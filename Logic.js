@@ -7,7 +7,7 @@ var totalWidth = 5;//Колличество блоков в строку
 var totalHeight = 5;//Колличество блоков в стлобец
 
 var robotMoveDelay=500;//Задержка при движении робота в милисекундах
-
+var timerIsStarted = false;//Переменная-флаг, для того чтобы таймер отсчета времени не запускался несколько раз
 var totalSeconds = 0;//Для зранения колличества секунд которые прошли с начала прохождения уровня
 var totalCommandsAllowed = 0;//Колличество команд, которое разрешено поставить на данном поле(рассчитывается при генерации лабиринта)
 
@@ -36,6 +36,7 @@ game.newLoopFromConstructor('myGame', function () {
 
 function timer()
 {
+  timerIsStarted = true;
   totalSeconds++;
   setTimeout("timer()", 1000);
 }
@@ -53,9 +54,8 @@ function initializeGame(){
   //Создаем игрока
   playerSetStart();
   //Инициализируем таймер времени
-  if(totalSeconds !== 0)
-    totalSeconds = 0;
-  else timer();
+  totalSeconds = 0;
+  if(!timerIsStarted) timer();
 }
 
 //Перерасчитывает размеры существующего поля и элементов
