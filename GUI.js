@@ -1,10 +1,12 @@
 //СКРИПТ СОДЕРЖИТ ОПИСАНИЕ ВСЕХ ЭЛЕМЕНТОВ GUI ИГРЫ, а также методы для работы с ними
 
-var buttonStartImgSrc = "img/startButton.png";
-var buttonStopImgSrc = "img/stopButton.png";
-var menuButtonImgSrc = "img/menuButton.png";
+var buttonStartImgSrc = "img/interface/startButton.png";
+var buttonStopImgSrc = "img/interface/stopButton.png";
+var menuButtonImgSrc = "img/interface/menuButton.png";
+var reloadButtonImgSrc = "img/interface/reloadButton.png";
 var startB = null; //ктопка старт
 var menuB = null; //ктопка меню
+var reloadB = null;//Кнопка перезагрузки лабиринта
 var timerText = null; //текст таймера
 var progressText = null; // количество ходов
 var menuItemH = 0; // стандартная высота элемента меню
@@ -20,18 +22,26 @@ var guiTextColor = "white";
 function drawGUI(){
   startB.draw();
   menuB.draw();
+  reloadB.draw();
   timerText.draw();
   updateTextOnGui();
   progressText.draw();
 }
 
-//Обработчик нажатий на кнопку старта
-function isStartButtonPressed(){
+//Обработчик нажатий нвсе кнопки интерфейса
+function isButtonPressed(){
   
-  if(isLeftClicked(startB)){
+  if(isLeftClicked(startB)){//КНОПКА СТАРТА/СТОПА
     startB.isPlay = !startB.isPlay;
     if(startB.isPlay)
       setTimeout("processRobotMove()", robotMoveDelay);
+  }
+  else if(isLeftClicked(reloadB)){//КНОПКА ПЕРЕЗАГРУЗКИ УРОВНЯ
+    if(!startB.isPlay)
+      initializeGame();
+  }
+  else if(isLeftClicked(menuB)){//КНОПКА МЕНЮ
+  
   }
 }
 
@@ -63,8 +73,8 @@ function isGuiClick(){
 	 }
 	 else {
 	   commandsMenuLayer.clear();
-	   //Если пользователь нажмет старт запускает робота
-	   isStartButtonPressed();
+	   //Обрабатывае нажатия на кнопки
+	   isButtonPressed();
 	 }
 	 return result;
 }
@@ -139,6 +149,27 @@ function menuBInit()
   
 }
 
+function reloadBInit(){
+  
+   if(menuItemW > menuItemH)
+  {
+    menuItemH = menuItemW;
+  }
+  else menuItemW = menuItemH;
+  
+  
+  reloadB = game.newImageObject({x : 0, y : 0,w : menuItemW, h : menuItemH, file : reloadButtonImgSrc});
+  
+  if(width < height)
+  {
+    reloadB.setPositionS(point((startB.x + menuB.x) / 2, height- startB.h - 5));
+  }else
+  {
+    reloadB.setPositionS(point((startB.x + menuB.x) / 2, gameSpaceH - startB.h - 5));
+  }
+  
+}
+
 function timerTextInit()
 {
   if(width < height)
@@ -184,6 +215,7 @@ function initGUI()
   initGameSpace();
   startBInit();
   menuBInit();
+  reloadBInit();
   timerTextInit();
   progressTextInit();
 }

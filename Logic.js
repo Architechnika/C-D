@@ -118,7 +118,7 @@ function getTotalCommandsOnField(){
   OOP.forArr(field,function(el){
     counter += el.commands.length;
   });
-  counter += playerCommands.length;
+  //counter += playerCommands.length;
   return counter;
 }
 
@@ -145,8 +145,6 @@ function processRobotMove(){
 	  else if(res != "")//Если у робота возникли проблемы
 	  {
 	    alert(res);//Выводим их на экран
-	    //Возвращаем игру к исходному состоянию
-	    robotOn = false;
 	    //Останавливаем цикл движения игры, меняя свойство кнопки
 	    startB.isPlay = false;
 	    //Очищаем все команды на поле

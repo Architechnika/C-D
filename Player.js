@@ -124,6 +124,7 @@ function addCommandsToPlayer(comm){
       return;
     }
   });
+  
   if(isStop){
     playerCommands = new Array();
     playerCommands.push(COMMANDS.STOP);
@@ -131,7 +132,8 @@ function addCommandsToPlayer(comm){
   }
 
   //Добавляем все элементы из comm В КОНЕЦ стека
-  if(lastPlayerPoz != playerPozition){//Только если мы сдвинулись с прошлой клетки(Запись в буфер команд происходит только один раз с клетки)
+  //Только если мы сдвинулись с прошлой клетки(Запись в буфер команд происходит только один раз с клетки) ну или робот не знает что делать
+  if(lastPlayerPoz != playerPozition || (playerCommands !== null && playerCommands.length == 0)){
     for(var i = 0; i < comm.length; i++){
       playerCommands.push(comm[i]);
     }
