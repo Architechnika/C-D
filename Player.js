@@ -1,9 +1,5 @@
 //СКРИПТ ОПИСЫВАЕТ МЕТОДЫ И ДАННЫЕ ИГРОКА, КОТОРЫЙ ПРОХОДИТ ЛАБИРИНТ
 
-//Исходный файл с изображением игрока
-var playerImgSrc = "img/player.png";
-//Файл картинки игрока для графики, генерится в скрипте Logic.json
-var playerImageObj = null;
 //Позиция игрока на поле
 var playerPozition = 0, lastPlayerPoz = 0;
 //Текущая команда для выполнения
@@ -23,6 +19,7 @@ function playerSetStart(){
       movePlayerToFieldElement(field[playerPozition]);
       //Задаем направление, куда смотрит персонаж
       playerSetDirection(getPlayerDirFromSide());
+      lastPlayerPoz = -1;
       //Инициализируем стек команд
       playerCommands = new Array();
       return;
@@ -133,7 +130,7 @@ function addCommandsToPlayer(comm){
 
   //Добавляем все элементы из comm В КОНЕЦ стека
   //Только если мы сдвинулись с прошлой клетки(Запись в буфер команд происходит только один раз с клетки) ну или робот не знает что делать
-  if(lastPlayerPoz != playerPozition || (playerCommands !== null && playerCommands.length == 0)){
+  if(lastPlayerPoz != playerPozition){
     for(var i = 0; i < comm.length; i++){
       playerCommands.push(comm[i]);
     }

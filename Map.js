@@ -87,17 +87,10 @@ function fieldElement(imgSource, comm, elemcode, fx,fy,fw,fh){
 function clearAllCommandsOnField(){
   OOP.forArr(field,function(el){
     if(el.code == entryCode){
-      el.commands = new Array(COMMANDS.UP);
+      el.commands = new Array(COMMANDS[1]);
     }
     else el.commands = new Array();
   });
-}
-
-//isSquare - true - если нужен квадратный лабиринта
-//totalInW - всего квадратов в ширину
-//totalInH - всего квадратов в высоту
-function genMap(totalInW, totalInH, isRegen){
-  generateMap(gameSpaceW,gameSpaceH,gameSpaceX,gameSpaceY,totalInW,totalInH);
 }
 
 //Перерасчитывает размеры существующего поля
@@ -134,10 +127,10 @@ function generateMap(w, h, x, y, elemsInLine, elemsInColumn){
       img = groundPath;
       //Если это клетка входа в лабиринт, инициализируем сразу команду для игрока в ней
       if(S == entryCode) {
-        if(entrySide == "DOWN") comm.push(COMMANDS.UP);
-        else if(entrySide == "UP") comm.push(COMMANDS.DOWN);
-        else if(entrySide == "LEFT") comm.push(COMMANDS.RIGHT);
-        else if(entrySide == "RIGHT") comm.push(COMMANDS.LEFT);
+        if(entrySide == "DOWN") comm.push(COMMANDS[1]);
+        else if(entrySide == "UP") comm.push(COMMANDS[2]);
+        else if(entrySide == "LEFT") comm.push(COMMANDS[4]);
+        else if(entrySide == "RIGHT") comm.push(COMMANDS[3]);
         img = entryPath;
       }
       else if(S == exitCode){
@@ -261,12 +254,4 @@ function genBin(hate, width, maze, walls, currentPosition)
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
-}
-
-//Проверяет, можно ли поставить по этим индексам елемент с типом code
-function checkSpawnCode(x,y,code){
-  //Если пытаемся поставить вход или выход
-  if(code == roadCode){
-    
-  }
 }

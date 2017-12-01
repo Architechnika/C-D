@@ -1,19 +1,18 @@
 //СКРИПТ СОДЕРЖИТ ОПИСАНИЕ ВСЕХ ЭЛЕМЕНТОВ GUI ИГРЫ, а также методы для работы с ними
 
-var buttonStartImgSrc = "img/interface/startButton.png";
-var buttonStopImgSrc = "img/interface/stopButton.png";
-var menuButtonImgSrc = "img/interface/menuButton.png";
-var reloadButtonImgSrc = "img/interface/reloadButton.png";
+
 var startB = null; //ктопка старт
 var menuB = null; //ктопка меню
 var reloadB = null;//Кнопка перезагрузки лабиринта
 var timerText = null; //текст таймера
 var progressText = null; // количество ходов
+
+var scrollIsInited = false;
+
 var menuItemH = 0; // стандартная высота элемента меню
 var menuItemW = 0; // стандартная ширина элемента меню
-//Переменные для хранения размера области игрbы(Области где будет отображаться игра)
-var gameSpaceX=0,gameSpaceY=0;
-var gameSpaceW=0,gameSpaceH=0;
+
+var scrollSpeed = 0.05;
 var guiTextColor = "white";
 
 
@@ -26,6 +25,26 @@ function drawGUI(){
   timerText.draw();
   updateTextOnGui();
   progressText.draw();
+}
+
+
+function initGUI()
+{//поочередность иницилизаии ОБЯЗАТЕЛЬНА для правильного расположения меню
+//1 - initGameSpace
+//2 - startBInit
+//3 - menuBInit 
+//..timerTextInit();
+// progressTextInit();
+  menuItemH = (height / 100) * 10;
+  menuItemW = (width / 100) * 10;
+  
+  initGameSpace();
+  startBInit();
+  menuBInit();
+  reloadBInit();
+  timerTextInit();
+  progressTextInit();
+  scrollIsInited = false;
 }
 
 //Обработчик нажатий нвсе кнопки интерфейса
@@ -48,15 +67,15 @@ function isButtonPressed(){
 //Возвращает true если пользователь нажал на отображенный элемент GUI
 function isGuiClick(){
   var result = false;
+  if(commandsMenuElements === null || commandsMenuElements.length === 0)
+    commandsMenuElements = getAllCommandsMenu();
   //Если открыт интерфейс выбор команды для клетки
 	if(lastClickedIndx != -1){
-	      
-	 commandsMenuLayer.on( function(){
     OOP.forArr(commandsMenuElements,function(el){
   	        //Если выбрали команду, то назначем этому элементу поля эту команду
-	          if(isLeftClicked(el.image)){
+	          if(isLeftClicked(el) && el.visible){
 	            //Если выбрали пустую команду, то очищаем весь стек команд на этом элементе
-    	        if(el.command == COMMANDS.NONE) field[lastClickedIndx].commands = new Array();
+    	        if(el.command == COMMANDS[0]) field[lastClickedIndx].commands = new Array();
     	        else {
     	          //Добавляем в стек команду если ещё есть место на этом полеоля
     	          if(getTotalCommandsOnField() < totalCommandsAllowed)
@@ -69,12 +88,17 @@ function isGuiClick(){
 	          }
 	          else showCommandsMenu();
 	        });
-	      });
 	 }
 	 else {
 	   commandsMenuLayer.clear();
 	   //Обрабатывае нажатия на кнопки
 	   isButtonPressed();
+	 }
+	 return result;
+	 
+	 if(lastClickedIndx != -1){
+	   if(scrollBar())
+	    result = true;
 	 }
 	 return result;
 }
@@ -162,7 +186,7 @@ function reloadBInit(){
   
   if(width < height)
   {
-    reloadB.setPositionS(point((startB.x + menuB.x) / 2, height- startB.h - 5));
+    reloadB.setPositionS(point(5, height- startB.h - 5));
   }else
   {
     reloadB.setPositionS(point((startB.x + menuB.x) / 2, gameSpaceH - startB.h - 5));
@@ -202,52 +226,90 @@ function progressTextInit()
   
 }
 
-function initGUI()
-{//поочередность иницилизаии ОБЯЗАТЕЛЬНА для правильного расположения меню
-//1 - initGameSpace
-//2 - startBInit
-//3 - menuBInit 
-//..timerTextInit();
-// progressTextInit();
-  menuItemH = (height / 100) * 10;
-  menuItemW = (width / 100) * 10;
-  
-  initGameSpace();
-  startBInit();
-  menuBInit();
-  reloadBInit();
-  timerTextInit();
-  progressTextInit();
+function scrollInit(posX, posY, ArrItems)
+{
+  this.arr = ArrItems;
+  if(ArrItems.length > 0)
+  {
+       visibelElementsCount = 4;//количество 100% видемых элементов на экране
+       backGround = game.newRectObject({x : posX, y : posY, h: ArrItems[0].h*2, w: ArrItems[0].w*visibelElementsCount, fillColor : "transparent"}); //задний фон от которого зависит прозрачность элементов
+       context = game.newRoundRectObject({x : backGround.x, y : backGround.y, h: ArrItems[0].h*2, w: 180, radius : 10, fillColor : "transparent"});//родительский объект всех граф.элементов(для координации)
+       bar = game.newRectObject({x : 100, y : 175, h: 5, w: 160, fillColor : "red"});  //полоска бара
+      
+      //указываем элементам их родителя
+        OOP.forArr(ArrItems, function(el)
+        {
+          context.addChild(el);
+        });	
+    return true;
+  }
+  return false;
+
 }
 
 
-function initGameSpace()
-{   var ind = 0;
-    if(width < height)
-    {
-      gameSpaceX = ind;
-      gameSpaceW = width;
-      gameSpaceH = gameSpaceW;
-      if(height - gameSpaceH < (menuItemH*2)+20)
-        gameSpaceY = menuItemH+10;
-        else
-        gameSpaceY = menuItemH + 10;
-    }
-    else
-    {
-    // gameSpaceH = height - (menuItemH*1.3)*2;
-    // gameSpaceW = gameSpaceH;
-    // if(height - gameSpaceH >= (menuItemH*1.3)*2)
-    // {
-    //   gameSpaceY = (menuItemH*1.3)
-    // }else
-    // gameSpaceY = (height / 4)-(menuItemH*1.3);
-    //   gameSpaceX = (width / 2) - gameSpaceW/2;// - (h / 2);
-    
-    gameSpaceX = 0;
-    gameSpaceY = 0;
-    gameSpaceH = height;
-    gameSpaceW = gameSpaceH;
- 
-    }
+function scrollBar()
+{
+  if(!scrollIsInited)
+  {
+    /*var elems = ;
+    var imgs = [];
+    OOP.forArr(elems,function(el){
+      imgs.push(el.image);
+    });*/
+    commandsMenuElements = getAllCommandsMenu(oneTileWidth,oneTileHeight);
+    scrollIsInited = scrollInit(gameSpaceW / 2 - (2 * oneTileWidth), gameSpaceY + gameSpaceH - (oneTileHeight * 2) - 50, commandsMenuElements);
+  }
+  var rXEl0 = arr[0].x + arr[0].w; // координаты правого верхнего по Х  угла 0 элемента
+  var FrsElemX =  arr[arr.length - 1].x;
+  var rXBG = backGround.x + backGround.w;   // координаты правого верхнегопо Х заднего
+  commandsMenuLayer.on(function(){
+  //обход всех дочерных элементов (графические элементы меню)
+	OOP.forArr(commandsMenuElements,function(el)
+	{
+	  el.draw();
+	  //если пальец зажат
+	  if(touch.isDown())
+     {
+       //var speed = touch.getSpeed().x * scrollSpeed;
+      if(touch.getSpeed().x > 0 )// палец вправо
+      {
+        //var FrsElemX =  context.children[0].x;
+        if(FrsElemX < backGround.x)
+        {
+         el.x +=touch.getSpeed().x * scrollSpeed; // перемещаем элементы по Х с динамической скоростью
+        }
+      }else if (touch.getSpeed().x < 0) // палец влево
+      {
+        if(rXEl0 >= rXBG)
+        {
+          el.x +=touch.getSpeed().x* scrollSpeed; // перемещаем элементы по Х с динамической скоростью
+        }
+      }
+     }
+    else if(touch.isPeekObject(el)) return true;//Если элемент выбрали
+	  //изчезновение элементов
+	  if(el.x < rXBG || el.x > backGround.x)
+	  {
+	    var alpha = 0.03;
+	    el.setVisible(true);
+	    
+	    if(el.x+el.w > rXBG)
+	    {
+	      var aX = rXBG - el.x;
+	      el.setAlpha(aX*alpha);
+	    }
+	    if(el.x < backGround.x)
+	    {
+	      var aX = (el.x + el.w)- backGround.x;
+	      el.setAlpha(aX*alpha);
+	    }
+	    if(el.alpha <= 0)
+	      el.setVisible(false);
+	  }else
+	  {
+	    el.setVisible(false);
+	  }
+	});});
+	return false;
 }

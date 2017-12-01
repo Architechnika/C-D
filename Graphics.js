@@ -13,6 +13,14 @@ var groundPath = "img/ground.png";//Картинка для дороги
 var backgroundPath = "img/background.png";//Картинка для фона за либиринтом
 var exitPath = "img/exit.png";//Картинка для выхода из лабиринта
 var entryPath = "img/entry.png";//Картинка для входа в лабиринт
+//Пути до файлов с изображениями для интерфейса
+var buttonStartImgSrc = "img/interface/startButton.png";
+var buttonStopImgSrc = "img/interface/stopButton.png";
+var menuButtonImgSrc = "img/interface/menuButton.png";
+var reloadButtonImgSrc = "img/interface/reloadButton.png";
+//Пути до файлов с изображением робота
+var playerImgSrc = "img/player.png";
+var playerImageObj = null;
 
 var width  = game.getWH().w; // Ширина всего экрана
 var height = game.getWH().h; // Высота всего экрана
@@ -24,17 +32,10 @@ var playerLayer = layers.newLayer(2,{alpha : 1, backgroundColor : "transparent"}
 var commandsLayer = layers.newLayer(1,{alpha : 0.5, backgroundColor : "transparent"});//СЛОЙ ДЛЯ ОТОБРАЖЕНИЯ ГРАФИКИ НАЗНАЧЕННЫХ ЭЛЕМЕНТАМ КОММАНДЕ
 //Переменные для интерфейсных задач
 var lastClickedIndx = -1;//Номер элемента лабиринта по которому кликнул пользователь
-var commandsMenuElements = getAllCommandsMenu();//Массив, хранящий программное представление меню выбора команда
+var commandsMenuElements = [];//getAllCommandsMenu(oneTileWidth,oneTileHeight);//Массив, хранящий программное представление меню выбора команда
 
 var checkScreenTimeout = 40;//Таймаут для методы который следит за изменениями размера экрана
 
-//Класс для хранения последнего элемента на который нажал пользователь(нужно для того, чтобы пользователь мог одновременно выбрать только мент поля)один эле
-function onefieldElement(obj,index){
-  this.object = obj;
-  this.indx = index;
-} 
-
-//pjs.system.setSyle( {backgroundColor : "black"});
 pjs.system.setTitle('Лабиринт'); // Set Title for Tab or Window
 
 //Обновление графики на экране
@@ -63,15 +64,15 @@ function updateScreen(){
 }
 
 //Запускает таймер который следит за изменениями параметров экрана 
-function startResizeTimer(){
+function resizeTimer(){
   var scrParams = game.getWH();
   if(scrParams.w != width || scrParams.h != height){//Если изменились
     width = scrParams.w;
     height = scrParams.h;
     //Перерасчитываем все элементы игры
-    resizeAllElementsOnScreen();
+    resizeAllElements();
   }
-  setTimeout("startResizeTimer()",checkScreenTimeout);
+  setTimeout("resizeTimer()",checkScreenTimeout);
 }
   
 //Обработка нажатий на поле
@@ -127,8 +128,9 @@ function showCommandsMenu(){
       return;
     }
     //Получаем представление меню команд
-    commandsMenuElements = getAllCommandsMenu(oneTileWidth,oneTileHeight);
-    //alert(mouse.getPosition().x + " " + mouse.getPosition().y);
+    //commandsMenuElements = getAllCommandsMenu(oneTileWidth,oneTileHeight);
+    scrollBar();
+    /*//alert(mouse.getPosition().x + " " + mouse.getPosition().y);
     //Расчитываем позицию расположения элементов
     var X,Y;
     //Если элементы не влезут в экране то мы их рисуем относительно квадрата повыше
@@ -145,7 +147,8 @@ function showCommandsMenu(){
       c.image.y += Y;
       c.image.x += X;
       c.image.draw();
-    });
-    
+    });*/
+    //commandsMenuElements = getAllCommandsMenu(oneTileWidth,oneTileHeight);
+    //scrollBar();
   });
 }

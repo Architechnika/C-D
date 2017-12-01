@@ -2,6 +2,9 @@
 Главный скрипт игры. Содержит логику игрового процесса.
 Методы и данные для работы игровой логики
 */
+//Переменные для хранения размера области игрbы(Области где будет отображаться игра)
+var gameSpaceX=0,gameSpaceY=0;
+var gameSpaceW=0,gameSpaceH=0;
 
 var totalWidth = 5;//Колличество блоков в строку
 var totalHeight = 5;//Колличество блоков в стлобец
@@ -12,20 +15,19 @@ var totalSeconds = 0;//Для зранения колличества секун
 var totalCommandsAllowed = 0;//Колличество команд, которое разрешено поставить на данном поле(рассчитывается при генерации лабиринта)
 
 //Игровой цикл
-game.newLoopFromConstructor('myGame', function () {
+game.newLoopFromConstructor('Labyrinth', function () {
 	//Код для старта игры
 	this.entry = function(){
-	  log('myGame is started');
 	  //Создаем все объекты для игры
 	  initializeGame();
 	  //Запускаем таймер который следит за изменением экрана(для правильного ресайза)
-	  startResizeTimer();
-	  //Запускаем таймер отсчета времени
-	  totalTimeTimer();
+	  resizeTimer();
+	  //Инициализируем таймер времени
+	  totalTimeTimer()
 	};
 	//Код для завершения игры
 	this.exit = function(){
-	  log('myGame is stopped');
+	  
 	};
 	//Код для апдейта игры
 	this.update = function(){
@@ -38,7 +40,7 @@ game.newLoopFromConstructor('myGame', function () {
 function totalTimeTimer()
 {
   totalSeconds++;
-  setTimeout("timer()", 1000);
+  setTimeout("totalTimeTimer()", 1000);
 }
 
 //Инициализация лабиринта
@@ -48,17 +50,41 @@ function initializeGame(){
   //Инициализируем элементы интерфейса
   initGUI();
   //Генерируем лабиринт(или пересчитываем параметры существующего)
-  genMap(totalWidth, totalHeight);
+  generateMap(gameSpaceW,gameSpaceH,gameSpaceX,gameSpaceY,totalWidth, totalHeight);
   //Рассчитываем сколько команд можно поставить на этом поле для прохождения
   totalCommandsAllowed = (totalWidth + totalHeight) * 2;
   //Создаем игрока
   playerSetStart();
-  //Обнуляем счетчик времени
+  //Сбрасываем счетчик времени
   totalSeconds = 0;
 }
 
+//Расчет глобальных параметров игровой области
+function initGameSpace()
+{   var ind = 0;
+    if(width < height)
+    {
+      gameSpaceX = ind;
+      gameSpaceW = width;
+      gameSpaceH = gameSpaceW;
+      if(height - gameSpaceH < (menuItemH*2)+20)
+        gameSpaceY = menuItemH+10;
+        else
+        gameSpaceY = menuItemH + 10;
+    }
+    else
+    {
+    
+    gameSpaceX = 0;
+    gameSpaceY = 0;
+    gameSpaceH = height;
+    gameSpaceW = gameSpaceH;
+ 
+    }
+}
+
 //Перерасчитывает размеры существующего поля и элементов
-function resizeAllElementsOnScreen(){
+function resizeAllElements(){
   //Инициализируем элементы интерфейса
   initGUI();
   //Пересчитываем параметры существующего лабиринта
@@ -71,7 +97,13 @@ function resizeAllElementsOnScreen(){
 function isLeftClicked(checkObject){
   //Если у нас мобильное устройство
   if(touch.isMobileDevice()){
-    return touch.isPeekObject(checkObject);
+    if(lastClickedIndx == -1)
+      return touch.isPeekObject(checkObject);
+    else{
+      var spd = touch.getSpeed().x;
+      if(touch.isPress() && spd == 0)
+        return touch.isPeekObject(checkObject);
+    }
   }
   //Если пк с мышкой
   if(mouse.isPeekObject('LEFT',checkObject)){
@@ -104,11 +136,6 @@ function processClickField(indx){
 	  if(field[indx].code == roadCode)
 	    field[indx].commands.pop(); 
 	}
-}
-
-function sleepFor( sleepDuration ){
-    var now = new Date().getTime();
-    while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
 }
 
 //Возвращает число команд на поле всего
@@ -154,4 +181,4 @@ function processRobotMove(){
 	  else if(startB.isPlay) setTimeout("processRobotMove()",robotMoveDelay);
 }
 
-game.startLoop('myGame'); 
+game.startLoop('Labyrinth'); 
