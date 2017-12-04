@@ -124,31 +124,11 @@ function drawCommandsOnField(){
 function showCommandsMenu(){
   
   commandsMenuLayer.on(function(){
-    if(lastClickedIndx == -1) {
+    /*if(lastClickedIndx == -1) {
       return;
-    }
-    //Получаем представление меню команд
-    //commandsMenuElements = getAllCommandsMenu(oneTileWidth,oneTileHeight);
-    scrollBar();
-    /*//alert(mouse.getPosition().x + " " + mouse.getPosition().y);
-    //Расчитываем позицию расположения элементов
-    var X,Y;
-    //Если элементы не влезут в экране то мы их рисуем относительно квадрата повыше
-    if(commandsMenuElements[0].image.x + (field[lastClickedIndx].X+field[lastClickedIndx].W) > width){
-      X = field[lastClickedIndx + 2].X;
-      Y = field[lastClickedIndx].Y;
-    }
-    else{
-      X = field[lastClickedIndx].X;
-      Y = field[lastClickedIndx].Y;
-    }
-    OOP.forArr(commandsMenuElements,function(c)
-    {
-      c.image.y += Y;
-      c.image.x += X;
-      c.image.draw();
-    });*/
-    //commandsMenuElements = getAllCommandsMenu(oneTileWidth,oneTileHeight);
-    //scrollBar();
+    }*/
+    //Отображаем скролл бар для выбора команд для клетки
+  scrollDawn.scrollUpdate();
+  scrollUp.scrollUpdate();
   });
 }

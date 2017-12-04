@@ -76,7 +76,7 @@ function getAllCommandsMenu(OneW,OneH){
   
   var menuItems = [];
   //Генерим структуру меню(по 4 элемента в ряд)
-  levels.forStringArray({w : OneW, h : OneH, source : ['123489CW','5670RIE']},//,'456789','CWRIE']},
+  levels.forStringArray({w : OneW, h : OneH, source : ['123489CW','5670RIE0']},//,'456789','CWRIE']},
   function (S,X,Y,W,H)
   {
     for (var comm in COMMANDS){

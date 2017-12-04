@@ -7,12 +7,10 @@ var reloadB = null;//Кнопка перезагрузки лабиринта
 var timerText = null; //текст таймера
 var progressText = null; // количество ходов
 
-var scrollIsInited = false;
-
 var menuItemH = 0; // стандартная высота элемента меню
 var menuItemW = 0; // стандартная ширина элемента меню
 
-var scrollSpeed = 0.05;
+var scrollSpeed = 0.5;
 var guiTextColor = "white";
 
 
@@ -44,7 +42,6 @@ function initGUI()
   reloadBInit();
   timerTextInit();
   progressTextInit();
-  scrollIsInited = false;
 }
 
 //Обработчик нажатий нвсе кнопки интерфейса
@@ -66,41 +63,43 @@ function isButtonPressed(){
 
 //Возвращает true если пользователь нажал на отображенный элемент GUI
 function isGuiClick(){
-  var result = false;
-  if(commandsMenuElements === null || commandsMenuElements.length === 0)
-    commandsMenuElements = getAllCommandsMenu();
-  //Если открыт интерфейс выбор команды для клетки
-	if(lastClickedIndx != -1){
-    OOP.forArr(commandsMenuElements,function(el){
-  	        //Если выбрали команду, то назначем этому элементу поля эту команду
-	          if(isLeftClicked(el) && el.visible){
-	            //Если выбрали пустую команду, то очищаем весь стек команд на этом элементе
-    	        if(el.command == COMMANDS[0]) field[lastClickedIndx].commands = new Array();
-    	        else {
-    	          //Добавляем в стек команду если ещё есть место на этом полеоля
-    	          if(getTotalCommandsOnField() < totalCommandsAllowed)
-    	            field[lastClickedIndx].commands.push(el.command);
-    	          else alert("Память робота переполнена");
-    	        }
-	            lastClickedIndx = -1;
-	            result = true;
-	            return;
-	          }
-	          else showCommandsMenu();
-	        });
-	 }
-	 else {
-	   commandsMenuLayer.clear();
-	   //Обрабатывае нажатия на кнопки
-	   isButtonPressed();
-	 }
-	 return result;
+//   var result = false;
+//   if(commandsMenuElements === null || commandsMenuElements.length === 0)
+//     commandsMenuElements = getAllCommandsMenu();
+//   //Если открыт интерфейс выбор команды для клетки
+// 	if(lastClickedIndx != -1){
+//     OOP.forArr(commandsMenuElements,function(el){
+//   	        //Если выбрали команду, то назначем этому элементу поля эту команду
+// 	          if(isLeftClicked(el) && el.visible){
+// 	            //Если выбрали пустую команду, то очищаем весь стек команд на этом элементе
+//     	        if(el.command == COMMANDS[0]) field[lastClickedIndx].commands = new Array();
+//     	        else {
+//     	          //Добавляем в стек команду если ещё есть место на этом полеоля
+//     	          if(getTotalCommandsOnField() < totalCommandsAllowed)
+//     	            field[lastClickedIndx].commands.push(el.command);
+//     	          else alert("Память робота переполнена");
+//     	        }
+// 	            lastClickedIndx = -1;
+// 	            result = true;
+// 	            return;
+// 	          }
+// 	          else showCommandsMenu();
+// 	        });
+// 	 }
+// 	 else {
+// 	   commandsMenuLayer.clear();
+// 	   //Обрабатывае нажатия на кнопк
+      showCommandsMenu();
+ 	   isButtonPressed();
+// 	 }
+// 	 return result;
 	 
-	 if(lastClickedIndx != -1){
-	   if(scrollBar())
-	    result = true;
-	 }
-	 return result;
+// 	 if(lastClickedIndx != -1){
+// 	   if(scrollBar())
+// 	    result = true;
+// 	 }
+// 	 return result;
+      return true;
 }
 
 //Обновляет запись об общем колличестве команд на поле
@@ -226,68 +225,93 @@ function progressTextInit()
   
 }
 
-function scrollInit(posX, posY, ArrItems)
+function ScrollBar(itemsArray,locationBar){
+  
+  if(itemsArray.length < 1)
+    return;
+  this.allItems = itemsArray;
+  this.locationBar = locationBar;
+  
+  var fristItemW = this.allItems[this.allItems.length-1].w;
+  var fristItemH = this.allItems[this.allItems.length-1].h;
+  var fristItemX = this.allItems[this.allItems.length-1].x;
+  var fristItemY = this.allItems[this.allItems.length-1].y;
+  
+  var lastItemW = this.allItems[this.allItems.length-1].w;
+  var lastItemH = this.allItems[this.allItems.length-1].h;
+  var lastItemX = this.allItems[this.allItems.length-1].x;
+  var lastItemY = this.allItems[this.allItems.length-1].y;
+
+        //ИНИЦИАЛИЗИРУЕМ BACKGROND
+         var X,Y,W,H;
+        switch (this.locationBar) {
+          case 'UP':
+            X = gameSpaceW / 100 * 20;//20%
+            Y = 0;
+            W = gameSpaceW / 100 * 60;
+            H = gameSpaceW / 100 * 30;
+            break;
+          case 'DOWN':
+            X = gameSpaceW / 100 * 20;//20%
+            Y = gameSpaceH-(gameSpaceH/100*30);
+            W = gameSpaceW / 100 * 60;
+            H = gameSpaceW / 100 * 30;
+            break;
+          case 'LEFT':
+            X = 0;
+            Y = gameSpaceH / 100 * 20;
+            W = gameSpaceH / 100 * 30;
+            H = gameSpaceH / 100 * 60;
+            break;
+          case 'RIGHT':
+            X = gameSpaceH / 100 * 70;
+            Y = gameSpaceH / 100 * 20;
+            W = gameSpaceH / 100 * 30;
+            H = gameSpaceH / 100 * 60;
+            break;
+          case 'CENTER':
+            X = gameSpaceW / 100 * 20;
+            Y = gameSpaceH / 100 * 35;
+            W = gameSpaceH / 100 * 60;
+            H = gameSpaceH / 100 * 30;
+          default:
+            return;
+        } 
+        var backGround = game.newRectObject({x : X, y : Y, h: H, w: W , fillColor : "transparent"}); //задний фон от которого зависит прозрачность элементв
+        OOP.forArr(this.allItems,function(el){
+           backGround.addChild(el);
+        });
+        log("backGroundX: "+backGround.x + " backGroundY: "+backGround.y + " backGroundW: "+ backGround.w+ " backGroundH: "+backGround.h);
+       // bar = game.newRectObject({x : 100, y : 175, h: 5, w: 160, fillColor : "red"});  //полоска бара
+//Функция реализующая скролл с командами на экране
+this.scrollUpdate = function()
 {
-  this.arr = ArrItems;
-  if(ArrItems.length > 0)
-  {
-       visibelElementsCount = 4;//количество 100% видемых элементов на экране
-       backGround = game.newRectObject({x : posX, y : posY, h: ArrItems[0].h*2, w: ArrItems[0].w*visibelElementsCount, fillColor : "transparent"}); //задний фон от которого зависит прозрачность элементов
-       context = game.newRoundRectObject({x : backGround.x, y : backGround.y, h: ArrItems[0].h*2, w: 180, radius : 10, fillColor : "transparent"});//родительский объект всех граф.элементов(для координации)
-       bar = game.newRectObject({x : 100, y : 175, h: 5, w: 160, fillColor : "red"});  //полоска бара
-      
-      //указываем элементам их родителя
-        OOP.forArr(ArrItems, function(el)
-        {
-          context.addChild(el);
-        });	
-    return true;
-  }
-  return false;
-
-}
-
-
-function scrollBar()
-{
-  if(!scrollIsInited)
-  {
-    /*var elems = ;
-    var imgs = [];
-    OOP.forArr(elems,function(el){
-      imgs.push(el.image);
-    });*/
-    commandsMenuElements = getAllCommandsMenu(oneTileWidth,oneTileHeight);
-    scrollIsInited = scrollInit(gameSpaceW / 2 - (2 * oneTileWidth), gameSpaceY + gameSpaceH - (oneTileHeight * 2) - 50, commandsMenuElements);
-  }
-  var rXEl0 = arr[0].x + arr[0].w; // координаты правого верхнего по Х  угла 0 элемента
-  var FrsElemX =  arr[arr.length - 1].x;
-  var rXBG = backGround.x + backGround.w;   // координаты правого верхнегопо Х заднего
-  commandsMenuLayer.on(function(){
+  var rXElLast = this.allItems[this.allItems.length-1].x + lastItemW; // координаты правого верхнего по Х  угла 0 элемента
+  var FrsElemX =  this.allItems[this.allItems.length-1].x;
+  var rXBG =  backGround.x +  backGround.w;   // координаты правого верхнегопо Х заднего
   //обход всех дочерных элементов (графические элементы меню)
-	OOP.forArr(commandsMenuElements,function(el)
+	OOP.forArr(backGround.children,function(el)
 	{
 	  el.draw();
-	  //если пальец зажат
-	  if(touch.isDown())
-     {
-       //var speed = touch.getSpeed().x * scrollSpeed;
-      if(touch.getSpeed().x > 0 )// палец вправо
-      {
-        //var FrsElemX =  context.children[0].x;
-        if(FrsElemX < backGround.x)
-        {
-         el.x +=touch.getSpeed().x * scrollSpeed; // перемещаем элементы по Х с динамической скоростью
-        }
-      }else if (touch.getSpeed().x < 0) // палец влево
-      {
-        if(rXEl0 >= rXBG)
-        {
-          el.x +=touch.getSpeed().x* scrollSpeed; // перемещаем элементы по Х с динамической скоростью
-        }
-      }
+	  //если палец зажат
+	  if(touch.isDown() && touch.isInObject(backGround))
+     { 
+             //var speed = touch.getSpeed().x * scrollSpeed;
+            if(touch.getSpeed().x > 0 )// палец вправо
+            {
+              if(FrsElemX < backGround.x)
+              {log(FrsElemX);
+               el.x +=touch.getSpeed().x * scrollSpeed; // перемещаем элементы по Х с динамической скоростью
+              }
+            }else if (touch.getSpeed().x <= 0) // палец влево
+            {
+              if(rXElLast >= 0)
+              {
+                el.x +=touch.getSpeed().x* scrollSpeed; // перемещаем элементы по Х с динамической скоростью
+              }
+            }
      }
-    else if(touch.isPeekObject(el)) return true;//Если элемент выбрали
+    //else if(touch.isPeekObject(el)) return true;//Если элемент выбрали
 	  //изчезновение элементов
 	  if(el.x < rXBG || el.x > backGround.x)
 	  {
@@ -310,6 +334,8 @@ function scrollBar()
 	  {
 	    el.setVisible(false);
 	  }
-	});});
-	return false;
+	});
+	//return false;
+} 
+  
 }
