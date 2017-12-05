@@ -3,6 +3,7 @@
 
 var startB = null; //ктопка старт
 var menuB = null; //ктопка меню
+var okB = null; // кнопка ок(при нажатии на которую заканчивается ввод команд в клетку)
 var reloadB = null;//Кнопка перезагрузки лабиринта
 var timerText = null; //текст таймера
 var progressText = null; // количество ходов
@@ -13,13 +14,14 @@ var menuItemW = 0; // стандартная ширина элемента ме�
 var scrollSpeed = 0.5;
 var guiTextColor = "white";
 
-
+var Scrolls = new Array();// массив всех скролбаров
 
 //Отрисовывает элементы интерфейса
 function drawGUI(){
   startB.draw();
   menuB.draw();
   reloadB.draw();
+  
   timerText.draw();
   updateTextOnGui();
   progressText.draw();
@@ -37,69 +39,18 @@ function initGUI()
   menuItemW = (width / 100) * 10;
   
   initGameSpace();
+  
   startBInit();
   menuBInit();
   reloadBInit();
+  okBInit();  
+  
   timerTextInit();
   progressTextInit();
-}
-
-//Обработчик нажатий нвсе кнопки интерфейса
-function isButtonPressed(){
-  
-  if(isLeftClicked(startB)){//КНОПКА СТАРТА/СТОПА
-    startB.isPlay = !startB.isPlay;
-    if(startB.isPlay)
-      setTimeout("processRobotMove()", robotMoveDelay);
-  }
-  else if(isLeftClicked(reloadB)){//КНОПКА ПЕРЕЗАГРУЗКИ УРОВНЯ
-    if(!startB.isPlay)
-      initializeGame();
-  }
-  else if(isLeftClicked(menuB)){//КНОПКА МЕНЮ
-  
-  }
-}
-
-//Возвращает true если пользователь нажал на отображенный элемент GUI
-function isGuiClick(){
-//   var result = false;
-//   if(commandsMenuElements === null || commandsMenuElements.length === 0)
-//     commandsMenuElements = getAllCommandsMenu();
-//   //Если открыт интерфейс выбор команды для клетки
-// 	if(lastClickedIndx != -1){
-//     OOP.forArr(commandsMenuElements,function(el){
-//   	        //Если выбрали команду, то назначем этому элементу поля эту команду
-// 	          if(isLeftClicked(el) && el.visible){
-// 	            //Если выбрали пустую команду, то очищаем весь стек команд на этом элементе
-//     	        if(el.command == COMMANDS[0]) field[lastClickedIndx].commands = new Array();
-//     	        else {
-//     	          //Добавляем в стек команду если ещё есть место на этом полеоля
-//     	          if(getTotalCommandsOnField() < totalCommandsAllowed)
-//     	            field[lastClickedIndx].commands.push(el.command);
-//     	          else alert("Память робота переполнена");
-//     	        }
-// 	            lastClickedIndx = -1;
-// 	            result = true;
-// 	            return;
-// 	          }
-// 	          else showCommandsMenu();
-// 	        });
-// 	 }
-// 	 else {
-// 	   commandsMenuLayer.clear();
-// 	   //Обрабатывае нажатия на кнопк
-      showCommandsMenu();
- 	   isButtonPressed();
-// 	 }
-// 	 return result;
-	 
-// 	 if(lastClickedIndx != -1){
-// 	   if(scrollBar())
-// 	    result = true;
-// 	 }
-// 	 return result;
-      return true;
+  Scrolls = new Array();
+  //Инииализируем скролл бары
+  Scrolls.push(new ScrollBar(getAllCommandsMenu(100,100),"DOWN",2));
+  Scrolls.push(new ScrollBar(getAllCommandsMenu(100,100),"UP",1));
 }
 
 //Обновляет запись об общем колличестве команд на поле
@@ -193,6 +144,17 @@ function reloadBInit(){
   
 }
 
+function okBInit(){
+  if(menuItemW > menuItemH)
+  {
+    menuItemH = menuItemW;
+  }
+  else menuItemW = menuItemH;
+  
+  okB = game.newImageObject({x : 0, y : 0,w : gameSpaceW / 100 * 30, h : gameSpaceH / 100 * 10, file : okButtonImgSrc});
+  okB.setPositionS(point(gameSpaceX + (gameSpaceW/2 - okB.w/2),gameSpaceY + (gameSpaceH - okB.h)));
+}
+
 function timerTextInit()
 {
   if(width < height)
@@ -225,13 +187,21 @@ function progressTextInit()
   
 }
 
-function ScrollBar(itemsArray,locationBar){
-  
+function ScrollBar(itemsArray,locationBar,_lineCount,posX,posY){
+  //проверяем входящий массив на пустосу
   if(itemsArray.length < 1)
     return;
   this.allItems = itemsArray;
-  this.locationBar = locationBar;
+  this.locationBar = locationBar; //орентация скролбара
+  var backGround = null;
   
+  var lineCount ;  //количество линий элементов в строке
+  if(_lineCount == null)
+      lineCount = 2;
+      else
+      lineCount = _lineCount;
+  var speedVector = 0;
+  var scrollOrientXorY=0;
   var fristItemW = this.allItems[this.allItems.length-1].w;
   var fristItemH = this.allItems[this.allItems.length-1].h;
   var fristItemX = this.allItems[this.allItems.length-1].x;
@@ -241,92 +211,227 @@ function ScrollBar(itemsArray,locationBar){
   var lastItemH = this.allItems[this.allItems.length-1].h;
   var lastItemX = this.allItems[this.allItems.length-1].x;
   var lastItemY = this.allItems[this.allItems.length-1].y;
+  
 
-        //ИНИЦИАЛИЗИРУЕМ BACKGROND
-         var X,Y,W,H;
-        switch (this.locationBar) {
-          case 'UP':
-            X = gameSpaceW / 100 * 20;//20%
-            Y = 0;
-            W = gameSpaceW / 100 * 60;
-            H = gameSpaceW / 100 * 30;
-            break;
-          case 'DOWN':
-            X = gameSpaceW / 100 * 20;//20%
-            Y = gameSpaceH-(gameSpaceH/100*30);
-            W = gameSpaceW / 100 * 60;
-            H = gameSpaceW / 100 * 30;
-            break;
-          case 'LEFT':
-            X = 0;
-            Y = gameSpaceH / 100 * 20;
-            W = gameSpaceH / 100 * 30;
-            H = gameSpaceH / 100 * 60;
-            break;
-          case 'RIGHT':
-            X = gameSpaceH / 100 * 70;
-            Y = gameSpaceH / 100 * 20;
-            W = gameSpaceH / 100 * 30;
-            H = gameSpaceH / 100 * 60;
-            break;
-          case 'CENTER':
-            X = gameSpaceW / 100 * 20;
-            Y = gameSpaceH / 100 * 35;
-            W = gameSpaceH / 100 * 60;
-            H = gameSpaceH / 100 * 30;
-          default:
-            return;
-        } 
-        var backGround = game.newRectObject({x : X, y : Y, h: H, w: W , fillColor : "transparent"}); //задний фон от которого зависит прозрачность элементв
-        OOP.forArr(this.allItems,function(el){
-           backGround.addChild(el);
-        });
-        log("backGroundX: "+backGround.x + " backGroundY: "+backGround.y + " backGroundW: "+ backGround.w+ " backGroundH: "+backGround.h);
-       // bar = game.newRectObject({x : 100, y : 175, h: 5, w: 160, fillColor : "red"});  //полоска бара
+  //ИНИЦИАЛИЗИРУЕМ BACKGROND
+  var X,Y,W,H;
+  switch (this.locationBar) {
+    case 'UP':
+      if(posX == null)
+        X = gameSpaceX + (gameSpaceW / 100 * 20);//20%
+      else
+        X = posX
+      if(posY == null)
+        Y = gameSpaceY + (gameSpaceH / 100 * 6);
+      else
+        Y = poxY;
+      W = gameSpaceW / 100 * 80;
+      H = gameSpaceW / 100 * (15*lineCount);
+      break;
+    case 'DOWN':
+      W = gameSpaceW / 100 * 80;
+      H = gameSpaceW / 100 * (15*lineCount);
+      if(posX == null)
+        X = gameSpaceX + (gameSpaceW / 100 * 20);//20%
+      else
+        X = posX;
+      if(posY == null)
+        Y = (gameSpaceH+gameSpaceY) - (H + 100);//(gameSpaceH / 100 * 25));
+      else
+        Y = posY;
+      break;
+    case 'LEFT':
+      if(posX == null)
+        X = gameSpaceX + (gameSpaceW / 100 * 5);
+      else
+        X = posX
+      if(posY == null)
+        Y = gameSpaceY + (gameSpaceH / 100 * 6);
+      else
+        Y = poxY;
+      W = gameSpaceH / 100 * (15*lineCount);
+      H = gameSpaceH / 100 * 50;
+      break;
+    case 'RIGHT':
+      if(posX == null)
+        X = gameSpaceH / 100 * 70;
+      else
+        X = posX
+      if(posY == null)
+        Y = gameSpaceH / 100 * 20;
+      else
+        Y = poxY;
+      W = gameSpaceH / 100 * (15*lineCount);
+      H = gameSpaceH / 100 * 50;
+      break;
+    case 'CENTER':
+      if(posX == null)
+        X = gameSpaceW / 100 * 20;
+      else
+        X = posX
+      if(posY == null)
+        Y = gameSpaceH / 100 * 35;
+      else
+        Y = poxY;
+      W = gameSpaceH / 100 * 50;
+      H = gameSpaceH / 100 * (15*lineCount);
+    default:
+      return;
+  } 
+  backGround = game.newRectObject({x : X, y : Y, h: H, w: W , fillColor : "transpatent"}); //задний фон от которого зависит прозрачность элементв
+  // OOP.forArr(this.allItems,function(el,i){
+  //   backGround.addChild(el);
+  //   // log(el.x+" "+el.y+ " "+i);
+  // });
+  backGround.w *=0.8;
+  backGround.h *=0.8;
+  
+  this.getBackGround = function(){
+    return backGround;
+  }
+  
+  function sortElementsUpDownCenter(arr)
+  {
+    this.sortArr = arr;
+    var arrMediana = Math.ceil(this.sortArr.length/lineCount);
+    var itemHW = backGround.h/lineCount;
+    var itemX = backGround.x;
+    var itemY = backGround.y;
+  //  while(arrMediana % lineCount != 0)
+     // arrMediana++;
+    OOP.forArr(this.sortArr,function(el,i)
+    {
+       el.x = itemX;
+       el.y = itemY;
+       el.w = itemHW;
+       el.h = itemHW;
+       if(i % arrMediana == 0)
+       {
+         itemX = backGround.x;
+         itemY +=itemHW;
+       }else
+       itemX+=itemHW;
+    });
+    return this.sortArr;
+  }
+  
+  function sortElementsLeftRight(arr)
+  {
+    this.sortArr = arr;
+    var arrMediana = Math.ceil(this.sortArr.length/lineCount);
+    var itemHW = backGround.w/(lineCount);
+    var itemX = backGround.x;
+    var itemY = backGround.y;
+    OOP.forArr(this.sortArr,function(el,i)
+    {
+       el.x = itemX;
+       el.y = itemY;
+       el.w = itemHW;
+       el.h = itemHW;
+       if(i % arrMediana == 0)
+       {
+         itemY = backGround.y;
+         itemX +=itemHW;
+       }else
+       itemY+=itemHW;
+       log(el.x+" "+el.y+ " "+i);
+    });
+    return this.sortArr;
+  }
+  
+  var items;
+  if(locationBar == "UP" || locationBar == "DOWN" || locationBar == "CENTER")
+    items = sortElementsUpDownCenter(this.allItems);
+    else
+    items = sortElementsLeftRight(this.allItems);
+  log("backGroundX: "+backGround.x + " backGroundY: "+backGround.y + " backGroundW: "+ backGround.w+ " backGroundH: "+backGround.h);
+  // bar = game.newRectObject({x : 100, y : 175, h: 5, w: 160, fillColor : "red"});  //полоска бара
+  
+
 //Функция реализующая скролл с командами на экране
-this.scrollUpdate = function()
+this.scrollUpdate = function(scrollVal)
 {
-  var rXElLast = this.allItems[this.allItems.length-1].x + lastItemW; // координаты правого верхнего по Х  угла 0 элемента
+  backGround.draw();
+  var rXElLast = this.allItems[0].x + lastItemW; // координаты правого верхнего по Х  угла 0 элемента
+  var rYElLast = this.allItems[0].y + lastItemW;
   var FrsElemX =  this.allItems[this.allItems.length-1].x;
+  var FrsElemY =  this.allItems[this.allItems.length-1].y;
   var rXBG =  backGround.x +  backGround.w;   // координаты правого верхнегопо Х заднего
+  var rYBG =  backGround.y +  backGround.h; 
   //обход всех дочерных элементов (графические элементы меню)
-	OOP.forArr(backGround.children,function(el)
+	OOP.forArr(items,function(el)
 	{
-	  el.draw();
-	  //если палец зажат
-	  if(touch.isDown() && touch.isInObject(backGround))
-     { 
-             //var speed = touch.getSpeed().x * scrollSpeed;
-            if(touch.getSpeed().x > 0 )// палец вправо
-            {
+	  if(scroll.x !== 0 || scroll.y !== 0)
+     {
+     if(locationBar == "UP" || locationBar == "DOWN" || locationBar == "CENTER")
+      {
+        if(scrollVal.x > 0 )
+         {
               if(FrsElemX < backGround.x)
-              {log(FrsElemX);
-               el.x +=touch.getSpeed().x * scrollSpeed; // перемещаем элементы по Х с динамической скоростью
-              }
-            }else if (touch.getSpeed().x <= 0) // палец влево
-            {
-              if(rXElLast >= 0)
               {
-                el.x +=touch.getSpeed().x* scrollSpeed; // перемещаем элементы по Х с динамической скоростью
+               el.x +=scrollVal.x * scrollSpeed; // перемещаем элементы по Х с динамической скоростью
+              }
+         }else if (scrollVal.x <= 0) 
+            {
+              if(rXElLast >= rXBG)
+              {
+                el.x +=scrollVal.x* scrollSpeed; // перемещаем элементы по Х с динамической скоростью
               }
             }
-     }
-    //else if(touch.isPeekObject(el)) return true;//Если элемент выбрали
-	  //изчезновение элементов
-	  if(el.x < rXBG || el.x > backGround.x)
+            
+        if(el.x < rXBG || el.x > backGround.x)
+    	  {
+    	    var alpha = 0.004;
+    	    el.setVisible(true);
+    	    
+    	    if(el.x+el.w > rXBG)
+    	    {
+    	      var aX = rXBG - el.x;
+    	      el.setAlpha(aX*alpha);
+    	    }
+    	    if(el.x < backGround.x )
+    	    {
+    	      var aX = (el.x + el.w)- backGround.x;
+    	      el.setAlpha(aX*alpha);
+    	    }
+    	    if(el.x > backGround.x && (el.x+el.w < rXBG))
+    	    el.setAlpha(1);
+    	    if(el.alpha <= 0)
+    	      el.setVisible(false);
+    	  }else
+    	  {
+    	    el.setVisible(false);
+    	  }
+      }
+    else
+      {
+        if(scrollVal.y > 0 )
+           {
+              if(FrsElemY < backGround.y)
+              {
+               el.y +=scrollVal.y * scrollSpeed; 
+              }
+           }else if (scrollVal.y <= 0) 
+            {
+              if(rYElLast >= rYBG)
+              {
+                el.y +=scrollVal.y* scrollSpeed; 
+              }
+            }
+            
+   if(el.y < rYBG || el.y > backGround.y)
 	  {
-	    var alpha = 0.03;
+	    var alpha = 0.05;
 	    el.setVisible(true);
-	    
-	    if(el.x+el.w > rXBG)
+	    if(el.y+el.h >= backGround.h+backGround.y)
 	    {
-	      var aX = rXBG - el.x;
-	      el.setAlpha(aX*alpha);
+	      var aY = rYBG - el.y;
+	      el.setAlpha(aY*alpha);
 	    }
-	    if(el.x < backGround.x)
+	    if(el.y < backGround.y)
 	    {
-	      var aX = (el.x + el.w)- backGround.x;
-	      el.setAlpha(aX*alpha);
+	      var aY = (el.y + el.w)- backGround.y;
+	      el.setAlpha(aY*alpha);
 	    }
 	    if(el.alpha <= 0)
 	      el.setVisible(false);
@@ -334,8 +439,18 @@ this.scrollUpdate = function()
 	  {
 	    el.setVisible(false);
 	  }
+      }
+     }
+	  //изчезновение элементов
 	});
 	//return false;
-} 
+}
+
+this.draw = function(){
+        OOP.forArr(items,function(el)
+      	{
+      	  el.draw();
+      	});
+      }
   
 }

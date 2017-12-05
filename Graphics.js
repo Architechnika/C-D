@@ -18,6 +18,7 @@ var buttonStartImgSrc = "img/interface/startButton.png";
 var buttonStopImgSrc = "img/interface/stopButton.png";
 var menuButtonImgSrc = "img/interface/menuButton.png";
 var reloadButtonImgSrc = "img/interface/reloadButton.png";
+var okButtonImgSrc = "img/interface/okButton.png";
 //Пути до файлов с изображением робота
 var playerImgSrc = "img/player.png";
 var playerImageObj = null;
@@ -40,24 +41,19 @@ pjs.system.setTitle('Лабиринт'); // Set Title for Tab or Window
 
 //Обновление графики на экране
 function updateScreen(){
-  //Очищаем экран
-  //game.clear();
-  //Проверяем нажал ли пользователь на элемент интерфейса
-  var clicked = isGuiClick();
   //Отрисовываем слой команд
-  drawCommandsOnField();
+  commandsLayer.on(function(){
+    drawCommandsOnField();
+  });
   //Отрисовываем поле
 	for(var i = 0; i < field.length; i++){
-	  //Проверяем не было ли нажатие на элемент лабиринта
-	 if(!clicked){
-	    processClickField(i);
-    }
-    //Отрисовываем поле
-	  field[i].getImageObject().draw();
+	  field[i].draw();
   }
   //Отрисовываем элементы интерфейса
-  drawGUI();
-  //Рисуем на графическом слое для отображения игрока
+  guiLayer.on(function(){
+    drawGUI();
+  });
+  //Рисуем на графическом слое игрока для отображения игрока
   playerLayer.on(function(){
     playerImageObj.draw();
   });
@@ -74,34 +70,10 @@ function resizeTimer(){
   }
   setTimeout("resizeTimer()",checkScreenTimeout);
 }
-  
-//Обработка нажатий на поле
-function setFocused(fieldElem,indx){
-  
-  //Если нажали на недоспустимый элемент 
-  if(fieldElem.code != roadCode){
-    
-      if(lastClickedIndx != -1){
-        lastClickedIndx = -1;
-      }
-      return;
-  }
-  
-  if(lastClickedIndx != -1){
-    //Если все ок, то убираем выделение с предыдущего объекта
-    field[lastClickedIndx].setStroke(false);
-  }
-  //Cохраняем номер текущего
-  lastClickedIndx = indx;
-
-  //Выделяем в рамку объект по которому нажали
-  field[indx].setStroke(true);
-}
 
 //Отрисовывает команды на слое команд
 function drawCommandsOnField(){
-  commandsLayer.on(function(){
-    OOP.forArr(field,function(el){
+  OOP.forArr(field,function(el){
       //Если это дорога
       if(el.code == roadCode || el.code == entryCode){
         //Если команда назначена
@@ -116,7 +88,6 @@ function drawCommandsOnField(){
           img.draw();
         }   
       }
-    });
   });
 }
 
@@ -124,11 +95,15 @@ function drawCommandsOnField(){
 function showCommandsMenu(){
   
   commandsMenuLayer.on(function(){
-    /*if(lastClickedIndx == -1) {
-      return;
-    }*/
-    //Отображаем скролл бар для выбора команд для клетки
-  scrollDawn.scrollUpdate();
-  scrollUp.scrollUpdate();
+      game.clear();
+      if(lastClickedIndx == -1) {
+        return;
+      }
+      //Отображаем скролл бары для выбора команд в клетке
+      OOP.forArr(Scrolls,function(scroll){
+        scroll.draw();
+      });
+      //Отображаем кнопку ОК
+      okB.draw();
   });
 }

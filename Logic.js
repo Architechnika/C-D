@@ -13,12 +13,13 @@ var robotMoveDelay=500;//Задержка при движении робота �
 
 var totalSeconds = 0;//Для зранения колличества секунд которые прошли с начала прохождения уровня
 var totalCommandsAllowed = 0;//Колличество команд, которое разрешено поставить на данном поле(рассчитывается при генерации лабиринта)
-var scrollDawn = null;
-var scrollUp = null;
+
 //Игровой цикл
 game.newLoopFromConstructor('Labyrinth', function () {
 	//Код для старта игры
 	this.entry = function(){
+	  //Смотрим смартфон или ПК у нас
+	  isMobile = touch.isMobileDevice();
 	  //Создаем все объекты для игры
 	  initializeGame();
 	  //Запускаем таймер который следит за изменением экрана(для правильного ресайза)
@@ -32,6 +33,8 @@ game.newLoopFromConstructor('Labyrinth', function () {
 	};
 	//Код для апдейта игры
 	this.update = function(){
+	  //Обрабатываем ввод пользователя
+	  processClick();
 	  //Обновляем графику
 	  updateScreen();
 	};
@@ -58,11 +61,6 @@ function initializeGame(){
   playerSetStart();
   //Сбрасываем счетчик времени
   totalSeconds = 0;
-  
-  var d = 0.8;
-  scrollDawn = new ScrollBar(getAllCommandsMenu(100,100),"DOWN");
-  scrollUp = new ScrollBar(getAllCommandsMenu(100,100),"UP");
- // log(oneTileWidth);
 }
 
 //Расчет глобальных параметров игровой области
@@ -99,51 +97,6 @@ function resizeAllElements(){
   movePlayerToFieldElement(field[playerPozition]);
 }
 
-//Проверка - нажали ли на объект checkObject левой кнопкой мыши
-function isLeftClicked(checkObject){
-  //Если у нас мобильное устройство
-  if(touch.isMobileDevice()){
-    if(lastClickedIndx == -1)
-      return touch.isPeekObject(checkObject);
-    else{
-      var spd = touch.getSpeed().x;
-      if(touch.isPress() && spd == 0)
-        return touch.isPeekObject(checkObject);
-    }
-  }
-  //Если пк с мышкой
-  if(mouse.isPeekObject('LEFT',checkObject)){
-    return true;
-  }
-  return false;
-}
-
-//Проверка - нажали ли на объект checkObject правой кнопкой мыши  
-function isRightClicked(checkObject){
-  
-  //Если у нас мобильное устройство
-  if(touch.isMobileDevice()){
-    return false;
-  }
-  //Если пк с мышкой
-  if(mouse.isPeekObject('RIGHT',checkObject)){
-    return true;
-  }
-  return false;
-}
-
-function processClickField(indx){
-  //Обрабатываем клики мышкой
-	if(isLeftClicked(field[indx].getImageObject())){
-	  //Перерисовываем кликнутый элемент
-    setFocused(field[indx],indx);
-	}
-	else if(isRightClicked(field[indx].getImageObject())){
-	  if(field[indx].code == roadCode)
-	    field[indx].commands.pop(); 
-	}
-}
-
 //Возвращает число команд на поле всего
 function getTotalCommandsOnField(){
   var counter = 0;
@@ -152,6 +105,29 @@ function getTotalCommandsOnField(){
   });
   //counter += playerCommands.length;
   return counter;
+}
+
+//Обработка нажатий на поле
+function setFocused(fieldElem,indx){
+  
+  //Если нажали на недоспустимый элемент 
+  if(fieldElem.code != roadCode){
+    
+      if(lastClickedIndx != -1){
+        lastClickedIndx = -1;
+      }
+      return;
+  }
+  
+  if(lastClickedIndx != -1){
+    //Если все ок, то убираем выделение с предыдущего объекта
+    field[lastClickedIndx].setStroke(false);
+  }
+  //Cохраняем номер текущего
+  lastClickedIndx = indx;
+
+  //Выделяем в рамку объект по которому нажали
+  field[indx].setStroke(true);
 }
 
 //Обработчик поведения робота

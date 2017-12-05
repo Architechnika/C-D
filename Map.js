@@ -59,13 +59,19 @@ function fieldElement(imgSource, comm, elemcode, fx,fy,fw,fh){
     return this.imgObjectSource;
     }
     
+  this.draw = function(){
+    this.imgObjectSource.draw();
+    if(this.imgObjectSource.strokeWidth !== 0){
+      this.imgObjectSource.drawStaticBox();//this.imgObjectSource.strokeColor);
+    }
+  }
+    
   this.setStroke = function(isStroke){
     if(isStroke){
-      this.imgObjectSource.strokeColor = "red";
-      this.imgObjectSource.strokeWidth = 30;
+      this.imgObjectSource.strokeColor = "blue";
+      this.imgObjectSource.strokeWidth = 100;
     }
     else{
-      this.imgObjectSource.strokeColor = "red";
       this.imgObjectSource.strokeWidth = 0;
     }
   }
@@ -106,7 +112,10 @@ function calcField(w, h, x, y, elemsInLine, elemsInColumn){
     var img = element.imgSrc;
     var comm = element.commands;
     //На его место добавляем новый
-    field.push(new fieldElement(img, comm, S, X+x,Y+y,oneTileWidth,oneTileHeight));
+    var newElem = new fieldElement(img, comm, S, X+x,Y+y,oneTileWidth,oneTileHeight);
+    if(element.imgObjectSource.strokeWidth != 0)
+      newElem.setStroke(true);
+    field.push(newElem);
   });
 }
 
