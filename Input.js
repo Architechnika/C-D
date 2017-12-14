@@ -133,6 +133,7 @@ function processScrolls(){
 function scrollDynamic(speed,scrollElement){
   
   if(Math.abs(speed.x) > 10 || Math.abs(speed.y) > 10){
+    if(isMobile){speed.x *= 3;speed.y *= 3;}
     scrollElement.scrollUpdate(speed);
     //ИНИЦИАЛИЗИРУЕМ ФЛАГ СКРОЛА
     isScrollMove = true;

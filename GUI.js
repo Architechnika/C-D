@@ -72,7 +72,7 @@ function updateTextOnGui(){
   //Смотрим сколько комманл уже есть на поле
   var totalCommands = getTotalCommandsOnField();
   //Обновляем текст об этом
-  progressText.text = "Команд: " + totalCommands + " из " + totalCommandsAllowed;
+  progressText.text = "Батареек собрано: " + playerInventory.length;// totalCommands + " из " + totalCommandsAllowed;
   //Обновляем инфу о времени
   var min = Math.floor(totalMiliSeconds / 200 / 60);
   var sec = Math.floor(totalMiliSeconds / 200 - min * 60);
@@ -174,12 +174,12 @@ function timerTextInit()
   if(width < height)
   {
     var siz = (width/100)*4;
-    timerText = game.newTextObject({x : 0, y : 0,h : menuItemH, w : menuItemW, text : "Прошло времени: 00:00", size : siz, color : guiTextColor} );
+    timerText = game.newTextObject({x : 0, y : 0,h : menuItemH, w : menuItemW, text : "Прошло времени: 00:00", size : siz, color : guiTextColor ,fillColor : "black"} );
     timerText.setPositionS(point(5, 5));
   }else
   {
     var siz = ((width - gameSpaceW)/100)*8;
-    timerText = game.newTextObject({x : 0, y : 0,h : menuItemH, w : menuItemW, text : "Прошло времени: 00:00", size : siz, color : guiTextColor} );
+    timerText = game.newTextObject({x : 0, y : 0,h : menuItemH, w : menuItemW, text : "Прошло времени: 00:00", size : siz, color : guiTextColor, fillColor : "black"} );
     timerText.setPositionS(point(gameSpaceW+5, 5));
   }
   
@@ -190,12 +190,12 @@ function progressTextInit()
   if(width < height)
   {
     var siz = (width/100)*4;
-    progressText = game.newTextObject({x : 0, y : 0, text : "Команд: 00 из 00", size :siz, color : guiTextColor} );
+    progressText = game.newTextObject({x : 0, y : 0, text : "Батареек собрано: 00", size :siz, color : guiTextColor, fillColor : "black"} );
     progressText.setPositionS(point(width - progressText.w, 5));
   }else
   {
     var siz = ((width - gameSpaceW)/100)*8;
-    progressText = game.newTextObject({x : 0, y : 0,h : menuItemH, w : menuItemW, text : "Команд: 00", size : siz, color :  guiTextColor} );
+    progressText = game.newTextObject({x : 0, y : 0,h : menuItemH, w : menuItemW, text : "Батареек собрано: 00", size : siz, color :  guiTextColor, fillColor : "black"} );
     progressText.setPositionS(point(gameSpaceW+5, timerText.h+5));
   }
   
