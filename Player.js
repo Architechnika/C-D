@@ -4,9 +4,14 @@
 var playerPozition = 0, lastPlayerPoz = 0;
 //Текущая команда для выполнения
 var playerCommands = new Array();
+//Инвентарь робота. На карте он может собирать и перетаскивать элементы
+var playerInventory = new Array();
 //Текущая лицевая сторона
 var playerFrontSide = 0;//0 верх, 1 право, 2 низ, 3 лево
-
+//Время старта движения робота, с отсчетом от глобального таймера в милисекундах
+var startPlayerMoveTime = 0;
+//Счетчик ходов робота
+var playerMoveCount = 0;
 //Инициализация игрока
 function playerSetStart(){
   //Ищем местоположение двери
@@ -19,6 +24,10 @@ function playerSetStart(){
       movePlayerToFieldElement(field[playerPozition]);
       //Задаем направление, куда смотрит персонаж
       playerSetDirection(getPlayerDirFromSide());
+      //Обнуляем счетчик времени
+      startPlayerMoveTime = 0;
+      //Обнуляем счетчик ходов робота
+      playerMoveCount = 0;
       lastPlayerPoz = -1;
       //Инициализируем стек команд
       playerCommands = new Array();
@@ -31,14 +40,15 @@ function playerSetStart(){
 //Возвращает end - если робот достиг выхода из лабиринта
 //Возвращает "", если робот все сделал правильно и выполнил команду
 //Возвращает любую другую строку с текстом, если у робота возникли сложности
-function playerMove(){
-  
+function playerMove(canRead){
+  playerMoveCount++;
   var code = field[playerPozition].code;
   var pPoz = playerPozition;
-  var dir = playerFrontSide;
+  var dir = 0;
   var isTrueDir = true;
-  //Добавляем команды из текущего элемента поля в стек
-  addCommandsToPlayer(field[playerPozition].commands);
+  if(canRead === undefined) {//Добавляем команды из текущего элемента поля в стек команд игрока
+    addCommandsToPlayer(field[playerPozition].getTopCommands(true));
+  }
   //Если стек пустой, то возвращаем ошибку
   if(playerCommands.length === 0) return "Робот не знает что ему делать";
   //Обрабатываем самую верхнюю команду
@@ -49,45 +59,64 @@ function playerMove(){
     case "up"://Вверх
         code = field[playerPozition + totalWidth].code;
         pPoz += totalWidth; 
-        isTrueDir = dir == 0;
+        isTrueDir = playerFrontSide == 0;
+        dir = 0;
       break;
     case "down"://Вниз
         code = field[playerPozition - totalWidth].code;
         pPoz -= totalWidth;
-        isTrueDir = dir == 2;
+        isTrueDir = playerFrontSide == 2;
+        dir = 2;
       break;
     case "left"://Влево
         code = field[playerPozition + 1].code;
         pPoz++;
-        isTrueDir = dir == 3;
+        isTrueDir = playerFrontSide == 3;
+        dir = 3;
       break;
     case "right"://Вправо
         code = field[playerPozition - 1].code;
         pPoz--;
-        isTrueDir = dir == 1;
+        isTrueDir = playerFrontSide == 1;
+        dir = 1;
       break;
     case "clockwise"://Повернуться по часовой стрелке
-        dir++;
         //Задаем направление того, куда смотрит робот
-        playerSetDirection(dir);
+        playerSetDirection(playerFrontSide + 1);
       break;  
     case "unclockwise"://Повернуться против часовой стрелк
-        dir--;
         //Задаем направление того, куда смотрит робот
-        playerSetDirection(dir);
+        playerSetDirection(playerFrontSide - 1);
       break;
     case "stop"://Остановиться на текущей клетке
         playerCommands = new Array();
-        //Очищаем стек команд на этом элементе поля(так как мы его уже считали)
-        field[playerPozition].commands = new Array();
         //Запоминаем новую позицию игрока на поле
         playerPozition = pPoz;
+        lastPlayerPoz = playerPozition + 1;//Для того чтобы при следующем ходе снова считать команды
         return "stop";
+      break;
+    case "pickup":
+        var res = tryToPickUp();
+        if(res != "") return res;
+        break;
+    case "drop":
+        if(playerInventory === undefined || playerInventory.length == 0) return "Инвентарь робота пуст";
+        //Если инвентарь не пуст, то выгружаем последний подобранный элемент на текущую позицию карты
+        playerInventory[0].setNewPosition(playerPozition);
+        gameObjects.push(playerInventory[0]);
+        playerInventory.splice(0,1);
       break;
   }
   
   //Если направление в котором планирует сдвинутся робот не совпадает с его передней стороной
-  if(!isTrueDir) return "Робот смотрит не в ту сторону";
+  if(!isTrueDir){
+    if(difficultyLevel == "EASY") {//Если уровень сложности изи то поворачиваем робота в нужную сторону
+      turnToTrueDirection(dir);
+      return playerMove(false);
+    }
+    else return "Робот смотрит не в ту сторону";
+  } 
+  
   //Проверяем - сможет ли робот сдвинуться в эту сторону или нет
   if(code == roadCode || code == exitCode){
     
@@ -111,31 +140,42 @@ function playerMove(){
 //Добавляет набор команд в текущий буфер(стек) команд игрока
 function addCommandsToPlayer(comm){
   //Если добавлять нечего
-  if(comm === null || comm.length === 0) return;
-  
-  var isStop = false;
-  //Если найдем команду стоп в стеке команд то сбрасываем весь стек и останавливаем робота
-  OOP.forArr(comm,function(el){
-    if(el == COMMANDS.STOP){
-      isStop = true;
-      return;
-    }
-  });
-  
-  if(isStop){
-    playerCommands = new Array();
-    playerCommands.push(COMMANDS.STOP);
-    return;
-  }
+  if(comm === undefined || comm.length === 0) return;
 
-  //Добавляем все элементы из comm В КОНЕЦ стека
+  //Добавляем все элементы из comm в НАЧАЛО стека
   //Только если мы сдвинулись с прошлой клетки(Запись в буфер команд происходит только один раз с клетки) ну или робот не знает что делать
   if(lastPlayerPoz != playerPozition){
-    for(var i = 0; i < comm.length; i++){
-      playerCommands.push(comm[i]);
+    for(var i = comm.length - 1; i >= 0; i--){
+      playerCommands.unshift(comm[i]);
     }
   }
-  //alert(playerCommands.length);
+}
+
+function turnToTrueDirection(dir){
+  
+  if(dir != playerFrontSide){
+    if((dir == 3 && playerFrontSide == 0) || (dir < playerFrontSide && dir != 0)) playerCommands.unshift(COMMANDS[6]);//Чтобы робот не крутился а просто повернулся против часовой если смотрит вверх
+    else if((dir == 0 && playerFrontSide == 3) || dir > playerFrontSide) playerCommands.unshift(COMMANDS[5]);//Поворачиваем робота по часовой
+    else playerCommands.unshift(COMMANDS[6]);
+  }
+  
+}
+
+//Метод для сбор вещей в инвентарь(возвращает строку с текстом ошибки или пустую строку)
+function tryToPickUp(){
+  if(gameObjects !== undefined && gameObjects.length > 0){
+    //Ищем игровой обьект, который находится на той же клетке что и игрок
+    for(var i = 0 ; i < gameObjects.length; i++){
+      //Если нашли
+      if(gameObjects[i].position == playerPozition){
+        //Переносим его в инвентарь
+        playerInventory.push(gameObjects[i]);
+        gameObjects.splice(i,1);
+        return "";
+      }
+    }
+  }
+  return "Робот не может найти объект который можно подобрать";
 }
 
 //Устанавливает текущее направление обзора робота
@@ -146,7 +186,7 @@ function playerSetDirection(direction){
   //Обрабатываем сторону
   if(direction === 0) playerImageObj.angle = 0;
   else if(direction == 2) playerImageObj.angle = 180;
-  else if(direction == 3) playerImageObj.angle = -90;
+  else if(direction == 3) playerImageObj.angle = -90;  
   else if(direction == 1) playerImageObj.angle = 90;
   playerFrontSide = direction;
 }
@@ -178,4 +218,9 @@ function getPlayerDirFromSide(){
   if(entrySide == "UP") return 2;
   if(entrySide == "RIGHT") return 3;
   return 0;
+}
+
+//Возвращает время в милисекундах от старта движения робота
+function getPlayerMoveTime(){
+  return totalMiliSeconds - startPlayerMoveTime;
 }

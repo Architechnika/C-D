@@ -3,11 +3,13 @@
 */
 
 var isMobile = false;//Флаг того, мобильное ли у нас устройство или ПК(инициализируется в Logic)
+var isDowned = false;//Флаг того, что пользователь нажал на один из скролов и держит
+var isScrollMove = false;//Флаг для того, чтобы отличать скролл от тапа
 
 //Метод в котором обрабатываются клики на все элементы игры
 function processClick(){
   
-  if(!processGuiClick())//Если пользователь не нажал на GUI
+  if(!processGuiClick())//Если пользователь не нажал на GUI выбора команд
     if(!processButtonClick())//Если пользователь не нажал на кнопки
       processFieldClick();//Проверяем нажал ли пользователь на поле
 }
@@ -17,8 +19,13 @@ function processButtonClick(){
   
   if(isLeftClicked(startB)){//КНОПКА СТАРТА/СТОПА
     startB.isPlay = !startB.isPlay;
-    if(startB.isPlay)
+    if(startB.isPlay){
+      //Запоминаем время начала движения робота
+      startPlayerMoveTime = totalMiliSeconds;
+      //Увеличиваем счетчик попыток для прохождения
+      totalAttempts++;
       setTimeout("processRobotMove()", robotMoveDelay);
+    }
     return true;
   }
   else if(isLeftClicked(reloadB)){//КНОПКА ПЕРЕЗАГРУЗКИ УРОВНЯ
@@ -38,12 +45,15 @@ function processGuiClick(){
   if(lastClickedIndx == -1) return false;
   //Обрабатываем скролы
   processScrolls();
-  //Отрисовываем скролы
-  showCommandsMenu();
   //Обрабатываем кнопку ok
   if(isLeftClicked(okB)){//Если на кнопку нажали, то скрываем весь интерфейс ввода
-    lastClickedIndx = -1;
-    guiLayer.clear();
+  
+    field[lastClickedIndx].setStroke(false);//Убираем выделение с поля
+    initUpScroll([]);//Очищаем интерфейс вывода введенных команд
+    lastClickedIndx = -1;//Очищаем индекс выбранной клетки поля
+    isScrollMove = true;//ПО дефолту скролл(чтобы не было срабатываний на клик при первом отображении интерфейса ввода команд)
+    guiLayer.clear();//Очищаем слой с интерфейса
+    startB.setVisible(true);//Показывае кнопку старт/стоп
     return true;
   }
   return true;
@@ -53,26 +63,92 @@ function processGuiClick(){
 function processScrolls(){
   
   if(lastClickedIndx == -1) return;
+  //Инициализируем скорость скрола(от сенсорного экрана или от колёсика мышки)
+  var scrollSpeed = isMobile ? touch.getSpeed() : (mouse.isWheel("UP") ? new point(-100,100) : mouse.isWheel("DOWN") ? new point(100,100) : new point(0,0));
+  //Обходим все скролы которые инициализированы
+  OOP.forArr(Scrolls, function(scroll){
+    if(isMobile){//Если мобильное устройство то обрабатываем сенсорный экран
+      //Если игрок зажал в область тача
+      if(touch.isDown() && touch.isInObject(scroll.getBackGround())){
+        //Если он скролит то обрабатываем скрол
+        scrollDynamic(scrollSpeed,scroll);
+      }
+      else if(touch.isUp()){
+        if(touch.isInObject(scroll.getBackGround())){
+          if(scroll.locationBar == "DOWN"){
+                //ЕСЛИ МЫ ОПРЕДЕЛИЛИ ЧТО ПОЛЬЗОВАТЕЛЬ КЛИКНУЛ ПО ЭЛЕМЕНТУ
+                if(!isScrollMove){
+                  var pos = touch.getPosition();
+                  //Определяем на какой элемент он КЛИКНУЛ
+                  OOP.forArr(scroll.allItems, function(el){
+                      if(touch.isInObject(el)){
+                        //ОБРАБАТЫВАЕМ КЛИК 
+                        addCommandToCell(el);
+                      }
+                  });
+                }
+                else scroll.setBarAlpha(0.55);
+                //По дефолту считаем что пользователь не будет скролить
+                isScrollMove = false;
+                return;
+              }
+          if(scroll.locationBar == "UP"){
+            if(isScrollMove) scroll.setBarAlpha(0.55);
+          }
+        }
+      }
+    }
+    else if(mouse.isInObject(scroll.getBackGround())){
+        
+          scrollDynamic(scrollSpeed,scroll);
+          
+          if(scroll.locationBar == "DOWN"){//ОБРАБОТКА КЛИКОВ ПО СКРОЛ БАРУ СО СПИСКОМ КОММАНД
+            //ЕСЛИ МЫ ОПРЕДЕЛИЛИ ЧТО ПОЛЬЗОВАТЕЛЬ КЛИКНУЛ ПО ЭЛЕМЕНТУ
+            if(mouse.isPress("LEFT")){
+                //Определяем на какой элемент он КЛИКНУЛ
+                OOP.forArr(scroll.allItems, function(el){
+                  if(mouse.isInObject(el)){
+                    //ОБРАБАТЫВАЕМ КЛИК 
+                    addCommandToCell(el);
+                  }
+                });
+            }
+          }
+          else if(scroll.locationBar == "UP"){//ОБРАБОТКА КЛИКОВ ПО СКРОЛЛБАРУ СО КОМАНДАМИ В КЛЕТКЕ
+             if(mouse.isPress("RIGHT")) {
+               //Определяем на какой элемент он КЛИКНУЛ
+                OOP.forArr(scroll.allItems, function(el,index){
+                  if(mouse.isInObject(el)){
+                    //УДАЛЯЕМ КОМАНДУ ИЗ СПИСКА КОММАНД
+                    removeCommandFromCell(index);
+                  }
+                });
+             }
+          }
+      }
+  });
+}
+
+//Функция обеспечивающая динамический скролл
+function scrollDynamic(speed,scrollElement){
   
-  if(isMobile){//Если мобильное устройство то обрабатываем сенсорный экран
-    //Обходим все скролы которые инициализированы
-    OOP.forArr(Scrolls, function(scroll){
-       if(touch.isDown() && touch.isInObject(scroll.getBackGround())){//Если игрок скролит
-         scroll.scrollUpdate(touch.getSpeed());
-       } 
-    });
+  if(Math.abs(speed.x) > 10 || Math.abs(speed.y) > 10){
+    scrollElement.scrollUpdate(speed);
+    //ИНИЦИАЛИЗИРУЕМ ФЛАГ СКРОЛА
+    isScrollMove = true;
   }
-  else{//Иначе колесико мышки
-    //Обходим все скролы которые инициализированы
-    OOP.forArr(Scrolls, function(scroll){
-      if(mouse.isInObject(scroll.backGround)){
-        if(mouse.isWheel("UP"))//Колесико вверх
-          scroll.scrollUpdate(point(-10,-10));
-        if(mouse.isWheel("DOWN"))//Колесико вниз
-          scroll.scrollUpdate(point(10,10));
-      } 
-    });
+  
+  /*if(speed.x !== 0){
+    if(speed.x < 0) speed.x++;
+    else speed.x--;
   }
+  if(speed.y !== 0){
+    if(speed.y < 0) speed.y++;
+    else speed.y--;
+  }
+  
+  if(speed.x !== 0 && speed.y !== 0)
+    setTimeout(scrollDynamic, 1, speed, scrollElement);*/
 }
 
 //Обработка кликов на элемент поля

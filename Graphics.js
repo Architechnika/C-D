@@ -13,6 +13,7 @@ var groundPath = "img/ground.png";//Картинка для дороги
 var backgroundPath = "img/background.png";//Картинка для фона за либиринтом
 var exitPath = "img/exit.png";//Картинка для выхода из лабиринта
 var entryPath = "img/entry.png";//Картинка для входа в лабиринт
+var coinPath = "img/coin.png";//Картинка для отображения монетки
 //Пути до файлов с изображениями для интерфейса
 var buttonStartImgSrc = "img/interface/startButton.png";
 var buttonStopImgSrc = "img/interface/stopButton.png";
@@ -41,6 +42,9 @@ pjs.system.setTitle('Лабиринт'); // Set Title for Tab or Window
 
 //Обновление графики на экране
 function updateScreen(){
+  game.clear();
+  //Отрисовка фона
+  mainBackGroundDrow();
   //Отрисовываем слой команд
   commandsLayer.on(function(){
     drawCommandsOnField();
@@ -53,9 +57,38 @@ function updateScreen(){
   guiLayer.on(function(){
     drawGUI();
   });
-  //Рисуем на графическом слое игрока для отображения игрока
+  //Рисуем на графическом слое игрока для отображения игрока и игровых обьектов
   playerLayer.on(function(){
+    OOP.forArr(gameObjects,function(el){
+      el.draw();
+    });
     playerImageObj.draw();
+  });
+}
+
+function mainBackGroundDrow()
+{
+  var arr = [];
+  var bg = []
+ // var mainBackGroung = game.newImageObject({x: 0, y: 0, h: oneTileHeight, w: oneTileWidth, file: entryPath});
+  var lineCount = Math.floor(height/oneTileWidth);
+  var columnCount = Math.floor(width/oneTileHeight);
+  for(var i = 0; i < lineCount+1;i++)
+  {
+    arr[i] = [];
+    for(var j= 0 ; j< columnCount+1;j++)
+    {
+      arr[i][j] = "B";
+    }
+  }
+  
+  levels.forStringArray({w:oneTileHeight, h: oneTileHeight, source:arr},function(S,X,Y,W,H)
+  {
+    bg.push(game.newImageObject({x: X, y: Y, h: H, w: W, file: groundPath}))
+  });
+  
+  OOP.forArr(bg,function(el){
+    el.draw();
   });
 }
 
@@ -77,9 +110,9 @@ function drawCommandsOnField(){
       //Если это дорога
       if(el.code == roadCode || el.code == entryCode){
         //Если команда назначена
-        if(el.commands.length > 0){
+        if(el.getTotalCommands() > 0){
           var img = game.newImageObject({
-            file : el.commands[0].imgSource,
+            file : COMMANDS[0].imgSource,
             x : el.X,
             y : el.Y,
             w : el.W,
@@ -95,7 +128,7 @@ function drawCommandsOnField(){
 function showCommandsMenu(){
   
   commandsMenuLayer.on(function(){
-      game.clear();
+
       if(lastClickedIndx == -1) {
         return;
       }

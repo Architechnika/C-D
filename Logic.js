@@ -8,11 +8,15 @@ var gameSpaceW=0,gameSpaceH=0;
 
 var totalWidth = 5;//Колличество блоков в строку
 var totalHeight = 5;//Колличество блоков в стлобец
-
 var robotMoveDelay=500;//Задержка при движении робота в милисекундах
 
-var totalSeconds = 0;//Для зранения колличества секунд которые прошли с начала прохождения уровня
+var totalMiliSeconds = 0;//Для зранения колличества секунд которые прошли с начала прохождения уровня
 var totalCommandsAllowed = 0;//Колличество команд, которое разрешено поставить на данном поле(рассчитывается при генерации лабиринта)
+var totalAttempts = 0;//Счетчик попыток прохождения уровня
+//ПАРАМЕТРИЗУЕМЫЕ ПАРАМЕТРЫ
+//Уровень сложности(если EASY - робот сам поворачивается куда нужно при движении)
+var difficultyLevel = "EASY";
+var totalTokensOnMap = 2;//Сколько всего монеток генерится в лабиринте
 
 //Игровой цикл
 game.newLoopFromConstructor('Labyrinth', function () {
@@ -43,8 +47,8 @@ game.newLoopFromConstructor('Labyrinth', function () {
 
 function totalTimeTimer()
 {
-  totalSeconds++;
-  setTimeout("totalTimeTimer()", 1000);
+  totalMiliSeconds++;
+  setTimeout("totalTimeTimer()", 1);
 }
 
 //Инициализация лабиринта
@@ -60,7 +64,8 @@ function initializeGame(){
   //Создаем игрока
   playerSetStart();
   //Сбрасываем счетчик времени
-  totalSeconds = 0;
+  totalMiliSeconds = 0;
+  totalAttempts = 0;
 }
 
 //Расчет глобальных параметров игровой области
@@ -101,7 +106,7 @@ function resizeAllElements(){
 function getTotalCommandsOnField(){
   var counter = 0;
   OOP.forArr(field,function(el){
-    counter += el.commands.length;
+    counter += el.getTotalCommands();
   });
   //counter += playerCommands.length;
   return counter;
@@ -125,9 +130,29 @@ function setFocused(fieldElem,indx){
   }
   //Cохраняем номер текущего
   lastClickedIndx = indx;
-
+  //Инициализируем верхний скролл
+  initUpScroll(field[lastClickedIndx].getCommandsImagesArr());
   //Выделяем в рамку объект по которому нажали
   field[indx].setStroke(true);
+  //Скрываем кнопку старт/стоп
+  startB.setVisible(false);
+}
+
+//Функция обработчик для добавления команды в клетку
+function addCommandToCell(commandImg){
+  
+  if(commandImg.command.name == "none") 
+  field[lastClickedIndx].commandsClear();
+  else field[lastClickedIndx].addCommand(commandImg.command,"TOP");//Добавляем команду к этой клетке
+  
+  initUpScroll(field[lastClickedIndx].getCommandsImagesArr());
+}
+
+function removeCommandFromCell(commands,index){
+  //Удаляем команду из списка команд
+  field[lastClickedIndx].commands.splice(index,1);
+  //инициазируем скролл новым списком
+  initUpScroll(field[lastClickedIndx].getCommandsImagesArr());
 }
 
 //Обработчик поведения робота

@@ -18,13 +18,18 @@ var Scrolls = new Array();// массив всех скролбаров
 
 //Отрисовывает элементы интерфейса
 function drawGUI(){
+  //Отрисовываем кнопки
   startB.draw();
   menuB.draw();
   reloadB.draw();
   
-  timerText.draw();
+  //Отрисовываем текстовые поля
   updateTextOnGui();
+  timerText.draw();
   progressText.draw();
+  
+  //Отрисовываем интерфейс выбора команд
+  showCommandsMenu();
 }
 
 
@@ -46,11 +51,20 @@ function initGUI()
   okBInit();  
   
   timerTextInit();
-  progressTextInit();
-  Scrolls = new Array();
-  //Инииализируем скролл бары
-  Scrolls.push(new ScrollBar(getAllCommandsMenu(100,100),"DOWN",2));
-  Scrolls.push(new ScrollBar(getAllCommandsMenu(100,100),"UP",1));
+  progressTextInit(); 
+  if(Scrolls.length == 0){
+    Scrolls = new Array();
+    //Инииализируем скролл бары
+    Scrolls.push(new ScrollBar(getAllCommandsMenu(100,100),"DOWN",2));
+  }
+  else{
+    var result = [];
+    OOP.forArr(Scrolls,function(scr){
+      result.push(new ScrollBar(scr.allItems,scr.locationBar,scr.lineCount));
+    });
+    Scrolls = result;
+  }
+  //Scrolls.push(new ScrollBar(getAllCommandsMenu(100,100),"UP",1));
 }
 
 //Обновляет запись об общем колличестве команд на поле
@@ -58,10 +72,10 @@ function updateTextOnGui(){
   //Смотрим сколько комманл уже есть на поле
   var totalCommands = getTotalCommandsOnField();
   //Обновляем текст об этом
-  progressText.text = "Ходов: " + totalCommands + " из " + totalCommandsAllowed;
+  progressText.text = "Команд: " + totalCommands + " из " + totalCommandsAllowed;
   //Обновляем инфу о времени
-  var min = Math.floor(totalSeconds / 60);
-  var sec = Math.floor(totalSeconds - min * 60);
+  var min = Math.floor(totalMiliSeconds / 200 / 60);
+  var sec = Math.floor(totalMiliSeconds / 200 - min * 60);
   //Обновляем инфу о времени
   timerText.text = "Прошло времени: " + (min < 10 ? "0" + min:min) + ":" + (sec < 10 ? "0" + sec:sec);
 }
@@ -89,6 +103,7 @@ function startBInit()
     if(this.isPlay)
       this.setImage(buttonStopImgSrc);
     else this.setImage(buttonStartImgSrc);
+    if(lastClickedIndx != -1) this.setVisible(false);
   };
   
   if(width < height)
@@ -151,8 +166,7 @@ function okBInit(){
   }
   else menuItemW = menuItemH;
   
-  okB = game.newImageObject({x : 0, y : 0,w : gameSpaceW / 100 * 30, h : gameSpaceH / 100 * 10, file : okButtonImgSrc});
-  okB.setPositionS(point(gameSpaceX + (gameSpaceW/2 - okB.w/2),gameSpaceY + (gameSpaceH - okB.h)));
+  okB = game.newImageObject({x : startB.x, y : startB.y,w : startB.w, h : startB.h, file : okButtonImgSrc});
 }
 
 function timerTextInit()
@@ -176,69 +190,104 @@ function progressTextInit()
   if(width < height)
   {
     var siz = (width/100)*4;
-    progressText = game.newTextObject({x : 0, y : 0, text : "Ходов: 00 из 00", size :siz, color : guiTextColor} );
+    progressText = game.newTextObject({x : 0, y : 0, text : "Команд: 00 из 00", size :siz, color : guiTextColor} );
     progressText.setPositionS(point(width - progressText.w, 5));
   }else
   {
     var siz = ((width - gameSpaceW)/100)*8;
-    progressText = game.newTextObject({x : 0, y : 0,h : menuItemH, w : menuItemW, text : "Ходов: 00", size : siz, color :  guiTextColor} );
+    progressText = game.newTextObject({x : 0, y : 0,h : menuItemH, w : menuItemW, text : "Команд: 00", size : siz, color :  guiTextColor} );
     progressText.setPositionS(point(gameSpaceW+5, timerText.h+5));
   }
   
 }
 
+//Функция для инициализации верхнего скрола командами
+function initUpScroll(initArray){
+  var found = false;
+  OOP.forArr(Scrolls,function(scroll,i){
+    //Ищем верхний скролл
+    if(scroll.locationBar == "UP"){
+      
+      Scrolls[i] = new ScrollBar(initArray,"UP",1);//Реинициализируем его
+      
+      found = true;
+      return;
+    }
+  });
+  
+  if(!found) Scrolls.push(new ScrollBar(initArray,"UP",1));
+}
+
 function ScrollBar(itemsArray,locationBar,_lineCount,posX,posY){
   //проверяем входящий массив на пустосу
-  if(itemsArray.length < 1)
-    return;
   this.allItems = itemsArray;
   this.locationBar = locationBar; //орентация скролбара
   var backGround = null;
-  
+  var bar = null;
+  this.lastElRX = 0;
+  this.fristElX = 0;
+  var dHW = 0.8; //сжатие background
+  var scrollItemsSize = 20; // размер окна скрола на экране устройств в процентном соотношении %
   var lineCount ;  //количество линий элементов в строке
+  var barBackGround = null;
   if(_lineCount == null)
-      lineCount = 2;
+      lineCount = 1;
       else
       lineCount = _lineCount;
   var speedVector = 0;
   var scrollOrientXorY=0;
-  var fristItemW = this.allItems[this.allItems.length-1].w;
-  var fristItemH = this.allItems[this.allItems.length-1].h;
-  var fristItemX = this.allItems[this.allItems.length-1].x;
-  var fristItemY = this.allItems[this.allItems.length-1].y;
   
-  var lastItemW = this.allItems[this.allItems.length-1].w;
-  var lastItemH = this.allItems[this.allItems.length-1].h;
-  var lastItemX = this.allItems[this.allItems.length-1].x;
-  var lastItemY = this.allItems[this.allItems.length-1].y;
+  this.isItemsArrEmpty = function()
+  {
+    if (this.allItems.length > 0)
+    return false
+    else 
+    return true;
+  }
   
-
+  
   //ИНИЦИАЛИЗИРУЕМ BACKGROND
   var X,Y,W,H;
+  var barX,barY,barW,barH;
   switch (this.locationBar) {
     case 'UP':
       if(posX == null)
-        X = gameSpaceX + (gameSpaceW / 100 * 20);//20%
+       X = gameSpaceX + (gameSpaceW - W*dHW)/2;
       else
         X = posX
       if(posY == null)
-        Y = gameSpaceY + (gameSpaceH / 100 * 6);
+        Y = gameSpaceY;
       else
         Y = poxY;
-      W = gameSpaceW / 100 * 80;
-      H = gameSpaceW / 100 * (15*lineCount);
+      W = gameSpaceW/dHW;
+         //если рабочая область в зависимости от эркана устройства  меньше 400 то увеличиваем для него размер элементов скролла
+    if(gameSpaceW <= 400)
+       scrolItemsSize = 25;
+      H = gameSpaceW / 100 * (scrollItemsSize*lineCount);
+      barX = X;
+      barH = 10;
+      barY = Y + (H*dHW);
+      barW = W*dHW;
       break;
     case 'DOWN':
-      W = gameSpaceW / 100 * 80;
-      H = gameSpaceW / 100 * (15*lineCount);
-      if(posX == null)
-        X = gameSpaceX + (gameSpaceW / 100 * 20);//20%
-      else
-        X = posX;
-      if(posY == null)
-        Y = (gameSpaceH+gameSpaceY) - (H + 100);//(gameSpaceH / 100 * 25));
-      else
-        Y = posY;
+        W = gameSpaceW;
+        //если рабочая область в зависимости от эркана устройства  меньше 400 то увеличиваем для него размер элементов скролла
+        if(gameSpaceW <= 400)
+          scrollItemsSize = 25;
+        H = gameSpaceW / 100 * (scrollItemsSize*lineCount);
+        if(posX == null)
+          X = gameSpaceX + (gameSpaceW - W*dHW)/2;
+        else
+          X = posX;
+        if(posY == null)
+          Y = gameSpaceY + ((gameSpaceH - H*dHW) - 10);
+        else
+          Y = posY;
+        barX = X;
+        barH = 10;
+        barY = Y + (H*dHW);
+        barW = W*dHW;
+      
       break;
     case 'LEFT':
       if(posX == null)
@@ -246,11 +295,18 @@ function ScrollBar(itemsArray,locationBar,_lineCount,posX,posY){
       else
         X = posX
       if(posY == null)
-        Y = gameSpaceY + (gameSpaceH / 100 * 6);
+        Y = gameSpaceY + (gameSpaceH / 100 *10);
       else
-        Y = poxY;
-      W = gameSpaceH / 100 * (15*lineCount);
+        Y = posY;
+         //если рабочая область в зависимости от эркана устройства  меньше 400 то увеличиваем для него размер элементов скролла
+      if(gameSpaceW <= 400)
+         scrollItemsSize = 25;
+      W = gameSpaceH / 100 * (scrollItemsSize*lineCount);
       H = gameSpaceH / 100 * 50;
+      barH = H*dHW;
+      barW = 10;
+      barX = X-barW;
+      barY = Y;
       break;
     case 'RIGHT':
       if(posX == null)
@@ -258,11 +314,15 @@ function ScrollBar(itemsArray,locationBar,_lineCount,posX,posY){
       else
         X = posX
       if(posY == null)
-        Y = gameSpaceH / 100 * 20;
+        Y = gameSpaceY + (gameSpaceH / 100 *10);
       else
         Y = poxY;
-      W = gameSpaceH / 100 * (15*lineCount);
+      W = gameSpaceH / 100 * (scrollItemsSize*lineCount);
       H = gameSpaceH / 100 * 50;
+      barH = H*dHW;
+      barW = 10;
+      barX = X+(W*dHW);
+      barY = Y;
       break;
     case 'CENTER':
       if(posX == null)
@@ -275,20 +335,24 @@ function ScrollBar(itemsArray,locationBar,_lineCount,posX,posY){
         Y = poxY;
       W = gameSpaceH / 100 * 50;
       H = gameSpaceH / 100 * (15*lineCount);
+      barX = X;
+      barH = 10;
+      barY = Y + (H*dHW)-barH;
+      barW = W*dHW;
     default:
       return;
   } 
   backGround = game.newRectObject({x : X, y : Y, h: H, w: W , fillColor : "transpatent"}); //задний фон от которого зависит прозрачность элементв
-  // OOP.forArr(this.allItems,function(el,i){
-  //   backGround.addChild(el);
-  //   // log(el.x+" "+el.y+ " "+i);
-  // });
-  backGround.w *=0.8;
-  backGround.h *=0.8;
+ // if(gameSpaceW >=400)
+  //{
+  backGround.w *=dHW;
+  backGround.h *=dHW;
+ // }
   
   this.getBackGround = function(){
     return backGround;
   }
+  
   
   function sortElementsUpDownCenter(arr)
   {
@@ -297,10 +361,9 @@ function ScrollBar(itemsArray,locationBar,_lineCount,posX,posY){
     var itemHW = backGround.h/lineCount;
     var itemX = backGround.x;
     var itemY = backGround.y;
-  //  while(arrMediana % lineCount != 0)
-     // arrMediana++;
     OOP.forArr(this.sortArr,function(el,i)
     {
+       el.drawDynamicBox("black");
        el.x = itemX;
        el.y = itemY;
        el.w = itemHW;
@@ -311,7 +374,12 @@ function ScrollBar(itemsArray,locationBar,_lineCount,posX,posY){
          itemY +=itemHW;
        }else
        itemX+=itemHW;
+       if(!el.isIntersect(backGround))
+        {
+          el.setVisible(false)
+        }
     });
+  
     return this.sortArr;
   }
   
@@ -334,30 +402,75 @@ function ScrollBar(itemsArray,locationBar,_lineCount,posX,posY){
          itemX +=itemHW;
        }else
        itemY+=itemHW;
-       log(el.x+" "+el.y+ " "+i);
+      if(!el.isIntersect(backGround))
+        {
+          el.setVisible(false)
+        }
     });
     return this.sortArr;
   }
   
   var items;
   if(locationBar == "UP" || locationBar == "DOWN" || locationBar == "CENTER")
-    items = sortElementsUpDownCenter(this.allItems);
+    {
+      items = sortElementsUpDownCenter(this.allItems);
+      bar = game.newRoundRectObject({x : barX, y :  barY, h: barH, w: barW, radius : 5, fillColor : "red"})
+      barBackGround = game.newRoundRectObject({x : barX, y : barY, h: barH, w: backGround.w, radius : 10, fillColor : "#ffba42"})
+       bar.w *= backGround.w/((items.length*(backGround.h/lineCount))/lineCount);
+      if(items.length <=5){
+        bar.w = 0; 
+        barBackGround.setVisible(false);
+        bar.setVisible(false);
+      }
+      else {
+        barBackGround.setVisible(true);
+        bar.setVisible(true);
+      }
+    }
     else
-    items = sortElementsLeftRight(this.allItems);
-  log("backGroundX: "+backGround.x + " backGroundY: "+backGround.y + " backGroundW: "+ backGround.w+ " backGroundH: "+backGround.h);
-  // bar = game.newRectObject({x : 100, y : 175, h: 5, w: 160, fillColor : "red"});  //полоска бара
-  
-
+    {
+      items = sortElementsLeftRight(this.allItems);
+      bar = game.newRoundRectObject({x : barX, y :  barY, h: barH, w: barW, radius : 5, fillColor : "red"})
+      barBackGround = game.newRoundRectObject({x : barX, y :  barY, h: barH, w: barW, radius : 5, fillColor : "#ffba42"})
+       bar.h *= backGround.h/((items.length*(backGround.w/lineCount))/lineCount);
+      if(items.length <=5){
+        bar.h = 0;
+        barBackGround.setVisible(false);
+        bar.setVisible(false);
+      }
+      else {
+       
+        barBackGround.setVisible(true);
+        bar.setVisible(true);
+      }
+    }
+    
+this.setBarAlpha = function (alpha)
+{
+  bar.setAlpha(alpha);
+  barBackGround.setAlpha(bar.getAlpha()+0.5)
+}  
+    
 //Функция реализующая скролл с командами на экране
 this.scrollUpdate = function(scrollVal)
 {
+  if(!this.isItemsArrEmpty())
+  {
   backGround.draw();
-  var rXElLast = this.allItems[0].x + lastItemW; // координаты правого верхнего по Х  угла 0 элемента
-  var rYElLast = this.allItems[0].y + lastItemW;
+  var rXElLast = this.allItems[0].x + this.allItems[0].w; // координаты правого верхнего по Х  угла 0 элемент
+  //var rXElLast = items[0].x + lastItemW;
+  var rYElLast = this.allItems[0].y + this.allItems[0].w;
   var FrsElemX =  this.allItems[this.allItems.length-1].x;
   var FrsElemY =  this.allItems[this.allItems.length-1].y;
   var rXBG =  backGround.x +  backGround.w;   // координаты правого верхнегопо Х заднего
-  var rYBG =  backGround.y +  backGround.h; 
+  var rYBG =  backGround.y +  backGround.h;
+  var dx =0;
+  var dy=0;
+  var ctxtW = items.length / lineCount * items[0].w;
+  var ctxtH = items.length / lineCount * items[0].w;
+  bar.setAlpha(1);
+  this.lastElRX = rXElLast;
+  this.fristElX = FrsElemX;
   //обход всех дочерных элементов (графические элементы меню)
 	OOP.forArr(items,function(el)
 	{
@@ -369,22 +482,33 @@ this.scrollUpdate = function(scrollVal)
          {
               if(FrsElemX < backGround.x)
               {
-               el.x +=scrollVal.x * scrollSpeed; // перемещаем элементы по Х с динамической скоростью
+                 dx = scrollVal.x* scrollSpeed;
+                 if(FrsElemX + dx >  backGround.x)
+                 {
+                  // var dSpeed =(FrsElemX+dx) - backGround.x;
+                   dx = 0;
+                 }
               }
-         }else if (scrollVal.x <= 0) 
+         }else if (scrollVal.x < 0) 
             {
               if(rXElLast >= rXBG)
               {
-                el.x +=scrollVal.x* scrollSpeed; // перемещаем элементы по Х с динамической скоростью
+                 dx = scrollVal.x* scrollSpeed;
+                 if(rXElLast + dx <  rXBG)
+                 {
+                   var dSpeed = rXBG - (rXElLast+dx)
+                   dx = dSpeed-5;
+                 }
               }
-            }
-            
+        }
+        el.x += dx; // перемещаем элементы по Х с динамической скорость
+        
         if(el.x < rXBG || el.x > backGround.x)
     	  {
-    	    var alpha = 0.004;
+    	    var alpha = 0.0095;
     	    el.setVisible(true);
-    	    
-    	    if(el.x+el.w > rXBG)
+
+    	    if(el.x+el.w >= rXBG)
     	    {
     	      var aX = rXBG - el.x;
     	      el.setAlpha(aX*alpha);
@@ -394,7 +518,7 @@ this.scrollUpdate = function(scrollVal)
     	      var aX = (el.x + el.w)- backGround.x;
     	      el.setAlpha(aX*alpha);
     	    }
-    	    if(el.x > backGround.x && (el.x+el.w < rXBG))
+    	    if(el.x+5 > backGround.x && (el.x+el.w < rXBG))
     	    el.setAlpha(1);
     	    if(el.alpha <= 0)
     	      el.setVisible(false);
@@ -409,15 +533,26 @@ this.scrollUpdate = function(scrollVal)
            {
               if(FrsElemY < backGround.y)
               {
-               el.y +=scrollVal.y * scrollSpeed; 
+                dy = scrollVal.y * scrollSpeed;
+              if(FrsElemY + dy >  backGround.y)
+                {
+                // var dSpeed = (FrsElemY+dy) - backGround.y;
+                  dy = 0;
+                }
               }
            }else if (scrollVal.y <= 0) 
             {
               if(rYElLast >= rYBG)
               {
-                el.y +=scrollVal.y* scrollSpeed; 
+                dy = scrollVal.y * scrollSpeed;
+                if(rYElLast + dy <  rYBG)
+                {
+                  var dSpeed = rYBG - (rYElLast+dy);
+                  dy = dSpeed;
+                }
               }
             }
+            el.y += dy;
             
    if(el.y < rYBG || el.y > backGround.y)
 	  {
@@ -443,14 +578,19 @@ this.scrollUpdate = function(scrollVal)
      }
 	  //изчезновение элементов
 	});
-	//return false;
+	bar.x += (backGround.w /100)*-((dx/ctxtW)*100);
+	bar.y += (backGround.h /100)*-((dy/ctxtH)*100);
+  }
 }
 
 this.draw = function(){
-        OOP.forArr(items,function(el)
+      OOP.forArr(this.allItems,function(el)
       	{
+      	  if(el !== null || el.length !== 0)
       	  el.draw();
       	});
+      	barBackGround.draw();
+      	bar.draw();
       }
-  
+  this.scrollUpdate(new point(0,0));
 }
