@@ -163,11 +163,11 @@ function processFieldClick(){
         setFocused(field[i],i);
         return true;
     	}
-    	else if(isRightClicked(field[i].getImageObject())){
+    	/*else if(isRightClicked(field[i].getImageObject())){
     	  if(field[i].code == roadCode)
     	    field[i].commands.pop(); 
     	   return true;
-    	} 
+    	} */
   }
   return false;
 }

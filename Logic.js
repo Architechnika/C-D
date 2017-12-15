@@ -150,7 +150,7 @@ function addCommandToCell(commandImg){
 
 function removeCommandFromCell(commands,index){
   //Удаляем команду из списка команд
-  field[lastClickedIndx].commands.splice(index,1);
+  field[lastClickedIndx].commandsClear();//commands.splice(index,1);
   //инициазируем скролл новым списком
   initUpScroll(field[lastClickedIndx].getCommandsImagesArr());
 }
