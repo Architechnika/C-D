@@ -18,6 +18,14 @@ var totalAttempts = 0;//Счетчик попыток прохождения у�
 var difficultyLevel = "EASY";
 var totalTokensOnMap = 2;//Сколько всего монеток генерится в лабиринте
 
+var lastClickedIndx = -1;//Номер элемента лабиринта по которому кликнул пользователь
+//Переменная для хранения состояний меню ввода команд:
+//0 - ввод команд в клетку поля
+//1 - ввод команд в команду COUNT или blockA (верхний элемент в левом скроле)
+//2 - ввод команд в команду COMMANDSBLOCK или blockB(второй элемент в левом скроле)
+//3 - ввод команд в команду COMMANDSBLOCK(третий элемент в левом скроле)
+var inputCommandStates = 0;
+
 //Игровой цикл
 game.newLoopFromConstructor('Labyrinth', function () {
 	//Код для старта игры
@@ -73,27 +81,32 @@ function initGameSpace()
 {   var ind = 0;
     if(width < height)
     {
-      gameSpaceX = ind;
+      /*gameSpaceX = 0;
+      gameSpaceY = 0;
       gameSpaceW = width;
-      gameSpaceH = gameSpaceW;
-      if(height - gameSpaceH < (menuItemH*2)+20)
-        gameSpaceY = menuItemH+10;
-        else
-        gameSpaceY = menuItemH + 10;
+      gameSpaceH = height/100*55;*/
+      
+      gameSpaceX = height/100 * 15;
+      gameSpaceY = 0;
+      gameSpaceH = height/100 * 85;
+      gameSpaceW = gameSpaceH
+      
     }
     else
     {
     
-    gameSpaceX = 0;
+    gameSpaceX = height/100 * 15;
     gameSpaceY = 0;
-    gameSpaceH = height;
-    gameSpaceW = gameSpaceH;
+    gameSpaceH = height/100 * 85;
+    gameSpaceW = gameSpaceH
  
     }
+    log(gameSpaceX + " " + gameSpaceY + " " + gameSpaceW + " " + gameSpaceH);
 }
 
 //Перерасчитывает размеры существующего поля и элементов
 function resizeAllElements(){
+  Scrolls = new Array();
   //Инициализируем элементы интерфейса
   initGUI();
   //Пересчитываем параметры существующего лабиринта
@@ -131,7 +144,9 @@ function setFocused(fieldElem,indx){
   //Cохраняем номер текущего
   lastClickedIndx = indx;
   //Инициализируем верхний скролл
-  initUpScroll(field[lastClickedIndx].getCommandsImagesArr());
+  initDownScroll(field[lastClickedIndx].getCommandsImagesArr());
+  //Инициализируем левый скролл
+  initLeftScroll(undefined,undefined);
   //Выделяем в рамку объект по которому нажали
   field[indx].setStroke(true);
   //Скрываем кнопку старт/стоп
@@ -144,15 +159,41 @@ function addCommandToCell(commandImg){
   if(commandImg.command.name == "none") 
   field[lastClickedIndx].commandsClear();
   else field[lastClickedIndx].addCommand(commandImg.command,"TOP");//Добавляем команду к этой клетке
-  
-  initUpScroll(field[lastClickedIndx].getCommandsImagesArr());
+  //Инициализируем нижний скролл обновившимся множеством команд в клетке
+  initDownScroll(field[lastClickedIndx].getCommandsImagesArr());
+  //Если выбранная команда относится к сложным и требует дополнительного ввода - инициализируем левый скролл
+  if(commandImg.command.name == "repeat"){
+    inputCommandStates = 1;
+    initLeftScroll(commandImg,getRepeatScrollBarPattern(inputCommandStates));
+  }
+  if(commandImg.command.name == "repeatif"){
+    inputCommandStates = 1;
+    initLeftScroll(commandImg,getIFScrollBarPattern(inputCommandStates));
+  }
 }
 
-function removeCommandFromCell(commands,index){
+//Обработчик кликов по левому скролу
+function leftScrollBarItemsClick(element){
+  
+  if(element.command.name == "commandsblock"){
+    
+  }
+  if(element.command.name == "counter"){
+    
+  }
+  else if(element.command.name == "ok"){//Если нажали на команду OK
+    isDifficultCommandInput = false;
+    initLeftScroll(undefined,undefined);
+  }
+}
+
+//indexArray - индекс массива команд клетки в стеке команд клетки, indexELem - индекс элемента из этого массива команд для удаления
+function removeCommandFromCell(indexArray,indexElem){
+  log("Индекс в графике: " + indexElem);
   //Удаляем команду из списка команд
-  field[lastClickedIndx].commandsClear();//commands.splice(index,1);
+  field[lastClickedIndx].removeCommand(indexArray,indexElem);
   //инициазируем скролл новым списком
-  initUpScroll(field[lastClickedIndx].getCommandsImagesArr());
+  initDownScroll(field[lastClickedIndx].getCommandsImagesArr());
 }
 
 //Обработчик поведения робота
@@ -188,4 +229,5 @@ function processRobotMove(){
 	  else if(startB.isPlay) setTimeout("processRobotMove()",robotMoveDelay);
 }
 
-game.startLoop('Labyrinth'); 
+//game.startLoop('Labyrinth'); 
+game.startLoop('menu'); 

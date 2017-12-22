@@ -8,7 +8,12 @@ var exitCode = '9';//Представление элемента выхода и
 var wallCode1 = '1';//Всего доступно 3 типа стенок внутри игры КОДЫ 1,2,3
 var wallCode2 = '2';//Всего доступно 3 типа стенок внутри игры КОДЫ 1,2,3
 var wallCode3 = '3';//Всего доступно 3 типа стенок внутри игры КОДЫ 1,2,3
+//Коды игровых предметов
 var coinCode = '4';//КОД МОНЕТКИ
+
+//Массив содержащий игровые код всех игровых элементов
+var allGameItemsCode = [roadCode,borderCode,coinCode,exitCode,entryCode,wallCode1,wallCode2,wallCode3];
+
 //Разрешение одного тайла на поле
 var oneTileWidth = 0;
 var oneTileHeight = 0;
@@ -20,6 +25,7 @@ var gameObjects = new Array();
 var entrySide = "NONE" //Хранит местоположение входа в лабиринте - необходимо для инициализации робота
 
 var field = new Array();//Массив хранящий экземпляры fieldElement, представляющие элементы поля
+
 //Класс описывающий элемент поля. Содержит в себе элементы для графической части, и массив команд.
 function fieldElement(imgSource, comm, elemcode, fx,fy,fw,fh){
   //Параметры элемента
@@ -76,7 +82,6 @@ function fieldElement(imgSource, comm, elemcode, fx,fy,fw,fh){
   //Задает наличие выделения элемента.(Нужно для отображения когда добавляем команды на поле)  
   this.setStroke = function(isStroke){
     if(isStroke){
-      this.imgObjectSource.strokeColor = "blue";
       this.imgObjectSource.strokeWidth = 100;
     }
     else{
@@ -113,6 +118,14 @@ function fieldElement(imgSource, comm, elemcode, fx,fy,fw,fh){
     });
     return counter;
   }
+  //Удаляем indexElem элемент из indexMass массива
+  this.removeCommand = function(indexMass, indexElem){
+    //Потому что индексация в графике идет с начала списка, а тут - с конца
+    var indx = this.commands[indexMass].length - 1 - indexElem;
+    log("Индекс в командах : " + indx);
+    //Удаляем элемент
+    this.commands[indexMass].splice(indx,1);
+  }
   
   //Полностью очищает стек команд элемента
   this.commandsClear = function(){
@@ -122,10 +135,10 @@ function fieldElement(imgSource, comm, elemcode, fx,fy,fw,fh){
   
   //Возвращает верхний массив команд в стеке массивов команд
   //Если isDelete = true - то он удаляется
-  this.getTopCommands = function(isDelete){
+  this.getTopCommands = function(isRemove){
     if(this.commands !== undefined){
       var result = this.commands[0];
-      if(isDelete){//Удаляем команды если нужно
+      if(isRemove !== undefined && isRemove){//Удаляем команды если нужно
         //РЕАЛИЗОВАТЬ УДАЛЕНИЕ ЭЛЕМЕНТОВ В КОТОРЫХ СВОЙСТВО undeletable = false
       }
       return result;    

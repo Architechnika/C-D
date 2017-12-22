@@ -8,7 +8,9 @@ var wallPaths = [//Стенки внутри лабиринта
   "img/wall2.png",
   "img/wall3.png"
 ];
+
 var bordersPath = "img/border.png";//Крайние стенки(те что вокруг лабиринта)
+var nonePath = "img/commands/none.png";
 var groundPath = "img/ground.png";//Картинка для дороги
 var backgroundPath = "img/background.png";//Картинка для фона за либиринтом
 var exitPath = "img/exit.png";//Картинка для выхода из лабиринта
@@ -33,8 +35,7 @@ var commandsMenuLayer = layers.newLayer(3,{alpha : 1, backgroundColor : "transpa
 var playerLayer = layers.newLayer(2,{alpha : 1, backgroundColor : "transparent"});//СЛОЙ ДЛЯ ОТБРАЖЕНИЯ ГРАФИКИ ИГРОКА
 var commandsLayer = layers.newLayer(1,{alpha : 0.5, backgroundColor : "transparent"});//СЛОЙ ДЛЯ ОТОБРАЖЕНИЯ ГРАФИКИ НАЗНАЧЕННЫХ ЭЛЕМЕНТАМ КОММАНДЕ
 //Переменные для интерфейсных задач
-var lastClickedIndx = -1;//Номер элемента лабиринта по которому кликнул пользователь
-var commandsMenuElements = [];//getAllCommandsMenu(oneTileWidth,oneTileHeight);//Массив, хранящий программное представление меню выбора команда
+var commandsMenuElements = [];//getAllCommandsMenu(oneTileWidth,oneTileHeight);//Массив, хранящий про  раммное представление меню выбора команда
 
 var checkScreenTimeout = 40;//Таймаут для методы который следит за изменениями размера экрана
 
@@ -134,7 +135,7 @@ function showCommandsMenu(){
       }
       //Отображаем скролл бары для выбора команд в клетке
       OOP.forArr(Scrolls,function(scroll){
-        scroll.draw();
+        scroll.DrawScrollBar();
       });
       //Отображаем кнопку ОК
       okB.draw();
