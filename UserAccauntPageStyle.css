@@ -1,0 +1,136 @@
+@charset "utf-8";
+/**{*/
+/*  margin: 0;*/
+/*  padding: 0;*/
+/*}*/
+b{
+  width: 20%;
+  height: 20%;
+ font-size: 0px; 
+ font-family: Comic Sans MS, Arial;
+ color: #56007c;
+ margin-left: 35%;
+ 
+  /*margin-right: 100%;*/
+}
+.base{
+  width: 100%;
+  height: 100%;
+}
+
+
+
+
+#accauntBG{
+  width: 50%;
+  height:  30%;
+  margin-top: 20%;
+  margin-left: 35%;
+  
+}
+#butMineMenu
+{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    margin: 0;
+    padding: 0;
+}
+
+input:not(.active)
+{
+  width: 60%;
+  height: 20%;
+  background: #f4f1f7;
+  color: #56007c;
+  
+font-size: 1.3em;
+}
+input:not(.actove):focus
+{
+/*
+    width: 30%;
+    height: 6%;
+    position: absolute;
+    top: 1%;
+*/
+}
+#login:not(.actove):focus
+{
+    width: 30%;
+    height: 6%;
+    position: absolute;
+    top: 1%;
+}
+#passw:not(.actove):focus
+{
+    width: 30%;
+    height: 6%;
+    position: absolute;
+    top: 1%;
+    left: 35%;
+}
+::-webkit-input-placeholder {color:#56007c;}
+::-moz-placeholder          {color:#56007c;}/* Firefox 19+ */
+:-moz-placeholder           {color:#56007c;}/* Firefox 18- */
+:-ms-input-placeholder      {color:#56007c;}
+
+
+#loginText{
+  margin-left: 0%;
+  margin-right: 0%;
+  margin-top: 0%;
+}
+#passwText{
+  margin-left: 0%;
+  margin-right: 0%;
+  margin-top: 0%;
+}
+
+
+#login:not()
+{
+  
+}
+#passw{
+
+ 
+}
+
+#buttGo{
+ /*margin-left: 12%;*/
+}
+#buttRegistr{
+  /*margin-left: 1%;*/
+}
+
+#buttMainMenu
+{
+    background-image: url(img/menu/menu.png);
+    background-size : cover;  
+    width: 100%;
+    height: 100%;
+}
+
+button {
+  width: 30%;
+  height: 20%;
+}
+
+button:not(.active) {
+  box-shadow: inset 0 1px 1px rgba(111, 55, 125, 0.8), inset 0 -1px 0px rgba(63, 59, 113, 0.2), 0 9px 16px 0 rgba(0, 0, 0, 0.3), 0 4px 3px 0 rgba(0, 0, 0, 0.3), 0 0 0 1px #150a1e;
+  background-image: linear-gradient(#af78ea, #c3afd9);
+  text-shadow: 0 0 21px rgba(223, 206, 228, 0.5), 0 -1px 0 #311d47;
+}
+
+button:not(.active):hover,
+button:not(.active):focus {
+  transition: color 200ms linear, text-shadow 500ms linear;
+  color: #fff;
+  text-shadow: 0 0 21px rgba(223, 206, 228, 0.5), 0 0 10px rgba(223, 206, 228, 0.4), 0 0 2px #2a153c;
+}
+button:not(:hover) {
+    transition: 0.6s;
+}
