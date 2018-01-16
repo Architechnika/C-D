@@ -36,16 +36,15 @@ var playerLayer = layers.newLayer(2,{alpha : 1, backgroundColor : "transparent"}
 var commandsLayer = layers.newLayer(1,{alpha : 0.5, backgroundColor : "transparent"});//СЛОЙ ДЛЯ ОТОБРАЖЕНИЯ ГРАФИКИ НАЗНАЧЕННЫХ ЭЛЕМЕНТАМ КОММАНДЕ
 //Переменные для интерфейсных задач
 var commandsMenuElements = [];//getAllCommandsMenu(oneTileWidth,oneTileHeight);//Массив, хранящий про  раммное представление меню выбора команда
-
-var checkScreenTimeout = 40;//Таймаут для методы который следит за изменениями размера экрана
+var mainbackGround = undefined;
+var checkScreenTimeout = 40;//Таймаут для метода который следит за изменениями размера экрана
 
 pjs.system.setTitle('Лабиринт'); // Set Title for Tab or Window
 
 //Обновление графики на экране
 function updateScreen(){
-  game.clear();
-  //Отрисовка фона
-  mainBackGroundDrow();
+  //mainBackGroundDrow();
+  mainbackGround.drawBG();
   //Отрисовываем слой команд
   commandsLayer.on(function(){
     drawCommandsOnField();
@@ -53,7 +52,10 @@ function updateScreen(){
   //Отрисовываем поле
 	for(var i = 0; i < field.length; i++){
 	  field[i].draw();
-  }
+  } 
+    
+    
+       
   //Отрисовываем элементы интерфейса
   guiLayer.on(function(){
     drawGUI();
@@ -88,20 +90,30 @@ function mainBackGroundDrow()
     bg.push(game.newImageObject({x: X, y: Y, h: H, w: W, file: groundPath}))
   });
   
-  OOP.forArr(bg,function(el){
-    el.draw();
-  });
+  this.drawBG = function()
+ {
+      OOP.forArr(bg,function(el){
+        el.draw();
+      });
+ }
 }
 
 //Запускает таймер который следит за изменениями параметров экрана 
 function resizeTimer(){
-  var scrParams = game.getWH();
-  if(scrParams.w != width || scrParams.h != height){//Если изменились
+    //var scrParams = game.getWH();
+
+    //сохраняем состояние игры 
+    if (userData !== undefined) {
+       userData.save(isGameSpaseUp,totalSeconds,field,playerInventory,gameObjects,entrySide,totalWidth);
+    }
+    //
+
+  /*if(scrParams.w != width || scrParams.h != height){//Если изменились
     width = scrParams.w;
     height = scrParams.h;
     //Перерасчитываем все элементы игры
     resizeAllElements();
-  }
+  }*/
   setTimeout("resizeTimer()",checkScreenTimeout);
 }
 

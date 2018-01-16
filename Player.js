@@ -46,8 +46,9 @@ function playerMove(canRead){
   var pPoz = playerPozition;
   var dir = 0;
   var isTrueDir = true;
+  var isShift = true;
   if(canRead === undefined) {//Добавляем команды из текущего элемента поля в стек команд игрока
-    addCommandsToPlayer(field[playerPozition].getTopCommands(true));
+    addCommandsToPlayer(field[playerPozition].getTopCommands(true,true));
   }
   //Если стек пустой, то возвращаем ошибку
   if(playerCommands.length === 0) return "Робот не знает что ему делать";
@@ -105,7 +106,25 @@ function playerMove(canRead){
         playerInventory[0].setNewPosition(playerPozition);
         gameObjects.push(playerInventory[0]);
         playerInventory.splice(0,1);
-      break;
+        break;
+    case "repeat":
+          //Выполняем итерацию цикла(получаем команды)
+          var comms = comm.checkCondition(comm.countBlock,comm.commandsBlock);
+          //Добавляем их в стек команд
+          if (comms.length != 0) {
+              isShift = false;
+              addCommandsToPlayer(comms, true);
+          }
+          break;
+    case "repeatif":
+          //Выполняем итерацию цикла(получаем команды)
+          var comms = comm.checkCondition(comm.ifBlock);
+          //Добавляем их в стек команд
+          if (comms.length != 0) {
+              isShift = false;
+              addCommandsToPlayer(comms, true);
+          }
+          break;
   }
   
   //Если направление в котором планирует сдвинутся робот не совпадает с его передней стороной
@@ -121,7 +140,7 @@ function playerMove(canRead){
   if(code == roadCode || code == exitCode){
     
     //Убираем из стека обработанную команду
-    playerCommands.shift();  
+    if(isShift) playerCommands.shift();  
     //Запоминаем предыдущее местоположение робота
     lastPlayerPoz = playerPozition;
     //Запоминаем новую позицию игрока на поле
@@ -138,17 +157,18 @@ function playerMove(canRead){
 }
 
 //Добавляет набор команд в текущий буфер(стек) команд игрока
-function addCommandsToPlayer(comm){
+function addCommandsToPlayer(comm,dontClear){
   //Если добавлять нечего
   if(comm === undefined || comm.length === 0) return;
-
+  if (dontClear === undefined)
+      playerCommands = new Array();
   //Добавляем все элементы из comm в НАЧАЛО стека
   //Только если мы сдвинулись с прошлой клетки(Запись в буфер команд происходит только один раз с клетки) ну или робот не знает что делать
-  if(lastPlayerPoz != playerPozition){
+  //if(lastPlayerPoz != playerPozition){
     for(var i = comm.length - 1; i >= 0; i--){
-      playerCommands.unshift(comm[i]);
+      playerCommands.unshift(getCopyOfObj(comm[i]));
     }
-  }
+  //}
 }
 
 function turnToTrueDirection(dir){
@@ -213,7 +233,7 @@ function movePlayerToFieldElement(fEl){
 }
 
 //Задает направление для персонажа, исходя из того, где находится вход в лабиринт
-function getPlayerDirFromSide(){
+function getPlayerDirFromSide() {
   if(entrySide == "LEFT") return 1;
   if(entrySide == "UP") return 2;
   if(entrySide == "RIGHT") return 3;

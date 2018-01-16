@@ -15,8 +15,8 @@ var coinCode = '4';//КОД МОНЕТКИ
 var allGameItemsCode = [roadCode,borderCode,coinCode,exitCode,entryCode,wallCode1,wallCode2,wallCode3];
 
 //Разрешение одного тайла на поле
-var oneTileWidth = 0;
-var oneTileHeight = 0;
+var oneTileWidth = 100;
+var oneTileHeight = 100;
 //Переменная для хранения бинарного представления поля
 var binMap = null;
 //Массив хранящий игровые объекты(монетки)
@@ -31,6 +31,7 @@ function fieldElement(imgSource, comm, elemcode, fx,fy,fw,fh){
   //Параметры элемента
   this.code = elemcode;
   this.commands = comm;
+  this.isCommandsReaded = false;
   this.imgSrc = imgSource;
   this.X = fx;
   this.Y = fy;
@@ -122,7 +123,7 @@ function fieldElement(imgSource, comm, elemcode, fx,fy,fw,fh){
   this.removeCommand = function(indexMass, indexElem){
     //Потому что индексация в графике идет с начала списка, а тут - с конца
     var indx = this.commands[indexMass].length - 1 - indexElem;
-    log("Индекс в командах : " + indx);
+    //log("Индекс в командах : " + indx);
     //Удаляем элемент
     this.commands[indexMass].splice(indx,1);
   }
@@ -133,13 +134,29 @@ function fieldElement(imgSource, comm, elemcode, fx,fy,fw,fh){
     this.commands.push(new Array());
   }
   
+  this.getTopCommand = function(isRead){
+    if(this.commands[0] !== undefined && this.commands[0].length > 0){
+      var result = this.commands[0];
+      result = result[result.length - 1];
+      if (isRead !== undefined && isRead) if (isRead !== undefined && isRead) {
+          if (this.isCommandsReaded && this.code != entryCode) return undefined;
+          this.isCommandsReaded = true;
+      }
+      return result;    
+    }
+  }
+  
   //Возвращает верхний массив команд в стеке массивов команд
   //Если isDelete = true - то он удаляется
-  this.getTopCommands = function(isRemove){
+  this.getTopCommands = function(isRemove,isRead){
     if(this.commands !== undefined){
       var result = this.commands[0];
       if(isRemove !== undefined && isRemove){//Удаляем команды если нужно
         //РЕАЛИЗОВАТЬ УДАЛЕНИЕ ЭЛЕМЕНТОВ В КОТОРЫХ СВОЙСТВО undeletable = false
+      }
+      if (isRead !== undefined && isRead) {
+          if (this.isCommandsReaded && this.code != entryCode) return [];
+          this.isCommandsReaded = true;
       }
       return result;    
     }
