@@ -5,6 +5,7 @@
 var isMobile = false;//Флаг того, мобильное ли у нас устройство или ПК(инициализируется в Logic)
 var isDowned = false;//Флаг того, что пользователь нажал на один из скролов и держит
 var isScrollMove = false;//Флаг для того, чтобы отличать скролл от тапа
+var scrolled = false;//Флаг того, что пользовател зажал тач и начал скролить
 var clickCoord = new point(0,0);
 
 //Буфер для хранения элемента который сдвигают в нижнем скроле(чтобы вернуть его в исходное состояние если что)
@@ -59,7 +60,6 @@ function onTouchMove(e){
 //------------------------------------------------
 //Обработчик клика тачем или мышкой
 function onUp(e){
-    var canProcessOther = true;//Флаг для регулирования обработки(только скролл или все остальное)
     //ЕСЛИ ОТКРЫТ ИНТЕРФЕЙС ВВОДА КОМАНД(ОБРАБАТЫВАЕМ СКРОЛЫ)
     if(lastClickedIndx !== -1){
         OOP.forArr(Scrolls, function(scroll){
@@ -78,9 +78,9 @@ function onUp(e){
                   }
                   //Очищаем буфер для объекта который сдвигали
                   yMovedItem = new point(-1,-1);
-                  canProcessOther = false;
+                  scrolled = true;
                 }//ЭТО ЕСЛИ НАЖАЛИ НА НИЖНИЙ СКРОЛЛ, ЧТОБЫ ВЫБРАТЬ КОМАНДУ
-                else if(scroll.name == "DOWN" && clickIsInObj(e.x,e.y,scroll.GetBackGround()) && scrollSpeed.y == 0 && (inputCommandStates == 0 || inputCommandStates == 4)){
+                else if(scroll.name == "DOWN" && clickIsInObj(e.x,e.y,scroll.GetBackGround()) && (inputCommandStates == 0 || inputCommandStates == 4)){
                   var itm = scroll.getArrayItems();
                     if(itm !== undefined){
                     OOP.forArr(itm,function(el,i){
@@ -191,11 +191,12 @@ function onUp(e){
     else{
     }
     
-    if((isMobile && canProcessOther) || (!isMobile && e.which == 1)){
+    if((isMobile && !scrolled) || (!isMobile && e.which == 1)){
         if(!processGuiClick(e))//Если пользователь не нажал на GUI выбора команд
             processButtonClick(e);//Если пользователь не нажал на кнопки
         processFieldClick(e);//Проверяем нажал ли пользователь на поле
     }
+    scrolled = false;
 }
 
 //Обработчик свайпов и скролов колесиком мышки
@@ -206,7 +207,9 @@ function onMove(e){
         OOP.forArr(Scrolls, function(scroll){
             if(isMobile){//Если мобильное устройство то обрабатываем сенсорный экран
                 //ОПРЕДЕЛЯЕМ ЖЕСТ УДАЛЕНИЯ
-                if(scroll.name == "DOWN" && Math.abs(scrollSpeed.y) > Math.abs(scrollSpeed.x) && clickIsInObj(e.x,e.y,scroll.GetActivityArea())){
+                if(scroll.name == "DOWN")
+                    if(Math.abs(scrollSpeed.y) > Math.abs(scrollSpeed.x))
+                        if(clickIsInObj(e.x,e.y,scroll.GetActivityArea())){
                   var itms = scroll.getArrayItems();
                   if(itms !== undefined && itms.length !== 0){
                     //ОПРЕДЕЛЯЕМ НА КАКОМ ЭЛЕМЕНТЕ ЗАЖАЛ ПОЛЬЗОВАТЕЛЬ
@@ -230,12 +233,14 @@ function onMove(e){
                     });
                   }
                 }
-                else if(clickIsInObj(e.x,e.y,scroll.GetBackGround())) 
+                else if(clickIsInObj(e.x,e.y,scroll.GetBackGround())){ 
                   scrollDynamic(scrollSpeed,scroll); //ОБРАБОТКА ПРОКРУТКИ ПО СКРОЛЛУ
+                  scrolled = true;
+                }
             }
             else{//ЕСЛИ МЫШКА
                 if(clickIsInObj(e.x,e.y,scroll.GetBackGround()))
-                scrollDynamic(new point(e.deltaY,e.deltaY),scroll);
+                    scrollDynamic(new point(e.deltaY,e.deltaY),scroll);
             }
         });
     }
