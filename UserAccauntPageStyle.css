@@ -57,6 +57,8 @@ input:not(.actove):focus
     top: 1%;
 */
 }
+/*
+//перемещаем область ввода на верх при фокусе
 #login:not(.actove):focus
 {
     width: 30%;
@@ -72,6 +74,8 @@ input:not(.actove):focus
     top: 1%;
     left: 35%;
 }
+//
+*/
 ::-webkit-input-placeholder {color:#56007c;}
 ::-moz-placeholder          {color:#56007c;}/* Firefox 19+ */
 :-moz-placeholder           {color:#56007c;}/* Firefox 18- */

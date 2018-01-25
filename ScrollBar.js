@@ -1,3 +1,7 @@
+var isOne = true;
+var isSwaped = false;
+item1Pos = new point(-1,-1);
+item2Pos = new point(-1,-1);
 function ScrollBar(posX,posY,orientation,arr, name)
 {
 	//Локализуем полученные данные внутри класса
@@ -17,6 +21,7 @@ function ScrollBar(posX,posY,orientation,arr, name)
   var scrollBarCase = undefined;
   var items = undefined;
   var caseVisible = false;
+    
    if(orientation == "Vertical")
       {
         // backGroundH = gameSpaceH - (height - gameSpaceH);
@@ -42,14 +47,94 @@ function ScrollBar(posX,posY,orientation,arr, name)
     return scrollBarCase;
   }
   
-  // this.setItemsAlpha = function(alpha)
-  // {
-  //   //OOR.forArr()
-  // }
   this.getPositionX = function()
   {
     var tmpX = barPositionX;
     return tmpX;
+  }
+  
+  this.swapItems = function(item1,item2)
+  {  
+      var items = this.getArrayItems();
+      if(items !== undefined)
+        {
+            items.move(items.indexOf(item1),items.indexOf(item2));
+            //var i =  this.sortElements(this.getArrayItems(),this.GetBackGround());
+           // this.setArrayItems(i)
+        }
+  }
+  
+  this.swapItemPosition = function(isTuped,item1, item2,selItemPos)
+  {
+      if(isTuped)
+      {//log("тапнули позиция выделенного элемента "+ selItemPos.x)
+
+          if(isOne && item2 !== undefined)
+              {//log("зашли в первый раз")
+                  item1Pos = selItemPos;
+                  isOne = false;
+              }
+              if(item2 !== undefined)
+                {//log("второй элемент не андефайн меняем позиции")
+                    item2Pos = item2.getPositionC();
+                    item1.setPositionC(item2Pos);
+                    item2.setPositionC(item1Pos);
+
+                  if(Math.floor(item2.getPositionC().x) == Math.floor(item1Pos.x))
+                      {//log("установили новую позицию выделенному элементу")
+                        item1Pos = item1.getPositionC();
+                      }
+                    isSwaped = true;
+                }//else  log("второй элемент андефайн")
+
+        }
+        else
+        {log("отпустили тап")
+            if(item1Pos.x < 0)
+            {log("item1Pos < 0")
+                item1.setPositionC(selItemPos);    
+            }
+            else
+            {
+                if(isSwaped)
+                    {
+                        item1.setPositionC(item1Pos); 
+                        isSwaped = false;
+                    }else item1.setPositionC(selItemPos); 
+                log("item1Pos > 0 "+ item1Pos.x+" selectItemPos "+ selItemPos.x)
+            }
+            isOne = true;
+            item1.setAlpha(1);
+        }
+    
+  }
+  this.isItemWhollyInGB = function(itemX,itemW)
+  {
+      if(itemX+10 >= this.GetBackGround().x && ((itemX+itemW)-10 <= (this.GetBackGround().x + this.GetBackGround().w)))
+          return true;
+      else return false;
+  }
+  this.objectEntryC = function(obj1)
+  { 
+      var item;
+      var objX = Math.floor(obj1.getPositionC().x);
+      var items = this.getArrayItems();
+      if(items !== undefined)
+        {
+            var rectW = 20;
+           OOP.forArr(items,function(el,i)
+           {
+               if(el !=obj1)
+               {
+                    var elX = Math.floor(el.getPositionC().x);
+                    if((objX < elX+rectW && objX > elX-rectW) )
+                    {
+                       item = el; 
+                    }
+               }
+           });   
+            return item;
+        }
   }
   this.getPositionY = function()
   {
@@ -60,14 +145,14 @@ function ScrollBar(posX,posY,orientation,arr, name)
   this.setWidthScroll = function(w)
   {
     backGround.setWidth(w)
-    items = sortElements(arrayForBar,this.GetBackGround());
+    items = this.sortElements(arrayForBar,this.GetBackGround());
     indicator = new Indicator(this.GetBackGround());
     this.setArrayItems(items);
   }
   this.setHeightScroll = function(h)
   {
     backGround.setHeight(h)
-    items = sortElements(arrayForBar,this.GetBackGround());
+    items = this.sortElements(arrayForBar,this.GetBackGround());
     indicator = new Indicator(this.GetBackGround());
     this.setArrayItems(items);
   }
@@ -79,7 +164,7 @@ function ScrollBar(posX,posY,orientation,arr, name)
   
   this.initArrayItems = function(arrayToInit){
     //arrayForBar = arrayToInit;
-    items = sortElements(arrayToInit,backGround.getBackGround());
+    items = this.sortElements(arrayToInit,backGround.getBackGround());
     indicator = new Indicator(backGround.getBackGround());
     this.setArrayItems(items);
   }
@@ -93,7 +178,7 @@ function ScrollBar(posX,posY,orientation,arr, name)
     if(imte.type == "ImageObject()") //проверяем тип объекта, который передали для добавления
     {
       arrayForBar.push(item);
-      items = sortElements(arrayForBar,backGround.getBackGround());
+      items = this.sortElements(arrayForBar,backGround.getBackGround());
       this.setArrayItems(items);
     }
     else
@@ -111,7 +196,7 @@ function ScrollBar(posX,posY,orientation,arr, name)
     if(arrayForBar.length > 0 && (arrayForBar.length-1) >= i)
     {
       arrayForBar.splice(i,1);
-      items = sortElements(arrayForBar,backGround.getBackGround());
+      items = this.sortElements(arrayForBar,backGround.getBackGround());
       this.setArrayItems(items);
     }
     else
@@ -180,7 +265,7 @@ function ScrollBar(posX,posY,orientation,arr, name)
       return tmpBackGround;
     }
     this.getActivityArea = function(){
-      var area = game.newRoundRectObject({x : bgX, y : bgY-bgH, w : bgW, h : bgH * 3, radius : 20, fillColor : bgColor});
+      var area = game.newRoundRectObject({x : bgX, y : bgY-bgH, w : bgW + oneTileWidth, h : bgH * 3, radius : 20, fillColor : bgColor});
       return area;
     }
   }
@@ -346,7 +431,9 @@ function ScrollBar(posX,posY,orientation,arr, name)
     bar.w = tmpW;
     this.setBarReletion();
     bar.x = (scrollBackGround.x + scrollBackGround.w)- bar.w;
+    if(orientation == "Horizontal")
     barBackGroud = game.newRoundRectObject({x : scrollBackGround.x, y : bar.y, h: tmpH, w: tmpW ,radius: 8, fillColor : "#ffba42"});
+      else barBackGroud = game.newRoundRectObject({x : bar.x, y : bar.y, h: tmpH, w: tmpW ,radius: 8, fillColor : "#ffba42"});
     
     this.DrawIndicator = function()
     {
@@ -377,7 +464,7 @@ function ScrollBar(posX,posY,orientation,arr, name)
   {
     lineCount = count;
     backGround = new BackGround(backGroundPosX,backGroundPosY,backGroundW,backGroundH);
-    items = sortElements(arrayForBar,backGround.getBackGround());
+    items = this.sortElements(arrayForBar,backGround.getBackGround());
     indicator = new Indicator(backGround.getBackGround());
     this.setArrayItems(items);
     backGround.setAlphaBG(backGroundAplha);
@@ -411,7 +498,7 @@ function ScrollBar(posX,posY,orientation,arr, name)
         }
      }
   }
-  function sortElements(array, scrollBackGround)
+  this.sortElements = function(array, scrollBackGround)
   {
     if(array === undefined || array.length <=0)
       return;
@@ -542,7 +629,7 @@ function ScrollBar(posX,posY,orientation,arr, name)
             backGround.setX(backGroundPosX+backGroundH);
           }
            scrollBarCase = new ScrollBarrCase(this.GetBackGround());
-           items = sortElements(arrayForBar,this.GetBackGround());
+           items = this.sortElements(arrayForBar,this.GetBackGround());
            indicator = new Indicator(this.GetBackGround());
            this.setArrayItems(items);
            caseVisible = true;
@@ -562,7 +649,7 @@ function ScrollBar(posX,posY,orientation,arr, name)
   backGround = new BackGround(backGroundPosX,backGroundPosY,backGroundW,backGroundH);
   if (arrayForBar != undefined)
   {
-    items = sortElements(arrayForBar,this.GetBackGround());
+    items = this.sortElements(arrayForBar,this.GetBackGround());
     indicator = new Indicator(this.GetBackGround());
     this.setArrayItems(items);
   }
@@ -631,7 +718,7 @@ function ScrollBar(posX,posY,orientation,arr, name)
                   dy = 0;
                 }
               }
-          }else if (scrollVal.y <= 0) 
+          }else if (scrollVal.y < 0) 
             {
               if(rYElLast >= rYBG)
               {
@@ -639,7 +726,7 @@ function ScrollBar(posX,posY,orientation,arr, name)
                 if(rYElLast + dy <  rYBG)
                 {
                   var dSpeed = rYBG - (rYElLast+dy);
-                  dy = dSpeed;
+                  dy = 0;
                 }
               }
             }

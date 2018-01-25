@@ -289,10 +289,10 @@ function initLeftScroll(blockImg,initMass){
   if(blockImg !== undefined && blockImg != "SAME"){//SAME - оставить картинку вверху скрола такой же как и была
     //Создаем полную копию обьекта картинки
     var itm = game.newImageObject({
-      x : blockImg.x, y : blockImg.y, w : blockImg.w, h : blockImg.h,
-      file : blockImg.file
+      x : 0, y : 0, w : 15, h : 15,
+      file : blockImg.imgSource
     });
-    itm.setUserData({ command : blockImg.command});
+    itm.setUserData({ command : blockImg});
     Scrolls[found].getScrollBarCase().setLeftImg(itm);
   }
   

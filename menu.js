@@ -274,22 +274,22 @@ function menuOnUp(e){
         }
         game.setLoop('Labyrinth');
     }
-    if(clickIsInObj(e.x,e.y,menu.buttonLoaded.getObject()))
+    else if(clickIsInObj(e.x,e.y,menu.buttonLoaded.getObject()))
     {
         if(userData !== undefined)
         {log(isGameSpaseUp)
             game.setLoop('Labyrinth');
         }
     }
-    if(clickIsInObj(e.x,e.y,menu.buttonGameSpaseUp.getObject()))
+    else if(clickIsInObj(e.x,e.y,menu.buttonGameSpaseUp.getObject()))
     {
         isGameSpaseUp = false;
     }
-    if(clickIsInObj(e.x,e.y,menu.buttonGameSpaseDown.getObject()))
+    else if(clickIsInObj(e.x,e.y,menu.buttonGameSpaseDown.getObject()))
     {
         isGameSpaseUp = true;  
     }
-    if(clickIsInObj(e.x,e.y,menu.buttonUserAccaunt.getObject()))
+    else if(clickIsInObj(e.x,e.y,menu.buttonUserAccaunt.getObject()))
     {isUserBClicked = true;
         game.setLoop('userAccaunt');
     }
@@ -481,23 +481,28 @@ function registration()
         }
          if(localMemory.loadAsObject(Number(sum)/10000000) && !isFiled)
          {
-            log("аккаунт существует");
-             var div = base.getElementsByTagName('b')[0];
-
-             div.style.fontSize = "30px";
-             div.style.transition = "0.4s";   
-            function textColor()
-            {
-             div.style.fontSize = "0px";
-             div.style.transition = "0.4s"; 
-            }setTimeout(textColor,1500);
+             warning("Данный аккаунт уже зарегистрирован");
          }else if(!localMemory.loadAsObject(Number(sum)/10000000) && !isFiled)
          {
             var accaunt = new UserAccaunt(login,pass,(Number(sum)/10000000));
             localMemory.saveAsObject(Number(sum)/10000000,accaunt);
+             warning("Аккаунт успешно зарегистрирован");
+             
          }
      }
 
+}
+function warning(text)
+{
+        var div = base.getElementsByTagName('b')[0];
+        div.innerHTML = text;
+         div.style.fontSize = "30px";
+         div.style.transition = "0.4s";   
+        function textColor()
+        {
+         div.style.fontSize = "0px";
+         div.style.transition = "0.4s"; 
+        }setTimeout(textColor,1500);
 }
 function entry()
 {
