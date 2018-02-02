@@ -49,7 +49,7 @@ var commandsLayer = layers.newLayer(1, {
 //Переменные для интерфейсных задач
 var commandsMenuElements = []; //getAllCommandsMenu(oneTileWidth,oneTileHeight);//Массив, хранящий про  раммное представление меню выбора команда
 var mainbackGround = undefined;
-pjs.system.setTitle('Лабиринт'); // Set Title for Tab or Window
+pjs.system.setTitle('КРОП - учись играя'); // Set Title for Tab or Window
 
 //Обновление графики на экране
 function updateScreen() {
