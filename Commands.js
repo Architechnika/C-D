@@ -90,7 +90,7 @@ COMMANDS.push({
     elseBlock: undefined
 });
 
-//БЛОК ПОВТОРЕНИЯ, ПОВТОРЯЕТ действия actions count раз 
+//БЛОК ПОВТОРЕНИЯ, ПОВТОРЯЕТ действия actions count раз
 COMMANDS.push({
     code: 'R',
     name: "repeat",
@@ -284,7 +284,7 @@ function checkConditionIF(blockA, blockB, commandsBlock, elseBlock) {
     //У нас стены не только внешние, но и внутренние
     // blockA.code = blockB.code > 0 && blockB.code < 4 ? borderCode : blockB.code;
     if (blockB.code == coinCode) {
-        if (blockA.itemCode === undefined) return [];
+        if (blockA.itemCode === undefined) return elseBlock ? elseBlock.actions : [];
         else if (blockA.itemCode == blockB.code) return commandsBlock.actions;
     } else {
         blockA.fieldCode = blockA.fieldCode > 0 && blockA.fieldCode < 4 ? borderCode : blockA.fieldCode;
@@ -299,7 +299,7 @@ function checkConditionIF(blockA, blockB, commandsBlock, elseBlock) {
 function getAllCommandsMenu(isOnComms) {
 
     var menuItems = [];
-    var src = isOnComms ? ['{}[]981234REI'] : ['129348REI'];
+    var src = isOnComms ? ['{}[]123498REI'] : ['123498REI'];
     //Генерим структуру меню(по 4 элемента в ряд)
     levels.forStringArray({
             source: src
@@ -318,7 +318,10 @@ function getAllCommandsMenu(isOnComms) {
                     });
 
                     obj.setUserData({
-                        command: getCopyOfObj(COMMANDS[comm])
+                        command: getCopyOfObj(COMMANDS[comm]),
+                        onClick: function (el) {
+                            return onChooseCommandClick(el);
+                        }
                     });
 
                     menuItems.push(obj);
@@ -360,6 +363,9 @@ function getAllInteractGameObjects() {
             code: borderCode,
             imgSource: wallImgComm,
             name: "blockB"
+        },
+        onClick: function (el) {
+            return onChooseCommandClick(el);
         }
     });
     //МОНЕТКА
@@ -375,6 +381,9 @@ function getAllInteractGameObjects() {
             code: coinCode,
             imgSource: coinImgComm,
             name: "blockB"
+        },
+        onClick: function (el) {
+            return onChooseCommandClick(el);
         }
     });
     //ВЫХОД
@@ -390,6 +399,9 @@ function getAllInteractGameObjects() {
             code: exitCode,
             imgSource: exitImgComm,
             name: "blockB"
+        },
+        onClick: function (el) {
+            return onChooseCommandClick(el);
         }
     });
     //ВХОД
@@ -405,6 +417,9 @@ function getAllInteractGameObjects() {
             code: entryCode,
             imgSource: entryImgComm,
             name: "blockB"
+        },
+        onClick: function (el) {
+            return onChooseCommandClick(el);
         }
     });
     //ДОРОГА
@@ -420,6 +435,9 @@ function getAllInteractGameObjects() {
             code: roadCode,
             imgSource: groundImgComm,
             name: "blockB"
+        },
+        onClick: function (el) {
+            return onChooseCommandClick(el);
         }
     });
 
@@ -438,7 +456,10 @@ function getAllDirections() {
         h: 10
     }));
     allObj[allObj.length - 1].setUserData({
-        command: COMMANDS[18]
+        command: COMMANDS[18],
+        onClick: function (el) {
+            return onChooseCommandClick(el);
+        }
     });
     //НИЗ
     allObj.push(game.newImageObject({
@@ -449,7 +470,10 @@ function getAllDirections() {
         h: 10
     }));
     allObj[allObj.length - 1].setUserData({
-        command: COMMANDS[19]
+        command: COMMANDS[19],
+        onClick: function (el) {
+            return onChooseCommandClick(el);
+        }
     });
     //ЛЕВО
     allObj.push(game.newImageObject({
@@ -460,7 +484,10 @@ function getAllDirections() {
         h: 10
     }));
     allObj[allObj.length - 1].setUserData({
-        command: COMMANDS[20]
+        command: COMMANDS[20],
+        onClick: function (el) {
+            return onChooseCommandClick(el);
+        }
     });
     //ПРАВО
     allObj.push(game.newImageObject({
@@ -471,7 +498,10 @@ function getAllDirections() {
         h: 10
     }));
     allObj[allObj.length - 1].setUserData({
-        command: COMMANDS[21]
+        command: COMMANDS[21],
+        onClick: function (el) {
+            return onChooseCommandClick(el);
+        }
     });
     //ПОД НОГАМИ(ЦЕНТР)
     allObj.push(game.newImageObject({
@@ -482,7 +512,10 @@ function getAllDirections() {
         h: 10
     }));
     allObj[allObj.length - 1].setUserData({
-        command: COMMANDS[22]
+        command: COMMANDS[22],
+        onClick: function (el) {
+            return onChooseCommandClick(el);
+        }
     });
     return allObj;
 }
@@ -628,6 +661,9 @@ function getDigitKeyboardImages() {
             command: {
                 name: "digit",
                 value: i + 1
+            },
+            onClick: function (el) {
+                return onKeyboardClick(el);
             }
         });
     }
@@ -643,6 +679,9 @@ function getDigitKeyboardImages() {
         command: {
             name: "digit",
             value: 0
+        },
+        onClick: function (el) {
+            return onKeyboardClick(el);
         }
     });
     //backspace
@@ -656,6 +695,9 @@ function getDigitKeyboardImages() {
     allObj[0].setUserData({
         command: {
             name: "backspace"
+        },
+        onClick: function (el) {
+            return onKeyboardClick(el);
         }
     });
     return allObj;

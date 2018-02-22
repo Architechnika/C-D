@@ -16,12 +16,21 @@ var backgroundPath = "img/background.png"; //Картинка для фона з
 var exitPath = "img/exit.png"; //Картинка для выхода из лабиринта
 var entryPath = "img/entry.png"; //Картинка для входа в лабиринт
 var coinPath = "img/coin.png"; //Картинка для отображения монетки
+var clockPath = "img/interface/clock.png"
 //Пути до файлов с изображениями для интерфейса
 var buttonStartImgSrc = "img/interface/startButton.png";
 var buttonStopImgSrc = "img/interface/stopButton.png";
 var menuButtonImgSrc = "img/interface/menuButton.png";
 var reloadButtonImgSrc = "img/interface/reloadButton.png";
 var okButtonImgSrc = "img/interface/okButton.png";
+var nextStepButtonImgSrc = "img/interface/nextStep.png";
+var prevStepButtonImgSrc = "img/interface/prevStep.png";
+//Пути для фпайлов для карты кода
+var itemDeleteSrc = "img/interface/delete.png";
+var itemReplaceSrc = "img/interface/replace.png";
+var itemAddSrc = "img/interface/add.png";
+var itemMoveSrc = "img/interface/move.png";
+var itemPlusSrc = "img/interface/plus.png";
 //Пути до файлов с изображением робота
 var playerImgSrc = "img/player.png";
 var playerImageObj = null;
@@ -34,46 +43,56 @@ var guiLayer = layers.newLayer(4, {
     alpha: 0.8,
     backgroundColor: "transparent"
 }); //СЛОЙ ДЛЯ ОТОБРАЖЕНИЯ ГРАФИЧЕСКИХ ЭЛЕМЕНТОВ ИНТЕРФЕЙСА
-var commandsMenuLayer = layers.newLayer(3, {
+var commandsMenuLayer = layers.newLayer(5, {
     alpha: 1,
     backgroundColor: "transparent"
 }); //СЛОЙ ДЛЯ ОТОБРАЖЕНИЯ ВЫБОРА КОМАНД ПОЛЬЗОВАТЕЛЕМ
-var playerLayer = layers.newLayer(2, {
+var playerLayer = layers.newLayer(5, {
     alpha: 1,
     backgroundColor: "transparent"
 }); //СЛОЙ ДЛЯ ОТБРАЖЕНИЯ ГРАФИКИ ИГРОКА
-var commandsLayer = layers.newLayer(1, {
-    alpha: 0.5,
+var commandsLayer = layers.newLayer(5, {
+    alpha: 1,
     backgroundColor: "transparent"
 }); //СЛОЙ ДЛЯ ОТОБРАЖЕНИЯ ГРАФИКИ НАЗНАЧЕННЫХ ЭЛЕМЕНТАМ КОММАНДЕ
 //Переменные для интерфейсных задач
 var commandsMenuElements = []; //getAllCommandsMenu(oneTileWidth,oneTileHeight);//Массив, хранящий про  раммное представление меню выбора команда
 var mainbackGround = undefined;
-pjs.system.setTitle('КРОП - учись играя'); // Set Title for Tab or Window
+pjs.system.setTitle('Лабиринт'); // Set Title for Tab or Window
 
 //Обновление графики на экране
 function updateScreen() {
 
-    mainbackGround.drawBG();
+    //mainbackGround.drawBG();
     //Отрисовываем слой команд
     commandsLayer.on(function () {
         drawCommandsOnField();
+        if(inputCommandStates == 0)
+            codeView.drawCodeMap();
     });
     //Отрисовываем поле
     for (var i = 0; i < field.length; i++) {
         field[i].draw();
     }
+    OOP.forArr(gameObjects, function (el) {
+        el.draw();
+    });
     //Отрисовываем элементы интерфейса
     guiLayer.on(function () {
         drawGUI();
     });
-    //Рисуем на графическом слое игрока для отображения игрока и игровых обьектов
+    //Рисуем на графическом слое игрока для отображения игрока
     playerLayer.on(function () {
-        OOP.forArr(gameObjects, function (el) {
-            el.draw();
-        });
         playerImageObj.draw();
     });
+}
+
+function clearAllLayers() {
+    game.clear();
+    playerLayer.clear();
+    guiLayer.clear();
+    commandsLayer.clear();
+    commandsMenuLayer.clear();
 }
 
 function mainBackGroundDrow() {
@@ -116,13 +135,13 @@ function drawCommandsOnField() {
         //Если это дорога
         if (el.code == roadCode || el.code == entryCode) {
             //Если команда назначена
-            if (el.getTotalCommands() > 0) {
+            if (el.getTotalCommands() > 0 && el.visible) {
                 var img = game.newImageObject({
                     file: COMMANDS[0].imgSource,
-                    x: el.X,
-                    y: el.Y,
-                    w: el.W,
-                    h: el.H
+                    x: el.x,
+                    y: el.y,
+                    w: el.w,
+                    h: el.h
                 });
                 img.draw();
             }
@@ -132,17 +151,15 @@ function drawCommandsOnField() {
 
 //Рисует на экране меню команд
 function showCommandsMenu() {
-
     commandsMenuLayer.on(function () {
 
-        if (lastClickedIndx == -1) {
+        /*if (lastClickedIndx == -1) {
             return;
-        }
+        }*/
         //Отображаем скролл бары для выбора команд в клетке
         OOP.forArr(Scrolls, function (scroll) {
             scroll.DrawScrollBar();
         });
-        //Отображаем кнопку ОК
-        okB.draw();
     });
+    //if (okB) okB.draw();
 }

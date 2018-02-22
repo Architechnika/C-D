@@ -6,11 +6,11 @@
 b{
   width: 20%;
   height: 20%;
- font-size: 0px; 
+ font-size: 0px;
  font-family: Comic Sans MS, Arial;
  color: #56007c;
  margin-left: 35%;
- 
+
   /*margin-right: 100%;*/
 }
 .base{
@@ -26,7 +26,7 @@ b{
   height:  30%;
   margin-top: 20%;
   margin-left: 35%;
-  
+
 }
 #butMineMenu
 {
@@ -45,7 +45,7 @@ input:not(.active)
   height: 20%;
   background: #f4f1f7;
   color: #56007c;
-  
+
 font-size: 1.3em;
 }
 input:not(.actove):focus
@@ -96,11 +96,11 @@ input:not(.actove):focus
 
 #login:not()
 {
-  
+
 }
 #passw{
 
- 
+
 }
 
 #buttGo{
@@ -113,7 +113,7 @@ input:not(.actove):focus
 #buttMainMenu
 {
     background-image: url(img/menu/menu.png);
-    background-size : cover;  
+    background-size : cover;
     width: 100%;
     height: 100%;
 }

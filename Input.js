@@ -12,14 +12,16 @@ var selectedItem = undefined;
 var swapedItem = undefined;
 var selItemPos = new point(-1, -1);
 var touchTapTimeStamp = undefined;
-var touchTapTimeSpan = 200; //Промежуток времени который должен пройти в миллисекундах для перемещения предмета в скроле
+var touchTapTimeSpan = 100; //Промежуток времени который должен пройти в миллисекундах для перемещения предмета в скроле
 var touchTapTimeFlag = false;
 var touchedScroll = undefined;
 var touchMovement = "NONE";
-
+var labIsMove = false,
+    codeMapIsMoved = false;
 //Буфер для хранения элемента который сдвигают в нижнем скроле(чтобы вернуть его в исходное состояние если что)
 var yMovedItem = new point(-1, -1);
 var xMovedItem = new point(-1, -1);
+var scrollStep = 20; //Шаг скрола в пикселях
 //Отменяем вывод контестного меню на страничке
 document.oncontextmenu = function () {
     return false
@@ -50,16 +52,18 @@ function removeInputEvents() {
 //Обработчики для событий ввода --------------------
 function onMouseUP(e) {
     e.cancelBubble = true;
+    labIsMove = false;
+    codeMapIsMoved = false;
     onUp(e);
 }
 
 function onMouseDOWN(e) {
-    if (lastClickedIndx != -1 && e.which == 1) {
-        clickCoord.x = e.x;
-        clickCoord.y = e.y;
+    clickCoord.x = e.x;
+    clickCoord.y = e.y;
+    if (e.which == 1 && inputCommandStates == 1) {
         //Инитим нажатый элемент если находим его
         OOP.forArr(Scrolls, function (scroll) {
-            if (scroll.name == "DOWN" && clickIsInObj(clickCoord.x, clickCoord.y, scroll.GetBackGround())) {
+            if (scroll.name == "LEFT" && clickIsInObj(clickCoord.x, clickCoord.y, scroll.GetBackGround())) {
                 var itms = scroll.getArrayItems();
                 if (itms && itms.length > 0) {
                     OOP.forArr(itms, function (el, i) {
@@ -80,12 +84,25 @@ function onMouseDOWN(e) {
             }
         });
     }
+    if (e.which == 3) { //Если нажали правой кнопкой мышки и указатель в области лабиринта
+        OOP.forArr(field, function (el) {
+            if (clickIsInObj(e.x, e.y, el.getImageObject())) {
+                labIsMove = true;
+                return;
+            }
+        });
+        if (clickIsInObj(e.x, e.y, codeView.backGround)) {
+            codeMapIsMoved = true;
+            return;
+        }
+    }
 }
 
 function onWheel(e) {
+    var isInLab = true;
     //Инитим нажатый элемент если находим его
     OOP.forArr(Scrolls, function (scroll) {
-        if ((scroll.name == "DOWN" || scroll.name == "RIGHT") && clickIsInObj(e.x, e.y, scroll.GetBackGround())) {
+        if ((scroll.name == "LEFT" || scroll.name == "RIGHT") && clickIsInObj(e.x, e.y, scroll.GetBackGround())) {
             var itms = scroll.getArrayItems();
             OOP.forArr(itms, function (el, i) {
                 if (clickIsInObj(e.x, e.y, el)) {
@@ -95,18 +112,29 @@ function onWheel(e) {
             });
         }
     });
+    if (clickIsInObj(e.x, e.y, labView.getBackGround())) {
+        labView.resizeView(e.deltaY < 0 ? -1 * scrollStep : scrollStep);
+        return;
+    }
+    if (clickIsInObj(e.x, e.y, codeView.getBackGround()) && inputCommandStates == 0) {
+        codeView.resizeView(e.deltaY < 0 ? -1 * scrollStep : scrollStep);
+        return;
+    }
     onMove(e);
 }
 
 function onMouseMove(e) {
-    if (touchTapTimeFlag) { //Если нажата клавиша мышки в области НИЖНЕГО скрола и пользователь передвигает там элементы
+    if (codeMapIsMoved || labIsMove || touchTapTimeFlag) { //Если нажата клавиша мышки в области НИЖНЕГО скрола и пользователь передвигает там элементы
         onMove(e);
-        clickCoord.x = e.x;
-        clickCoord.y = e.y;
     }
+    clickCoord.x = e.x;
+    clickCoord.y = e.y;
 }
 
 function onTouchStart(e) {
+    isMobile = true;
+    var arrs = touch.getTouches();
+    log(arrs.length)
     clickCoord.x = e.changedTouches[0].clientX;
     clickCoord.y = e.changedTouches[0].clientY;
     if (lastClickedIndx != -1) {
@@ -152,180 +180,136 @@ function onTouchMove(e) {
     clickCoord.x = e.x;
     clickCoord.y = e.y;
 }
-//------------------------------------------------
-//Обработчик клика тачем или мышкой
+
 function onUp(e) {
-    //ЕСЛИ ОТКРЫТ ИНТЕРФЕЙС ВВОДА КОМАНД(ОБРАБАТЫВАЕМ СКРОЛЫ)
-    if (lastClickedIndx !== -1) {
-        OOP.forArr(Scrolls, function (scroll) {
-            if (isMobile) { //Если есть тач
-                //Если пользователь начал сдвигать элемент из нижнего скрола чтобы удалить
-                if (scroll.name == "DOWN" && yMovedItem.x != -1 && touchTapTimeFlag) {
-                    //Если элемент вытащили за пределы фона скрола, то удаляем его из списка
-                    if (!selectedItem.isIntersect(scroll.GetBackGround())) {
-                        //УДАЛЯЕМ КОМАНДУ ИЗ СПИСКА КОММАНД(ПОКА ВСЕГДА 0ой массив команд в стеке, потом их будет несколько)
-                        removeCommandFromCell(0, yMovedItem.x);
-                    } else { //ВОЗВРАЩАЕМ ЕГО К ИСХОДНОМУ СОСТОЯНИЮ
-                        selectedItem.y = yMovedItem.y;
-                        selectedItem.setAlpha(1)
-                    }
-                    //Очищаем буфер для объекта который сдвигали
-                    yMovedItem = new point(-1, -1);
-                    scrolled = true;
+    var clicked = false;
+    OOP.forArr(Scrolls, function (scroll) {
+        if (isMobile) { //Если есть тач
+            //Если пользователь начал сдвигать элемент из нижнего скрола чтобы удалить
+            if (scroll.name == "DOWN" && yMovedItem.x != -1 && touchTapTimeFlag) {
+                //Если элемент вытащили за пределы фона скрола, то удаляем его из списка
+                if (!selectedItem.isIntersect(scroll.GetBackGround())) {
+                    //УДАЛЯЕМ КОМАНДУ ИЗ СПИСКА КОММАНД(ПОКА ВСЕГДА 0ой массив команд в стеке, потом их будет несколько)
+                    removeCommandFromCell(0, yMovedItem.x);
+                } else { //ВОЗВРАЩАЕМ ЕГО К ИСХОДНОМУ СОСТОЯНИЮ
+                    selectedItem.y = yMovedItem.y;
+                    selectedItem.setAlpha(1)
                 }
-                if (scroll.name == "DOWN" && selectedItem !== undefined && touchTapTimeFlag) {
-                    scroll.swapItemPosition(false, selectedItem, undefined, selItemPos)
-                    if (swapedItem !== undefined) {
-                        scroll.swapItems(selectedItem, swapedItem);
-                        //Реинициализации команд в текущем выбранном элемента
-                        if (menuStatesArr.length > 0) {
-                            //menuStatesArr[0].addCommands(scroll.getArrayItems(), true, 0)
-                            var mass = [];
-                            OOP.forArr(scroll.getArrayItems(), function (el) {
-                                mass.push(el.command);
-                            })
-                            if (menuStatesArr[0].name == "if" && menuStatesArr[0].redacted == "else")
-                                menuStatesArr[0].elseBlock.actions = mass;
-                            else menuStatesArr[0].commandsBlock.actions = mass;
-                        } else field[lastClickedIndx].addCommands(scroll.getArrayItems(), true);
-
-                        swapedItem = undefined;
-                    }
-                } else if (scroll.name == "DOWN" && clickIsInObj(e.x, e.y, scroll.GetBackGround()) && (inputCommandStates == 0 || inputCommandStates == 4 || inputCommandStates == 5) && isScrollMove) { //ЭТО ЕСЛИ НАЖАЛИ НА НИЖНИЙ СКРОЛЛ, ЧТОБЫ ВЫБРАТЬ КОМАНДУ
-                    var itm = scroll.getArrayItems();
-                    if (itm !== undefined && itm.length > 0) {
-                        OOP.forArr(itm, function (el, i) {
-                            if (clickIsInObj(e.x, e.y, el)) {
-                                if (el.command.name == "repeatif" || el.command.name == "repeat" || el.command.name == "if") {
-                                    var elL = field[lastClickedIndx].getCommands().length;
-                                    if (menuStatesArr.length !== 0) {
-                                        if (menuStatesArr[0].name == "if" && menuStatesArr[0].redacted == "else")
-                                            elL = menuStatesArr[0].elseBlock.actions.length;
-                                        else elL = menuStatesArr[0].commandsBlock.actions.length;
-                                    }
-                                    choosenCommandInElement = elL - 1 - i;
-                                    addCommandToCell(el, true);
-                                }
-                            }
+                //Очищаем буфер для объекта который сдвигали
+                yMovedItem = new point(-1, -1);
+                scrolled = true;
+            }
+            if (scroll.name == "DOWN" && selectedItem !== undefined && touchTapTimeFlag) {
+                scroll.swapItemPosition(false, selectedItem, undefined, selItemPos)
+                if (swapedItem !== undefined) {
+                    scroll.swapItems(selectedItem, swapedItem);
+                    //Реинициализации команд в текущем выбранном элемента
+                    if (menuStatesArr.length > 0) {
+                        //menuStatesArr[0].addCommands(scroll.getArrayItems(), true, 0)
+                        var mass = [];
+                        OOP.forArr(scroll.getArrayItems(), function (el) {
+                            mass.push(el.command);
                         })
-                    }
-                }
+                        if (menuStatesArr[0].name == "if" && menuStatesArr[0].redacted == "else")
+                            menuStatesArr[0].elseBlock.actions = mass;
+                        else menuStatesArr[0].commandsBlock.actions = mass;
+                    } else field[lastClickedIndx].addCommands(scroll.getArrayItems(), true);
 
-                //ОРАБОТКА СКРОЛЛА ВЫБОРА КОМАНД
-                if (clickIsInObj(e.x, e.y, scroll.GetBackGround())) {
-                    if (scroll.name == "RIGHT") { //ПРАВЫЙ СКРОЛЛ ВВОДА ПРОСТЫХ КОМАНД
-                        //ЕСЛИ МЫ ОПРЕДЕЛИЛИ ЧТО ПОЛЬЗОВАТЕЛЬ КЛИКНУЛ ПО ЭЛЕМЕНТУ
-                        if (!isScrollMove) {
-                            //var pos = touch.getPosition();
-                            //Определяем на какой элемент он КЛИКНУЛ
-                            OOP.forArr(scroll.getArrayItems(), function (el) {
-                                if (clickIsInObj(e.x, e.y, el)) {
-                                    //ОБРАБАТЫВАЕМ КЛИК 
-                                    addCommandToCell(el);
+                    swapedItem = undefined;
+                }
+            } else if (scroll.name == "DOWN" && clickIsInObj(e.x, e.y, scroll.GetBackGround()) && (inputCommandStates == 0 || inputCommandStates == 4 || inputCommandStates == 5) && !scrolled) { //ЭТО ЕСЛИ НАЖАЛИ НА НИЖНИЙ СКРОЛЛ, ЧТОБЫ ВЫБРАТЬ КОМАНДУ
+                var itm = scroll.getArrayItems();
+                if (itm !== undefined && itm.length > 0) {
+                    OOP.forArr(itm, function (el, i) {
+                        if (clickIsInObj(e.x, e.y, el)) {
+                            if (el.command.name == "repeatif" || el.command.name == "repeat" || el.command.name == "if") {
+                                var elL = field[lastClickedIndx].getCommands().length;
+                                if (menuStatesArr.length !== 0) {
+                                    if (menuStatesArr[0].name == "if" && menuStatesArr[0].redacted == "else")
+                                        elL = menuStatesArr[0].elseBlock.actions.length;
+                                    else elL = menuStatesArr[0].commandsBlock.actions.length;
                                 }
-                            });
+                                choosenCommandInElement = elL - 1 - i;
+                                addCommandToCell(el, true);
+                            }
                         }
-                        //По дефолту считаем что пользователь не будет скролить
-                        isScrollMove = false;
-                        return;
-                    }
+                    })
                 }
+            }
 
-                //ОБРАБОТЧИК ЛЕВОГО СКРОЛА - РЕДАКТОР СЛОЖНЫХ КОМАНД
-                if (scroll.name == "LEFT" && clickIsInObj(e.x, e.y, scroll.GetBackGround())) {
-                    var elems = scroll.getArrayItems();
-                    if (elems !== undefined && elems.length > 0) {
-                        if (!isScrollMove) {
-                            //var pos = touch.getPosition();
-                            //Определяем на какой элемент он КЛИКНУЛ
-                            OOP.forArr(elems, function (el) {
-                                if (clickIsInObj(e.x, e.y, el)) {
-                                    //ОБРАБАТЫВАЕМ КЛИК 
-                                    //leftScrollBarItemsClick(el);
-                                    addCommandToCell(el, true);
-                                }
-                            });
-                        }
-                        isScrollMove = false;
-                        return;
-                    }
-                }
-            } else { //Если МЫШКА
-
-                if (e.which == 1) { //ЛЕВАЯ КНОПКА МЫШИ
-                    if (scroll.name == "RIGHT") { //ОБРАБОТКА КЛИКОВ ПО СКРОЛ БАРУ СО СПИСКОМ КОММАНД
+            //ОРАБОТКА СКРОЛЛА ВЫБОРА КОМАНД
+            if (clickIsInObj(e.x, e.y, scroll.GetBackGround())) {
+                if (scroll.name == "RIGHT") { //ПРАВЫЙ СКРОЛЛ ВВОДА ПРОСТЫХ КОМАНД
+                    //ЕСЛИ МЫ ОПРЕДЕЛИЛИ ЧТО ПОЛЬЗОВАТЕЛЬ КЛИКНУЛ ПО ЭЛЕМЕНТУ
+                    if (!isScrollMove) {
+                        //var pos = touch.getPosition();
                         //Определяем на какой элемент он КЛИКНУЛ
                         OOP.forArr(scroll.getArrayItems(), function (el) {
                             if (clickIsInObj(e.x, e.y, el)) {
-                                //ОБРАБАТЫВАЕМ КЛИК 
+                                //ОБРАБАТЫВАЕМ КЛИК
                                 addCommandToCell(el);
                             }
                         });
-                    } else if (scroll.name == "DOWN") {
-                        var elems = scroll.getArrayItems();
-                        if (elems && elems.length > 0) {
-                            if (touchTapTimeFlag) { //Если перемещаем итем
-                                scroll.swapItemPosition(false, selectedItem, undefined, selItemPos)
-                                if (swapedItem !== undefined) {
-                                    scroll.swapItems(selectedItem, swapedItem);
-                                    //Реинициализации команд в текущем выбранном элемента
-                                    if (menuStatesArr.length > 0) {
-                                        //menuStatesArr[0].addCommands(scroll.getArrayItems(), true, 0)
-                                        var mass = [];
-                                        OOP.forArr(scroll.getArrayItems(), function (el) {
-                                            mass.push(el.command);
-                                        })
-                                        if (menuStatesArr[0].name == "if" && menuStatesArr[0].redacted == "else")
-                                            menuStatesArr[0].elseBlock.actions = mass;
-                                        else menuStatesArr[0].commandsBlock.actions = mass;
-                                    } else field[lastClickedIndx].addCommands(scroll.getArrayItems(), true);
-                                    swapedItem = undefined;
-                                }
-                            } else {
-                                var itm = scroll.getArrayItems();
-                                if (itm !== undefined) {
-                                    OOP.forArr(itm, function (el, i) {
-                                        if (clickIsInObj(e.x, e.y, el)) {
-                                            choosenCommandInElement = field[lastClickedIndx].getCommands().length - 1 - i;
-                                            addCommandToCell(el, true);
-                                        }
-                                    })
-                                }
-                            }
-                        }
-                    } else if (scroll.name == "LEFT") {
-                        var itms = scroll.getArrayItems();
-                        if (itms !== undefined && itms.length > 0) {
-                            //Определяем на какой элемент он КЛИКНУЛ
-                            OOP.forArr(itms, function (el) {
-                                if (clickIsInObj(e.x, e.y, el)) {
-                                    //ОБРАБАТЫВАЕМ КЛИК 
-                                    //leftScrollBarItemsClick(el);
-                                    addCommandToCell(el, true);
-                                }
-                            });
-                        }
                     }
-                } else if (e.which == 3) { //ПРАВАЯ КНОПКА МЫШИ
-                    if (scroll.name == "DOWN" && scroll.getArrayItems()) {
+                    //По дефолту считаем что пользователь не будет скролить
+                    isScrollMove = false;
+                    return;
+                }
+            }
+
+            //ОБРАБОТЧИК ЛЕВОГО СКРОЛА - РЕДАКТОР СЛОЖНЫХ КОМАНД
+            if (scroll.name == "LEFT" && clickIsInObj(e.x, e.y, scroll.GetBackGround())) {
+                var elems = scroll.getArrayItems();
+                if (elems !== undefined && elems.length > 0) {
+                    if (!isScrollMove) {
+                        //var pos = touch.getPosition();
                         //Определяем на какой элемент он КЛИКНУЛ
-                        OOP.forArr(scroll.getArrayItems(), function (el, index) {
+                        OOP.forArr(elems, function (el) {
                             if (clickIsInObj(e.x, e.y, el)) {
-                                //УДАЛЯЕМ КОМАНДУ ИЗ СПИСКА КОММАНД(ПОКА ВСЕГДА 0ой массив команд в стеке, потом их будет несколько)
-                                removeCommandFromCell(0, index);
-                                return;
+                                //ОБРАБАТЫВАЕМ КЛИК
+                                //leftScrollBarItemsClick(el);
+                                addCommandToCell(el, true);
                             }
                         });
                     }
+                    isScrollMove = false;
+                    return;
                 }
             }
-        });
-    } else {}
+        } else { //Если МЫШКА
 
-    if ((isMobile && !scrolled && !touchTapTimeFlag) || (!isMobile && e.which == 1 && !touchTapTimeFlag)) {
-        if (!processGuiClick(e)) //Если пользователь не нажал на GUI выбора команд
-            processButtonClick(e); //Если пользователь не нажал на кнопки
-        processFieldClick(e); //Проверяем нажал ли пользователь на поле
+            if (e.which == 1) { //ЛЕВАЯ КНОПКА МЫШИ
+                if (scroll.name == "RIGHT") { //ОБРАБОТКА КЛИКОВ ПО СКРОЛ БАРУ СО СПИСКОМ КОММАНД
+                    //Определяем на какой элемент он КЛИКНУЛ
+                    OOP.forArr(scroll.getArrayItems(), function (el) {
+                        if (clickIsInObj(e.x, e.y, el)) {
+                            el.onClick(el);
+                            clicked = true;
+                            return;
+                        }
+                    });
+                } else if (scroll.name == "LEFT") {
+                    var elems = scroll.getArrayItems();
+                    if (clickIsInObj(e.x, e.y, scroll.GetBackGround()))
+                        clicked = true;
+                    if (elems && elems.length > 0) {
+                        if (touchTapTimeFlag) { //Если перемещаем итем
+                            scroll.swapItemPosition(false, selectedItem, undefined, selItemPos)
+                            if (swapedItem !== undefined) {
+                                scroll.swapItems(selectedItem, swapedItem);
+                                swapedItem = undefined;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    if (!clicked && e.which == 1) { //Если клик не был обнаружен выше
+        if (!allButtons.checkButtonsClicked(e))
+            if (!codeView.isClicked(e))
+                processFieldClick(e);
     }
     scrolled = false;
     touchTapTimeFlag = false;
@@ -344,7 +328,7 @@ function onMove(e) {
                     yMovedItem.x = touchedScroll.getArrayItems().indexOf(selectedItem);
                     yMovedItem.y = selectedItem.y;
                 }
-                //Сдвигаем элемент туда куда двигают  
+                //Сдвигаем элемент туда куда двигают
                 //Если элемент вытащили ещё не слишком далеко, то продолжаем его вытаскивать
                 if (selectedItem.isIntersect(touchedScroll.GetActivityArea())) {
                     selectedItem.y += scrollSpeed.y;
@@ -363,22 +347,30 @@ function onMove(e) {
                 }
                 touchMovement = "HOR";
             }
-        } else if (lastClickedIndx != -1 && touchedScroll && (touchedScroll.name == "DOWN" || touchedScroll.name == "RIGHT")) { //ОБРАБОТКА ПРОКРУТКИ ПО СКРОЛЛУ
+        } else if (lastClickedIndx != -1 && touchedScroll && (touchedScroll.name == "LEFT" || touchedScroll.name == "RIGHT")) { //ОБРАБОТКА ПРОКРУТКИ ПО СКРОЛЛУ
             scrollDynamic(scrollSpeed, touchedScroll);
             scrolled = true;
         }
     } else if (touchTapTimeFlag && touchedScroll) { //ЕСЛИ МЫШКА И ПОЛЬЗОВАТЕЛЬ ПЕРЕДВИГАЕТ ЭЛЕМЕНТЫ
         var item = touchedScroll.objectEntryC(selectedItem)
         if (selectedItem.isIntersect(touchedScroll.GetBackGround())) {
-            if (touchedScroll.isItemWhollyInGB(selectedItem.x + scrollSpeed.x, selectedItem.w) && selectedItem.getAlpha() < 1) {
+            if (touchedScroll.isItemWhollyInGB(selectedItem.y + scrollSpeed.y, selectedItem.h) && selectedItem.getAlpha() < 1) {
                 touchedScroll.swapItemPosition(true, selectedItem, item, selItemPos)
                 if (item !== undefined)
                     swapedItem = item;
-                selectedItem.x += (scrollSpeed.x);
+                selectedItem.y += (scrollSpeed.y);
             }
         }
     } else if (touchedScroll) { //ЕСЛИ МЫШКА И ПОЛЬЗОВАТЕЛЬ СКРОЛИТ КОЛЕСИКОМ
-        scrollDynamic(new point(e.deltaY, e.deltaY), touchedScroll);
+        scrollDynamic(new point(e.deltaY * -1, e.deltaY * -1), touchedScroll);
+    }
+    //Если пользователь скролит игровое поле
+    if (labIsMove) {
+        labView.elementsMove(scrollSpeed.x, scrollSpeed.y);
+    }
+    //Если пользователь скролит карту кода
+    if (codeMapIsMoved) {
+        codeView.elementsMove(scrollSpeed.x, scrollSpeed.y);
     }
 }
 
@@ -392,66 +384,111 @@ function onTouchTimeTimer() {
     setTimeout("onTouchTimeTimer()", 40);
 }
 
-//Обработчик нажатий нвсе кнопки интерфейса
-function processButtonClick(e) {
-
-    if (clickIsInObj(e.x, e.y, startB)) { //КНОПКА СТАРТА/СТОПА
-        startB.isPlay = !startB.isPlay;
-        if (startB.isPlay) {
-            //Запоминаем время начала движения робота
-            startPlayerMoveTime = totalSeconds;
-            //Увеличиваем счетчик попыток для прохождения
-            totalAttempts++;
-            setTimeout("processRobotMove()", robotMoveDelay);
-        }
-        else playerSetStart();
-        return true;
-    } else if (clickIsInObj(e.x, e.y, reloadB)) { //КНОПКА ПЕРЕЗАГРУЗКИ УРОВНЯ
-        if (!startB.isPlay)
-            initializeGame();
-        return true;
-    } else if (clickIsInObj(e.x, e.y, menuB)) { //КНОПКА МЕНЮ
-        return true;
+//Обработчики всех кликабельных элементов---------------------------
+function onOkBClick() { //Вернет TRUE если надо закрыть кнопку OK
+    if(infoText.isVisible()) infoText.close();
+    initRightScroll([]);
+    //lastClickedIndx = -1; //Очищаем индекс выбранной клетки поля
+    choosenCommandInElement = undefined;
+    isScrollMove = true; //ПО дефолту скролл(чтобы не было срабатываний на клик при первом отображении интерфейса ввода команд)
+    guiLayer.clear(); //Очищаем слой с интерфейса
+    //Проверяем надо ли совсем закрывать интерфейс ввода
+    if (inputCommandStates > 0) {
+        //Инициализируем карту кода
+        codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
+        //field[lastClickedIndx].setStroke(false); //Убираем выделение с поля
+        inputCommandStates = 0;
+        return false;
     }
-    return false;
+    initLeftScroll([]);
+    //Инициализируем карту кода
+    codeView.createCodeMap(0, 0, lastClickedElement.commands, false, false);
+    field[lastClickedIndx].setStroke(false); //Убираем выделение с поля
+    return true;
 }
+
+//КНОПКА СТАРТА/СТОПА
+function startBClick() {
+    isStarted = !isStarted;
+    if (isStarted) {
+        //Запоминаем время начала движения робота
+        startPlayerMoveTime = totalSeconds;
+        //Увеличиваем счетчик попыток для прохождения
+        totalAttempts++;
+        setTimeout("processRobotMove()", robotMoveDelay);
+    }
+    return true;
+}
+
+//КНОПКА МЕНЮ
+function menuBClick() {
+    clearAllLayers();
+    game.setLoop('menu');
+    return true;
+}
+//КНОПКА ПЕРЕЗАГРУЗКИ УРОВНЯ
+function reloadBClick() {
+    if (!isStarted)
+        initializeGame();
+    return true;
+}
+
+function labyrinthRoadClick(index) {
+    //Перерисовываем кликнутый элемент
+    setFocused(field[index], index);
+    return true;
+}
+
+function onCodeMapElementClick(element) {
+
+    if (element.name && element.name == "plus") {
+        choosenCommandInElement = element.command;
+        addCommandToCell(element, true);
+        return;
+    }
+
+    choosenCommandInElement = findObjStorage(lastClickedElement.commands, element.command);
+    if (!choosenCommandInElement) return;
+
+    if (element.command.name == "blockA" || element.command.name == "whatisit" || element.command.name == "blockB" || element.command.name == "counter") {
+        addCommandToCell(element, true);
+        codeView.menu.closeMenu(element);
+    } else {
+        codeView.menu.openMenu(element);
+    }
+}
+
+function onChooseCommandClick(el) {
+    //ОБРАБАТЫВАЕМ КЛИК
+    addCommandToCell(el);
+}
+
+//Обработчик для ввода с цифр
+function onKeyboardClick(el){
+    var count = el.command.name != "backspace" ? el.command.value : -1;
+    var text = choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count.toString();
+    if(count != -1){//Если элемент добавляют        
+        if(text.length < 4){
+            text = text + count.toString();
+        }
+    }
+    else if(text.length > 0) text = text.substring(0, text.length - 1)//Если стирают
+    var parsedInt = parseInt(text);
+    parsedInt = isNaN(parsedInt) ? 0 : parsedInt;
+    //Инитим текст в блок итераций
+    choosenCommandInElement.countBlock.count = parsedInt;
+    //Задаем текст в текст бокс
+    infoText.setText(text);
+}
+//------------------------------------------------------------------
 
 //Возвращает true если пользователь нажал на отображенный элемент GUI
 function processGuiClick(e) {
-    //Если не выбран ввод команд
-    if (lastClickedIndx == -1) return false;
     //Обрабатываем кнопку ok
     if (clickIsInObj(e.x, e.y, okB)) { //Если на кнопку нажали, то скрываем весь интерфейс ввода
-        if (menuStatesArr.length != 0) {
-            //Удаляем верхний элемент из стека команд
-            menuStatesArr.shift();
-            //Если в стеке состояний не осталось больше команд, то очищаем скролы
-            if (menuStatesArr.length == 0) {
-                inputCommandStates = 0;
-                initLeftScroll(undefined, undefined);
-                initRightScroll(getAllCommandsMenu());
-                initDownScroll(field[lastClickedIndx].getCommandsImagesArr());
-            } else {
-                //Удаляем первый элемент из стека, чтобы снова его добавить в addCommandToCell. Чутка костыль, да..но хорошо работает:)
-                var unShifted = menuStatesArr.shift();
-                addCommandToCell({
-                    command: unShifted
-                }, true);
-            }
-        } else {
-            field[lastClickedIndx].setStroke(false); //Убираем выделение с поля
-            //initDownScroll([]);//Очищаем интерфейс вывода введенных команд
-            lastClickedIndx = -1; //Очищаем индекс выбранной клетки поля
-            choosenCommandInElement = -1;
-            isScrollMove = true; //ПО дефолту скролл(чтобы не было срабатываний на клик при первом отображении интерфейса ввода команд)
-            guiLayer.clear(); //Очищаем слой с интерфейса
-            startB.setVisible(true); //Показывае кнопку старт/стоп
-            menuB.setVisible(true);
-            inputCommandStates = 0;
-        }
-        return true;
+        return okB.onClick();
     }
-    return true;
+    return false;
 }
 
 //Функция обеспечивающая динамический скролл
@@ -473,12 +510,8 @@ function processFieldClick(e) {
     //Проходим по полю и проверяем кликнули ли мы на элемент поля
     for (var i = 0; i < field.length; i++) {
         //Обрабатываем клики мышкой
-        if (clickIsInObj(e.x, e.y, field[i].getImageObject())) {
-            if (field[i].code == roadCode || field[i].code == entryCode) {
-                //Перерисовываем кликнутый элемент
-                setFocused(field[i], i);
-                return true;
-            }
+        if (field[i].onClick && clickIsInObj(e.x, e.y, field[i])) {
+            field[i].onClick(i);
         }
     }
     return false;
@@ -487,8 +520,10 @@ function processFieldClick(e) {
 
 //Вернет true если клик был внутри координат прямоугольника obj
 function clickIsInObj(x, y, obj) {
-    if (x >= obj.x && y >= obj.y)
-        if (x <= obj.x + obj.w && y <= obj.y + obj.h)
-            return true;
+    if (obj && obj.visible != "false") {
+        if (x >= obj.x && y >= obj.y)
+            if (x <= obj.x + obj.w && y <= obj.y + obj.h)
+                return true;
+    }
     return false;
 }

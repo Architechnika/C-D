@@ -33,60 +33,58 @@ function fieldElement(imgSource, comm, elemcode, fx, fy, fw, fh) {
     this.commands = comm;
     this.commandsImgs = undefined;
     this.isCommandsReaded = false;
-    this.imgSrc = imgSource;
-    this.X = fx;
-    this.Y = fy;
-    this.W = fw;
-    this.H = fh;
 
     //Объекты изображений
     //Объект который хранит графическое представление элемента с исходным изображением
-    this.imgObjectSource = newImageObj(this.imgSrc, this.X, this.Y, this.W, this.H);
+    //var this.__proto__ = newImageObj(this.imgSrc, fx, fy, fw, fh);
+    this.__proto__ = newImageObj(imgSource, fx, fy, fw, fh);
+    //Добавляем обработчик на клик если этот элемент дорога либо вход
+    if (this.code == roadCode || this.code == entryCode) {
+        this.setUserData({
+            onClick: function (index) {//index - индекс элемента в массиве где он хранится
+                return labyrinthRoadClick(index)
+            }
+        });
+    }
 
     //Задает полностью новое изображение для элемента
-    this.setNewImage = function (src, x, y, w, h) {
-        this.X = x;
-        this.Y = y;
-        this.W = w;
-        this.H = h;
-        this.imgSrc = imgPath;
-        this.imgObjectSource = newImageObj(this.imgSrc, this.X, this.Y, this.W, this.H);
+    this.setNewImageSrc = function (src) {
+        this.__proto__.file = imgPath;
     }
 
     //Задает файл с картинкой элемента
     this.setNewSourceImage = function (imgPath) {
         this.imgSrc = imgPath;
-        this.imgObjectSource = newImageObj(this.imgSrc, this.X, this.Y, this.W, this.H);
+        this.__proto__ = newImageObj(this.imgSrc, this.__proto__.x, this.__proto__.y, this.__proto__.w, this.__proto__.h);
     }
 
     //Задает размер элемента
     this.setNewSize = function (x, y, w, h) {
-        this.X = x;
-        this.Y = y;
-        this.W = w;
-        this.H = h;
-        this.imgObjectSource = newImageObj(this.imgSrc, this.X, this.Y, this.W, this.H);
+        this.__proto__.x = x;
+        this.__proto__.y = y;
+        this.__proto__.w = w;
+        this.__proto__.h = h;
     }
 
     //Возвращает текущее графическое представление элемента по исходному изображению
     this.getImageObject = function () {
-        return this.imgObjectSource;
+        return this.__proto__;
     }
 
     //Отрисовывает элемент на экране
     this.draw = function () {
-        this.imgObjectSource.draw();
-        if (this.imgObjectSource.strokeWidth !== 0) {
-            this.imgObjectSource.drawStaticBox();
+        this.__proto__.draw();
+        if (this.__proto__.strokeWidth !== 0) {
+            this.__proto__.drawStaticBox();
         }
     }
 
-    //Задает наличие выделения элемента.(Нужно для отображения когда добавляем команды на поле)  
+    //Задает наличие выделения элемента.(Нужно для отображения когда добавляем команды на поле)
     this.setStroke = function (isStroke) {
         if (isStroke) {
-            this.imgObjectSource.strokeWidth = 100;
+            this.__proto__.strokeWidth = 100;
         } else {
-            this.imgObjectSource.strokeWidth = 0;
+            this.__proto__.strokeWidth = 0;
         }
     }
     //Возвращает массив ImageObject-ов элементов команд по заданному index из стека
@@ -163,7 +161,7 @@ function fieldElement(imgSource, comm, elemcode, fx, fy, fw, fh) {
     this.addCommands = function (comms, isClear) {
         if (isClear) //Если удаляем предыдущие элементы
             this.commands = new Array();
-        for(var i = 0 ; i < comms.length; i++)
+        for (var i = 0; i < comms.length; i++)
             this.commands.unshift(comms[i].command);
     }
 
@@ -180,58 +178,6 @@ function fieldElement(imgSource, comm, elemcode, fx, fy, fw, fh) {
         return res;
     }
 }
-
-//КЛАСС описывающий игровой объект на поле. Это могут быть любые объекты с которыми может взаимодействовать робот
-/*function gameObject(NAME,TYPE,LOCATION,IMAGE, isROTATE){
-  //Название объекта
-  this.name = NAME;
-  //Его код для логической части игры
-  this.code = TYPE;
-  //Индекс элемента field к которому обьект привязан
-  this.position = LOCATION;
-  //Его представление для графической части
-  this.imgObject = field === undefined ? null : game.newImageObject({
-    file : IMAGE,
-    x : field[this.position].X  + field[this.position].W / 4,
-    y : field[this.position].Y  + field[this.position].H / 4,
-    w : field[this.position].W / 2,
-    h : field[this.position].H / 2
-  });
-  var isRotate = isROTATE;
-  
-  this.draw = function(){
-    this.imgObject.draw();
-  }
-  //Запускает анимацию вращения монетки
-  this.startRotating = function(speed,angle){
-    isRotate = true;
-    setTimeout(rotate, speed,angle,this.imgObject,speed);
-  };
-  //Останавливает анимацию вращения монетки
-  this.stopRotating = function(){
-    isRotate = false;
-  };
-  //Задает новую позицию этому элементу на поле
-  this.setNewPosition = function(poz){
-    this.position = poz;
-    this.setSize(field[this.position]);
-  };
-  //Задает размер изображения элемента
-  this.setSize = function(imgObj){
-    this.imgObject.x = imgObj.X;
-    this.imgObject.y = imgObj.Y;
-    this.imgObject.w = imgObj.W;
-    this.imgObject.h = imgObj.H;
-  }
-  function rotate(angle,obj,speed){
-    if(isRotate){
-      obj.angle += angle;
-      setTimeout(rotate, speed,angle,obj,speed);
-    }
-  }
-  //ЗАДАЕМ ВРАЩЕНИЕ МОНЕТОК
-  if(isRotate) this.startRotating(50,2);
-}*/
 
 //Перерасчитывает размеры существующего поля
 function calcField(w, h, x, y, elemsInLine, elemsInColumn) {
@@ -251,7 +197,7 @@ function calcField(w, h, x, y, elemsInLine, elemsInColumn) {
             var comm = element.commands;
             //На его место добавляем новый
             var newElem = new fieldElement(img, comm, S, X + x, Y + y, oneTileWidth, oneTileHeight);
-            if (element.imgObjectSource.strokeWidth != 0)
+            if (element.this.__proto__ectSource.strokeWidth != 0)
                 newElem.setStroke(true);
             field.push(newElem);
         });
@@ -297,8 +243,9 @@ function generateMap(w, h, x, y, elemsInLine, elemsInColumn) {
             } else if (S > 0) {
                 img = wallPaths[S - 1];
             }
+            var fEl = new fieldElement(img, comm, S, X + x, Y + y, oneTileWidth, oneTileHeight);
             //Заполняем массив элементов лабиринта
-            field.push(new fieldElement(img, comm, S, X + x, Y + y, oneTileWidth, oneTileHeight));
+            field.push(fEl);
         });
 
     //ГЕНЕРИМ МЕСТОПОЛОЖЕНИЕ ИГРОВЫХ ОБЪЕКТОВ ЕСЛИ НАДО

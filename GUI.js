@@ -1,302 +1,256 @@
 //СКРИПТ СОДЕРЖИТ ОПИСАНИЕ ВСЕХ ЭЛЕМЕНТОВ GUI ИГРЫ, а также методы для работы с ними
 
-
-var startB = null; //ктопка старт
-var menuB = null; //ктопка меню
-var okB = null; // кнопка ок(при нажатии на которую заканчивается ввод команд в клетку)
-var reloadB = null;//Кнопка перезагрузки лабиринта
 var timerText = null; //текст таймера
 var progressText = null; // количество ходов
-var inputCounterText = null;//Текстовое поле для ввода чисел
+var inputCounterText = null; //Текстовое поле для ввода чисел
 
 var menuItemH = 0; // стандартная высота элемента меню
 var menuItemW = 0; // стандартная ширина элемента меню
 var textbackGroundItem = null; //задний фон текстов
+var codeMapBG = undefined;
 var scrollSpeed = 0.5;
 var guiTextColor = "red";
-
-var Scrolls = new Array();// массив всех скролбаров
+var clockItem = undefined;
+var coinItem = undefined;
+var allButtons = undefined; //Класс для всех кнопок
+var Scrolls = new Array(); // массив всех скролбаров
+var infoText = undefined;
 
 //Отрисовывает элементы интерфейса
-function drawGUI(){
-  //Отрисовываем кнопки
-  startB.draw();
-  menuB.draw();
-  //reloadB.draw();
-  
-  //Отрисовываем текстовые поля
-  textbackGroundItem.draw();
-  updateTextOnGui();
-  timerText.textDraw();
-  progressText.textDraw();
-  if (inputCounterText !== null) inputCounterText.draw();
-  
-  //Отрисовываем интерфейс выбора команд
-  showCommandsMenu();
+function drawGUI() {
+    //Отрисовываем кнопки
+
+    //Отрисовываем текстовые поля
+    textbackGroundItem.draw();
+    codeMapBG.draw();
+    updateTextOnGui();
+    timerText.textDraw();
+    progressText.textDraw();
+    coinItem.draw();
+    clockItem.draw();
+    infoText.draw();
+    
+    if (inputCounterText !== null) inputCounterText.draw();
+
+    //Отрисовываем интерфейс выбора команд
+    showCommandsMenu();
+    allButtons.ButtonsDraw();
 }
 
 
-function initGUI()
-{//поочередность иницилизаии ОБЯЗАТЕЛЬНА для правильного расположения меню
-//1 - initGameSpace
-//2 - startBInit
-//3 - menuBInit 
-//..timerTextInit();
-// progressTextInit();
-  menuItemH = (height / 100) * 8;
-  menuItemW = (width / 100) * 8;
-  
-  initGameSpace();
-  
-  startBInit();
-  menuBInit();
-  reloadBInit();
-  okBInit();  
-  
-  timerTextInit();
-  progressTextInit(); 
-  //inputCounterTextInit();
-  
-  textbackGroundInit("#ffba42",1);
-  //ИНИЦИАЛИЗИРУЕМ ИНТЕРФЕЙС РЕДАКТОРА КОМАНД  
-  if(Scrolls.length == 0){
-    Scrolls = new Array();
-    initRightScroll(getAllCommandsMenu(50,50));
-  }
+function initGUI() { //поочередность иницилизаии ОБЯЗАТЕЛЬНА для правильного расположения меню
+    menuItemH = (height / 100) * 8;
+    menuItemW = (width / 100) * 8;
+
+    initGameSpace();
+
+    infoText = new TextWithBG(gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH);
+
+    timerTextInit();
+    progressTextInit();
+
+    textbackGroundInit("#000000", 0.4);
+    codeMapBackGroundInit("#000000", 0.4)
+    //ИНИЦИАЛИЗИРУЕМ ИНТЕРФЕЙС РЕДАКТОРА КОМАНД
+    if (Scrolls.length == 0) {
+        Scrolls = new Array();
+        initLeftScroll([]);
+    }
 }
 
 //Обновляет запись об общем колличестве команд на поле
-function updateTextOnGui(){
-  //Смотрим сколько комманл уже есть на поле
-  var totalCommands = getTotalCommandsOnField();
-  //Обновляем текст об этом
-  progressText.setText("Батареек собрано: " + playerInventory.length);
-  //Обновляем инфу о времени
-  var min = Math.floor(totalSeconds / 60);
-  var sec = totalSeconds - (min * 60);//Math.floor(totalMiliSeconds / 200 - min * 60);
-  //Обновляем инфу о времени
-  timerText.setText("Прошло времени: " + (min < 10 ? "0" + min:min) + ":" + (sec < 10 ? "0" + sec:sec))
+function updateTextOnGui() {
+    //Смотрим сколько комманл уже есть на поле
+    var totalCommands = getTotalCommandsOnField();
+    //Обновляем текст об этом
+    progressText.setText(playerInventory.length);
+    //Обновляем инфу о времени
+    var min = Math.floor(totalSeconds / 60);
+    var sec = totalSeconds - (min * 60); //Math.floor(totalMiliSeconds / 200 - min * 60);
+    //Обновляем инфу о времени
+    timerText.setText((min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec))
 }
 
-//Функция для инициализации кнопки старт/стоп
-function startBInit()
-{
-  
-  if(menuItemW > menuItemH)
-  {
-    menuItemH = menuItemW;
-  }
-  else menuItemW = menuItemH;
-  
-  if(startB == null)
-    startB = game.newImageObject({x : 0, y : 0,w : (gameSpaceX), h : gameSpaceX, file : buttonStartImgSrc});
-  
-  //Задаем стартовое состояние кнопки
-  startB.setUserData({
-    isPressed : false
-  });
-  
-  //Описываем обработчик для отрисовки кнопки
-  startB.ondraw = function(){
-    if(this.isPlay)
-      this.setImage(buttonStopImgSrc);
-    else this.setImage(buttonStartImgSrc);
-    if(lastClickedIndx != -1) this.setVisible(false);
-  };
-  
-  startB.setPositionS(point(0, height- startB.h));
-}
 
-function menuBInit()
-{
-  
-  if(menuItemW > menuItemH)
-  {
-    menuItemH = menuItemW;
-  }
-  else menuItemW = menuItemH;
-  
-  if(menuB == null)
-    menuB = game.newImageObject({x : 0, y : 0,w : gameSpaceX, h : gameSpaceX, file : menuButtonImgSrc});
-  
-  if(width < height)
-  {
-  menuB.setPositionS(point(gameSpaceW - menuItemW-5, height- startB.h - 5));
-  }else
-  {
-    menuB.setPositionS(point(gameSpaceX+gameSpaceW, (height-gameSpaceX) ));
-  }
-  
-}
-
-function reloadBInit(){
-  
-   if(menuItemW > menuItemH)
-  {
-    menuItemH = menuItemW;
-  }
-  else menuItemW = menuItemH;
-  
-  if(reloadB == null)
-    reloadB = game.newImageObject({x : 0, y : 0,w : menuItemW, h : menuItemH, file : reloadButtonImgSrc});
-  
-  if(width < height)
-  {
-    reloadB.setPositionS(point(5, height- startB.h - 5));
-  }else
-  {
-    reloadB.setPositionS(point((startB.x + menuB.x) / 2, gameSpaceH - startB.h - 5));
-  }
-  
-}
-
-function okBInit(){
-  /*if(menuItemW > menuItemH)
-  {
-    menuItemH = menuItemW;
-  }
-  else menuItemW = menuItemH;
-  
-  okB = game.newImageObject({x : startB.x, y : startB.y,w : startB.w, h : startB.h, file : okButtonImgSrc});*/
-}
-
-function timerTextInit()
-{
-    var siz = ((width - gameSpaceW)/100)*5;
-    timerText = new Label(0,0,"Прошло времени: 00:00");
-    timerText.setTextPosition((gameSpaceX + gameSpaceW)+5, 5);
-    timerText.setTextSize(siz);
+function timerTextInit() {
+    clockItem = game.newImageObject({
+        x: gameSpaceX,
+        y: 0,
+        w: gameSpaceY,
+        h: gameSpaceY,
+        file: clockPath
+    })
+    timerText = new Label(0, 0, "00:00");
+    timerText.setTextPosition((clockItem.x + clockItem.w) + 5, 0);
+    timerText.setTextSize(gameSpaceY);
     timerText.setTextColor(guiTextColor);
 }
 
-function progressTextInit()
-{
-    var siz = ((width - gameSpaceW)/100)*5;
-    progressText = new Label(0,0,"Ходов: 00");
-    progressText.setTextPosition(gameSpaceX+gameSpaceW+5, timerText.getTextObject().size+5);
-    progressText.setTextSize(siz);
+function progressTextInit() {
+    coinItem = game.newImageObject({
+        x: timerText.getObj().x + timerText.getObj().w * 4,
+        y: 0,
+        w: gameSpaceY,
+        h: gameSpaceY,
+        file: coinPath
+    })
+    progressText = new Label(0, 0, "00");
+    progressText.setTextPosition(coinItem.x + coinItem.w + 5, 0);
+    progressText.setTextSize(gameSpaceY);
     progressText.setTextColor(guiTextColor);
 }
 
 function inputCounterTextInit() {
-
-    var lImg = undefined;
-    OOP.forArr(Scrolls, function (el) {
-        if (el.name == "LEFT") {
-            lImg = el.getArrayItems()[1];
-            return;
-        }
-    });
-    if (lImg === undefined) return;
-
     W = width / 100 * 5;
     H = height / 100 * 5;
-    
-    if(inputCounterText == null)
-        inputCounterText = game.newTextObject({ x: lImg.x + (lImg.w / 4), y: lImg.y + (lImg.h / 4), w : 0, h : 0, text : " ", size : lImg.h / 2, color : "blue"});
+
+    if (inputCounterText == null)
+        inputCounterText = game.newTextObject({
+            x: 0, //lImg.x + (lImg.w / 4),
+            y: 0, //lImg.y + (lImg.h / 4),
+            w: 0,
+            h: 0,
+            text: " ",
+            size: 10, //lImg.h / 2,
+            color: "blue"
+        });
     inputCounterText.text = " ";
     inputCounterText.visible = false;
 }
 
-function textbackGroundInit(color,alpha)
-{
-   if(textbackGroundItem == null)
-        textbackGroundItem = game.newRoundRectObject({x : (gameSpaceX + gameSpaceW), y : 0, w : width- (gameSpaceX+gameSpaceW), h :  height/100 * 15, radius : 20, fillColor : color});
-   textbackGroundItem.setAlpha(alpha);
+function textbackGroundInit(color, alpha) {
+    if (textbackGroundItem == null)
+        textbackGroundItem = game.newRoundRectObject({
+            x: gameSpaceX,
+            y: 0,
+            w: (gameSpaceW),
+            h: gameSpaceY,
+            radius: 0,
+            fillColor: color
+        });
+    textbackGroundItem.setAlpha(alpha);
 }
 
-function initRightScroll(initArray){
-  var found = -1;
-    OOP.forArr(Scrolls,function(scroll,i){
-      //Ищем верхний скролл
-      if(scroll.name == "RIGHT"){
-        found = i;
-        return;
-      }
-    });
-    if(found == -1){
-      //Инииализируем скролл БАР ВСЕХ КОМАНД(ПРАВЫЙ ВЕРТИКАЛЬНЫЙ СКРОЛЛ)
-      Scrolls.push(new ScrollBar(gameSpaceX+gameSpaceW,(height/100 * 15),"Vertical",initArray,"RIGHT"));
-      Scrolls[0].setLineCount(2);
-      Scrolls[0].setWidthScroll(width - (gameSpaceX+gameSpaceW))
-      Scrolls[0].setHeightScroll(gameSpaceH-1);
-      found = Scrolls.length - 1;
-    } 
-    Scrolls[found].initArrayItems(initArray);
+function codeMapBackGroundInit(color, alpha) {
+    if (codeMapBG == null)
+        codeMapBG = game.newRoundRectObject({
+            x: (gameSpaceX + gameSpaceW),
+            y: 0,
+            w: (width - (gameSpaceX + gameSpaceW)),
+            h: height,
+            radius: 0,
+            fillColor: color
+        });
+    codeMapBG.setAlpha(alpha);
 }
 
-//Функция для инициализации верхнего скрола командами
-function initDownScroll(initArray){
-  var found = -1;
-    OOP.forArr(Scrolls,function(scroll,i){
-      //Ищем верхний скролл
-      if(scroll.name == "DOWN"){
-        found = i;
-        return;
-      }
+function initRightScroll(initArray) {
+    var isDel = false;
+    if (!initArray || initArray.length == 0) {
+        isDel = true;
+    }
+    var found = -1;
+    OOP.forArr(Scrolls, function (scroll, i) {
+        //Ищем верхний скролл
+        if (scroll.name == "RIGHT") {
+            if (isDel)
+                Scrolls.splice(i, 1);
+            else found = i;
+            return;
+        }
     });
-    if(found == -1){
-        if (isGameSpaseUp)
-            Scrolls.push(new ScrollBar(0, (gameSpaceY + gameSpaceH), "Horizontal", initArray, "DOWN"));
-        else
-            Scrolls.push(new ScrollBar(0, 0, "Horizontal", initArray, "DOWN"));
-      found = Scrolls.length - 1;
-    } 
-    if(!Scrolls[found].isCaseVisible())
-    {
-      Scrolls[found].setCaseVisible(true);
+    if (isDel) return;
+    if (found == -1) {
+        //Инииализируем скролл БАР ВСЕХ КОМАНД(ПРАВЫЙ ВЕРТИКАЛЬНЫЙ СКРОЛЛ)
+        Scrolls.push(new ScrollBar(gameSpaceX + gameSpaceW, 0, "Vertical", initArray, "RIGHT"));
+        Scrolls[Scrolls.length - 1].setLineCount(2);
+        Scrolls[Scrolls.length - 1].setWidthScroll(width - (gameSpaceX + gameSpaceW))
+        Scrolls[Scrolls.length - 1].setHeightScroll(height); //gameSpaceX+gameSpaceH);
+        found = Scrolls.length - 1;
     }
     Scrolls[found].initArrayItems(initArray);
-    Scrolls[found].scrollToEnd();
-    //ИНИТИМ КНОПКУ ОК
-    var sz = Scrolls[found].getScrollBarCase().getLeftImg();
-    okB = game.newImageObject({
-        file: COMMANDS[17].imgSource,
-        x: sz.x,
-        y: sz.y,
-        w: sz.w,
-        h: sz.h
-    });
+    //Очищаем массив codeView при инициализиации скрола
+    if (codeView && codeView.elems.length > 0) codeView.clear();
 }
 
 //Возвращает графическое представление ЛЕВОГО БОКОВОГО СКРОЛА которое соответствует текущему состоянию в интерфейсе
-function initLeftScroll(blockImg,initMass){
-  //Берем верхнюю команду из стека редактора вложенных комманд
-  //Если стек пуст - инициализируем меню редактором скриптов в клетке
-  //ИНИЦИАЛИЗИРУЕМ СКРОЛЛ БАР СТЕКА ВЛОЖЕННЫХ КОМАНД(ЛЕВЫЙ ВЕРТИКАЛЬНЫЙ СКРОЛЛ)
-  var found = -1;
-  OOP.forArr(Scrolls, function(el,i){
-    if(el.name == "LEFT"){
-      el.initArrayItems(initMass);
-      found = i;return;
-    }
-  });
-  
-  if(found == -1){
-    Scrolls.push(new ScrollBar(0,0,"Vertical",initMass,"LEFT"));
-    found = Scrolls.length - 1;
-    Scrolls[found].setCaseVisible(true);
-  }
-
-  //Сбрасываем скролл если нужно
-  if(blockImg === undefined && Scrolls[found].getScrollBarCase().getLeftImg().file !== nonePath){
-    Scrolls[found] = new ScrollBar(0,0,"Vertical",initMass,"LEFT");
-    Scrolls[found].setCaseVisible(true);
-    if(inputCounterText != null) inputCounterText.visible = false;
-    return;
-  }
-  //Добавляем картинку на верх скролл бара
-  if(blockImg !== undefined && blockImg != "SAME"){//SAME - оставить картинку вверху скрола такой же как и была
-    //Создаем полную копию обьекта картинки
-    var itm = game.newImageObject({
-      x : 0, y : 0, w : 15, h : 15,
-      file : blockImg.imgSource
+function initLeftScroll(initMass) {
+    //Берем верхнюю команду из стека редактора вложенных комманд
+    //Если стек пуст - инициализируем меню редактором скриптов в клетке
+    //ИНИЦИАЛИЗИРУЕМ СКРОЛЛ БАР СТЕКА ВЛОЖЕННЫХ КОМАНД(ЛЕВЫЙ ВЕРТИКАЛЬНЫЙ СКРОЛЛ)
+    var isDel = false;
+    if (!initMass)
+        isDel = true;
+    var found = -1;
+    OOP.forArr(Scrolls, function (el, i) {
+        if (el.name == "LEFT") {
+            if (isDel) {
+                Scrolls.splice(i, 1);
+            } else {
+                el.initArrayItems(initMass);
+                found = i;
+                el.scrollToEnd();
+                if (initMass.length == 0)
+                    isDel = true;
+            }
+            return;
+        }
     });
-    itm.setUserData({ command : blockImg});
-    Scrolls[found].getScrollBarCase().setLeftImg(itm);
-  }
-  
-  if(initMass !== undefined)    //Инициализируем массив элементов скролла
-    Scrolls[found].initArrayItems(initMass);  
+    if (isDel) return;
+    if (found == -1) {
+        Scrolls.push(new ScrollBar(0, 0, "Vertical", initMass, "LEFT"));
+        found = Scrolls.length - 1;
+    }
 }
 
+function TextWithBG(X, Y, W, H) { //класс для рисования текста с задним фоном, первоначально была разработана для того чтобы над лаберинтом выводить цифры введенные в блоки цикла по количеству
+    var textSize = 200;
+    var _radius = 0;
+    var alphaBG = 0.7;
+    var textColor = "#ffffff"
+    var BGcolor = "#000000"
+    var BG = game.newRoundRectObject({
+        x: X,
+        y: Y,
+        w: W,
+        h: H,
+        radius: _radius,
+        fillColor: BGcolor
+    })
+    var textX = (BG.x + BG.w / 2) - textSize / 2;
+    var textY = (BG.y + BG.h / 2) - textSize / 2;
+    var text = game.newTextObject({
+        x: textX,
+        y: textY,
+        text: "test",
+        color: textColor,
+        size: textSize,
+        alpha: 1
+    })
+    BG.setAlpha(alphaBG)
+    BG.setVisible(false)
+    text.setVisible(false)
+    
+    this.isVisible = function(){
+        return text.visible;
+    }
+    
+    this.draw = function () {
+        BG.draw();
+        text.draw();
+    }
+    this.getText = function(){
+        return text.text;
+    }
+    this.setText = function (t) {
+        text.text = t;
+        text.x = (BG.x + BG.w / 2) - text.w / 2;
+        text.y = (BG.y + BG.h / 2) - text.h / 2;
+        BG.setVisible(true)
+        text.setVisible(true)
+    }
+    this.close = function () {
+        BG.setVisible(false)
+        text.setVisible(false)
+    }
+}

@@ -8,37 +8,45 @@ var gameSpaceX = 0,
 var gameSpaceW = 0,
     gameSpaceH = 0;
 
-var totalWidth = 5; //Колличество блоков в строку
-var totalHeight = 5; //Колличество блоков в стлобец
-var robotMoveDelay = 200; //Задержка при движении робота в милисекундах
+var totalWidth = 25; //Колличество блоков в строку
+var totalHeight = 25; //Колличество блоков в стлобец
+var robotMoveDelay = 600; //Задержка при движении робота в милисекундах
 var saveTimeout = 1000; //Таймаут для метода который следит за изменениями размера экрана
 var totalSeconds = 0; //Для зранения колличества секунд которые прошли с начала прохождения уровня
 var secBuff = 0; //Буфер для хранения времени старта
 var totalCommandsAllowed = 0; //Колличество команд, которое разрешено поставить на данном поле(рассчитывается при генерации лабиринта)
-var totalLabCompleted = 0;//Счетчик пройденных лабиринтов
+var totalLabCompleted = 0; //Счетчик пройденных лабиринтов
 var totalAttempts = 0; //Счетчик попыток прохождения уровня
 //ПАРАМЕТРИЗУЕМЫЕ ПАРАМЕТРЫ
 //Уровень сложности(если EASY - робот сам поворачивается куда нужно при движении)
 var difficultyLevel = "EASY";
 var totalTokensOnMap = 20; //Сколько всего монеток генерится в лабиринте
 
-var lastClickedIndx = -1; //Номер элемента лабиринта по которому кликнул пользователь
-var choosenCommandInElement = -1; //Индекс команды в массиве команд которую редактирует игрок
+//var lastClickedIndx = -1; //Номер элемента лабиринта по которому кликнул пользователь
+var lastClickedElement = undefined; //Последний элемент карты по которому кликал пользователь(нужно для построения карты кода)
+var choosenCommandInElement = undefined; //Индекс команды в массиве команд которую редактирует игрок
 var lastCommandToRedact = undefined; //Ссылка на последний редактируемый обьект. Нужно для рекурсивного добавления команд в сложные команды
 var menuStatesArr = new Array();
 var isBackGroundDrawed = false;
-
+var isEntried = false;//Флаг для обозначения того, что игра уже была инициализирована и не нужно пересоздавать всю игру при перезагрузке
+var isStarted = false;//Флаг для старта/стопа игры
+var isChooseCommandShow = false;//Флаг - показывать интерфейс выбора команд или нет
 //Переменная для хранения состояний меню ввода команд:
-//0 - ввод команд в клетку поля
-//1 - ввод if комманды
-//2 - ввод count цикла
-//3 - ввод repeatif цикла
+// 0 - обычный ввод
+// 1 - blockA или if или repeatif
+// 2 - blockB
+// 3 - counter или repeat
+// 4 - commandBlock или count
+// 5 - elseBlock
 var inputCommandStates = 0;
-
+var labView, codeView;
 //Игровой цикл
 game.newLoopFromConstructor('Labyrinth', function () {
     //Код для старта игры
     this.entry = function () {
+        //Инициализируем события для перехвата ввода
+        initInputEvents();
+        if (isEntried) return;
         //Смотрим смартфон или ПК у нас
         isMobile = touch.isMobileDevice();
         //Создаем все объекты для игры
@@ -47,9 +55,8 @@ game.newLoopFromConstructor('Labyrinth', function () {
         saveTimer();
         //Инициализируем таймер времени
         totalTimeTimer();
-        //Инициализируем события для перехвата ввода
-        initInputEvents();
-        mainbackGround = new mainBackGroundDrow();
+        //mainbackGround = new mainBackGroundDrow();
+        isEntried = true;
     };
     //Код для завершения игры
     this.exit = function () {
@@ -63,11 +70,11 @@ game.newLoopFromConstructor('Labyrinth', function () {
     };
 });
 
-//Запускает таймер который следит за изменениями параметров экрана 
+//Запускает таймер который следит за изменениями параметров экрана
 function saveTimer() {
-    //сохраняем состояние игры 
+    //сохраняем состояние игры
     if (userData !== undefined) {
-        userData.save(isGameSpaseUp, totalSeconds, field, playerInventory, gameObjects, entrySide, totalWidth);
+        userData.save(isGameSpaseUp, totalSeconds, field, playerInventory, gameObjects, entrySide);
     }
     setTimeout("saveTimer()", saveTimeout);
 }
@@ -85,7 +92,7 @@ function initializeGame(isInit) {
     //Создаем новое поле
     if (isInit) {
         if (userData) {
-            field = userData.load(isGameSpaseUp, gameObjects, playerInventory, totalHeight, totalWidth, totalSeconds, initGUI)
+            field = userData.load(isGameSpaseUp, gameObjects, playerInventory, initGUI)
             if (field.length <= 0)
                 generateMap(gameSpaceW, gameSpaceH, gameSpaceX, gameSpaceY, totalWidth, totalHeight);
         } else {
@@ -100,7 +107,12 @@ function initializeGame(isInit) {
     //Создаем игрока
     playerSetStart();
     totalAttempts = 0;
-    mainbackGround = new mainBackGroundDrow();
+    //mainbackGround = new mainBackGroundDrow();
+    //Инициализируем обьекты для вывода графики лабиринта
+    labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
+    //Инициализируем обьект для вывода карты кода
+    codeView = new CodeMapView(codeMapBG.x,codeMapBG.y,codeMapBG.w,codeMapBG.h, "white");
+    allButtons = new Buttons();
 }
 
 function initLabirint() {
@@ -128,11 +140,13 @@ function initLabirint() {
                 return;
             }
         });
-        processButtonClick({x : startB.x + 1, y : startB.y + 1});
+        processButtonClick({
+            x: startB.x + 1,
+            y: startB.y + 1
+        });
     }
 }
 
-//Расчет глобальных параметров игровой области
 function initGameSpace() {
     var ind = 0;
     if (width < height) {
@@ -150,7 +164,7 @@ function initGameSpace() {
 
         if (isGameSpaseUp) {
             gameSpaceX = height / 100 * 15;
-            gameSpaceY = 0;
+            gameSpaceY = ( height / 100 * 15)/5;
             gameSpaceH = height / 100 * 85;
             gameSpaceW = gameSpaceH
         } else {
@@ -187,33 +201,24 @@ function getTotalCommandsOnField() {
 //Обработка нажатий на поле
 function setFocused(fieldElem, indx) {
 
-    //Если нажали на недоспустимый элемент 
+    //Если нажали на недоспустимый элемент
     if (fieldElem.code != roadCode && fieldElem.code != entryCode) {
-
-        if (lastClickedIndx != -1) {
-            lastClickedIndx = -1;
-        }
         return;
-    }
-
-    if (lastClickedIndx != -1) {
-        //Если все ок, то убираем выделение с предыдущего объекта
-        field[lastClickedIndx].setStroke(false);
     }
     //Cохраняем номер текущего
     lastClickedIndx = indx;
+    if (lastClickedElement) lastClickedElement.setStroke(false);
+    //Запоминаем последний кликнутый пользователь элемент
+    lastClickedElement = field[lastClickedIndx];
     inputCommandStates = 0;
-    //Инициализируем верхний скролл
-    initDownScroll(field[lastClickedIndx].getCommandsImagesArr());
     //Инициализируем левый скролл
-    initLeftScroll(undefined, undefined);
-    //Инициализируем правый скролл
-    initRightScroll(getAllCommandsMenu());
+    initLeftScroll(field[lastClickedIndx].getCommandsImagesArr());
+    initRightScroll([]);
+    codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
     //Выделяем в рамку объект по которому нажали
     field[indx].setStroke(true);
-    //Скрываем кнопку старт/стоп
-    startB.setVisible(false);
-    menuB.setVisible(false);
+    //Показываем кнопку ok
+    allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
 }
 
 //Функция обработчик для добавления команды в клетку
@@ -223,39 +228,29 @@ function addCommandToCell(commandImg, dontAdd) {
 
     if (!dontAdd) { //Если добавляем команду
 
-        if (inputCommandStates == 0) { //Если у нас простая команда и мы добавляем ее тупо в клетку
-            field[lastClickedIndx].addCommand(commandImg.command);
-            initDownScroll(field[lastClickedIndx].getCommandsImagesArr());
-        } else if (inputCommandStates == 1) { //Если выбираем blockA
+        if (inputCommandStates == 1) { //Если у нас простая команда и мы добавляем ее тупо в клетку
+            choosenCommandInElement.push(getCopyOfObj(commandImg.command));
+            initLeftScroll(getCommandsImgArr(choosenCommandInElement));
+        } else if (inputCommandStates == 2) { //Если выбираем blockA
             var comm = getCopyOfObj(COMMANDS[10]); //Инициализируем команду whatisit
             comm.lookCommand = commandImg.command; //Инитим параметр lookCommand
-            menuStatesArr[0].blockA = comm;
-        } else if (inputCommandStates == 2) //Если выбираем blockB
-            menuStatesArr[0].blockB = commandImg.command;
-        else if (inputCommandStates == 3) { //Если выбираем число итераций в repeat
-            if (commandImg.command.name == "digit") {
-                if (inputCounterText.text.length < 2)
-                    inputCounterText.text += commandImg.command.value
-                var parsed = parseInt(inputCounterText.text);
-                menuStatesArr[0].countBlock.count = isNaN(parsed) ? 0 : parsed;
-            } else if (commandImg.command.name == "backspace") {
-                inputCounterText.text = inputCounterText.text.slice(0, inputCounterText.text.length - 1);
-                var parsed = parseInt(inputCounterText.text);
-                menuStatesArr[0].countBlock.count = isNaN(parsed) ? 0 : parsed;
-            }
-        } else if (inputCommandStates == 4) { //Если мы добавляем в commandsBlock последней команды из стека состояний меню
-            menuStatesArr[0].commandsBlock.actions.push(commandImg.command);
-            initDownScroll(getCommandsImgArr(menuStatesArr[0].commandsBlock.actions));
-        } else if (inputCommandStates == 5) { //Если мы добавляем в elseBlock последней команды из стека состояний меню
-            menuStatesArr[0].elseBlock.actions.push(commandImg.command);
-            initDownScroll(getCommandsImgArr(menuStatesArr[0].elseBlock.actions));
+            choosenCommandInElement.blockA = comm;
+            inputCommandStates = 0;
+            initLeftScroll([]);
+            initRightScroll([]);
+            codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
+        } else if (inputCommandStates == 3){ //Если выбираем blockB
+            choosenCommandInElement.blockB = commandImg.command;
+            inputCommandStates = 0;
+            initLeftScroll([]);
+            initRightScroll([]);
+            codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
         }
+        return;
     }
-    //Если добавляемая команда сложная, то добавляем ее в стек состояний меню и далее работаем с ней
-    if (commandImg.command.name == "if" || commandImg.command.name == "repeatif" || commandImg.command.name == "repeat")
-        menuStatesArr.unshift(commandImg.command);
     //Меняем состояние меню в зависимости от типа команды
-    changeMenuState(commandImg.command.name);
+    var name = commandImg.name ? commandImg.name : commandImg.command.name;
+    changeMenuState(name);
 }
 
 //Задает состояние меню в зависимости от типа команды
@@ -268,71 +263,25 @@ function addCommandToCell(commandImg, dontAdd) {
 function changeMenuState(commName) {
 
     //Скрываем текстовое поле ввода итераций в цикле, если оно не скрыто
-    if (inputCounterText && inputCounterText.visible && menuStatesArr[0].name != "repeat") inputCounterText.visible = false;
-
-    if (commName == "if" || commName == "repeatif" || commName == "blockA" || commName == "whatisit") {
+    if (inputCounterText && inputCounterText.visible && choosenCommandInElement.name != "repeat") inputCounterText.visible = false;
+    
+    if(commName == "plus"){
         inputCommandStates = 1;
-        initDownScroll(undefined, undefined);
-
-        if (menuStatesArr[0].name == "if")
-            initLeftScroll(menuStatesArr[0], getIFScrollBarPattern(inputCommandStates, menuStatesArr[0]));
-        else if (menuStatesArr[0].name == "repeatif")
-            initLeftScroll(menuStatesArr[0], getRepeatIFScrollBarPattern(inputCommandStates, menuStatesArr[0]));
-
+        initRightScroll(getAllCommandsMenu(true));
+    }
+    else if (commName == "blockA" || commName == "whatisit") {
+        inputCommandStates = 2;
         initRightScroll(getAllDirections());
 
     } else if (commName == "blockB") {
-        inputCommandStates = 2;
-        initDownScroll(undefined, undefined);
-
-        if (menuStatesArr[0].name == "if")
-            initLeftScroll("SAME", getIFScrollBarPattern(inputCommandStates, menuStatesArr[0]));
-        else if (menuStatesArr[0].name == "repeatif")
-            initLeftScroll("SAME", getRepeatIFScrollBarPattern(inputCommandStates, menuStatesArr[0]));
-
+        inputCommandStates = 3;
         initRightScroll(getAllInteractGameObjects());
 
-    } else if (commName == "counter" || commName == "repeat") {
-
-        inputCommandStates = 3;
-
-        initLeftScroll(menuStatesArr[0], getRepeatScrollBarPattern(inputCommandStates, menuStatesArr[0]));
-        initDownScroll(undefined, undefined);
+    } else if (commName == "counter") {
+        inputCommandStates = 4;
         //Инициализируем клавиатуру для ввода цифр
         initRightScroll(getDigitKeyboardImages());
-
-        inputCounterTextInit();
-        inputCounterText.text = menuStatesArr[0].countBlock.count == 0 ? "" : menuStatesArr[0].countBlock.count + "";
-        inputCounterText.visible = true;
-
-    } else if (commName == "commandsblock") {
-
-        inputCommandStates = 4;
-
-        if (menuStatesArr[0].name == "if") {
-            menuStatesArr[0].redacted = "commands"; //Запоминаем тот блок который редактируем
-            initLeftScroll("SAME", getIFScrollBarPattern(inputCommandStates, menuStatesArr[0]));
-        } else if (menuStatesArr[0].name == "repeatif")
-            initLeftScroll("SAME", getRepeatIFScrollBarPattern(inputCommandStates, menuStatesArr[0]));
-        else if (menuStatesArr[0].name == "repeat")
-            initLeftScroll(menuStatesArr[0], getRepeatScrollBarPattern(inputCommandStates, menuStatesArr[0]));
-
-        // Инициализируем правый скролл
-        initRightScroll(getAllCommandsMenu(true));
-        //Инициализируем нижний скролл командами из поля команд в команде
-        initDownScroll(getCommandsImgArr(menuStatesArr[0].commandsBlock.actions));
-
-    } else if (commName == "elseblock") {
-        inputCommandStates = 5;
-        if (menuStatesArr[0].name == "if") {
-            menuStatesArr[0].redacted = "else"; //Запоминаем тот блок который редактируем
-            initLeftScroll("SAME", getIFScrollBarPattern(inputCommandStates, menuStatesArr[0]));
-        }
-        // Инициализируем правый скролл
-        initRightScroll(getAllCommandsMenu(true));
-        //Инициализируем нижний скролл командами из поля команд в команде
-        initDownScroll(getCommandsImgArr(menuStatesArr[0].elseBlock.actions));
-
+        infoText.setText(choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count + "");
     }
 }
 
@@ -342,23 +291,27 @@ function removeCommandFromCell(indexArray, indexElem) {
         //Удаляем команду из списка команд
         field[lastClickedIndx].removeCommand(indexElem);
         //инициазируем скролл новым списком
-        initDownScroll(field[lastClickedIndx].getCommandsImagesArr());
-    } else if (menuStatesArr.length > 0 && (inputCommandStates == 4 || inputCommandStates == 5)) { //COMMANDSBLOCK        
+        //initDownScroll(field[lastClickedIndx].getCommandsImagesArr());
+        initLeftScroll(field[lastClickedIndx].getCommandsImagesArr());
+    } else if (menuStatesArr.length > 0 && (inputCommandStates == 4 || inputCommandStates == 5)) { //COMMANDSBLOCK
 
         if (menuStatesArr[0].name == "if") {
             if (menuStatesArr[0].redacted == "commands") {
                 var indx = menuStatesArr[0].commandsBlock.actions.length - 1 - indexElem;
                 menuStatesArr[0].commandsBlock.actions.splice(indx, 1);
-                initDownScroll(getCommandsImgArr(menuStatesArr[0].commandsBlock.actions));
+                //initDownScroll(getCommandsImgArr(menuStatesArr[0].commandsBlock.actions));
+                initLeftScroll(getCommandsImgArr(menuStatesArr[0].commandsBlock.actions));
             } else if (menuStatesArr[0].redacted == "else") {
                 var indx = menuStatesArr[0].elseBlock.actions.length - 1 - indexElem;
                 menuStatesArr[0].elseBlock.actions.splice(indx, 1);
-                initDownScroll(getCommandsImgArr(menuStatesArr[0].elseBlock.actions));
+                //initDownScroll(getCommandsImgArr(menuStatesArr[0].elseBlock.actions));
+                initLeftScroll(getCommandsImgArr(menuStatesArr[0].elseBlock.actions));
             }
         } else if (menuStatesArr[0].name == "repeatif" || menuStatesArr[0].name == "repeat") {
             var indx = menuStatesArr[0].commandsBlock.actions.length - 1 - indexElem;
             menuStatesArr[0].commandsBlock.actions.splice(indx, 1);
-            initDownScroll(getCommandsImgArr(menuStatesArr[0].commandsBlock.actions));
+            //initDownScroll(getCommandsImgArr(menuStatesArr[0].commandsBlock.actions));
+            initLeftScroll(getCommandsImgArr(menuStatesArr[0].commandsBlock.actions));
         }
     }
 }
@@ -371,31 +324,36 @@ function processRobotMove() {
         robotOn = false;
         totalWidth += 2;
         totalHeight += 2;
-        if (totalWidth > 10) {
+        /*if (totalWidth > 10) {
             totalWidth = 11;
             totalHeight = 11;
-        }
-        startB.isPlay = false;
+        }*/
+        isStarted = false;
+        allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
         totalLabCompleted++;
         //Перезагружаем уровень с новым лабиринтом
         initializeGame();
     } else if (res == "stop") {
         alert("Робот остановился и ждет дальнейших команд");
-        startB.isPlay = false;
+        isStarted = false;
+        allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
     } else if (res != "") //Если у робота возникли проблемы
     {
-        if(startB.isPlay) alert(res); //Выводим их на экран
-        //Останавливаем цикл движения игры, меняя свойство кнопки
-        startB.isPlay = false;
+        if (isStarted) alert(res); //Выводим их на экран
+        //Останавливаем цикл движения игры
+        isStarted = false;
+        allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
         //СБрасываем флаг для чтения команд
         OOP.forArr(field, function (el) {
             el.isCommandsReaded = false;
         });
         //Ставим робота на вход в лабиринт
         playerSetStart();
-    } else if (startB.isPlay) setTimeout("processRobotMove()", robotMoveDelay);
+        //Очищаем карту кода
+        codeView.clear();
+    } else if (isStarted) setTimeout("processRobotMove()", robotMoveDelay);
     //camera.follow( playerImageObj, 1 );
 }
 
-//game.startLoop('Labyrinth'); 
+//game.startLoop('Labyrinth');
 game.startLoop('menu');

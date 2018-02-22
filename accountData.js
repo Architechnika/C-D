@@ -26,7 +26,7 @@ function UserAccaunt(login, pass, summ) {
         this.gameObjsPos = obj.gameObjsPos
 
     }
-    this.save = function (isGameSpaseUp, totalSeconds, field, playerInventory, gameObjects, entrySide, totalWidth) {
+    this.save = function (isGameSpaseUp, totalSeconds, field, playerInventory, gameObjects, entrySide) {
         this.labyrinth = JSON.stringify(field);
         this.gameTime = totalSeconds;
         this.gameCoin = JSON.stringify(playerInventory);
@@ -45,7 +45,7 @@ function UserAccaunt(login, pass, summ) {
             this.gameSpasePos = "Down";
         localMemory.saveAsObject(this.checkSumm, this)
     }
-    this.load = function (isGameSpaseUp, gameObjects, playerInventory, totalHeight, totalWidth, totalSeconds, initGUI) {
+    this.load = function (isGameSpaseUp, gameObjects, playerInventory, initGUI) {
         field = new Array();
         if (this.isSaved) {
             tmpField = JSON.parse(userData.labyrinth)
@@ -57,10 +57,10 @@ function UserAccaunt(login, pass, summ) {
                 var img = tmpField[i].imgSrc;
                 var comm = tmpField[i].commands;
                 var S = tmpField[i].code;
-                var tx = tmpField[i].X;
-                var ty = tmpField[i].Y;
-                var tw = tmpField[i].W;
-                var th = tmpField[i].H;
+                var tx = tmpField[i].imgObj.x;
+                var ty = tmpField[i].imgObj.y;
+                var tw = tmpField[i].imgObj.w;
+                var th = tmpField[i].imgObj.h;
                 if (isGameSpaseUp && this.gameSpasePos != "Up") {
                     ty -= (height / 100 * 15)
                 }
@@ -78,7 +78,8 @@ function UserAccaunt(login, pass, summ) {
                 playerInventory.push(tmpPlayerInventary[i]);
             }
             entrySide = this.entrySide;
-            totalHeight = totalWidth = this.totalWH;
+            totalHeight = this.totalWH;
+            totalWidth = this.totalWH;
             totalSeconds = this.gameTime;
             oneTileWidth = field[0].W;
             oneTileHeight = field[0].H;

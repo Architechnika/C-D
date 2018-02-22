@@ -27,8 +27,8 @@ function PointJS(Ta, Ua, xb, Rc) {
         Ua = J.offsetHeight;
         Ca = "absolute";
         yb = Dc(J)
-    }     
-    
+    }
+
     var Da = !0,
         zb = !0,
         Yb = !0,
