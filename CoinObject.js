@@ -1,4 +1,4 @@
-function CoinObject(NAME, TYPE, LOCATION, IMAGE) { // основной класс, который наследуеться от ImageObject
+function GameObject(NAME, TYPE, LOCATION, IMAGE) { // основной класс, который наследуеться от ImageObject
     //внем описаны все общие методы для игровых объектов
 
     //Индекс элемента field к которому обьект привязан
@@ -44,7 +44,7 @@ function CoinObject(NAME, TYPE, LOCATION, IMAGE) { // основной клас�
 
 function CoinBattery(NAME, TYPE, LOCATION, IMAGE, isROTATE) {
     var isRotate = isROTATE;
-    var parent = new CoinObject(NAME, TYPE, LOCATION, IMAGE);
+    var parent = new GameObject(NAME, TYPE, LOCATION, IMAGE);
     this.__proto__ = parent;
 
     this.startRotation = function () {

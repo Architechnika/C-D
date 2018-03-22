@@ -10,61 +10,61 @@ var COMMANDS = new Array();
 COMMANDS.push({
     code: '0',
     name: "none",
-    imgSource: "img/commands/none.png",
+    imgSource: commandNoneImgSrc,
     undeletable: false
 });
 COMMANDS.push({
     code: '1',
     name: "up",
-    imgSource: "img/commands/up.png",
+    imgSource: commandUpImgSrc,
     undeletable: false
 });
 COMMANDS.push({
     code: '2',
     name: "down",
-    imgSource: "img/commands/down.png",
+    imgSource: commandDownImgSrc,
     undeletable: false
 });
 COMMANDS.push({
     code: '3',
     name: "left",
-    imgSource: "img/commands/left.png",
+    imgSource: commandLeftImgSrc,
     undeletable: false
 });
 COMMANDS.push({
     code: '4',
     name: "right",
-    imgSource: "img/commands/right.png",
+    imgSource: commandRightImgSrc,
     undeletable: false
 });
 COMMANDS.push({
     code: '5',
     name: "clockwise",
-    imgSource: "img/commands/clockwise.png",
+    imgSource: commandClockwiseImgSrc,
     undeletable: false
 });
 COMMANDS.push({
     code: '6',
     name: "unclockwise",
-    imgSource: "img/commands/unclockwise.png",
+    imgSource: commandUnClockwiseImgSrc,
     undeletable: false
 });
 COMMANDS.push({
     code: '8',
     name: "pickup",
-    imgSource: "img/commands/pickup.png",
+    imgSource: commandPickUpImgSrc,
     undeletable: false
 });
 COMMANDS.push({
     code: '9',
     name: "drop",
-    imgSource: "img/commands/drop.png",
+    imgSource: commandDropImgSrc,
     undeletable: false
 });
 COMMANDS.push({
     code: 'C',
     name: "commandsblock",
-    imgSource: "img/commands/commandsblock.png",
+    imgSource: commandCommandsBlockImgSrc,
     actions: [],
     undeletable: false
 }); //БЛОК СОДЕРЖАЩИЙ СПИСОК КОМАНД
@@ -73,7 +73,7 @@ COMMANDS.push({
 COMMANDS.push({
     code: 'W',
     name: "whatisit",
-    imgSource: "img/commands/whatisit.png", //[10]
+    imgSource: commandWhatIsItImgSrc, //[10]
     lookCommand: undefined,
     undeletable: false
 });
@@ -82,7 +82,7 @@ COMMANDS.push({
 COMMANDS.push({
     code: 'I',
     name: "if",
-    imgSource: "img/commands/if.png", //[11]
+    imgSource: commandIfImgSrc, //[11]
     blockA: "0",
     blockB: "0",
     redacted: "commands", //Переменная для хранения последнего редактируемого блока(commands или else block)
@@ -94,7 +94,7 @@ COMMANDS.push({
 COMMANDS.push({
     code: 'R',
     name: "repeat",
-    imgSource: "img/commands/repeat.png",
+    imgSource: commandRepeatImgSrc,
     countBlock: undefined,
     commandsBlock: undefined, //[12]
 });
@@ -103,7 +103,7 @@ COMMANDS.push({
 COMMANDS.push({
     code: 'E',
     name: "repeatif",
-    imgSource: "img/commands/repeatif.png",
+    imgSource: commandRepeatIfImgSrc,
     blockA: undefined,
     blockB: undefined,
     commandsBlock: undefined, //[13]
@@ -114,26 +114,26 @@ COMMANDS.push({
 COMMANDS.push({
     code: 'A',
     name: "blockA",
-    imgSource: "img/commands/blockA.png",
+    imgSource: commandBlockAImgSrc,
     undeletable: true
 }); //[14]
 COMMANDS.push({
     code: 'B',
     name: "blockB",
-    imgSource: "img/commands/blockB.png",
+    imgSource: commandBlockBImgSrc,
     undeletable: true
 }); //[15]
 COMMANDS.push({
     code: 'K',
     name: "counter",
-    imgSource: "img/commands/counter.png",
+    imgSource: commandCounterImgSrc,
     count: 0,
     undeletable: true
 }); //[16]
 COMMANDS.push({
     code: 'O',
     name: "ok",
-    imgSource: "img/commands/ok.png",
+    imgSource: commandOkImgSrc,
     undeletable: true
 }); //[17]
 //Команды для того чтобы определять направление
@@ -141,66 +141,66 @@ COMMANDS.push({
     code: 'Z',
     name: "blockA",
     dir: "lookup",
-    imgSource: "img/commands/lookup.png",
+    imgSource: commandLookUpImgSrc,
     undeletable: true
 }); //[18]
 COMMANDS.push({
     code: 'X',
     name: "blockA",
     dir: "lookdown",
-    imgSource: "img/commands/lookdown.png",
+    imgSource: commandLookDownImgSrc,
     undeletable: true
 }); //[19]
 COMMANDS.push({
     code: 'L',
     name: "blockA",
     dir: "lookleft",
-    imgSource: "img/commands/lookleft.png",
+    imgSource: commandLookLeftImgSrc,
     undeletable: true
 }); //[20]
 COMMANDS.push({
     code: 'V',
     name: "blockA",
     dir: "lookright",
-    imgSource: "img/commands/lookright.png",
+    imgSource: commandLookRightImgSrc,
     undeletable: true
 }); //[21]
 COMMANDS.push({
     code: 'Z',
     name: "blockA",
     dir: "lookcenter",
-    imgSource: "img/commands/lookcenter.png",
+    imgSource: commandLookCenterImgSrc,
     undeletable: true
 }); //[22]
 COMMANDS.push({
     code: 'Q',
     name: "elseblock",
-    imgSource: "img/commands/elseblock.png",
+    imgSource: commandElseBlockImgSrc,
     actions: [],
     undeletable: true
 }); //[23]
 COMMANDS.push({
     code: '{',
     name: "forward",
-    imgSource: "img/commands/forward.png",
+    imgSource: commandForwardImgSrc,
     undeletable: false
 });
 COMMANDS.push({
     code: '}',
     name: "onleft",
-    imgSource: "img/commands/onleft.png",
+    imgSource: commandOnLeftImgSrc,
     undeletable: false
 });
 COMMANDS.push({
     code: '[',
     name: "onright",
-    imgSource: "img/commands/onright.png",
+    imgSource: commandOnRightImgSrc,
     undeletable: false
 });
 COMMANDS.push({
     code: ']',
     name: "back",
-    imgSource: "img/commands/back.png",
+    imgSource: commandBackwardImgSrc,
     undeletable: false
 });
 //ИНИЦИАЛИЗИРУЕМ ШАБЛОН КОМАНДЫ IF
@@ -215,12 +215,6 @@ COMMANDS[12].commandsBlock = COMMANDS[9];
 COMMANDS[13].blockA = COMMANDS[14];
 COMMANDS[13].blockB = COMMANDS[15];
 COMMANDS[13].commandsBlock = COMMANDS[9];
-
-var wallImgComm = "img/commands/wall.png";
-var coinImgComm = "img/commands/coin.png";
-var exitImgComm = "img/commands/exit.png";
-var entryImgComm = "img/commands/entry.png";
-var groundImgComm = "img/commands/road.png";
 
 function gameFieldElement(fCode, iCode) {
     this.fieldCode = fCode;
@@ -281,14 +275,19 @@ function checkConditionIF(blockA, blockB, commandsBlock, elseBlock) {
     if (blockA.name == "whatisit") {
         blockA = checkWhatIsIt(blockA.lookCommand, playerPozition, field, totalWidth, gameObjects, playerFrontSide)
     }
-    //У нас стены не только внешние, но и внутренние
-    // blockA.code = blockB.code > 0 && blockB.code < 4 ? borderCode : blockB.code;
-    if (blockB.code == coinCode) {
+
+    if (blockB.code == coinCode) {//Если в условии выбран игровой обьект(монетка и тд)
         if (blockA.itemCode === undefined) return elseBlock ? elseBlock.actions : [];
         else if (blockA.itemCode == blockB.code) return commandsBlock.actions;
-    } else {
-        blockA.fieldCode = blockA.fieldCode > 0 && blockA.fieldCode < 4 ? borderCode : blockA.fieldCode;
-        if (blockA.fieldCode == blockB.code) return commandsBlock.actions;
+    } else {//Если выбран обьект ландшафта(стены, вход или выход)
+        //Парсим в int
+        var val = parseInt(blockA.fieldCode);
+        val = isNaN(val) ? 0 : val;
+        //Если стены внутренние то код элемента 0(Любые стены для нас пока равнозначны)
+        if(val > 0 && val < 4)
+            blockA.fieldCode = borderCode;
+        if (blockA.fieldCode == blockB.code)
+            return commandsBlock.actions;
     }
     return elseBlock ? elseBlock.actions : [];
 }
@@ -649,9 +648,9 @@ function getIFScrollBarPattern(state, currentIFCommand) {
 function getDigitKeyboardImages() {
     var allObj = new Array();
     //Числа от 1 до 9
-    for (var i = 0; i < 9; i++) {
+    for (var i = 1; i < 10; i++) {
         allObj.unshift(game.newImageObject({
-            file: "img/commands/digit" + (i + 1) + ".png",
+            file: commandDigitsImgSrc[i],
             x: 0,
             y: 0,
             w: 10,
@@ -660,7 +659,7 @@ function getDigitKeyboardImages() {
         allObj[0].setUserData({
             command: {
                 name: "digit",
-                value: i + 1
+                value: i
             },
             onClick: function (el) {
                 return onKeyboardClick(el);
@@ -669,7 +668,7 @@ function getDigitKeyboardImages() {
     }
     //0
     allObj.unshift(game.newImageObject({
-        file: "img/commands/digit0.png",
+        file: commandDigitsImgSrc[0],
         x: 0,
         y: 0,
         w: 10,
@@ -686,7 +685,7 @@ function getDigitKeyboardImages() {
     });
     //backspace
     allObj.unshift(game.newImageObject({
-        file: "img/commands/backspace.png",
+        file: commandBackspaceImgSrc,
         x: 0,
         y: 0,
         w: 10,
@@ -726,7 +725,5 @@ function getCommandsImgArr(allCommands) {
 
 //Возвращает копию обьекта
 function getCopyOfObj(obj) {
-    var factory = FastClone.factory(obj);
-    return new factory(obj);
-    return obj;
+    return _.cloneDeep(obj);
 }

@@ -4,8 +4,8 @@
 
 var pjs = new PointJS(640, 480, {
     //backgroundColor : '#3333ff',
-    backgroundColor : '#4b4843' ,// optional
-    //background: 'url(img/menuFont.webp) no-repeat center ',
+    //backgroundColor : '#4b4843' ,// optional
+    background: 'url(' + backgroundImgPath + ') no-repeat center ',
     backgroundSize: 'cover'
 });
 pjs.system.initFullPage(); // for Full Page mode
@@ -37,3 +37,5 @@ Array.prototype.move = function (old_index, new_index) {
     this.splice(new_index, 0, this.splice(old_index, 1)[0]);
     return this; // for testing purposes
 };
+
+

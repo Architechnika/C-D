@@ -1,4 +1,4 @@
-var isOkClose = false;
+var isOkClose = true;
 
 function PushButton() { //Класс наследуеться от newImageObject, экзепляры класса это кнопки
     var parent = game.newImageObject({
@@ -38,7 +38,6 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.stepUpButton = new PushButton();
     this.backToStartButton = new PushButton();
     this.menuButton = new PushButton();
-
     //
     //создание и заполнение массива для хранения кнопок, нужен для того чтобы в дальнейшем рисовать эти кнопки или обходить их для вылавливание событий
     this.buttonsArr = [];
@@ -52,47 +51,58 @@ function Buttons() { //класс для работы совсеми кнопк�
     //получаем количество кнопок в массиве для того чтобы автоматический определить ширину кнопок на экране
     var buttonsCount = this.buttonsArr.length - n; //!!!если кнопка будет создана для того чтобы разместить в другом места, а не снизу, то обратите внимание на эту строку
     //выполняем настройки позиции, размеров картинки для кнопок
-    this.mainButton.setSetting(gameSpaceX, (gameSpaceY + gameSpaceH), (gameSpaceW) / buttonsCount, height-(gameSpaceY+gameSpaceW))
+    this.mainButton.setSetting(gameSpaceX, height - (gameSpaceW / 100 * 14), (gameSpaceW) / buttonsCount, gameSpaceW / 100 * 14)
     this.mainButton.setButtonImgSrc(buttonStartImgSrc)
 
-    this.stepDownButton.setSetting(this.mainButton.x + this.mainButton.w, (gameSpaceY + gameSpaceH), (gameSpaceW) / buttonsCount, height-(gameSpaceY+gameSpaceW))
+    this.stepDownButton.setSetting(this.mainButton.x + this.mainButton.w, height - (gameSpaceW / 100 * 14), (gameSpaceW) / buttonsCount, gameSpaceW / 100 * 14)
     this.stepDownButton.setButtonImgSrc(prevStepButtonImgSrc);
 
-    this.stepUpButton.setSetting(this.stepDownButton.x + this.stepDownButton.w, (gameSpaceY + gameSpaceH), (gameSpaceW) / buttonsCount,height-(gameSpaceY+gameSpaceW) )
+    this.stepUpButton.setSetting(this.stepDownButton.x + this.stepDownButton.w, height - (gameSpaceW / 100 * 14), (gameSpaceW) / buttonsCount, gameSpaceW / 100 * 14)
     this.stepUpButton.setButtonImgSrc(nextStepButtonImgSrc);
-    
-    this.backToStartButton.setSetting(this.stepUpButton.x + this.stepUpButton.w, (gameSpaceY + gameSpaceH), (gameSpaceW) / buttonsCount, height-(gameSpaceY+gameSpaceW))
+
+    this.backToStartButton.setSetting(this.stepUpButton.x + this.stepUpButton.w, height - (gameSpaceW / 100 * 14), (gameSpaceW) / buttonsCount, gameSpaceW / 100 * 14)
     this.backToStartButton.setButtonImgSrc(reloadButtonImgSrc);
 
-    this.menuButton.setSetting(this.backToStartButton.x + this.backToStartButton.w, (gameSpaceY + gameSpaceH), (gameSpaceW) / buttonsCount, height-(gameSpaceY+gameSpaceW))
+    this.menuButton.setSetting(this.backToStartButton.x + this.backToStartButton.w, height - (gameSpaceW / 100 * 14), (gameSpaceW) / buttonsCount, gameSpaceW / 100 * 14)
     this.menuButton.setButtonImgSrc(menuButtonImgSrc);
     //
     //описывает обработчик onClick для кнопок
     this.mainButton.setUserData({
         onClick: function (el) {
-            if(el.file == okButtonImgSrc) isOkClose = onOkBClick(); //Обрабатываем на нажатие по ОК
-            else startBClick();//Обрабатываем клик по СТАРТ/СТОП
+            if (el.file == okButtonImgSrc) isOkClose = onOkBClick(); //Обрабатываем на нажатие по ОК
+            else startBClick(); //Обрабатываем клик по СТАРТ/СТОП
             //Задаем картинку кнопке в соответствии с ее состоянием
-            if(isOkClose) el.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
+            if (isOkClose) el.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
         }
     });
     this.stepDownButton.setUserData({
         onClick: function (el) {
-            if(!isOkClose) return;
+            if (!isOkClose || isStarted || isSecondScreen) return;
             setPreviousStateToPlayer();
         }
     });
     this.stepUpButton.setUserData({
         onClick: function (el) {
-            if(!isOkClose) return;
+            if (!isOkClose || isStarted || isSecondScreen) return;
             processRobotMove();
         }
     });
     this.backToStartButton.setUserData({
         onClick: function (el) {
-            if(!isOkClose) return;
-            if(!isStarted)
+            if (!isOkClose || isSecondScreen) return;
+            if (!isStarted) {
+                //Останавливаем цикл движения игры
+                isStarted = false;
+                allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
+                //СБрасываем флаг для чтения команд
+                OOP.forArr(field, function (el) {
+                    el.isCommandsReaded = false;
+                });
+                //Ставим робота на вход в лабиринт
                 playerSetStart();
+                //Очищаем карту кода
+                codeView.clear();
+            }
         }
     });
     this.menuButton.setUserData({
@@ -100,6 +110,10 @@ function Buttons() { //класс для работы совсеми кнопк�
             menuBClick();
         }
     });
+
+    this.getPosition = function () {
+        return this.mainButton.getPosition();
+    }
     //
     //Функция вызываеться извне для обрисовки кнопок
     this.ButtonsDraw = function () {
@@ -108,10 +122,10 @@ function Buttons() { //класс для работы совсеми кнопк�
         }
     }
     //Проверка на клик по кнопке и запуск обработчика кнопки если клик есть
-    this.checkButtonsClicked = function(e) {
+    this.checkButtonsClicked = function (e) {
         if (this.buttonsArr) {
-            for(var i = 0 ; i < this.buttonsArr.length; i++) {
-                if(clickIsInObj(e.x,e.y,this.buttonsArr[i])){
+            for (var i = 0; i < this.buttonsArr.length; i++) {
+                if (clickIsInObj(e.x, e.y, this.buttonsArr[i])) {
                     this.buttonsArr[i].onClick(this.buttonsArr[i]);
                     return true;
                 }

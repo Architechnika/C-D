@@ -1,7 +1,7 @@
 /*Содержит методы и данные для работы с картой лабиринта и его генерации.
  */
 
-var roadCode = '7'; //Представление элемента длроги в виде числа
+var roadCode = '7'; //Представление элемента дороги в виде числа
 var borderCode = '0'; //Представление элемента внешних стенок в виде числа
 var entryCode = '8'; //Представление элемента входа в лаюиринт в виде числа
 var exitCode = '9'; //Представление элемента выхода из лабиринта в виде числа
@@ -33,11 +33,14 @@ function fieldElement(imgSource, comm, elemcode, fx, fy, fw, fh) {
     this.commands = comm;
     this.commandsImgs = undefined;
     this.isCommandsReaded = false;
+    this.isStroke = false;
 
     //Объекты изображений
     //Объект который хранит графическое представление элемента с исходным изображением
     //var this.__proto__ = newImageObj(this.imgSrc, fx, fy, fw, fh);
     this.__proto__ = newImageObj(imgSource, fx, fy, fw, fh);
+    this.parent = this.__proto__;
+
     //Добавляем обработчик на клик если этот элемент дорога либо вход
     if (this.code == roadCode || this.code == entryCode) {
         this.setUserData({
@@ -81,7 +84,8 @@ function fieldElement(imgSource, comm, elemcode, fx, fy, fw, fh) {
 
     //Задает наличие выделения элемента.(Нужно для отображения когда добавляем команды на поле)
     this.setStroke = function (isStroke) {
-        if (isStroke) {
+        this.isStroke = isStroke;
+        if (this.isStroke) {
             this.__proto__.strokeWidth = 100;
         } else {
             this.__proto__.strokeWidth = 0;
@@ -204,6 +208,22 @@ function calcField(w, h, x, y, elemsInLine, elemsInColumn) {
     if (gameObjects !== undefined)
         for (var i = 0; i < gameObjects.length; i++)
             gameObjects[i].setSize(field[gameObjects[i].position]);
+}
+
+//Смещает всю карту в нужный размер
+function calcMapPosition(){
+    oneTileWidth = gameSpaceW / totalWidth; //Расчет ширины одного элемента
+    oneTileHeight = gameSpaceH / totalHeight; //Расчет высоты одного элемента
+    //Обходим каждый элемент сгенерированного поля и создаем объекты характеризующие элементы поля
+    var i = 0;
+    pjs.levels.forStringArray({
+            w: oneTileWidth,
+            h: oneTileHeight,
+            source: binMap
+        }, function (S, X, Y) {
+             field[i].setNewSize(X + gameSpaceX, Y + gameSpaceY, oneTileWidth, oneTileHeight);
+             i++;
+        });
 }
 
 function generateMap(w, h, x, y, elemsInLine, elemsInColumn) {

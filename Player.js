@@ -7,14 +7,11 @@ var playerPozition = 0,
 var playerCommands = new Array(); //стек команд игрока
 var lastReadedCommands = new Array(); //буфер для хранения последнего считанного с карты набора команд(для отображения его в код мапе)
 var playerStatesBuff = new Array(); //стек состояний игрока
-//Инвентарь робота. На карте он может собирать и перетаскивать элементы
-var playerInventory = new Array();
 //Текущая лицевая сторона
 var playerFrontSide = 0; //0 верх, 1 право, 2 низ, 3 лево
 //Время старта движения робота, с отсчетом от глобального таймера в милисекундах
 var startPlayerMoveTime = 0;
-//Счетчик ходов робота
-var playerMoveCount = 0;
+var startPoz = 0;
 var passiveItemsAlpha = 0.35;
 //Инициализация игрока
 function playerSetStart() {
@@ -24,6 +21,7 @@ function playerSetStart() {
         if (f.code == entryCode) {
             //Запоминаем позицию на поле
             playerPozition = indx;
+            startPoz = indx;
             //Генерим графическое представление игрока для отображение
             movePlayerToFieldElement(field[playerPozition]);
             //Задаем направление, куда смотрит персонаж
@@ -150,7 +148,8 @@ function playerMove(canRead) {
             //Добавляем их в стек команд
             if (comms && comms.length != 0) {
                 isShift = false;
-                addCommandsToPlayer(comms, true);
+                //addCommandsToPlayer(comms, true);
+                insertArrayAt(playerCommands, 0, comms);
                 return playerMove(false);
             }
             break;
@@ -160,7 +159,8 @@ function playerMove(canRead) {
             //Добавляем их в стек команд
             if (comms && comms.length != 0) {
                 isShift = false;
-                addCommandsToPlayer(comms, true);
+                //addCommandsToPlayer(comms, true);
+                insertArrayAt(playerCommands, 0, comms);
                 return playerMove(false);
             }
             break;
@@ -204,7 +204,8 @@ function playerMove(canRead) {
     } else return "Робот врезался в стену";
     //Передвигаем игрока в нужную клетку
     movePlayerToFieldElement(field[playerPozition]);
-    codeView.createCodeMap(0, 0, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
+    if(!isVerticalScreen)
+        codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
     return "";
 }
 
@@ -226,14 +227,26 @@ function setPreviousStateToPlayer() {
     if (playerStatesBuff && playerStatesBuff.length > 0) {
         playerPozition = playerStatesBuff[0].position;
         //Возвращаем игрока на предыдущую позицию
-        movePlayerToFieldElement(field[playerStatesBuff[0].position]);
+        if (playerStatesBuff[0].position == startPoz) {
+            playerSetStart();
+            addCommandsToPlayer(field[playerPozition].getCommands());
+            //СБрасываем флаг для чтения команд
+            OOP.forArr(field, function (el) {
+                el.isCommandsReaded = false;
+            });
+            return;
+        } else movePlayerToFieldElement(field[playerStatesBuff[0].position]);
         //Разворачиваем его куда нужно
         playerSetDirection(playerStatesBuff[0].direction);
         //Инициализируем стек команд робота
-        playerCommands = playerStatesBuff[0].commands;
+        playerCommands = [];
+        OOP.forArr(playerStatesBuff[0].commands, function (el) {
+            playerCommands.push(el);
+        });
         //Убираем обработанный элемент
         playerStatesBuff.shift();
-        codeView.createCodeMap(0, 0, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
+        if(!isVerticalScreen)
+            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
     }
 }
 
@@ -242,7 +255,7 @@ function addCommandsToPlayer(comm, dontClear) {
     //Если добавлять нечего
     if (!comm || comm.length === 0) return;
     //Если считали команды с клетки поля
-    if (!dontClear){
+    if (!dontClear) {
         playerCommands = new Array();
     }
     //Добавляем все элементы из comm в НАЧАЛО стека
@@ -252,13 +265,14 @@ function addCommandsToPlayer(comm, dontClear) {
         playerCommands.unshift(getCopyOfObj(comm[i]));
     }
     //Если команды были считаны с клетки поля то сохраняем их в буфер для построения карты кода
-    if(!dontClear){
+    if (!dontClear) {
         lastReadedCommands = new Array();
         OOP.forArr(playerCommands, function (el) {
             lastReadedCommands.unshift(el);
         });
     }
-    codeView.createCodeMap(0, 0, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
+    if(!isVerticalScreen)
+        codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
 }
 
 function turnToTrueDirection(dir) {
@@ -344,4 +358,11 @@ function PlayerState(pos, dir, comms) {
     this.position = pos;
     this.direction = dir;
     this.commands = comms;
+}
+
+function wait(miliSec){
+    var e = new Date().getTime() + miliSec;
+    while (new Date().getTime() <= e) {
+
+    };
 }

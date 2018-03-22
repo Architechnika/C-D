@@ -343,7 +343,7 @@ function PointJS(ea, fa, rb, Gc) {
                 gameBlur: [],
                 gameFocus: [],
                 gameResize: [],
-                click: [] 
+                click: []
             },
             addEvent: function(a, b, c) {
                 "onload" == a && l.loaded ? c() : l.events[a].push({

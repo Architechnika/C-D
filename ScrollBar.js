@@ -26,7 +26,7 @@ function ScrollBar(posX, posY, orientation, arr, name) {
     if (orientation == "Vertical") {
         // backGroundH = gameSpaceH - (height - gameSpaceH);
         // backGroundW = (height - gameSpaceH)*lineCount;
-        backGroundH = height;// / 100 * 100;
+        backGroundH = height; // / 100 * 100;
         backGroundW = (height / 100 * 15) * lineCount;
     }
     if (orientation == "Horizontal") {
@@ -142,8 +142,8 @@ function ScrollBar(posX, posY, orientation, arr, name) {
     this.initArrayItems = function (arrayToInit) {
         //arrayForBar = arrayToInit;
         items = this.sortElements(arrayToInit, backGround.getBackGround());
-        indicator = new Indicator(backGround.getBackGround());
         this.setArrayItems(items);
+        indicator = new Indicator(backGround.getBackGround());
     }
     this.getArrayItems = function () {
         var tmpArray = arrayForBar;
@@ -399,9 +399,12 @@ function ScrollBar(posX, posY, orientation, arr, name) {
         });
 
         bar.h = tmpH;
-        bar.y = Y + H - bar.h;
-        bar.w = tmpW;
         this.setBarReletion();
+        //bar.y = Y + H - bar.h;
+        if (name == "LEFT")
+            bar.y = Y + H - bar.h;
+        else bar.y = Y
+        bar.w = tmpW;
         bar.x = (scrollBackGround.x + scrollBackGround.w) - bar.w;
         if (orientation == "Horizontal")
             barBackGroud = game.newRoundRectObject({
@@ -414,7 +417,7 @@ function ScrollBar(posX, posY, orientation, arr, name) {
             });
         else barBackGroud = game.newRoundRectObject({
             x: bar.x,
-            y: bar.y,
+            y: Y,
             h: tmpH,
             w: tmpW,
             radius: 8,
@@ -493,8 +496,10 @@ function ScrollBar(posX, posY, orientation, arr, name) {
             Y = scrollBackGround.y;
             W = scrollBackGround.w;
             H = scrollBackGround.h;
-            if(this.name != "LEFT")
-                scrollBackGround.h = (gameSpaceX + gameSpaceH)-1
+            if (this.name != "LEFT") {
+                if (!isVerticalScreen)
+                    scrollBackGround.h = (gameSpaceX + gameSpaceH) - 1;
+            }
             tmpH = W;
             //  tmpH =  (gameSpaceY+gameSpaceH)- (height / 100 * 15)
             oldX = Y;
@@ -513,10 +518,15 @@ function ScrollBar(posX, posY, orientation, arr, name) {
         }
         //считываем сколько процентов размер беграунда составляет от общего размера, делим на 10 и берем по меньшей части через floor это и будет количество строк элементов
         if (tmpH >= (height / 100 * 40)) {
+            //if(!isVerticalScreen)
+            //{
             var d = tmpH * 100 / width;
-            d = Math.floor(d / 10);
+            if (!isVerticalScreen)
+                d = Math.floor(d / 10);
+            else d = Math.floor(d / 20);
             scrollLineCount = d;
             lineCount = d;
+            //}
             arrMediana = Math.ceil(sortArr.length / scrollLineCount);
         }
         itemHW = tmpH / scrollLineCount;
@@ -538,14 +548,13 @@ function ScrollBar(posX, posY, orientation, arr, name) {
                     iter = 0;
                 }
                 oldY += itemHW;
-                if (lineCount > 1) {
-                }
+                if (lineCount > 1) {}
             } else {
                 el.x = oldX;
                 el.y = oldY;
                 oldX += itemHW;
             }
-            if (!el.isIntersect(backGround.getBackGround())) {
+            if (el.isIntersect && !el.isIntersect(backGround.getBackGround())) {
                 el.setVisible(false);
             }
         });

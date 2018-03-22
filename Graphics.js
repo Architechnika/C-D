@@ -2,131 +2,66 @@
 Содержит методы и данные для отрисовки графики(Графическая часть игры)
 */
 
-//Путь к файлам отображения лабиринта
-var wallPaths = [ //Стенки внутри лабиринта
-  "img/wall1.png",
-  "img/wall2.png",
-  "img/wall3.png"
-];
-
-var bordersPath = "img/border.png"; //Крайние стенки(те что вокруг лабиринта)
-var nonePath = "img/commands/none.png";
-var groundPath = "img/ground.png"; //Картинка для дороги
-var backgroundPath = "img/background.png"; //Картинка для фона за либиринтом
-var exitPath = "img/exit.png"; //Картинка для выхода из лабиринта
-var entryPath = "img/entry.png"; //Картинка для входа в лабиринт
-var coinPath = "img/coin.png"; //Картинка для отображения монетки
-var clockPath = "img/interface/clock.png"
-//Пути до файлов с изображениями для интерфейса
-var buttonStartImgSrc = "img/interface/startButton.png";
-var buttonStopImgSrc = "img/interface/stopButton.png";
-var menuButtonImgSrc = "img/interface/menuButton.png";
-var reloadButtonImgSrc = "img/interface/reloadButton.png";
-var okButtonImgSrc = "img/interface/okButton.png";
-var nextStepButtonImgSrc = "img/interface/nextStep.png";
-var prevStepButtonImgSrc = "img/interface/prevStep.png";
-//Пути для фпайлов для карты кода
-var itemDeleteSrc = "img/interface/delete.png";
-var itemReplaceSrc = "img/interface/replace.png";
-var itemAddSrc = "img/interface/add.png";
-var itemMoveSrc = "img/interface/move.png";
-var itemPlusSrc = "img/interface/plus.png";
-//Пути до файлов с изображением робота
-var playerImgSrc = "img/player.png";
-var playerImageObj = null;
+var playerImageObj = null;//Картинка характеризующая игрока в графике игры
 
 var width = game.getWH().w; // Ширина всего экрана
 var height = game.getWH().h; // Высота всего экрана
 
 //ПЕРЕМЕННЫЕ ГРАФИЧЕСКИХ СЛОЕВ
-var guiLayer = layers.newLayer(4, {
-    alpha: 0.8,
+/*var guiLayer = layers.newLayer(5, {
+    alpha: 1,
     backgroundColor: "transparent"
 }); //СЛОЙ ДЛЯ ОТОБРАЖЕНИЯ ГРАФИЧЕСКИХ ЭЛЕМЕНТОВ ИНТЕРФЕЙСА
 var commandsMenuLayer = layers.newLayer(5, {
     alpha: 1,
     backgroundColor: "transparent"
 }); //СЛОЙ ДЛЯ ОТОБРАЖЕНИЯ ВЫБОРА КОМАНД ПОЛЬЗОВАТЕЛЕМ
-var playerLayer = layers.newLayer(5, {
+var playerLayer = layers.newLayer(4, {
     alpha: 1,
     backgroundColor: "transparent"
 }); //СЛОЙ ДЛЯ ОТБРАЖЕНИЯ ГРАФИКИ ИГРОКА
-var commandsLayer = layers.newLayer(5, {
+var commandsLayer = layers.newLayer(3, {
     alpha: 1,
     backgroundColor: "transparent"
 }); //СЛОЙ ДЛЯ ОТОБРАЖЕНИЯ ГРАФИКИ НАЗНАЧЕННЫХ ЭЛЕМЕНТАМ КОММАНДЕ
-//Переменные для интерфейсных задач
-var commandsMenuElements = []; //getAllCommandsMenu(oneTileWidth,oneTileHeight);//Массив, хранящий про  раммное представление меню выбора команда
-var mainbackGround = undefined;
+var codeViewLayer = layers.newLayer(5, {
+    alpha: 1,
+    backgroundColor: "transparent"
+});*/
+
 pjs.system.setTitle('Лабиринт'); // Set Title for Tab or Window
 
 //Обновление графики на экране
 function updateScreen() {
-
-    //mainbackGround.drawBG();
-    //Отрисовываем слой команд
-    commandsLayer.on(function () {
-        drawCommandsOnField();
-        if(inputCommandStates == 0)
-            codeView.drawCodeMap();
-    });
-    //Отрисовываем поле
+    game.clear();
+    //Отрисовываем игровое поле
     for (var i = 0; i < field.length; i++) {
         field[i].draw();
     }
+    //Отрисовываем обьекты на поле
     OOP.forArr(gameObjects, function (el) {
         el.draw();
     });
-    //Отрисовываем элементы интерфейса
-    guiLayer.on(function () {
-        drawGUI();
-    });
-    //Рисуем на графическом слое игрока для отображения игрока
-    playerLayer.on(function () {
-        playerImageObj.draw();
-    });
+    //Отрисовываем команды на поле
+    drawCommandsOnField();
+    //Отрисовываем игрока
+    playerImageObj.draw();
+    //Отрисовываем скролы
+    showCommandsMenu();
+    //Отрисовываем карту кода
+    if(isVerticalScreen) {
+        if (isSecondScreen)
+            codeView.drawCodeMap();
+    }
+    else if (inputCommandStates == 0)
+        codeView.drawCodeMap();
+    //Отрисовываем гуи
+    drawGUI();
 }
 
 function clearAllLayers() {
+    allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
     game.clear();
-    playerLayer.clear();
-    guiLayer.clear();
-    commandsLayer.clear();
-    commandsMenuLayer.clear();
-}
-
-function mainBackGroundDrow() {
-    var arr = [];
-    var bg = []
-    // var mainBackGroung = game.newImageObject({x: 0, y: 0, h: oneTileHeight, w: oneTileWidth, file: entryPath});
-    var lineCount = Math.floor(height / oneTileWidth);
-    var columnCount = Math.floor(width / oneTileHeight);
-    for (var i = 0; i < lineCount + 1; i++) {
-        arr[i] = [];
-        for (var j = 0; j < columnCount + 1; j++) {
-            arr[i][j] = "B";
-        }
-    }
-
-    levels.forStringArray({
-        w: oneTileHeight,
-        h: oneTileHeight,
-        source: arr
-    }, function (S, X, Y, W, H) {
-        bg.push(game.newImageObject({
-            x: X,
-            y: Y,
-            h: H,
-            w: W,
-            file: groundPath
-        }))
-    });
-
-    this.drawBG = function () {
-        OOP.forArr(bg, function (el) {
-            el.draw();
-        });
-    }
 }
 
 //Отрисовывает команды на слое команд
@@ -151,15 +86,8 @@ function drawCommandsOnField() {
 
 //Рисует на экране меню команд
 function showCommandsMenu() {
-    commandsMenuLayer.on(function () {
-
-        /*if (lastClickedIndx == -1) {
-            return;
-        }*/
-        //Отображаем скролл бары для выбора команд в клетке
-        OOP.forArr(Scrolls, function (scroll) {
-            scroll.DrawScrollBar();
-        });
+    //Отображаем скролл бары для выбора команд в клетке
+    OOP.forArr(Scrolls, function (scroll) {
+        scroll.DrawScrollBar();
     });
-    //if (okB) okB.draw();
 }

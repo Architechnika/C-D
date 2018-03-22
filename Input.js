@@ -3,25 +3,19 @@
 */
 
 var isMobile = false; //Флаг того, мобильное ли у нас устройство или ПК(инициализируется в Logic)
-var isDowned = false; //Флаг того, что пользователь нажал на один из скролов и держит
 var isScrollMove = false; //Флаг для того, чтобы отличать скролл от тапа
 var scrolled = false; //Флаг того, что пользовател зажал тач и начал скролить
-var clickCoord = new point(0, 0);
-var isTup = false;
-var selectedItem = undefined;
-var swapedItem = undefined;
-var selItemPos = new point(-1, -1);
-var touchTapTimeStamp = undefined;
-var touchTapTimeSpan = 100; //Промежуток времени который должен пройти в миллисекундах для перемещения предмета в скроле
-var touchTapTimeFlag = false;
-var touchedScroll = undefined;
-var touchMovement = "NONE";
-var labIsMove = false,
-    codeMapIsMoved = false;
-//Буфер для хранения элемента который сдвигают в нижнем скроле(чтобы вернуть его в исходное состояние если что)
-var yMovedItem = new point(-1, -1);
-var xMovedItem = new point(-1, -1);
-var scrollStep = 20; //Шаг скрола в пикселях
+var clickCoord = new point(0, 0); //Актуальные координаты клика пользователя(даже если скролит то точка где находится палец)
+var touchPoint = undefined; //Точка в которой кликнул пользователь(не обновляется как clickCoord и становится = undefined при отпускании)
+var selectedItem = undefined; //Обьект в левом скроле, который передвигают или удаляют
+var swapedItem = undefined; //Обьект в левом скроле с которым нужно поменять местами передвигаемый
+var selItemPos = new point(-1, -1); //Буфер для хранения начальных координат элемента в левом скроле для того чтобы вернуть его обратно если его не поменяют местами с другим элементом
+var touchTapTimeFlag = false; //Флаг, для отработки событий сдвига(Если пользователь нажал в точку и двигает мышкой = true)
+var touchedScroll = undefined; //Буфер для хранения скрола на котором сдвигает элементы пользователь
+var labIsMove = false; //Флаг для того чтобы сдвигать поле
+var codeMapIsMoved = false; //Флаг для сдвига карты кода
+var multiTouchDelta = -1; //Буфер для хранения элемента который сдвигают в нижнем скроле(чтобы вернуть его в исходное состояние если что)
+var touchTimespan = undefined;
 //Отменяем вывод контестного меню на страничке
 document.oncontextmenu = function () {
     return false
@@ -52,116 +46,51 @@ function removeInputEvents() {
 //Обработчики для событий ввода --------------------
 function onMouseUP(e) {
     e.cancelBubble = true;
+    onUp(e);
+    selectedItem = undefined;
+    touchedScroll = undefined;
+    touchPoint = undefined;
+    scrolled = false;
+    touchTapTimeFlag = false;
     labIsMove = false;
     codeMapIsMoved = false;
-    onUp(e);
+    touchTimespan = undefined;
 }
 
 function onMouseDOWN(e) {
     clickCoord.x = e.x;
     clickCoord.y = e.y;
-    if (e.which == 1 && inputCommandStates == 1) {
-        //Инитим нажатый элемент если находим его
-        OOP.forArr(Scrolls, function (scroll) {
-            if (scroll.name == "LEFT" && clickIsInObj(clickCoord.x, clickCoord.y, scroll.GetBackGround())) {
-                var itms = scroll.getArrayItems();
-                if (itms && itms.length > 0) {
-                    OOP.forArr(itms, function (el, i) {
-                        if (clickIsInObj(clickCoord.x, clickCoord.y, el)) {
-                            //Запоминаем время начала тапа
-                            touchTapTimeStamp = Date.now();
-                            touchTapTimeFlag = false;
-                            touchedScroll = undefined;
-                            selectedItem = scroll.getItem(i);
-                            selItemPos = selectedItem.getPositionC();
-                            touchedScroll = scroll;
-                            //Отсчитываем время чтобы отделить нажатие от скрола
-                            onTouchTimeTimer();
-                            return;
-                        }
-                    });
-                }
-            }
-        });
-    }
-    if (e.which == 3) { //Если нажали правой кнопкой мышки и указатель в области лабиринта
-        OOP.forArr(field, function (el) {
-            if (clickIsInObj(e.x, e.y, el.getImageObject())) {
-                labIsMove = true;
-                return;
-            }
-        });
-        if (clickIsInObj(e.x, e.y, codeView.backGround)) {
-            codeMapIsMoved = true;
-            return;
-        }
-    }
+    //Запоминаем точку в которую кликнул пользователь
+    touchPoint = new point(clickCoord.x, clickCoord.y);
+    //Запоминаем время начала тапа
+    touchTimespan = Date.now();
 }
 
 function onWheel(e) {
-    var isInLab = true;
-    //Инитим нажатый элемент если находим его
-    OOP.forArr(Scrolls, function (scroll) {
-        if ((scroll.name == "LEFT" || scroll.name == "RIGHT") && clickIsInObj(e.x, e.y, scroll.GetBackGround())) {
-            var itms = scroll.getArrayItems();
-            OOP.forArr(itms, function (el, i) {
-                if (clickIsInObj(e.x, e.y, el)) {
-                    touchedScroll = scroll;
-                    return;
-                }
-            });
-        }
-    });
-    if (clickIsInObj(e.x, e.y, labView.getBackGround())) {
-        labView.resizeView(e.deltaY < 0 ? -1 * scrollStep : scrollStep);
-        return;
-    }
-    if (clickIsInObj(e.x, e.y, codeView.getBackGround()) && inputCommandStates == 0) {
-        codeView.resizeView(e.deltaY < 0 ? -1 * scrollStep : scrollStep);
-        return;
-    }
-    onMove(e);
+    onRecize(e,e.deltaY,scrollStep);
 }
 
 function onMouseMove(e) {
-    if (codeMapIsMoved || labIsMove || touchTapTimeFlag) { //Если нажата клавиша мышки в области НИЖНЕГО скрола и пользователь передвигает там элементы
-        onMove(e);
-    }
+    onMove(e);
     clickCoord.x = e.x;
     clickCoord.y = e.y;
 }
 
 function onTouchStart(e) {
     isMobile = true;
-    var arrs = touch.getTouches();
-    log(arrs.length)
     clickCoord.x = e.changedTouches[0].clientX;
     clickCoord.y = e.changedTouches[0].clientY;
-    if (lastClickedIndx != -1) {
-        touchedScroll = undefined;
-        //Инитим нажатый элемент если находим его
-        OOP.forArr(Scrolls, function (scroll) {
-            if (scroll.name == "DOWN" && clickIsInObj(clickCoord.x, clickCoord.y, scroll.GetBackGround())) {
-                var itms = scroll.getArrayItems();
-                if (itms && itms.length > 0) {
-                    OOP.forArr(itms, function (el, i) {
-                        if (clickIsInObj(clickCoord.x, clickCoord.y, el)) {
-                            //Запоминаем время начала тапа
-                            touchTapTimeStamp = Date.now();
-                            selectedItem = scroll.getItem(i);
-                            selItemPos = selectedItem.getPositionC();
-                            touchedScroll = scroll;
-                            //Отсчитываем время чтобы отделить нажатие от скрола
-                            onTouchTimeTimer();
-                            return;
-                        }
-                    });
-                }
-            } else if (scroll.name == "RIGHT" && clickIsInObj(clickCoord.x, clickCoord.y, scroll.GetBackGround())) {
-                touchedScroll = scroll;
-            }
-        });
+    for (var i = 0; i < Scrolls.length; i++) {
+        var scroll = Scrolls[i];
+        //Ищем клик по левому скролу
+        if (clickIsInObj(clickCoord.x, clickCoord.y, scroll.GetBackGround())) {
+            touchedScroll = scroll;
+        }
     }
+    //Запоминаем точку в которую кликнул пользователь
+    touchPoint = new point(clickCoord.x, clickCoord.y);
+    //Запоминаем время начала тапа
+    touchTimespan = Date.now();
 }
 
 function onTouchEnd(e) {
@@ -169,241 +98,255 @@ function onTouchEnd(e) {
     clickCoord.y = 0;
     e.x = e.changedTouches[0].clientX;
     e.y = e.changedTouches[0].clientY;
-    onUp(e);
+    if (touch.getTouches().length == 1)
+        onUp(e);
     selectedItem = undefined;
+    touchedScroll = undefined;
+    touchPoint = undefined;
+    scrolled = false;
+    touchTapTimeFlag = false;
+    labIsMove = false;
+    codeMapIsMoved = false;
+    multiTouchDelta = -1;
+    touchTimespan = undefined;
 }
 
 function onTouchMove(e) {
     e.x = e.changedTouches[0].clientX;
     e.y = e.changedTouches[0].clientY;
-    onMove(e);
+
+    //Если точек тача одна, то вызываем обработчик
+    if (touch.getTouches().length == 1)
+        onMove(e);
+    else { //Если находимся в режиме ресайза тачпадом(ЕСЛИ ПОЛЬЗОВАТЕЛЬ ДВУМЯ ПАЛЬЦАМИ РЕСАЙЗИТ)
+        //Получаем координаты 
+        var fP = new point(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+        var sP = new point(e.changedTouches[1].clientX, e.changedTouches[1].clientY);
+        //Просчитываем дельту двух точек
+        var delta = Math.abs(fP.y - sP.y); //Math.abs((fP.y + fP.x) - (sP.y + sP.x));
+        //Если это первая итерация то просто запоминаем эту дельту, если нет - делаем ресайз
+        if (multiTouchDelta == -1) multiTouchDelta = delta;
+        else {
+            onRecize(e,delta - multiTouchDelta, touchScrollVal);
+        }
+        scrolled = true;
+        multiTouchDelta = delta;
+        return;
+    }
     clickCoord.x = e.x;
     clickCoord.y = e.y;
 }
 
-function onUp(e) {
-    var clicked = false;
+function onRecize(e,delta,step){
+    //Инитим нажатый элемент если находим его
     OOP.forArr(Scrolls, function (scroll) {
-        if (isMobile) { //Если есть тач
-            //Если пользователь начал сдвигать элемент из нижнего скрола чтобы удалить
-            if (scroll.name == "DOWN" && yMovedItem.x != -1 && touchTapTimeFlag) {
-                //Если элемент вытащили за пределы фона скрола, то удаляем его из списка
-                if (!selectedItem.isIntersect(scroll.GetBackGround())) {
-                    //УДАЛЯЕМ КОМАНДУ ИЗ СПИСКА КОММАНД(ПОКА ВСЕГДА 0ой массив команд в стеке, потом их будет несколько)
-                    removeCommandFromCell(0, yMovedItem.x);
-                } else { //ВОЗВРАЩАЕМ ЕГО К ИСХОДНОМУ СОСТОЯНИЮ
-                    selectedItem.y = yMovedItem.y;
-                    selectedItem.setAlpha(1)
-                }
-                //Очищаем буфер для объекта который сдвигали
-                yMovedItem = new point(-1, -1);
-                scrolled = true;
-            }
-            if (scroll.name == "DOWN" && selectedItem !== undefined && touchTapTimeFlag) {
-                scroll.swapItemPosition(false, selectedItem, undefined, selItemPos)
-                if (swapedItem !== undefined) {
-                    scroll.swapItems(selectedItem, swapedItem);
-                    //Реинициализации команд в текущем выбранном элемента
-                    if (menuStatesArr.length > 0) {
-                        //menuStatesArr[0].addCommands(scroll.getArrayItems(), true, 0)
-                        var mass = [];
-                        OOP.forArr(scroll.getArrayItems(), function (el) {
-                            mass.push(el.command);
-                        })
-                        if (menuStatesArr[0].name == "if" && menuStatesArr[0].redacted == "else")
-                            menuStatesArr[0].elseBlock.actions = mass;
-                        else menuStatesArr[0].commandsBlock.actions = mass;
-                    } else field[lastClickedIndx].addCommands(scroll.getArrayItems(), true);
-
-                    swapedItem = undefined;
-                }
-            } else if (scroll.name == "DOWN" && clickIsInObj(e.x, e.y, scroll.GetBackGround()) && (inputCommandStates == 0 || inputCommandStates == 4 || inputCommandStates == 5) && !scrolled) { //ЭТО ЕСЛИ НАЖАЛИ НА НИЖНИЙ СКРОЛЛ, ЧТОБЫ ВЫБРАТЬ КОМАНДУ
-                var itm = scroll.getArrayItems();
-                if (itm !== undefined && itm.length > 0) {
-                    OOP.forArr(itm, function (el, i) {
-                        if (clickIsInObj(e.x, e.y, el)) {
-                            if (el.command.name == "repeatif" || el.command.name == "repeat" || el.command.name == "if") {
-                                var elL = field[lastClickedIndx].getCommands().length;
-                                if (menuStatesArr.length !== 0) {
-                                    if (menuStatesArr[0].name == "if" && menuStatesArr[0].redacted == "else")
-                                        elL = menuStatesArr[0].elseBlock.actions.length;
-                                    else elL = menuStatesArr[0].commandsBlock.actions.length;
-                                }
-                                choosenCommandInElement = elL - 1 - i;
-                                addCommandToCell(el, true);
-                            }
-                        }
-                    })
-                }
-            }
-
-            //ОРАБОТКА СКРОЛЛА ВЫБОРА КОМАНД
-            if (clickIsInObj(e.x, e.y, scroll.GetBackGround())) {
-                if (scroll.name == "RIGHT") { //ПРАВЫЙ СКРОЛЛ ВВОДА ПРОСТЫХ КОМАНД
-                    //ЕСЛИ МЫ ОПРЕДЕЛИЛИ ЧТО ПОЛЬЗОВАТЕЛЬ КЛИКНУЛ ПО ЭЛЕМЕНТУ
-                    if (!isScrollMove) {
-                        //var pos = touch.getPosition();
-                        //Определяем на какой элемент он КЛИКНУЛ
-                        OOP.forArr(scroll.getArrayItems(), function (el) {
-                            if (clickIsInObj(e.x, e.y, el)) {
-                                //ОБРАБАТЫВАЕМ КЛИК
-                                addCommandToCell(el);
-                            }
-                        });
-                    }
-                    //По дефолту считаем что пользователь не будет скролить
-                    isScrollMove = false;
+        if ((scroll.name == "LEFT" || scroll.name == "RIGHT") && clickIsInObj(e.x, e.y, scroll.GetBackGround())) {
+            var itms = scroll.getArrayItems();
+            OOP.forArr(itms, function (el, i) {
+                if (clickIsInObj(e.x, e.y, el)) {
+                    touchedScroll = scroll;
+                    scrollDynamic(new point(delta * -1, delta * -1), touchedScroll);
                     return;
                 }
-            }
-
-            //ОБРАБОТЧИК ЛЕВОГО СКРОЛА - РЕДАКТОР СЛОЖНЫХ КОМАНД
-            if (scroll.name == "LEFT" && clickIsInObj(e.x, e.y, scroll.GetBackGround())) {
-                var elems = scroll.getArrayItems();
-                if (elems !== undefined && elems.length > 0) {
-                    if (!isScrollMove) {
-                        //var pos = touch.getPosition();
-                        //Определяем на какой элемент он КЛИКНУЛ
-                        OOP.forArr(elems, function (el) {
-                            if (clickIsInObj(e.x, e.y, el)) {
-                                //ОБРАБАТЫВАЕМ КЛИК
-                                //leftScrollBarItemsClick(el);
-                                addCommandToCell(el, true);
-                            }
-                        });
-                    }
-                    isScrollMove = false;
-                    return;
-                }
-            }
-        } else { //Если МЫШКА
-
-            if (e.which == 1) { //ЛЕВАЯ КНОПКА МЫШИ
-                if (scroll.name == "RIGHT") { //ОБРАБОТКА КЛИКОВ ПО СКРОЛ БАРУ СО СПИСКОМ КОММАНД
-                    //Определяем на какой элемент он КЛИКНУЛ
-                    OOP.forArr(scroll.getArrayItems(), function (el) {
-                        if (clickIsInObj(e.x, e.y, el)) {
-                            el.onClick(el);
-                            clicked = true;
-                            return;
-                        }
-                    });
-                } else if (scroll.name == "LEFT") {
-                    var elems = scroll.getArrayItems();
-                    if (clickIsInObj(e.x, e.y, scroll.GetBackGround()))
-                        clicked = true;
-                    if (elems && elems.length > 0) {
-                        if (touchTapTimeFlag) { //Если перемещаем итем
-                            scroll.swapItemPosition(false, selectedItem, undefined, selItemPos)
-                            if (swapedItem !== undefined) {
-                                scroll.swapItems(selectedItem, swapedItem);
-                                swapedItem = undefined;
-                            }
-                        }
-                    }
-                }
-            }
+            });
         }
     });
-
-    if (!clicked && e.which == 1) { //Если клик не был обнаружен выше
-        if (!allButtons.checkButtonsClicked(e))
-            if (!codeView.isClicked(e))
-                processFieldClick(e);
+    if (!isSecondScreen && clickIsInObj(e.x, e.y, labView.getBackGround())) {
+        labView.resizeView(delta < 0 ? -1 * step : step);
+        return;
     }
-    scrolled = false;
-    touchTapTimeFlag = false;
-    touchMovement = "NONE";
+    else if (clickIsInObj(e.x, e.y, codeView.getBackGround()) && (inputCommandStates == 0 && !itemToAddAfterInCodeMap && !itemToReplaceInCodeMap)) {
+        //Ресайз поля работает только когда игрок не двигается
+        if (!isStarted) {
+            //Инициализируем карту кода
+            //Проверяем надо ли совсем закрывать интерфейс ввода
+            if (!field[lastClickedIndx].isStroke) {
+                //codeView.createCodeMap(0, 0, lastClickedElement.commands, false, false, 1);
+                codeView.resizeView(delta < 0 ? -1 * step : step, true, true);
+            } else codeView.resizeView(delta < 0 ? -1 * step : step);
+        }
+        return;
+    }
+}
+
+function onUp(e) {
+    var clicked = false;
+    //log(touchTapTimeFlag);
+    if (!scrolled) {
+        OOP.forArr(Scrolls, function (scroll) {
+            if (scroll.name == "RIGHT") { //ОБРАБОТКА КЛИКОВ ПО СКРОЛ БАРУ СО СПИСКОМ КОММАНД
+                //Определяем на какой элемент он КЛИКНУЛ
+                OOP.forArr(scroll.getArrayItems(), function (el) {
+                    if (clickIsInObj(e.x, e.y, el)) {
+                        //alert("touchOn: " + touchedOnClick.toString() + " touch: " + touched.toString())
+                        el.onClick(el);
+                        clicked = true;
+                        return;
+                    }
+                });
+            } else if (scroll.name == "LEFT") {
+                var elems = scroll.getArrayItems();
+                if (clickIsInObj(e.x, e.y, scroll.GetBackGround()))
+                    clicked = true;
+                if (elems && elems.length > 0 && selectedItem) {
+                    if (touchTapTimeFlag) { //Если перемещаем итем
+                        scroll.swapItemPosition(false, selectedItem, undefined, selItemPos)
+                        if (swapedItem !== undefined) {
+
+                            var stor = findObjStorage(lastClickedElement.commands, selectedItem.command);
+                            var indx1 = -1,
+                                indx2 = -1;
+                            OOP.forArr(stor, function (el, i) {
+                                if (el == selectedItem.command)
+                                    indx1 = i;
+                                else if (el == swapedItem.command)
+                                    indx2 = i;
+                            });
+                            if (indx1 != -1 && indx2 != -1) {
+                                stor.move(indx1, indx2);
+                                //Инициализируем карту кода
+                                codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
+                            }
+
+                            scroll.swapItems(selectedItem, swapedItem);
+                            swapedItem = undefined;
+                        }
+                    }
+                }
+            }
+        });
+        if (!clicked && !touchTapTimeFlag) { //Если клик не был обнаружен выше
+            if (!allButtons.checkButtonsClicked(e))
+                if (!codeView.isClicked(e)) {
+                    //Если ориентация вертикальная то проверяем клики по полю только когда находимся на экране с полем
+                    if (!isSecondScreen)
+                        processFieldClick(e);
+                }
+        }
+    }
 }
 
 //Обработчик свайпов и скролов колесиком мышки
 function onMove(e) {
-    var scrollSpeed = new point((e.x - clickCoord.x) / 1, (e.y - clickCoord.y) / 1);
-    if (isMobile) {
-        //Если перетаскиваем элементы
-        if (touchTapTimeFlag && touchedScroll) {
-            if (Math.abs(scrollSpeed.y) > Math.abs(scrollSpeed.x) && touchMovement != "HOR") { //Обработка удаления
-                //Запоминаем первоначальный Y этого элемента
-                if (yMovedItem.x == -1) {
-                    yMovedItem.x = touchedScroll.getArrayItems().indexOf(selectedItem);
-                    yMovedItem.y = selectedItem.y;
-                }
-                //Сдвигаем элемент туда куда двигают
-                //Если элемент вытащили ещё не слишком далеко, то продолжаем его вытаскивать
-                if (selectedItem.isIntersect(touchedScroll.GetActivityArea())) {
-                    selectedItem.y += scrollSpeed.y;
-                    log(selectedItem.y);
-                }
-                touchMovement = "VERT";
-            } else if (touchMovement != "VERT") { //Обработка перетаскивания
-                var item = touchedScroll.objectEntryC(selectedItem)
-                if (selectedItem.isIntersect(touchedScroll.GetBackGround())) {
-                    if (touchedScroll.isItemWhollyInGB(selectedItem.x + scrollSpeed.x, selectedItem.w) && selectedItem.getAlpha() < 1) {
-                        touchedScroll.swapItemPosition(true, selectedItem, item, selItemPos)
-                        if (item !== undefined)
-                            swapedItem = item;
-                        selectedItem.x += (scrollSpeed.x);
-                    }
-                }
-                touchMovement = "HOR";
-            }
-        } else if (lastClickedIndx != -1 && touchedScroll && (touchedScroll.name == "LEFT" || touchedScroll.name == "RIGHT")) { //ОБРАБОТКА ПРОКРУТКИ ПО СКРОЛЛУ
-            scrollDynamic(scrollSpeed, touchedScroll);
-            scrolled = true;
-        }
-    } else if (touchTapTimeFlag && touchedScroll) { //ЕСЛИ МЫШКА И ПОЛЬЗОВАТЕЛЬ ПЕРЕДВИГАЕТ ЭЛЕМЕНТЫ
-        var item = touchedScroll.objectEntryC(selectedItem)
-        if (selectedItem.isIntersect(touchedScroll.GetBackGround())) {
-            if (touchedScroll.isItemWhollyInGB(selectedItem.y + scrollSpeed.y, selectedItem.h) && selectedItem.getAlpha() < 1) {
-                touchedScroll.swapItemPosition(true, selectedItem, item, selItemPos)
-                if (item !== undefined)
-                    swapedItem = item;
-                selectedItem.y += (scrollSpeed.y);
-            }
-        }
-    } else if (touchedScroll) { //ЕСЛИ МЫШКА И ПОЛЬЗОВАТЕЛЬ СКРОЛИТ КОЛЕСИКОМ
-        scrollDynamic(new point(e.deltaY * -1, e.deltaY * -1), touchedScroll);
-    }
-    //Если пользователь скролит игровое поле
+    //Если точка куда пользователь кликнул отсутствует, то событие сработало ошибочно(ну вдруг)
+    if (!touchPoint) return;
+
+    var scrollSpeed = new point((e.x - clickCoord.x), (e.y - clickCoord.y));
+    var scrSpMax = Math.abs(scrollSpeed.x) > Math.abs(scrollSpeed.y) ? Math.abs(scrollSpeed.x) : Math.abs(scrollSpeed.y);
+    //Рассчитываем удаленность текущей точки тапа от точки старта нажатия
+    var diff = Math.abs(touchPoint.x) > Math.abs(touchPoint.y) ? Math.abs(e.x - touchPoint.x) : Math.abs(e.y - touchPoint.y);
+    if (diff < distanceOfScroll) return;
+    //Если область в которой пользователь двигает ещё не была определено, то определеяем ее
+    if (!touchTapTimeFlag) onTouchCheckMove();
+
+    //Если пользователь двигает игровое поле
     if (labIsMove) {
         labView.elementsMove(scrollSpeed.x, scrollSpeed.y);
+        return;
     }
-    //Если пользователь скролит карту кода
+    //Если пользователь двигает карту кода
     if (codeMapIsMoved) {
         codeView.elementsMove(scrollSpeed.x, scrollSpeed.y);
+        return;
+    }
+
+    if (scrolled && touchTapTimeFlag && touchedScroll && scrSpMax > 3) { //ОБРАБОТКА ПРОКРУТКИ ПО СКРОЛЛУ
+        scrollDynamic(scrollSpeed, touchedScroll);
+    } else if (!scrolled && touchTapTimeFlag && touchedScroll && touchedScroll.name == "LEFT") { //ЕСЛИ ПОЛЬЗОВАТЕЛЬ ПЕРЕДВИГАЕТ ЭЛЕМЕНТЫ
+        var item = touchedScroll.objectEntryC(selectedItem)
+        if (selectedItem.isIntersect(touchedScroll.GetBackGround())) {
+            touchedScroll.swapItemPosition(true, selectedItem, item, selItemPos)
+            if (item !== undefined)
+                swapedItem = item;
+            //Определяем в какую сторону тащить элемент(Вверх/вниз или вправо/влево)
+            //if(Math.abs(scrollSpeed.y) > Math.abs(scrollSpeed.x) && selectedItem.getPositionC().x == selItemPos.x)
+            selectedItem.y += (scrollSpeed.y);
+            //else if(Math.abs(scrollSpeed.x) >= Math.abs(scrollSpeed.y) && selectedItem.getPositionC().y == selItemPos.y) selectedItem.x += (scrollSpeed.x);
+        }
     }
 }
 
-function onTouchTimeTimer() {
-    if (Date.now() - touchTapTimeStamp > touchTapTimeSpan) {
+function onTouchCheckMove() {
+    //Обходим скролы
+    for (var i = 0; i < Scrolls.length; i++) {
+        var scroll = Scrolls[i];
+        //Ищем клик по левому скролу
+        if (scroll.name == "LEFT" && clickIsInObj(clickCoord.x, clickCoord.y, scroll.GetBackGround())) {
+            var itms = scroll.getArrayItems();
+            if (itms && itms.length > 0) {
+                for (var j = 0; j < itms.length; j++) {
+                    if (clickIsInObj(clickCoord.x, clickCoord.y, itms[j])) {
+                        if (Date.now() - touchTimespan < touchTapTimeOut) { //Если время не вышло то вопринимаем сдвиг как прокрутку скрола
+                            scrolled = true;
+                        } else { //Если время вышло, то сдвиг воспринимаем как перемещение элемента
+                            selectedItem = scroll.getItem(j);
+                            selectedItem.setAlpha(0.7);
+                            selItemPos = selectedItem.getPositionC();
+                        }
+                        touchedScroll = scroll;
+                        touchTapTimeFlag = true;
+                        return;
+                    }
+                }
+            }
+        } else if (scroll.name == "RIGHT" && clickIsInObj(clickCoord.x, clickCoord.y, scroll.GetBackGround())) {
+            touchedScroll = scroll;
+            touchTapTimeFlag = true;
+            return;
+        }
+    };
+    //Обходим codeMap
+    if (clickIsInObj(clickCoord.x, clickCoord.y, codeView.backGround)) {
+        codeMapIsMoved = true;
         touchTapTimeFlag = true;
-        if (selectedItem !== undefined)
-            selectedItem.setAlpha(0.7)
         return;
-    } else if (scrolled) return;
-    setTimeout("onTouchTimeTimer()", 40);
+    }
+    //Если указатель в области лабиринта
+    for (var i = 0; i < field.length; i++) {
+        if (clickIsInObj(clickCoord.x, clickCoord.y, field[i])) {
+            labIsMove = true;
+            touchTapTimeFlag = true;
+            return;
+        }
+    };
 }
 
 //Обработчики всех кликабельных элементов---------------------------
 function onOkBClick() { //Вернет TRUE если надо закрыть кнопку OK
-    if(infoText.isVisible()) infoText.close();
+    if (infoText.isVisible()) infoText.close();
     initRightScroll([]);
     //lastClickedIndx = -1; //Очищаем индекс выбранной клетки поля
     choosenCommandInElement = undefined;
     isScrollMove = true; //ПО дефолту скролл(чтобы не было срабатываний на клик при первом отображении интерфейса ввода команд)
-    guiLayer.clear(); //Очищаем слой с интерфейса
+
+    //Если находимся в режиме добавления после определенной команды
+    if (itemToAddAfterInCodeMap) {
+        itemToAddAfterInCodeMap = undefined;
+        inputCommandStates = 1;
+    }
     //Проверяем надо ли совсем закрывать интерфейс ввода
     if (inputCommandStates > 0) {
-        //Инициализируем карту кода
-        codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
-        //field[lastClickedIndx].setStroke(false); //Убираем выделение с поля
         inputCommandStates = 0;
+        OOP.forArr(Scrolls, function (el, i) {
+            if (el.name == "LEFT")
+                Scrolls.splice(i, 1);
+        });
+        //Инициализируем карту кода
+        codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true, 1);
         return false;
     }
-    initLeftScroll([]);
-    //Инициализируем карту кода
-    codeView.createCodeMap(0, 0, lastClickedElement.commands, false, false);
-    field[lastClickedIndx].setStroke(false); //Убираем выделение с поля
+    if (!isVerticalScreen) {
+        initLeftScroll([]);
+        //Инициализируем карту кода без возможности добавления элементов
+        codeView.createCodeMap(0, 0, lastClickedElement.commands, false, false, 1, undefined, true);
+        field[lastClickedIndx].setStroke(false); //Убираем выделение с поля
+    } else {
+        allButtons.backToStartButton.setAlpha(1);
+        allButtons.stepDownButton.setAlpha(1);
+        allButtons.stepUpButton.setAlpha(1);
+        isSecondScreen = false;
+        game.setLoop("Labyrinth");
+    }
     return true;
 }
 
@@ -423,7 +366,7 @@ function startBClick() {
 //КНОПКА МЕНЮ
 function menuBClick() {
     clearAllLayers();
-    game.setLoop('menu');
+    window.location.href = 'index.html'
     return true;
 }
 //КНОПКА ПЕРЕЗАГРУЗКИ УРОВНЯ
@@ -454,7 +397,7 @@ function onCodeMapElementClick(element) {
         addCommandToCell(element, true);
         codeView.menu.closeMenu(element);
     } else {
-        codeView.menu.openMenu(element);
+        codeView.menu.openMenu(element, codeView);
     }
 }
 
@@ -464,15 +407,14 @@ function onChooseCommandClick(el) {
 }
 
 //Обработчик для ввода с цифр
-function onKeyboardClick(el){
+function onKeyboardClick(el) {
     var count = el.command.name != "backspace" ? el.command.value : -1;
     var text = choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count.toString();
-    if(count != -1){//Если элемент добавляют        
-        if(text.length < 4){
+    if (count != -1) { //Если элемент добавляют        
+        if (text.length < 4) {
             text = text + count.toString();
         }
-    }
-    else if(text.length > 0) text = text.substring(0, text.length - 1)//Если стирают
+    } else if (text.length > 0) text = text.substring(0, text.length - 1) //Если стирают
     var parsedInt = parseInt(text);
     parsedInt = isNaN(parsedInt) ? 0 : parsedInt;
     //Инитим текст в блок итераций
@@ -481,15 +423,6 @@ function onKeyboardClick(el){
     infoText.setText(text);
 }
 //------------------------------------------------------------------
-
-//Возвращает true если пользователь нажал на отображенный элемент GUI
-function processGuiClick(e) {
-    //Обрабатываем кнопку ok
-    if (clickIsInObj(e.x, e.y, okB)) { //Если на кнопку нажали, то скрываем весь интерфейс ввода
-        return okB.onClick();
-    }
-    return false;
-}
 
 //Функция обеспечивающая динамический скролл
 function scrollDynamic(speed, scrollElement) {

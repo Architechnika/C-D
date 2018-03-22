@@ -8,29 +8,22 @@ var gameSpaceX = 0,
 var gameSpaceW = 0,
     gameSpaceH = 0;
 
-var totalWidth = 25; //Колличество блоков в строку
-var totalHeight = 25; //Колличество блоков в стлобец
-var robotMoveDelay = 600; //Задержка при движении робота в милисекундах
-var saveTimeout = 1000; //Таймаут для метода который следит за изменениями размера экрана
-var totalSeconds = 0; //Для зранения колличества секунд которые прошли с начала прохождения уровня
-var secBuff = 0; //Буфер для хранения времени старта
+var totalWidth = labyrinthSize; //Колличество блоков в строку(в начале игры)
+var totalHeight = labyrinthSize; //Колличество блоков в столбец(в начале игры)
 var totalCommandsAllowed = 0; //Колличество команд, которое разрешено поставить на данном поле(рассчитывается при генерации лабиринта)
 var totalLabCompleted = 0; //Счетчик пройденных лабиринтов
 var totalAttempts = 0; //Счетчик попыток прохождения уровня
-//ПАРАМЕТРИЗУЕМЫЕ ПАРАМЕТРЫ
-//Уровень сложности(если EASY - робот сам поворачивается куда нужно при движении)
-var difficultyLevel = "EASY";
-var totalTokensOnMap = 20; //Сколько всего монеток генерится в лабиринте
-
-//var lastClickedIndx = -1; //Номер элемента лабиринта по которому кликнул пользователь
 var lastClickedElement = undefined; //Последний элемент карты по которому кликал пользователь(нужно для построения карты кода)
 var choosenCommandInElement = undefined; //Индекс команды в массиве команд которую редактирует игрок
-var lastCommandToRedact = undefined; //Ссылка на последний редактируемый обьект. Нужно для рекурсивного добавления команд в сложные команды
 var menuStatesArr = new Array();
-var isBackGroundDrawed = false;
-var isEntried = false;//Флаг для обозначения того, что игра уже была инициализирована и не нужно пересоздавать всю игру при перезагрузке
-var isStarted = false;//Флаг для старта/стопа игры
-var isChooseCommandShow = false;//Флаг - показывать интерфейс выбора команд или нет
+var isEntried = false; //Флаг для обозначения того, что игра уже была инициализирована и не нужно пересоздавать всю игру при перезагрузке
+var isStarted = false; //Флаг для старта/стопа игры
+var itemToReplaceInCodeMap = undefined; //Переменная для хранения ссылки на обьект который нужно заменить в codeView
+var itemToAddAfterInCodeMap = -1; //Переменная которая хранит обьект из codeMap после которого надо добавить элемент
+var timeTimerLaunched = false;
+var isSecondScreen = false;
+var isVerticalScreen = undefined;
+var widthBuff = width;
 //Переменная для хранения состояний меню ввода команд:
 // 0 - обычный ввод
 // 1 - blockA или if или repeatif
@@ -44,6 +37,15 @@ var labView, codeView;
 game.newLoopFromConstructor('Labyrinth', function () {
     //Код для старта игры
     this.entry = function () {
+        var userID = sessionStorage.getItem("userdata")
+        var isNewGame = sessionStorage.getItem("typeGame") //получаем информацию о том, загружаемся или это новая игра
+        sessionStorage.removeItem("typeGame") //удаляем из сессии информацию о том загрузка это или новая игра
+        var buf = localMemory.loadAsObject(userID);
+        userData = new UserAccaunt();
+        if (buf && isNewGame != "NewGame") {
+            //userData = new UserAccaunt();
+            userData.copy(buf);
+        }
         //Инициализируем события для перехвата ввода
         initInputEvents();
         if (isEntried) return;
@@ -54,7 +56,11 @@ game.newLoopFromConstructor('Labyrinth', function () {
         //Запускаем таймер который сохраняет состояние игры
         saveTimer();
         //Инициализируем таймер времени
-        totalTimeTimer();
+        if (!timeTimerLaunched) {
+            totalTimeTimer();
+            checkScreenTimer();
+        }
+        timeTimerLaunched = true;
         //mainbackGround = new mainBackGroundDrow();
         isEntried = true;
     };
@@ -74,9 +80,37 @@ game.newLoopFromConstructor('Labyrinth', function () {
 function saveTimer() {
     //сохраняем состояние игры
     if (userData !== undefined) {
-        userData.save(isGameSpaseUp, totalSeconds, field, playerInventory, gameObjects, entrySide);
+        userData.save(true, totalSeconds, field, playerInventory, gameObjects, entrySide);
     }
     setTimeout("saveTimer()", saveTimeout);
+}
+
+//Таймер, который контролирует процесс смены ориентации экрана-----------------------------------------------------------
+function checkScreenTimer(){
+    if(screen.width != width){
+        if(isSecondScreen){
+            allButtons.backToStartButton.setAlpha(1);
+            allButtons.stepDownButton.setAlpha(1);
+            allButtons.stepUpButton.setAlpha(1);
+            isSecondScreen = false;
+            game.setLoop("Labyrinth");
+        }
+        if (lastClickedElement) lastClickedElement.setStroke(false);
+        width = game.getWH().w;
+        height = game.getWH().h;
+        //Пересчитываем позиции всех элементов
+        initGameSpace();
+        calcMapPosition();
+        labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
+        labView.checkGameObjects();//Ставим обьекты на место
+        Scrolls.splice(0,Scrolls.length);
+        initGUI();
+        //Инициализируем обьект для вывода карты кода
+        if (!codeMapBG) {
+            codeView = new CodeMapView(0, 0, 0, 0, "white");
+        } else codeView = new CodeMapView(codeMapBG.x, codeMapBG.y, codeMapBG.w, codeMapBG.h, "white");
+    }
+    setTimeout("checkScreenTimer()", 40);
 }
 
 function totalTimeTimer() {
@@ -87,12 +121,13 @@ function totalTimeTimer() {
 //Инициализация лабиринта
 function initializeGame(isInit) {
     game.clear();
+    initGameSpace();
     menuStatesArr = null;
     menuStatesArr = new Array();
     //Создаем новое поле
     if (isInit) {
         if (userData) {
-            field = userData.load(isGameSpaseUp, gameObjects, playerInventory, initGUI)
+            field = userData.load(true, gameObjects, playerInventory, initGUI)
             if (field.length <= 0)
                 generateMap(gameSpaceW, gameSpaceH, gameSpaceX, gameSpaceY, totalWidth, totalHeight);
         } else {
@@ -101,7 +136,7 @@ function initializeGame(isInit) {
     } else {
         initLabirint();
     }
-
+    allButtons = new Buttons();
     //Рассчитываем сколько команд можно поставить на этом поле для прохождения
     totalCommandsAllowed = (totalWidth + totalHeight) * 2;
     //Создаем игрока
@@ -111,8 +146,9 @@ function initializeGame(isInit) {
     //Инициализируем обьекты для вывода графики лабиринта
     labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
     //Инициализируем обьект для вывода карты кода
-    codeView = new CodeMapView(codeMapBG.x,codeMapBG.y,codeMapBG.w,codeMapBG.h, "white");
-    allButtons = new Buttons();
+    if (!codeMapBG) {
+        codeView = new CodeMapView(0, 0, 0, 0, "white");
+    } else codeView = new CodeMapView(codeMapBG.x, codeMapBG.y, codeMapBG.w, codeMapBG.h, "white");
 }
 
 function initLabirint() {
@@ -140,52 +176,25 @@ function initLabirint() {
                 return;
             }
         });
-        processButtonClick({
-            x: startB.x + 1,
-            y: startB.y + 1
-        });
     }
 }
 
 function initGameSpace() {
-    var ind = 0;
-    if (width < height) {
-        /*gameSpaceX = 0;
-        gameSpaceY = 0;
-        gameSpaceW = width;
-        gameSpaceH = height/100*55;*/
 
-        gameSpaceX = height / 100 * 15;
-        gameSpaceY = 0;
-        gameSpaceH = height / 100 * 85;
-        gameSpaceW = gameSpaceH
+    if (width < height) {
+        gameSpaceX = 0;
+        gameSpaceY = height / 100 * 15
+        gameSpaceW = width;
+        gameSpaceH = gameSpaceW;
+        isVerticalScreen = true;
 
     } else {
-
-        if (isGameSpaseUp) {
-            gameSpaceX = height / 100 * 15;
-            gameSpaceY = ( height / 100 * 15)/5;
-            gameSpaceH = height / 100 * 85;
-            gameSpaceW = gameSpaceH
-        } else {
-            gameSpaceX = height / 100 * 15;
-            gameSpaceY = height / 100 * 15;
-            gameSpaceH = height / 100 * 85;
-            gameSpaceW = gameSpaceH
-        }
-
+        gameSpaceX = height / 100 * 15;
+        gameSpaceY = (height / 100 * 15) / 5;
+        gameSpaceH = height / 100 * 85;
+        gameSpaceW = gameSpaceH
+        isVerticalScreen = false;
     }
-}
-
-//Перерасчитывает размеры существующего поля и элементов
-function resizeAllElements() {
-    Scrolls = new Array();
-    //Инициализируем элементы интерфейса
-    initGUI();
-    //Пересчитываем параметры существующего лабиринта
-    calcField(gameSpaceW, gameSpaceH, gameSpaceX, gameSpaceY, totalWidth, totalHeight);
-    //Пересчитываем позицию игрока
-    movePlayerToFieldElement(field[playerPozition]);
 }
 
 //Возвращает число команд на поле всего
@@ -211,12 +220,22 @@ function setFocused(fieldElem, indx) {
     //Запоминаем последний кликнутый пользователь элемент
     lastClickedElement = field[lastClickedIndx];
     inputCommandStates = 0;
-    //Инициализируем левый скролл
-    initLeftScroll(field[lastClickedIndx].getCommandsImagesArr());
-    initRightScroll([]);
-    codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
     //Выделяем в рамку объект по которому нажали
     field[indx].setStroke(true);
+    //Если ориентация экрана горизонтальная, то
+    if (!isVerticalScreen) {
+        //Инициализируем левый скролл
+        initLeftScroll(field[lastClickedIndx].getCommandsImagesArr());
+        initRightScroll([]);
+        codeView.resetZoomer();
+        codeView.createCodeMap(0, textbackGroundItem.h, lastClickedElement.commands, true, true, 1, true);
+    } else { //Если ориентация экрана вертикальная
+        clearAllLayers();
+        allButtons.backToStartButton.setAlpha(inactiveItemsAlpha);
+        allButtons.stepDownButton.setAlpha(inactiveItemsAlpha);
+        allButtons.stepUpButton.setAlpha(inactiveItemsAlpha);
+        game.setLoop("SecondScreen")
+    }
     //Показываем кнопку ok
     allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
 }
@@ -230,27 +249,63 @@ function addCommandToCell(commandImg, dontAdd) {
 
         if (inputCommandStates == 1) { //Если у нас простая команда и мы добавляем ее тупо в клетку
             choosenCommandInElement.push(getCopyOfObj(commandImg.command));
-            initLeftScroll(getCommandsImgArr(choosenCommandInElement));
+            if (commandImg.command.commandsBlock) onOkBClick();
+            else initLeftScroll(getCommandsImgArr(choosenCommandInElement));
         } else if (inputCommandStates == 2) { //Если выбираем blockA
             var comm = getCopyOfObj(COMMANDS[10]); //Инициализируем команду whatisit
             comm.lookCommand = commandImg.command; //Инитим параметр lookCommand
             choosenCommandInElement.blockA = comm;
             inputCommandStates = 0;
-            initLeftScroll([]);
+            if(isVerticalScreen) initLeftScroll();
+            else initLeftScroll([]);
             initRightScroll([]);
-            codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
-        } else if (inputCommandStates == 3){ //Если выбираем blockB
+            codeView.createCodeMap(codeMapBG.x,codeMapBG.y, lastClickedElement.commands, true, true);
+        } else if (inputCommandStates == 3) { //Если выбираем blockB
             choosenCommandInElement.blockB = commandImg.command;
             inputCommandStates = 0;
-            initLeftScroll([]);
+            if(isVerticalScreen) initLeftScroll();
+            else initLeftScroll([]);
             initRightScroll([]);
-            codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
+            codeView.createCodeMap(codeMapBG.x,codeMapBG.y, lastClickedElement.commands, true, true);
+        } else if (inputCommandStates == 0) { //Если редактируем команды из codeView
+            if (itemToReplaceInCodeMap) { //Если нужно заменить элемент
+                //Находим массив в котором хранится команда для замены
+                var elemStor = findObjStorage(lastClickedElement.commands, itemToReplaceInCodeMap.command);
+                //Находим ее в массиве и заменяем
+                OOP.forArr(elemStor, function (el, i) {
+                    if (el == itemToReplaceInCodeMap.command) {
+                        elemStor[i] = commandImg.command;
+                        return;
+                    }
+                });
+                //Очищаем буфер для хранения обьекта для замены и скролл
+                itemToReplaceInCodeMap = undefined;
+                initRightScroll([]);
+                if(isVerticalScreen) initLeftScroll();
+                codeView.createCodeMap(codeMapBG.x,codeMapBG.y, lastClickedElement.commands, true, true);
+            }
+            if (itemToAddAfterInCodeMap) { //Если нужно добавить элемент не в конец списка а после опредленного
+                //Находим массив в котором хранится команда для замены
+                var elemStor = findObjStorage(lastClickedElement.commands, itemToAddAfterInCodeMap.command);
+                var indx = 0;
+                //Находим ее в массиве и заменяем
+                OOP.forArr(elemStor, function (el, i) {
+                    if (el == itemToAddAfterInCodeMap.command) {
+                        indx = i + 1;
+                        return;
+                    }
+                });
+                var clone = getCopyOfObj(commandImg.command);
+                elemStor.splice(indx, 0, clone);
+                itemToAddAfterInCodeMap.command = clone;
+                if (commandImg.command.commandsBlock) onOkBClick();
+                initLeftScroll(getCommandsImgArr(choosenCommandInElement));
+            }
         }
         return;
     }
     //Меняем состояние меню в зависимости от типа команды
-    var name = commandImg.name ? commandImg.name : commandImg.command.name;
-    changeMenuState(name);
+    changeMenuState(commandImg);
 }
 
 //Задает состояние меню в зависимости от типа команды
@@ -260,25 +315,29 @@ function addCommandToCell(commandImg, dontAdd) {
 // 3 - blockC
 // 4 - commandBlock или count
 // 5 - elseBlock
-function changeMenuState(commName) {
+function changeMenuState(commandImg) {
 
+    var commName = commandImg.name ? commandImg.name : commandImg.command.name;
     //Скрываем текстовое поле ввода итераций в цикле, если оно не скрыто
     if (inputCounterText && inputCounterText.visible && choosenCommandInElement.name != "repeat") inputCounterText.visible = false;
-    
-    if(commName == "plus"){
+
+    if (commName == "plus") {
         inputCommandStates = 1;
-        initRightScroll(getAllCommandsMenu(true));
-    }
-    else if (commName == "blockA" || commName == "whatisit") {
+        initLeftScroll([]);
+        initRightScroll(getAllCommandsMenu(commandImg.commandName && commandImg.commandName != "empty"));
+    } else if (commName == "blockA" || commName == "whatisit") {
         inputCommandStates = 2;
+        initLeftScroll([]);
         initRightScroll(getAllDirections());
 
     } else if (commName == "blockB") {
         inputCommandStates = 3;
+        initLeftScroll([]);
         initRightScroll(getAllInteractGameObjects());
 
     } else if (commName == "counter") {
         inputCommandStates = 4;
+        initLeftScroll([]);
         //Инициализируем клавиатуру для ввода цифр
         initRightScroll(getDigitKeyboardImages());
         infoText.setText(choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count + "");
@@ -322,24 +381,26 @@ function processRobotMove() {
 
     if (res == "end") { //Если мы прошли до конца карты
         robotOn = false;
-        totalWidth += 2;
-        totalHeight += 2;
-        /*if (totalWidth > 10) {
-            totalWidth = 11;
-            totalHeight = 11;
-        }*/
+        if (isLabyrinthGrow) {
+            if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {
+                log("Лабиринт достиг максимально допустимого размера");
+            } else {
+                totalWidth += 2;
+                totalHeight += 2;
+            }
+        }
         isStarted = false;
         allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
         totalLabCompleted++;
         //Перезагружаем уровень с новым лабиринтом
         initializeGame();
     } else if (res == "stop") {
-        alert("Робот остановился и ждет дальнейших команд");
+        showMessage("Робот остановился и ждет дальнейших команд");
         isStarted = false;
-        allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
+        //allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
     } else if (res != "") //Если у робота возникли проблемы
     {
-        if (isStarted) alert(res); //Выводим их на экран
+        //alert(res); //Выводим их на экран
         //Останавливаем цикл движения игры
         isStarted = false;
         allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
@@ -351,9 +412,15 @@ function processRobotMove() {
         playerSetStart();
         //Очищаем карту кода
         codeView.clear();
+        showMessage(res);
     } else if (isStarted) setTimeout("processRobotMove()", robotMoveDelay);
     //camera.follow( playerImageObj, 1 );
 }
 
-//game.startLoop('Labyrinth');
-game.startLoop('menu');
+function showMessage(text) {
+    infoText.setText(text);
+    allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
+}
+
+game.startLoop('Labyrinth');
+//game.startLoop('menu');
