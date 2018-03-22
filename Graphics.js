@@ -29,7 +29,7 @@ var codeViewLayer = layers.newLayer(5, {
     backgroundColor: "transparent"
 });*/
 
-pjs.system.setTitle('Лабиринт'); // Set Title for Tab or Window
+pjs.system.setTitle('КРОП - учись играя'); // Set Title for Tab or Window
 
 //Обновление графики на экране
 function updateScreen() {
