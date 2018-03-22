@@ -31,7 +31,6 @@ var widthBuff = width;
 // 3 - counter или repeat
 // 4 - commandBlock или count
 // 5 - elseBlock
-//тестовый комент
 var inputCommandStates = 0;
 var labView, codeView;
 //Игровой цикл
