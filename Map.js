@@ -214,16 +214,20 @@ function calcField(w, h, x, y, elemsInLine, elemsInColumn) {
 function calcMapPosition(){
     oneTileWidth = gameSpaceW / totalWidth; //Расчет ширины одного элемента
     oneTileHeight = gameSpaceH / totalHeight; //Расчет высоты одного элемента
-    //Обходим каждый элемент сгенерированного поля и создаем объекты характеризующие элементы поля
-    var i = 0;
-    pjs.levels.forStringArray({
-            w: oneTileWidth,
-            h: oneTileHeight,
-            source: binMap
-        }, function (S, X, Y) {
-             field[i].setNewSize(X + gameSpaceX, Y + gameSpaceY, oneTileWidth, oneTileHeight);
-             i++;
-        });
+    var poz = new point(gameSpaceX,gameSpaceY);
+    var counter = 0;
+    //Обходим все элементы поля
+    for(var i = field.length - 1; i > -1; i--){
+        field[i].setNewSize(poz.x,poz.y,oneTileWidth,oneTileHeight);
+        counter++;
+        //Если надо сместить координаты на строку вниз
+        if(counter == labyrinthSize){
+            poz.x = gameSpaceX;
+            poz.y += oneTileHeight;
+            counter = 0;
+        }
+        else poz.x += oneTileWidth;//Если это следующий элемент в строке поля
+    }
 }
 
 function generateMap(w, h, x, y, elemsInLine, elemsInColumn) {

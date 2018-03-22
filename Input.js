@@ -45,7 +45,8 @@ function removeInputEvents() {
 
 //Обработчики для событий ввода --------------------
 function onMouseUP(e) {
-    e.cancelBubble = true;
+    clickCoord.x = 0;
+    clickCoord.y = 0;
     onUp(e);
     selectedItem = undefined;
     touchedScroll = undefined;
@@ -54,7 +55,9 @@ function onMouseUP(e) {
     touchTapTimeFlag = false;
     labIsMove = false;
     codeMapIsMoved = false;
+    multiTouchDelta = -1;
     touchTimespan = undefined;
+    e.cancelBubble = true;
 }
 
 function onMouseDOWN(e) {
@@ -64,20 +67,23 @@ function onMouseDOWN(e) {
     touchPoint = new point(clickCoord.x, clickCoord.y);
     //Запоминаем время начала тапа
     touchTimespan = Date.now();
+    e.cancelBubble = true;
 }
 
 function onWheel(e) {
     onRecize(e,e.deltaY,scrollStep);
+    e.cancelBubble = true;
 }
 
 function onMouseMove(e) {
     onMove(e);
     clickCoord.x = e.x;
     clickCoord.y = e.y;
+    e.cancelBubble = true;
 }
 
 function onTouchStart(e) {
-    isMobile = true;
+    //isMobile = true;
     clickCoord.x = e.changedTouches[0].clientX;
     clickCoord.y = e.changedTouches[0].clientY;
     for (var i = 0; i < Scrolls.length; i++) {
@@ -332,7 +338,8 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
                 Scrolls.splice(i, 1);
         });
         //Инициализируем карту кода
-        codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true, 1);
+        if(lastClickedElement)
+            codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true, 1);
         return false;
     }
     if (!isVerticalScreen) {
@@ -347,6 +354,7 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
         isSecondScreen = false;
         game.setLoop("Labyrinth");
     }
+    codeView.clear();
     return true;
 }
 

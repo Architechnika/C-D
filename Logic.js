@@ -87,7 +87,7 @@ function saveTimer() {
 
 //Таймер, который контролирует процесс смены ориентации экрана-----------------------------------------------------------
 function checkScreenTimer(){
-    if(screen.width != width){
+    if(game.getWH().w != width){
         if(isSecondScreen){
             allButtons.backToStartButton.setAlpha(1);
             allButtons.stepDownButton.setAlpha(1);
