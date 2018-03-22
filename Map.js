@@ -221,7 +221,7 @@ function calcMapPosition(){
         field[i].setNewSize(poz.x,poz.y,oneTileWidth,oneTileHeight);
         counter++;
         //Если надо сместить координаты на строку вниз
-        if(counter == labyrinthSize){
+        if(counter == totalWidth){
             poz.x = gameSpaceX;
             poz.y += oneTileHeight;
             counter = 0;

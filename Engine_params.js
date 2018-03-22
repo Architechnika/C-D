@@ -23,8 +23,7 @@ var brush = pjs.brush; // Brush, used for simple drawing
 var OOP = pjs.OOP; // Objects manager
 var math = pjs.math; // More Math-methods
 var key = pjs.keyControl.initKeyControl();
-/*var mouse = pjs.mouseControl.initMouseControl();
-pjs.mouseControl.exitMouseControl();*/
+//var mouse = pjs.mouseControl.initMouseControl();
 var touch = pjs.touchControl.initTouchControl();
 // var act   = pjs.actionControl.initActionControl();
 

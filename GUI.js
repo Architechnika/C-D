@@ -14,6 +14,7 @@ var coinItem = undefined;
 var allButtons = undefined; //Класс для всех кнопок
 var Scrolls = new Array(); // массив всех скролбаров
 var infoText = undefined;
+var toolTip = new ToolTip();
 
 //Отрисовывает элементы интерфейса
 function drawGUI() {
@@ -27,6 +28,7 @@ function drawGUI() {
     clockItem.draw();
     infoText.draw();
 
+    if(toolTip.isVisible()) toolTip.draw();
     if (inputCounterText !== null) inputCounterText.draw();
     //Отрисовываем интерфейс выбора команд
     //showCommandsMenu();

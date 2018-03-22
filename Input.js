@@ -16,6 +16,7 @@ var labIsMove = false; //Флаг для того чтобы сдвигать п
 var codeMapIsMoved = false; //Флаг для сдвига карты кода
 var multiTouchDelta = -1; //Буфер для хранения элемента который сдвигают в нижнем скроле(чтобы вернуть его в исходное состояние если что)
 var touchTimespan = undefined;
+var toolTipTimeCounter = undefined;
 //Отменяем вывод контестного меню на страничке
 document.oncontextmenu = function () {
     return false
@@ -77,6 +78,11 @@ function onWheel(e) {
 
 function onMouseMove(e) {
     onMove(e);
+
+    if(toolTip.isVisible())
+        toolTip.hideToolTip();
+    toolTipTimeCounter = 0;
+
     clickCoord.x = e.x;
     clickCoord.y = e.y;
     e.cancelBubble = true;
@@ -388,6 +394,12 @@ function labyrinthRoadClick(index) {
     //Перерисовываем кликнутый элемент
     setFocused(field[index], index);
     return true;
+}
+
+//Обработчик события показать тултип
+function toolTipShowEvent(x,y) {
+    //X,Y - координаты позиции курсора мыши на экране
+    toolTip.setToolTip(x,y,"test text");
 }
 
 function onCodeMapElementClick(element) {

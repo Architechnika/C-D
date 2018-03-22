@@ -58,7 +58,7 @@ game.newLoopFromConstructor('Labyrinth', function () {
         //Инициализируем таймер времени
         if (!timeTimerLaunched) {
             totalTimeTimer();
-            checkScreenTimer();
+            logicEventTimer();
         }
         timeTimerLaunched = true;
         //mainbackGround = new mainBackGroundDrow();
@@ -85,8 +85,9 @@ function saveTimer() {
     setTimeout("saveTimer()", saveTimeout);
 }
 
-//Таймер, который контролирует процесс смены ориентации экрана-----------------------------------------------------------
-function checkScreenTimer(){
+//Таймер, который контролирует логические процессы игры(Смена ориентации экрана, события тултипов)-----------------------------------------------------------
+function logicEventTimer(){
+    //Проверяем смену ориентации экрана
     if(game.getWH().w != width){
         if(isSecondScreen){
             allButtons.backToStartButton.setAlpha(1);
@@ -110,7 +111,12 @@ function checkScreenTimer(){
             codeView = new CodeMapView(0, 0, 0, 0, "white");
         } else codeView = new CodeMapView(codeMapBG.x, codeMapBG.y, codeMapBG.w, codeMapBG.h, "white");
     }
-    setTimeout("checkScreenTimer()", 40);
+    if(toolTip && !toolTip.isVisible() && toolTipTimeCounter >= toolTipDelay){
+        toolTipShowEvent(clickCoord.x,clickCoord.y);
+        toolTipTimeCounter = 0;
+    }
+    else toolTipTimeCounter += 40;
+    setTimeout("logicEventTimer()", 40);
 }
 
 function totalTimeTimer() {
