@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="17058c28-2061-4f3e-82d9-19af81fe3d0f" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/Engine_params.js" afterPath="$PROJECT_DIR$/Engine_params.js" />
-      <change beforePath="$PROJECT_DIR$/GameParams.js" afterPath="$PROJECT_DIR$/GameParams.js" />
-      <change beforePath="$PROJECT_DIR$/Input.js" afterPath="$PROJECT_DIR$/Input.js" />
-      <change beforePath="$PROJECT_DIR$/Viewer.js" afterPath="$PROJECT_DIR$/Viewer.js" />
-      <change beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change beforePath="$PROJECT_DIR$/instruction.html" afterPath="$PROJECT_DIR$/instruction.html" />
-      <change beforePath="$PROJECT_DIR$/jsbuilderscript.js" afterPath="$PROJECT_DIR$/jsbuilderscript.js" />
+      <change beforePath="$PROJECT_DIR$/Graphics.js" afterPath="$PROJECT_DIR$/Graphics.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -23,11 +16,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="GameParams.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GameParams.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GameParams.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-543">
               <caret line="33" column="4" lean-forward="false" selection-start-line="33" selection-start-column="4" selection-end-line="33" selection-end-column="4" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Graphics.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Graphics.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="527">
+              <caret line="31" column="35" lean-forward="true" selection-start-line="31" selection-start-column="35" selection-end-line="31" selection-end-column="35" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -118,16 +123,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ToolTip.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ToolTip.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="25" column="35" lean-forward="false" selection-start-line="25" selection-start-column="35" selection-end-line="25" selection-end-column="35" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Engine_params.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Engine_params.js">
           <provider selected="true" editor-type-id="text-editor">
@@ -159,6 +154,7 @@
         <option value="$PROJECT_DIR$/Engine_params.js" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/GameParams.js" />
+        <option value="$PROJECT_DIR$/Graphics.js" />
       </list>
     </option>
   </component>
@@ -168,7 +164,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-311" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
@@ -239,15 +235,15 @@
       <workItem from="1521711707227" duration="12388000" />
       <workItem from="1521725669611" duration="89000" />
       <workItem from="1521790386404" duration="4486000" />
-      <workItem from="1521795502234" duration="6000" />
+      <workItem from="1521795502234" duration="621000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17218000" />
+    <option name="totallyTimeSpent" value="17833000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1096" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14166667" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -663,6 +659,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-543">
           <caret line="33" column="4" lean-forward="false" selection-start-line="33" selection-start-column="4" selection-end-line="33" selection-end-column="4" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Graphics.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="527">
+          <caret line="31" column="35" lean-forward="true" selection-start-line="31" selection-start-column="35" selection-end-line="31" selection-end-column="35" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>

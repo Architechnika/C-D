@@ -7,28 +7,6 @@ var playerImageObj = null;//Картинка характеризующая иг
 var width = game.getWH().w; // Ширина всего экрана
 var height = game.getWH().h; // Высота всего экрана
 
-//ПЕРЕМЕННЫЕ ГРАФИЧЕСКИХ СЛОЕВ
-/*var guiLayer = layers.newLayer(5, {
-    alpha: 1,
-    backgroundColor: "transparent"
-}); //СЛОЙ ДЛЯ ОТОБРАЖЕНИЯ ГРАФИЧЕСКИХ ЭЛЕМЕНТОВ ИНТЕРФЕЙСА
-var commandsMenuLayer = layers.newLayer(5, {
-    alpha: 1,
-    backgroundColor: "transparent"
-}); //СЛОЙ ДЛЯ ОТОБРАЖЕНИЯ ВЫБОРА КОМАНД ПОЛЬЗОВАТЕЛЕМ
-var playerLayer = layers.newLayer(4, {
-    alpha: 1,
-    backgroundColor: "transparent"
-}); //СЛОЙ ДЛЯ ОТБРАЖЕНИЯ ГРАФИКИ ИГРОКА
-var commandsLayer = layers.newLayer(3, {
-    alpha: 1,
-    backgroundColor: "transparent"
-}); //СЛОЙ ДЛЯ ОТОБРАЖЕНИЯ ГРАФИКИ НАЗНАЧЕННЫХ ЭЛЕМЕНТАМ КОММАНДЕ
-var codeViewLayer = layers.newLayer(5, {
-    alpha: 1,
-    backgroundColor: "transparent"
-});*/
-
 pjs.system.setTitle('КРОП - учись играя'); // Set Title for Tab or Window
 
 //Обновление графики на экране
@@ -38,12 +16,12 @@ function updateScreen() {
     for (var i = 0; i < field.length; i++) {
         field[i].draw();
     }
+    //Отрисовываем команды на поле
+    drawCommandsOnField();
     //Отрисовываем обьекты на поле
     OOP.forArr(gameObjects, function (el) {
         el.draw();
     });
-    //Отрисовываем команды на поле
-    drawCommandsOnField();
     //Отрисовываем игрока
     playerImageObj.draw();
     //Отрисовываем скролы
