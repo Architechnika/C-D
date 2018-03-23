@@ -3919,6 +3919,7 @@ var touchTapTimeOut = 100;//Параметр указывающий скольк
 var distanceOfScroll = 5; //Параметр указывающий на каком расстоянии от точки тапа при движении по экрану начинать отрабатывать события скрола
 var scrollStep = 20; //Шаг скрола в пикселях(Когда крутишь колесиком мыши)
 var touchScrollVal = 2;//Шаг скрола когда пальцами ресайзишь
+var toolTipDelay = 1000;//Задержка в миллисекундах после которой всплывают тултипы если держать мышку на элементе
 //Игровые параметры---------------------------------------------------------------------------------------------
 var labyrinthSize = 5;//Стартовый размер лабиринта(Например если 5, тогда при старте игры сгенерится лабиринт размером 5x5). ДЛЯ АЛГОРИТМА ГЕНЕРАЦИИ ЭТО ДОЛЖНО БЫТЬ НЕЧЕТНОЕ ЧИСЛО
 var labyrinthMaxSize = 0;//Ограничение на максимальный размер лабиринта. Если = 0, то максимума нет.
@@ -4001,7 +4002,7 @@ var commandForwardImgSrc = "img/command_forward.png";
 var commandOnLeftImgSrc = "img/command_onleft.png";
 var commandOnRightImgSrc = "img/command_onright.png";
 var commandBackwardImgSrc = "img/command_backward.png";
-var commandDigitsImgSrc = ["img/command_digit_0",//Массив изображений для цифровой клавиатуры
+var commandDigitsImgSrc = ["img/command_digit_0.png",//Массив изображений для цифровой клавиатуры
 "img/command_digit_1.png",
 "img/command_digit_2.png",
 "img/command_digit_3.png",
@@ -4013,6 +4014,80 @@ var commandDigitsImgSrc = ["img/command_digit_0",//Массив изображе
 "img/command_digit_9.png"];
 var commandBackspaceImgSrc = "img/command_backspace.png";
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Предзагрузка ВСЕХ КАРТИНОК-------------------------------------------------------------------------------------------------------------------------------------
+var arrImagesForLoad = [
+    'img/field_wall1.png',
+    'img/field_wall2.png',
+    'img/field_wall3.png',
+    'img/field_border.png',
+    'img/command_none.png',
+    'img/field_ground.png',
+    'img/field_exit.png',
+    'img/field_entry.png',
+    'img/object_battery.png',
+    'img/interface_font.png',
+    'img/interface_clock.png',
+    'img/interface_button_start.png',
+    'img/interface_button_pause.png',
+    'img/interface_button_menu.png',
+    'img/interface_button_reload.png',
+    'img/interface_button_ok.png',
+    'img/interface_button_nextstep.png',
+    'img/interface_button_prevstep.png',
+    'img/interface_codeview_delete.png',
+    'img/interface_codeview_replace.png',
+    'img/interface_codeview_add.png',
+    'img/interface_codeview_move.png',
+    'img/interface_codeview_plus.png',
+    'img/command_interact_wall.png',
+    'img/command_interact_coin.png',
+    'img/command_interact_exit.png',
+    'img/command_interact_entry.png',
+    'img/command_interact_road.png',
+    'img/command_line.png',
+    'img/object_player.png',
+    'img/command_none.png',
+    'img/command_up.png',
+    'img/command_down.png',
+    'img/command_left.png',
+    'img/command_right.png',
+    'img/command_clockwise.png',
+    'img/command_unclockwise.png',
+    'img/command_pickup.png',
+    'img/command_drop.png',
+    'img/command_block_commands.png',
+    'img/command_whatisit.png',
+    'img/command_block_if.png',
+    'img/command_block_repeat.png',
+    'img/command_block_repeatif.png',
+    'img/command_block_a.png',
+    'img/command_block_b.png',
+    'img/command_counter.png',
+    'img/command_ok.png',
+    'img/command_look_up.png',
+    'img/command_look_down.png',
+    'img/command_look_left.png',
+    'img/command_look_right.png',
+    'img/command_look_center.png',
+    'img/command_block_else.png',
+    'img/command_forward.png',
+    'img/command_onleft.png',
+    'img/command_onright.png',
+    'img/command_backward.png',
+    'img/command_digit_0.png',
+    "img/command_digit_1.png",
+    "img/command_digit_2.png",
+    "img/command_digit_3.png",
+    "img/command_digit_4.png",
+    "img/command_digit_5.png",
+    "img/command_digit_6.png",
+    "img/command_digit_7.png",
+    "img/command_digit_8.png",
+    "img/command_digit_9.png"
+]
+arrImagesForLoad.forEach(function(e){
+    new Image().src = e;
+})
 /*
 Содержит переменные для работы с движком
 */
@@ -4038,7 +4113,7 @@ var brush = pjs.brush; // Brush, used for simple drawing
 var OOP = pjs.OOP; // Objects manager
 var math = pjs.math; // More Math-methods
 var key = pjs.keyControl.initKeyControl();
-var mouse = pjs.mouseControl.initMouseControl();
+//var mouse = pjs.mouseControl.initMouseControl();
 var touch = pjs.touchControl.initTouchControl();
 // var act   = pjs.actionControl.initActionControl();
 
@@ -4052,7 +4127,6 @@ Array.prototype.move = function (old_index, new_index) {
     this.splice(new_index, 0, this.splice(old_index, 1)[0]);
     return this; // for testing purposes
 };
-
 
 
 var isOkClose = true;
@@ -4192,6 +4266,39 @@ function Buttons() { //класс для работы совсеми кнопк�
     }
 }
 
+function ToolTip()
+{
+    var bgH = height/100*4;
+    var toolTipBG = game.newRoundRectObject({x:0,y:0,w:100,h:bgH,radius:5,fillColor:"green",visible : false});
+    var toolTipText = game.newTextObject({x:toolTipBG.x,y:toolTipBG.y,text:"test",size: toolTipBG.h,color:"#ff9900",visible: false});
+    
+    this.setToolTip = function(x,y,toolText)
+    {
+        var charCOunt = toolText.toString().length;
+        toolTipBG.w = charCOunt*(height/100*1.45);
+        toolTipBG.x = x;
+        toolTipBG.y = y;
+        toolTipText.x = x;
+        toolTipText.y = y;
+        toolTipText.text = toolText;
+        toolTipBG.setVisible(true);
+        toolTipText.setVisible(true);
+    }
+    this.hideToolTip = function()
+    {
+        toolTipBG.setVisible(false);
+        toolTipText.setVisible(false);
+        toolTipText.text = "test";
+    }
+    this.isVisible = function(){
+        return toolTipText.visible;
+    }
+    this.draw = function()
+    {
+        toolTipBG.draw();
+        toolTipText.draw();
+    }
+}
 /**
  * @license
  * Lodash <https://lodash.com/>
@@ -21414,7 +21521,7 @@ var codeViewLayer = layers.newLayer(5, {
     backgroundColor: "transparent"
 });*/
 
-pjs.system.setTitle('Лабиринт'); // Set Title for Tab or Window
+pjs.system.setTitle('КРОП - учись играя'); // Set Title for Tab or Window
 
 //Обновление графики на экране
 function updateScreen() {
@@ -21447,11 +21554,6 @@ function updateScreen() {
 function clearAllLayers() {
     allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
     game.clear();
-    /*playerLayer.clear();
-    guiLayer.clear();
-    commandsLayer.clear();
-    commandsMenuLayer.clear();
-    codeViewLayer.clear();*/
 }
 
 //Отрисовывает команды на слое команд
@@ -21500,6 +21602,7 @@ var labIsMove = false; //Флаг для того чтобы сдвигать п
 var codeMapIsMoved = false; //Флаг для сдвига карты кода
 var multiTouchDelta = -1; //Буфер для хранения элемента который сдвигают в нижнем скроле(чтобы вернуть его в исходное состояние если что)
 var touchTimespan = undefined;
+var toolTipTimeCounter = undefined;
 //Отменяем вывод контестного меню на страничке
 document.oncontextmenu = function () {
     return false
@@ -21529,7 +21632,8 @@ function removeInputEvents() {
 
 //Обработчики для событий ввода --------------------
 function onMouseUP(e) {
-    e.cancelBubble = true;
+    clickCoord.x = 0;
+    clickCoord.y = 0;
     onUp(e);
     selectedItem = undefined;
     touchedScroll = undefined;
@@ -21538,7 +21642,9 @@ function onMouseUP(e) {
     touchTapTimeFlag = false;
     labIsMove = false;
     codeMapIsMoved = false;
+    multiTouchDelta = -1;
     touchTimespan = undefined;
+    e.cancelBubble = true;
 }
 
 function onMouseDOWN(e) {
@@ -21548,20 +21654,28 @@ function onMouseDOWN(e) {
     touchPoint = new point(clickCoord.x, clickCoord.y);
     //Запоминаем время начала тапа
     touchTimespan = Date.now();
+    e.cancelBubble = true;
 }
 
 function onWheel(e) {
     onRecize(e,e.deltaY,scrollStep);
+    e.cancelBubble = true;
 }
 
 function onMouseMove(e) {
     onMove(e);
+
+    if(toolTip.isVisible())
+        toolTip.hideToolTip();
+    toolTipTimeCounter = 0;
+
     clickCoord.x = e.x;
     clickCoord.y = e.y;
+    e.cancelBubble = true;
 }
 
 function onTouchStart(e) {
-    isMobile = true;
+    //isMobile = true;
     clickCoord.x = e.changedTouches[0].clientX;
     clickCoord.y = e.changedTouches[0].clientY;
     for (var i = 0; i < Scrolls.length; i++) {
@@ -21816,7 +21930,8 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
                 Scrolls.splice(i, 1);
         });
         //Инициализируем карту кода
-        codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true, 1);
+        if(lastClickedElement)
+            codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true, 1);
         return false;
     }
     if (!isVerticalScreen) {
@@ -21831,6 +21946,7 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
         isSecondScreen = false;
         game.setLoop("Labyrinth");
     }
+    codeView.clear();
     return true;
 }
 
@@ -21864,6 +21980,11 @@ function labyrinthRoadClick(index) {
     //Перерисовываем кликнутый элемент
     setFocused(field[index], index);
     return true;
+}
+
+//Обработчик события показать тултип
+function toolTipShowEvent(x,y) {
+    //X,Y - координаты позиции курсора мыши на экране
 }
 
 function onCodeMapElementClick(element) {
@@ -23452,6 +23573,7 @@ var coinItem = undefined;
 var allButtons = undefined; //Класс для всех кнопок
 var Scrolls = new Array(); // массив всех скролбаров
 var infoText = undefined;
+var toolTip = new ToolTip();
 
 //Отрисовывает элементы интерфейса
 function drawGUI() {
@@ -23465,6 +23587,7 @@ function drawGUI() {
     clockItem.draw();
     infoText.draw();
 
+    if(toolTip.isVisible()) toolTip.draw();
     if (inputCounterText !== null) inputCounterText.draw();
     //Отрисовываем интерфейс выбора команд
     //showCommandsMenu();
@@ -23603,7 +23726,7 @@ function initRightScroll(initArray) {
         if (!isVerticalScreen) {
             //Инииализируем скролл БАР ВСЕХ КОМАНД(ПРАВЫЙ ВЕРТИКАЛЬНЫЙ СКРОЛЛ)
             Scrolls.push(new ScrollBar(gameSpaceX + gameSpaceW, 0, "Vertical", initArray, "RIGHT"));
-            //Scrolls[Scrolls.length - 1].setLineCount(2);
+            Scrolls[Scrolls.length - 1].setLineCount(2);
             Scrolls[Scrolls.length - 1].setWidthScroll(width - (gameSpaceX + gameSpaceW))
             Scrolls[Scrolls.length - 1].setHeightScroll(height); //gameSpaceX+gameSpaceH);
         } else {
@@ -23998,16 +24121,20 @@ function calcField(w, h, x, y, elemsInLine, elemsInColumn) {
 function calcMapPosition(){
     oneTileWidth = gameSpaceW / totalWidth; //Расчет ширины одного элемента
     oneTileHeight = gameSpaceH / totalHeight; //Расчет высоты одного элемента
-    //Обходим каждый элемент сгенерированного поля и создаем объекты характеризующие элементы поля
-    var i = 0;
-    pjs.levels.forStringArray({
-            w: oneTileWidth,
-            h: oneTileHeight,
-            source: binMap
-        }, function (S, X, Y) {
-             field[i].setNewSize(X + gameSpaceX, Y + gameSpaceY, oneTileWidth, oneTileHeight);
-             i++;
-        });
+    var poz = new point(gameSpaceX,gameSpaceY);
+    var counter = 0;
+    //Обходим все элементы поля
+    for(var i = field.length - 1; i > -1; i--){
+        field[i].setNewSize(poz.x,poz.y,oneTileWidth,oneTileHeight);
+        counter++;
+        //Если надо сместить координаты на строку вниз
+        if(counter == totalWidth){
+            poz.x = gameSpaceX;
+            poz.y += oneTileHeight;
+            counter = 0;
+        }
+        else poz.x += oneTileWidth;//Если это следующий элемент в строке поля
+    }
 }
 
 function generateMap(w, h, x, y, elemsInLine, elemsInColumn) {
@@ -24741,6 +24868,17 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         return false;
     }
 
+    //Возврашает элемент по x,y если такого нет то вернет undefined
+    this.getCommandAt = function(x,y){
+        var r = undefined;
+        OOP.forArr(parent.elems, function(el){
+            if(clickIsInObj(x,y,el))
+                r = el.command;
+                return;
+        });
+        return r;
+    }
+
     //Возвращает выбранный элемент
     this.getChoosenElement = function () {
         return this.menu.getElement();
@@ -25437,7 +25575,7 @@ game.newLoopFromConstructor('Labyrinth', function () {
         sessionStorage.removeItem("typeGame") //удаляем из сессии информацию о том загрузка это или новая игра
         var buf = localMemory.loadAsObject(userID);
         userData = new UserAccaunt();
-        if (buf && isNewGame && isNewGame == "LoadGame") {
+        if (buf && isNewGame != "NewGame") {
             //userData = new UserAccaunt();
             userData.copy(buf);
         }
@@ -25453,7 +25591,7 @@ game.newLoopFromConstructor('Labyrinth', function () {
         //Инициализируем таймер времени
         if (!timeTimerLaunched) {
             totalTimeTimer();
-            checkScreenTimer();
+            logicEventTimer();
         }
         timeTimerLaunched = true;
         //mainbackGround = new mainBackGroundDrow();
@@ -25480,9 +25618,10 @@ function saveTimer() {
     setTimeout("saveTimer()", saveTimeout);
 }
 
-//Таймер, который контролирует процесс смены ориентации экрана-----------------------------------------------------------
-function checkScreenTimer(){
-    if(screen.width != width){
+//Таймер, который контролирует логические процессы игры(Смена ориентации экрана, события тултипов)-----------------------------------------------------------
+function logicEventTimer(){
+    //Проверяем смену ориентации экрана
+    if(game.getWH().w != width){
         if(isSecondScreen){
             allButtons.backToStartButton.setAlpha(1);
             allButtons.stepDownButton.setAlpha(1);
@@ -25505,7 +25644,12 @@ function checkScreenTimer(){
             codeView = new CodeMapView(0, 0, 0, 0, "white");
         } else codeView = new CodeMapView(codeMapBG.x, codeMapBG.y, codeMapBG.w, codeMapBG.h, "white");
     }
-    setTimeout("checkScreenTimer()", 40);
+    if(toolTip && !toolTip.isVisible() && toolTipTimeCounter >= toolTipDelay){
+        toolTipShowEvent(clickCoord.x,clickCoord.y);
+        toolTipTimeCounter = 0;
+    }
+    else toolTipTimeCounter += 40;
+    setTimeout("logicEventTimer()", 40);
 }
 
 function totalTimeTimer() {

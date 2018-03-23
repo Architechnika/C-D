@@ -399,7 +399,6 @@ function labyrinthRoadClick(index) {
 //Обработчик события показать тултип
 function toolTipShowEvent(x,y) {
     //X,Y - координаты позиции курсора мыши на экране
-    toolTip.setToolTip(x,y,"test text");
 }
 
 function onCodeMapElementClick(element) {

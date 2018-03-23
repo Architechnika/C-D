@@ -551,6 +551,17 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         return false;
     }
 
+    //Возврашает элемент по x,y если такого нет то вернет undefined
+    this.getCommandAt = function(x,y){
+        var r = undefined;
+        OOP.forArr(parent.elems, function(el){
+            if(clickIsInObj(x,y,el))
+                r = el.command;
+                return;
+        });
+        return r;
+    }
+
     //Возвращает выбранный элемент
     this.getChoosenElement = function () {
         return this.menu.getElement();
