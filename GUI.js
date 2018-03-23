@@ -220,7 +220,7 @@ function initLeftScroll(initMass) {
 }
 
 function TextWithBG(X, Y, W, H) { //класс для рисования текста с задним фоном, первоначально была разработана для того чтобы над лаберинтом выводить цифры введенные в блоки цикла по количеству
-    var textSize = 200;
+    var textSize = height/100 * 30;
     var _radius = 0;
     var alphaBG = 0.7;
     var textColor = "#ffffff"
@@ -260,9 +260,7 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
     }
     this.setText = function (t) {
         text.text = t;
-        var sz = BG.w / t.toString().length * 2
-        if (sz > 200)
-            sz = 200
+        var sz = height/100*30;
         text.size = sz
         text.x = (BG.x + BG.w / 2) - text.w + textSize - text.x / 2;
         text.y = (BG.y + BG.h / 2) - text.h / 2;
