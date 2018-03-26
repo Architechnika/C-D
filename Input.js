@@ -375,6 +375,7 @@ function startBClick() {
     if (isStarted) {
         //Запоминаем время начала движения робота
         startPlayerMoveTime = totalSeconds;
+        initLeftScroll([]);
         //Увеличиваем счетчик попыток для прохождения
         totalAttempts++;
         setTimeout("processRobotMove()", robotMoveDelay);
