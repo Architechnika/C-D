@@ -531,11 +531,20 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         else if (!isVerticalScreen && codeMapBG) codeMapBG.draw();
 
         if (parent.elems && parent.elems.length > 0) {
+    this.drawCodeMap = function () {
+
+        if (codeMapBG && isVerticalScreen && isSecondScreen) codeMapBG.draw();
+        else if (!isVerticalScreen && codeMapBG) codeMapBG.draw();
+
+        if (parent.elems && parent.elems.length > 0) {
             for(var i=0;i<parent.elems.length;i++)
                 {
                     var el = parent.elems[i];
                     el.draw();
                 }
+            this.menu.draw(); //Отрисовываем дополнительные элементы если нужно
+        }
+    }
             this.menu.draw(); //Отрисовываем дополнительные элементы если нужно
         }
     }
