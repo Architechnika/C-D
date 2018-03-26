@@ -327,6 +327,11 @@ function onTouchCheckMove() {
 function onOkBClick() { //Вернет TRUE если надо закрыть кнопку OK
     if (infoText.isVisible()) infoText.close();
     initRightScroll([]);
+    if(!isVerticalScreen){
+        inputCommandStates = 0;
+        codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true, 1);
+        return true;
+    }
     //lastClickedIndx = -1; //Очищаем индекс выбранной клетки поля
     choosenCommandInElement = undefined;
     isScrollMove = true; //ПО дефолту скролл(чтобы не было срабатываний на клик при первом отображении интерфейса ввода команд)

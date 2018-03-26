@@ -240,10 +240,10 @@ function setFocused(fieldElem, indx) {
         allButtons.backToStartButton.setAlpha(inactiveItemsAlpha);
         allButtons.stepDownButton.setAlpha(inactiveItemsAlpha);
         allButtons.stepUpButton.setAlpha(inactiveItemsAlpha);
+        //Показываем кнопку ok
+        allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
         game.setLoop("SecondScreen")
     }
-    //Показываем кнопку ok
-    allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
 }
 
 //Функция обработчик для добавления команды в клетку
