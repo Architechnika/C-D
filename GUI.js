@@ -15,6 +15,7 @@ var allButtons = undefined; //Класс для всех кнопок
 var Scrolls = new Array(); // массив всех скролбаров
 var infoText = undefined;
 var toolTip = new ToolTip();
+var messengBox = new MessengBox();
 
 //Отрисовывает элементы интерфейса
 function drawGUI() {
@@ -41,10 +42,8 @@ function initGUI() { //поочередность иницилизаии ОБЯ�
     menuItemW = (width / 100) * 8;
     allButtons = new Buttons();
     infoText = new TextWithBG(gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH);
-
     timerTextInit();
     progressTextInit();
-
     textbackGroundInit("#000000", 0.4);
     codeMapBackGroundInit("#000000", 0.4)
     if (!isVerticalScreen) {
@@ -223,7 +222,7 @@ function initLeftScroll(initMass) {
 }
 
 function TextWithBG(X, Y, W, H) { //класс для рисования текста с задним фоном, первоначально была разработана для того чтобы над лаберинтом выводить цифры введенные в блоки цикла по количеству
-    var textSize = height/100 * 30;
+    var textSize = height/100*30;
     var _radius = 0;
     var alphaBG = 0.7;
     var textColor = "#ffffff"
