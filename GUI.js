@@ -182,6 +182,7 @@ function initRightScroll(initArray) {
     Scrolls[found].scrollUpdate(0);
     //Очищаем массив codeView при инициализиации скрола
     if (codeView && codeView.elems.length > 0) codeView.clear();
+    if(initArray && initArray.length > 0) inputCommandStates = 1;
     //Показываем кнопку ok
     allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
 }

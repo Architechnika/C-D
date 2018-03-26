@@ -547,7 +547,8 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
             else return true;
         } else return true;
 
-        if (clickIsInObj(e.x, e.y, parent.backGround) && parent.elems && parent.elems > 0) return true;
+        if (clickIsInObj(e.x, e.y, codeMapBG))//clickIsInObj(e.x, e.y, parent.backGround) && parent.elems && parent.elems > 0) return true;
+            return true;
         return false;
     }
 
@@ -740,8 +741,8 @@ function ItemMenu() {
     itemReplace.setUserData({
         onClick: function () {
             itemToReplaceInCodeMap = element;
-            initLeftScroll([]);
             choosenCommandInElement = findObjStorage(lastClickedElement.commands,itemToReplaceInCodeMap.command);
+            initLeftScroll(getCommandsImgArr(choosenCommandInElement));
             //описать клик замена
             initRightScroll(getAllCommandsMenu(true));
             codeView.menu.setMenuVisible(false);
@@ -753,6 +754,7 @@ function ItemMenu() {
             itemToAddAfterInCodeMap = element;
             //описать клик замена
             initRightScroll(getAllCommandsMenu(true));
+            initLeftScroll(getCommandsImgArr(choosenCommandInElement));
             codeView.menu.setMenuVisible(false);
         }
     });
