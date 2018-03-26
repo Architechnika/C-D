@@ -167,7 +167,7 @@ function onRecize(e,delta,step){
         labView.resizeView(delta < 0 ? -1 * step : step);
         return;
     }
-    else if (clickIsInObj(e.x, e.y, codeView.getBackGround()) && (inputCommandStates == 0 && !itemToAddAfterInCodeMap && !itemToReplaceInCodeMap)) {
+    else if (clickIsInObj(e.x, e.y, codeView.getBackGround())) {
         //Ресайз поля работает только когда игрок не двигается
         if (!isStarted) {
             //Инициализируем карту кода
@@ -375,7 +375,8 @@ function startBClick() {
     if (isStarted) {
         //Запоминаем время начала движения робота
         startPlayerMoveTime = totalSeconds;
-        initLeftScroll([]);
+        if(!isVerticalScreen)
+            initLeftScroll([]);
         //Увеличиваем счетчик попыток для прохождения
         totalAttempts++;
         setTimeout("processRobotMove()", robotMoveDelay);
