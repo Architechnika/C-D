@@ -7,7 +7,7 @@ var playerImageObj = null;//Картинка характеризующая иг
 var width = game.getWH().w; // Ширина всего экрана
 var height = game.getWH().h; // Высота всего экрана
 
-pjs.system.setTitle('КРОП - учись играя'); // Set Title for Tab or Window
+pjs.system.setTitle('SkillCraft - развивайся играя'); // Set Title for Tab or Window
 
 //Обновление графики на экране
 function updateScreen() {

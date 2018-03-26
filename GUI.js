@@ -164,7 +164,8 @@ function initRightScroll(initArray) {
     if (isDel){
         //inputCommandStates = 0;
         //Показываем кнопку старт или стоп
-        allButtons.mainButton.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
+        if(!isVerticalScreen)
+            allButtons.mainButton.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
         return;
     }
     if (found == -1) {
