@@ -15,7 +15,7 @@ var allButtons = undefined; //Класс для всех кнопок
 var Scrolls = new Array(); // массив всех скролбаров
 var infoText = undefined;
 var toolTip = new ToolTip();
-var messengBox = new MessengBox();
+var messageBox = new MessageBox();
 
 //Отрисовывает элементы интерфейса
 function drawGUI() {

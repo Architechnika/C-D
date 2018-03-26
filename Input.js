@@ -229,11 +229,14 @@ function onUp(e) {
         });
         if (!clicked && !touchTapTimeFlag) { //Если клик не был обнаружен выше
             if (!allButtons.checkButtonsClicked(e))
-                if (!codeView.isClicked(e)) {
+                if (isVerticalScreen) {
                     //Если ориентация вертикальная то проверяем клики по полю только когда находимся на экране с полем
                     if (!isSecondScreen)
                         processFieldClick(e);
+                    else codeView.isClicked(e);
                 }
+                else if(!codeView.isClicked(e))
+                    processFieldClick(e);
         }
     }
 }
@@ -325,7 +328,11 @@ function onTouchCheckMove() {
 
 //Обработчики всех кликабельных элементов---------------------------
 function onOkBClick() { //Вернет TRUE если надо закрыть кнопку OK
-    if (messengBox.isShow()) messengBox.setShow(false);
+    if (messageBox.isShow()) {
+        messageBox.setShow(false);
+        return true;
+    }
+    if (infoText.isVisible()) infoText.close();
     initRightScroll([]);
     if(!isVerticalScreen){
         inputCommandStates = 0;

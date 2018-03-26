@@ -1,4 +1,4 @@
-.tn-box {
+.tn-box {/*РАМКА*/
 	width: 96%;
 	position: fixed;
 /*	margin: 0 auto 20px auto;*/
@@ -13,7 +13,7 @@
 	display: none;
 }
 
-.tn-box p {
+.tn-box p {/*ТЕКСТ*/
 	font-weight: bold;
 	font-size: 16px;
 	margin: 0;
