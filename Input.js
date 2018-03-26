@@ -182,6 +182,10 @@ function onRecize(e,delta,step){
 }
 
 function onUp(e) {
+    if (messageBox.isShow()) {
+        messageBox.setShow(false);
+        return true;
+    }
     var clicked = false;
     //log(touchTapTimeFlag);
     if (!scrolled) {
@@ -328,10 +332,6 @@ function onTouchCheckMove() {
 
 //Обработчики всех кликабельных элементов---------------------------
 function onOkBClick() { //Вернет TRUE если надо закрыть кнопку OK
-    if (messageBox.isShow()) {
-        messageBox.setShow(false);
-        return true;
-    }
     if (infoText.isVisible()) infoText.close();
     initRightScroll([]);
     if(!isVerticalScreen){

@@ -427,7 +427,7 @@ function processRobotMove() {
 function showMessage(text) {
     messageBox.setShow(true);
     messageBox.setText(text);
-    allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
+    //allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
 }
 
 game.startLoop('Labyrinth');
