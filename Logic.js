@@ -110,6 +110,8 @@ function logicEventTimer(){
         if (!codeMapBG) {
             codeView = new CodeMapView(0, 0, 0, 0, "white");
         } else codeView = new CodeMapView(codeMapBG.x, codeMapBG.y, codeMapBG.w, codeMapBG.h, "white");
+        //Показываем кнопку старт или стоп
+        allButtons.mainButton.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
     }
     if(toolTip && !toolTip.isVisible() && toolTipTimeCounter >= toolTipDelay){
         toolTipShowEvent(clickCoord.x,clickCoord.y);

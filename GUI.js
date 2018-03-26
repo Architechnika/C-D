@@ -161,7 +161,12 @@ function initRightScroll(initArray) {
             return;
         }
     });
-    if (isDel) return;
+    if (isDel){
+        //inputCommandStates = 0;
+        //Показываем кнопку старт или стоп
+        allButtons.mainButton.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
+        return;
+    }
     if (found == -1) {
         if (!isVerticalScreen) {
             //Инииализируем скролл БАР ВСЕХ КОМАНД(ПРАВЫЙ ВЕРТИКАЛЬНЫЙ СКРОЛЛ)
@@ -181,7 +186,6 @@ function initRightScroll(initArray) {
     Scrolls[found].scrollUpdate(0);
     //Очищаем массив codeView при инициализиации скрола
     if (codeView && codeView.elems.length > 0) codeView.clear();
-    if(initArray && initArray.length > 0) inputCommandStates = 1;
     //Показываем кнопку ok
     allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
 }
