@@ -329,7 +329,8 @@ function changeMenuState(commandImg) {
 
     if (commName == "plus") {
         inputCommandStates = 1;
-        initLeftScroll([]);
+        //initLeftScroll([]);
+        initLeftScroll(getCommandsImgArr(choosenCommandInElement))
         initRightScroll(getAllCommandsMenu(commandImg.commandName && commandImg.commandName != "empty"));
     } else if (commName == "blockA" || commName == "whatisit") {
         inputCommandStates = 2;

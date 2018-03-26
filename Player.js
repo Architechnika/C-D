@@ -150,7 +150,8 @@ function playerMove(canRead) {
                 isShift = false;
                 //addCommandsToPlayer(comms, true);
                 insertArrayAt(playerCommands, 0, comms);
-                return playerMove(false);
+                drawCommState();
+                return "";//playerMove(false);
             }
             break;
         case "repeatif":
@@ -161,7 +162,8 @@ function playerMove(canRead) {
                 isShift = false;
                 //addCommandsToPlayer(comms, true);
                 insertArrayAt(playerCommands, 0, comms);
-                return playerMove(false);
+                drawCommState();
+                return "";//return playerMove(false);
             }
             break;
         case "if":
@@ -173,7 +175,8 @@ function playerMove(canRead) {
                 //Удаляем верхнюю команду их стека команд
                 removeUpperCommandFromPlayer();
                 insertArrayAt(playerCommands, 0, comms);
-                return playerMove(false);
+                drawCommState();
+                return "";//return playerMove(false);
             }
             break;
     }
@@ -204,9 +207,13 @@ function playerMove(canRead) {
     } else return "Робот врезался в стену";
     //Передвигаем игрока в нужную клетку
     movePlayerToFieldElement(field[playerPozition]);
+    drawCommState();
+    return "";
+}
+
+function drawCommState(){
     if(!isVerticalScreen)
         codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
-    return "";
 }
 
 //Удаляет верхнюю команду из стека команд робота и сохраняет состояние робота в буфер состояний

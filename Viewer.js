@@ -335,10 +335,10 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
             var el = arr[i];
             if (!el) continue;
 
-            //Позиционируем текущий элемент
-            addUsualCommand(lX, lY, elemWH, images, el.imgSource, el, isOnClick);
             //Добавляем линии
             addLinesToMap(lX, lY, elemWH, images);
+            //Позиционируем текущий элемент
+            addUsualCommand(lX, lY, elemWH, images, el.imgSource, el, isOnClick);
 
             //Если сложная команда
             if (el.commandsBlock) {
