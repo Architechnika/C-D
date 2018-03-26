@@ -167,7 +167,7 @@ function onRecize(e,delta,step){
         labView.resizeView(delta < 0 ? -1 * step : step);
         return;
     }
-    else if (clickIsInObj(e.x, e.y, codeView.getBackGround()) && (inputCommandStates == 0 && !itemToAddAfterInCodeMap && !itemToReplaceInCodeMap)) {
+    else if (clickIsInObj(e.x, e.y, codeView.getBackGround())) {
         //Ресайз поля работает только когда игрок не двигается
         if (!isStarted) {
             //Инициализируем карту кода
@@ -327,6 +327,11 @@ function onTouchCheckMove() {
 function onOkBClick() { //Вернет TRUE если надо закрыть кнопку OK
     if (messengBox.isShow()) messengBox.setShow(false);
     initRightScroll([]);
+    if(!isVerticalScreen){
+        inputCommandStates = 0;
+        codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true, 1);
+        return true;
+    }
     //lastClickedIndx = -1; //Очищаем индекс выбранной клетки поля
     choosenCommandInElement = undefined;
     isScrollMove = true; //ПО дефолту скролл(чтобы не было срабатываний на клик при первом отображении интерфейса ввода команд)
@@ -370,6 +375,8 @@ function startBClick() {
     if (isStarted) {
         //Запоминаем время начала движения робота
         startPlayerMoveTime = totalSeconds;
+        if(!isVerticalScreen)
+            initLeftScroll([]);
         //Увеличиваем счетчик попыток для прохождения
         totalAttempts++;
         setTimeout("processRobotMove()", robotMoveDelay);
