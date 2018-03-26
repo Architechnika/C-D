@@ -325,7 +325,7 @@ function onTouchCheckMove() {
 
 //Обработчики всех кликабельных элементов---------------------------
 function onOkBClick() { //Вернет TRUE если надо закрыть кнопку OK
-    if (infoText.isVisible()) infoText.close();
+    if (messengBox.isShow()) messengBox.setShow(false);
     initRightScroll([]);
     //lastClickedIndx = -1; //Очищаем индекс выбранной клетки поля
     choosenCommandInElement = undefined;
@@ -440,6 +440,8 @@ function onKeyboardClick(el) {
     choosenCommandInElement.countBlock.count = parsedInt;
     //Задаем текст в текст бокс
     infoText.setText(text);
+   // messengBox.setShow(true);
+   // messengBox.setText(text);
 }
 //------------------------------------------------------------------
 

@@ -57,7 +57,7 @@ function playerMove(canRead) {
         addCommandsToPlayer(field[playerPozition].getCommands(true));
     }
     //Если стек пустой, то возвращаем ошибку
-    if (playerCommands.length === 0) return "Робот не знает что ему делать";
+    if (playerCommands.length === 0) return `Робот не знает что ему делать`;
     //Обрабатываем самую верхнюю команду
     var comm = playerCommands[0];
 

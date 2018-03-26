@@ -425,7 +425,8 @@ function processRobotMove() {
 }
 
 function showMessage(text) {
-    infoText.setText(text);
+    messengBox.setShow(true);
+    messengBox.setText(text);
     allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
 }
 
