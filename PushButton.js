@@ -38,6 +38,7 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.stepUpButton = new PushButton();
     this.backToStartButton = new PushButton();
     this.menuButton = new PushButton();
+    this.deleteButton = new PushButton();
     //
     //создание и заполнение массива для хранения кнопок, нужен для того чтобы в дальнейшем рисовать эти кнопки или обходить их для вылавливание событий
     this.buttonsArr = [];
@@ -46,8 +47,9 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.buttonsArr.push(this.stepUpButton);
     this.buttonsArr.push(this.backToStartButton);
     this.buttonsArr.push(this.menuButton);
+    this.buttonsArr.push(this.deleteButton);
     //
-    var n = 0 // число кнопок, которые расположаны в отдельным местах экрана, а не рядом с кнопками снизу лабиринта
+    var n = 1 // число кнопок, которые расположаны в отдельным местах экрана, а не рядом с кнопками снизу лабиринта
     //получаем количество кнопок в массиве для того чтобы автоматический определить ширину кнопок на экране
     var buttonsCount = this.buttonsArr.length - n; //!!!если кнопка будет создана для того чтобы разместить в другом места, а не снизу, то обратите внимание на эту строку
     //выполняем настройки позиции, размеров картинки для кнопок
@@ -65,6 +67,10 @@ function Buttons() { //класс для работы совсеми кнопк�
 
     this.menuButton.setSetting(this.backToStartButton.x + this.backToStartButton.w, height - (gameSpaceW / 100 * 14), (gameSpaceW) / buttonsCount, gameSpaceW / 100 * 14)
     this.menuButton.setButtonImgSrc(menuButtonImgSrc);
+    
+    this.deleteButton.setSetting(width -(gameSpaceW/100 * 5) ,0, gameSpaceW/100 * 5, gameSpaceW / 100 * 5)
+    this.deleteButton.setButtonImgSrc(buttonDeleteImgSrc);
+    this.deleteButton.setVisible(false);
     //
     //описывает обработчик onClick для кнопок
     this.mainButton.setUserData({
@@ -79,6 +85,11 @@ function Buttons() { //класс для работы совсеми кнопк�
         onClick: function (el) {
             if (!isOkClose || isStarted || isSecondScreen) return;
             setPreviousStateToPlayer();
+        }
+    });
+    this.deleteButton.setUserData({
+        onClick: function (el) {
+                //описать обработчик удаление  скрипта в выделенной ячейке
         }
     });
     this.stepUpButton.setUserData({
