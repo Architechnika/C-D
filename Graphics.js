@@ -24,8 +24,6 @@ function updateScreen() {
     });
     //Отрисовываем игрока
     playerImageObj.draw();
-    //Отрисовываем скролы
-    showCommandsMenu();
     //Отрисовываем карту кода
     if(isVerticalScreen) {
         if (isSecondScreen)
@@ -33,6 +31,8 @@ function updateScreen() {
     }
     else if (inputCommandStates == 0)
         codeView.drawCodeMap();
+    //Отрисовываем скролы
+    showCommandsMenu();
     //Отрисовываем гуи
     drawGUI();
 }
