@@ -314,8 +314,12 @@ function onTouchCheckMove() {
             return;
         }
     };
+    var check = true;
+    if(isVerticalScreen)
+      if(!isSecondScreen)
+          check = false;
     //Обходим codeMap
-    if (clickIsInObj(clickCoord.x, clickCoord.y, codeView.backGround)) {
+    if (clickIsInObj(clickCoord.x, clickCoord.y, codeView.backGround) && check) {
         codeMapIsMoved = true;
         touchTapTimeFlag = true;
         return;
@@ -420,6 +424,7 @@ function onCodeMapElementClick(element) {
 
     if (element.name && element.name == "plus") {
         choosenCommandInElement = element.command;
+        codeView.resetZoomer();
         addCommandToCell(element, true);
         return;
     }

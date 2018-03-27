@@ -134,7 +134,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
                 this.currentShift.y = this.elems[0].y;
             }
         }
-        this.backGround.draw();
+        //this.backGround.draw();
     }
     //Ресайзит this.elements на величину delta
     this.resizeView = function (delta, dontCheckZoomer, isCodeView) {
