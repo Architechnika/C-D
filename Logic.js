@@ -404,7 +404,7 @@ function processRobotMove() {
         //Перезагружаем уровень с новым лабиринтом
         initializeGame();
     } else if (res == "stop") {
-        showMessage("Робот остановился и ждет дальнейших команд");
+        showMessage(lang[selectLang]['robot_is_waiting']);
         isStarted = false;
         //allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
     } else if (res != "") //Если у робота возникли проблемы

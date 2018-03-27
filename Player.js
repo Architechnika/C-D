@@ -57,7 +57,7 @@ function playerMove(canRead) {
         addCommandsToPlayer(field[playerPozition].getCommands(true));
     }
     //Если стек пустой, то возвращаем ошибку
-    if (playerCommands.length === 0) return `Робот не знает что ему делать`;
+    if (playerCommands.length === 0) return lang[selectLang]['robot_not_know'];
     //Обрабатываем самую верхнюю команду
     var comm = playerCommands[0];
 
@@ -135,7 +135,7 @@ function playerMove(canRead) {
             if (res != "") return res;
             break;
         case "drop":
-            if (playerInventory === undefined || playerInventory.length == 0) return "Инвентарь робота пуст";
+            if (playerInventory === undefined || playerInventory.length == 0) return lang[selectLang]['inventory_is_empty'];
             //Если инвентарь не пуст, то выгружаем последний подобранный элемент на текущую позицию карты
             playerInventory[0].setNewPosition(playerPozition);
             playerInventory[0].startRotation();
@@ -186,7 +186,7 @@ function playerMove(canRead) {
         if (difficultyLevel == "EASY") { //Если уровень сложности изи то поворачиваем робота в нужную сторону
             turnToTrueDirection(dir);
             return playerMove(false);
-        } else return "Робот смотрит не в ту сторону";
+        } else return lang[selectLang]['robot_not_look_there'];
     }
 
     //Проверяем - сможет ли робот сдвинуться в эту сторону или нет
@@ -204,7 +204,7 @@ function playerMove(canRead) {
         if (code == exitCode) {
             return "end";
         }
-    } else return "Робот врезался в стену";
+    } else return lang[selectLang]['crashed_the_wall'];
     //Передвигаем игрока в нужную клетку
     movePlayerToFieldElement(field[playerPozition]);
     drawCommState();
@@ -308,7 +308,7 @@ function tryToPickUp() {
             }
         }
     }
-    return "Робот не может найти объект который можно подобрать";
+    return lang[selectLang]['robot_not_find_object'];
 }
 
 //Устанавливает текущее направление обзора робота
