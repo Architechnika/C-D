@@ -1,5 +1,4 @@
 //СКРИПТ ОПИСЫВАЕТ МЕТОДЫ И ДАННЫЕ ИГРОКА, КОТОРЫЙ ПРОХОДИТ ЛАБИРИНТ
-
 //Позиция игрока на поле
 var playerPozition = 0,
     lastPlayerPoz = 0;
@@ -13,6 +12,7 @@ var playerFrontSide = 0; //0 верх, 1 право, 2 низ, 3 лево
 var startPlayerMoveTime = 0;
 var startPoz = 0;
 var passiveItemsAlpha = 0.35;
+var freezCounter = 0;//Счетчик того сколько ходов уже робот стоит на месте
 //Инициализация игрока
 function playerSetStart() {
     //Ищем местоположение двери
@@ -28,6 +28,7 @@ function playerSetStart() {
             playerSetDirection(getPlayerDirFromSide());
             //Обнуляем счетчик времени
             startPlayerMoveTime = 0;
+            freezCounter = 0;
             //Обнуляем счетчик ходов робота
             playerMoveCount = 0;
             lastPlayerPoz = -1;
@@ -49,8 +50,10 @@ function playerSetStart() {
 function playerMove(canRead) {
     playerMoveCount++;
     var code = field[playerPozition].code;
-    var pPoz = playerPozition;
     var dir = 0;
+
+    var pPoz = playerPozition;
+    var pozBuff = pPoz;
     var isTrueDir = true;
     var isShift = true;
     if (!canRead) { //Добавляем команды из текущего элемента поля в стек команд игрока
@@ -188,9 +191,13 @@ function playerMove(canRead) {
             return playerMove(false);
         } else return lang[selectLang]['robot_not_look_there'];
     }
-
+    //Проверяем на бесконечный цикл
+    if(freezCounter >= infinityCycleSteps){
+        return lang[selectLang]['robot_enter_infinity_cycle'];
+    }
+    freezCounter++;
     //Проверяем - сможет ли робот сдвинуться в эту сторону или нет
-    if (code == roadCode || code == exitCode) {
+    if (code == roadCode || code == exitCode || code == entryCode) {
 
         //Убираем из стека обработанную команду
         if (isShift) {
@@ -204,9 +211,10 @@ function playerMove(canRead) {
         if (code == exitCode) {
             return "end";
         }
-    } else return lang[selectLang]['crashed_the_wall'];
+    } else if(pozBuff !== pPoz) return lang[selectLang]['crashed_the_wall'];
     //Передвигаем игрока в нужную клетку
     movePlayerToFieldElement(field[playerPozition]);
+    if(pPoz !== pozBuff) freezCounter = 0;//Если робот дошёл до этой строчки кода, значит он ствинулся следовательно сбрасываем счетчик
     drawCommState();
     return "";
 }
