@@ -90,6 +90,8 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.deleteButton.setUserData({
         onClick: function (el) {
                 //описать обработчик удаление  скрипта в выделенной ячейке
+                lastClickedElement.commands.splice(0);
+                setFocused(field[lastClickedIndx],lastClickedIndx);
         }
     });
     this.stepUpButton.setUserData({

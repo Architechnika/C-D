@@ -26,11 +26,13 @@ function updateScreen() {
     playerImageObj.draw();
     //Отрисовываем карту кода
     if(isVerticalScreen) {
-        if (isSecondScreen)
+        if (isSecondScreen) {
             codeView.drawCodeMap();
+        }
     }
-    else if (inputCommandStates == 0)
+    else if (inputCommandStates == 0) {
         codeView.drawCodeMap();
+    }
     //Отрисовываем скролы
     showCommandsMenu();
     //Отрисовываем гуи

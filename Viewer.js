@@ -266,6 +266,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
     this.clear = function () {
         parent.elems.splice(0, parent.elems.length);
         this.menu.closeMenu();
+        allButtons.deleteButton.setVisible(false);
     }
 
     //Добавляет элемент с плюсиком в кодмап
@@ -415,7 +416,12 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         if(!isVerticalScreen)
             buildCodeMap(codeMapBG.x, codeMapBG.y, arr, parent.elems, this.elemWH, isPlusAdd, isOnClick, false);
         else buildCodeMap(x, y, arr, parent.elems, this.elemWH, isPlusAdd, isOnClick, false);
-        
+
+        if(isPlusAdd){
+            allButtons.deleteButton.setVisible(true);
+        }
+        else allButtons.deleteButton.setVisible(false);
+
         //Если есть параметр alpha - то присваиваем его всем элементам
         if (alpha && alpha >= 0 && alpha <= 1 && parent.elems.length > 0) {
             //Если alpha - значит необходимо видеть весь код мап в поле видимости - поэтому перерасчитваем размеры элементов

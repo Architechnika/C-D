@@ -351,6 +351,7 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
     if (itemToAddAfterInCodeMap || itemToReplaceInCodeMap) {
         itemToAddAfterInCodeMap = undefined;
         itemToReplaceInCodeMap = undefined;
+        codeView.resetZoomer();
         inputCommandStates = 1;
     }
     //Проверяем надо ли совсем закрывать интерфейс ввода
