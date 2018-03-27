@@ -29,6 +29,12 @@
             var tud = JSON.parse(sessionStorage.getItem("tmpUserData"));
             userdata.user = tud.userName;
             userName.innerHTML = tud.userName;
+        }else if (localStorage.getItem("tmpUserData"))
+        {
+            var tud = JSON.parse(localStorage.getItem("tmpUserData"));
+            userID = tud.userId;
+            userdata.user = tud.userName;
+            userName.innerHTML = tud.userName;   
         }
 
     }

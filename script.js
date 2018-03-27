@@ -30,7 +30,8 @@ var userdata =
 //класс для хранения временных данных пользователя
 var tmpUserData = 
 {
-    userName: "user"
+    userName: "user",
+    userId: 'id',
 };
 // определяем событие на закрытие диалога платформы
 // не позволяем закрыть диалог не выбрав плафторму
@@ -90,6 +91,7 @@ function userExit()
 {
     sessionStorage.removeItem(userSession)
     sessionStorage.removeItem("tmpUserData")
+    localStorage.removeItem("tmpUserData");
     userID = undefined;
     userdata.user = "Demo пользователь"
     login.close('close')
@@ -107,8 +109,10 @@ function newGame()
             sessionStorage.setItem(typeGame, "NewGame");
             sessionStorage.setItem(userSession, userID);
             tmpUserData.userName = userdata.user;
+            tmpUserData.userId = userID;
             var tud = JSON.stringify(tmpUserData);
-            sessionStorage.setItem("tmpUserData",tud)
+            sessionStorage.setItem("tmpUserData",tud);
+            localStorage.setItem("tmpUserData",tud);
        // }
    // continueGame();
 }
@@ -123,8 +127,10 @@ function continueGame()
         // передаём ID пользователя в игровой движок
         sessionStorage.setItem(userSession, userID);
         tmpUserData.userName = userdata.user;
+        tmpUserData.userId = userID;
         var tud = JSON.stringify(tmpUserData);
-        sessionStorage.setItem("tmpUserData",tud)
+        sessionStorage.setItem("tmpUserData",tud);
+        localStorage.setItem("tmpUserData",tud);
        }
 }
 
