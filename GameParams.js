@@ -43,6 +43,7 @@ var reloadButtonImgSrc = "img/interface_button_reload.png";
 var okButtonImgSrc = "img/interface_button_ok.png";
 var nextStepButtonImgSrc = "img/interface_button_nextstep.png";
 var prevStepButtonImgSrc = "img/interface_button_prevstep.png";
+var buttonDeleteImgSrc = "img/interface_button_delete.png";
 var guiTextColor = "red";//ЦВЕТ ТЕКСТА ДЛЯ GUI
 //Пути для файлов для карты кода------------------------------------------------
 var itemDeleteSrc = "img/interface_codeview_delete.png";
