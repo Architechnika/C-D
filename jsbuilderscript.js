@@ -21561,8 +21561,6 @@ function updateScreen() {
     });
     //Отрисовываем игрока
     playerImageObj.draw();
-    //Отрисовываем скролы
-    showCommandsMenu();
     //Отрисовываем карту кода
     if(isVerticalScreen) {
         if (isSecondScreen)
@@ -21570,6 +21568,8 @@ function updateScreen() {
     }
     else if (inputCommandStates == 0)
         codeView.drawCodeMap();
+    //Отрисовываем скролы
+    showCommandsMenu();
     //Отрисовываем гуи
     drawGUI();
 }
@@ -21923,8 +21923,12 @@ function onTouchCheckMove() {
             return;
         }
     };
+    var check = true;
+    if(isVerticalScreen)
+      if(!isSecondScreen)
+          check = false;
     //Обходим codeMap
-    if (clickIsInObj(clickCoord.x, clickCoord.y, codeView.backGround)) {
+    if (clickIsInObj(clickCoord.x, clickCoord.y, codeView.backGround) && check) {
         codeMapIsMoved = true;
         touchTapTimeFlag = true;
         return;
@@ -22029,6 +22033,7 @@ function onCodeMapElementClick(element) {
 
     if (element.name && element.name == "plus") {
         choosenCommandInElement = element.command;
+        codeView.resetZoomer();
         addCommandToCell(element, true);
         return;
     }
@@ -24496,7 +24501,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
                 this.currentShift.y = this.elems[0].y;
             }
         }
-        this.backGround.draw();
+        //this.backGround.draw();
     }
     //Ресайзит this.elements на величину delta
     this.resizeView = function (delta, dontCheckZoomer, isCodeView) {
@@ -25608,7 +25613,7 @@ var menuStatesArr = new Array();
 var isEntried = false; //Флаг для обозначения того, что игра уже была инициализирована и не нужно пересоздавать всю игру при перезагрузке
 var isStarted = false; //Флаг для старта/стопа игры
 var itemToReplaceInCodeMap = undefined; //Переменная для хранения ссылки на обьект который нужно заменить в codeView
-var itemToAddAfterInCodeMap = -1; //Переменная которая хранит обьект из codeMap после которого надо добавить элемент
+var itemToAddAfterInCodeMap = undefined; //Переменная которая хранит обьект из codeMap после которого надо добавить элемент
 var timeTimerLaunched = false;
 var isSecondScreen = false;
 var isVerticalScreen = undefined;
