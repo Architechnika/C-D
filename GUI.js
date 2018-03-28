@@ -40,6 +40,8 @@ function drawGUI() {
 function initGUI() { //поочередность иницилизаии ОБЯЗАТЕЛЬНА для правильного расположения меню
     menuItemH = (height / 100) * 8;
     menuItemW = (width / 100) * 8;
+    allButtons = new Buttons();
+    dialog = new Dialog();
     infoText = new TextWithBG(gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH);
     timerTextInit();
     progressTextInit();

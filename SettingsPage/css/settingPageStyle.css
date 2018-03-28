@@ -1,7 +1,18 @@
 *{
-    background: #c7b39b url(../../img/interface_font.png); /* Цвет фона и путь к файлу */
-    color: #000; /* Цвет текста */
-    background-size: cover;
-    
+    background:  url(../../img/interface_font.png); 
+    background-size: auto;
+
+}
+
+.leftSettingList{
+    height: 100%;
+    width:  35%;
+    position: absolute;
+}
+.RightSettingList{
+    height: 100%;
+    width: 65%;
+    position: absolute;
+    left:  35%;
     
 }
