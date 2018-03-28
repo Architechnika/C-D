@@ -411,16 +411,23 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
 
     //Метод располагающий элементы this.elems в правильном порядке
     this.createCodeMap = function (x, y, arr, isPlusAdd, isOnClick, alpha, activeELement, isBreakZoomer) {
+        //Если на экран выведен правый скролл то вообще нету смысла создавать кодмап
+        for(var i = 0 ; i < Scrolls.length; i++){
+            if(Scrolls[i].name == "RIGHT" && Scrolls[i].getArrayItems().length > 0){
+                return;
+            }
+        }
+        
         this.clear();
         
         if(!isVerticalScreen)
             buildCodeMap(codeMapBG.x, codeMapBG.y, arr, parent.elems, this.elemWH, isPlusAdd, isOnClick, false);
         else buildCodeMap(x, y, arr, parent.elems, this.elemWH, isPlusAdd, isOnClick, false);
 
-//        if(isPlusAdd){
-//            allButtons.deleteButton.setVisible(true);
-//        }
-//        else allButtons.deleteButton.setVisible(false);
+        if(isPlusAdd){
+                allButtons.deleteButton.setVisible(true);
+        }
+        else allButtons.deleteButton.setVisible(false);
 
         //Если есть параметр alpha - то присваиваем его всем элементам
         if (alpha && alpha >= 0 && alpha <= 1 && parent.elems.length > 0) {
