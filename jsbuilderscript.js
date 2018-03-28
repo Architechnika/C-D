@@ -3913,6 +3913,22 @@ function PointJS(Ta, Ua, xb, Rc) {
     k._GLOGAL_POINT_JS = this
 };
 
+var lang = {
+    ru : {
+       'robot_not_know'  : 'Робот не знает что ему делать',
+       'inventory_is_empty' : 'Инвентарь робота пуст',
+       'robot_not_look_there' : 'Робот смотрит не в ту сторону',
+       'crashed_the_wall' : 'Робот врезался в стену',
+       'robot_not_find_object' : 'Робот не может найти объект который можно подобрать',
+       'game_title' : 'SkillCraft - развивайся играя',
+        'robot_is_waiting' : 'Робот остановился и ждет дальнейших команд',
+        'robot_enter_infinity_cycle' : 'Робот зашёл в бесконечный цикл. Дальнейшее выполнение невозможно',
+        'dialog_delete' : 'Удалить?',
+    },
+    en : {
+    
+    },
+}
 //-----------------------------------------------------------------------ЛОГИЧЕСКИЕ ПАРАМЕТРЫ--------------------------------------------------------------------
 //Переменные для системы ВВОДА----------------------------------------------------------------------------------
 var touchTapTimeOut = 100;//Параметр указывающий сколько миллисекунд надо держать пользователю на элементе в скроле чтобы его переместить(НУЖНО ЧТОБЫ ОТДЕЛЯТЬ ПРОКРУТКУ СКРОЛА ОТ ПЕРЕМЕЩЕНИЙ ЭЛЕМЕНТОВ В СКРОЛЕ)
@@ -3921,18 +3937,20 @@ var scrollStep = 20; //Шаг скрола в пикселях(Когда кру
 var touchScrollVal = 2;//Шаг скрола когда пальцами ресайзишь
 var toolTipDelay = 1000;//Задержка в миллисекундах после которой всплывают тултипы если держать мышку на элементе
 //Игровые параметры---------------------------------------------------------------------------------------------
-var labyrinthSize = 5;//Стартовый размер лабиринта(Например если 5, тогда при старте игры сгенерится лабиринт размером 5x5). ДЛЯ АЛГОРИТМА ГЕНЕРАЦИИ ЭТО ДОЛЖНО БЫТЬ НЕЧЕТНОЕ ЧИСЛО
+var labyrinthSize = 3;//Стартовый размер лабиринта(Например если 5, тогда при старте игры сгенерится лабиринт размером 5x5). ДЛЯ АЛГОРИТМА ГЕНЕРАЦИИ ЭТО ДОЛЖНО БЫТЬ НЕЧЕТНОЕ ЧИСЛО
 var labyrinthMaxSize = 0;//Ограничение на максимальный размер лабиринта. Если = 0, то максимума нет.
 var isLabyrinthGrow = true;//Переключение возможности увеличения лабиринта при прохождении(Увеличивается лабиринт или нет при выходе из него)
 var robotMoveDelay = 450; //Задержка при движении робота в милисекундах(ЧЕМ МЕНЬШЕ ТЕМ БЫСТРЕЕ)
 var saveTimeout = 1000; //Таймаут для метода который следит за изменениями размера экрана
 var difficultyLevel = "EASY";//Уровень сложности(если EASY - робот сам поворачивается куда нужно при движении)
-var totalTokensOnMap = 20; //Сколько всего монеток генерится в лабиринте
+var totalTokensOnMap = 5; //Сколько всего монеток генерится в лабиринте
 var inactiveItemsAlpha = 0.5;//Альфа канал неактивных элементов интерфейса(кнопок и тд)
+var infinityCycleSteps = 5;//Количество итераций которые робот может стоять просто так(Если он простоит 5 итераций ничего не сделав, то это будет считаться бесконечным циклом БЕЗДЕЙСТВИЯ)
 //ГЛОБАЛЬНЫЕ ПЕРМЕННЫЕ КОТОРЫЕ СОДЕРЖАТ ОБЩЕИГРОВЫЕ ДАННЫЕ(МЕНЯЮТСЯ НА ПРОТЯЖЕНИИ ИГРЫ)-------------------------
 var totalSeconds = 0; //Для хранения колличества секунд которые прошли с начала прохождения уровня
 var playerInventory = new Array();//Инвентарь робота. На карте он может собирать и перетаскивать элементы
 var playerMoveCount = 0;//Счетчик ходов робота
+var selectLang = 'ru';
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------ГРАФИЧЕСКИЕ ПАРАМЕТРЫ-----------------------------------------------------------------
 //Путь к файлам отображения лабиринта---------------------------------------
@@ -3957,6 +3975,8 @@ var reloadButtonImgSrc = "img/interface_button_reload.png";
 var okButtonImgSrc = "img/interface_button_ok.png";
 var nextStepButtonImgSrc = "img/interface_button_nextstep.png";
 var prevStepButtonImgSrc = "img/interface_button_prevstep.png";
+var buttonDeleteImgSrc = "img/interface_button_delete.png";
+var buttonDialogImgSrc = "img/interface_button_dialog_ok.png"
 var guiTextColor = "red";//ЦВЕТ ТЕКСТА ДЛЯ GUI
 //Пути для файлов для карты кода------------------------------------------------
 var itemDeleteSrc = "img/interface_codeview_delete.png";
@@ -4083,7 +4103,9 @@ var arrImagesForLoad = [
     "img/command_digit_6.png",
     "img/command_digit_7.png",
     "img/command_digit_8.png",
-    "img/command_digit_9.png"
+    "img/command_digit_9.png",
+    "img/interface_button_dialog_ok.png",
+    "img/interface_button_delete.png"
 ]
 arrImagesForLoad.forEach(function(e){
     new Image().src = e;
@@ -4169,6 +4191,7 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.stepUpButton = new PushButton();
     this.backToStartButton = new PushButton();
     this.menuButton = new PushButton();
+    this.deleteButton = new PushButton();
     //
     //создание и заполнение массива для хранения кнопок, нужен для того чтобы в дальнейшем рисовать эти кнопки или обходить их для вылавливание событий
     this.buttonsArr = [];
@@ -4177,8 +4200,9 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.buttonsArr.push(this.stepUpButton);
     this.buttonsArr.push(this.backToStartButton);
     this.buttonsArr.push(this.menuButton);
+    this.buttonsArr.push(this.deleteButton);
     //
-    var n = 0 // число кнопок, которые расположаны в отдельным местах экрана, а не рядом с кнопками снизу лабиринта
+    var n = 1 // число кнопок, которые расположаны в отдельным местах экрана, а не рядом с кнопками снизу лабиринта
     //получаем количество кнопок в массиве для того чтобы автоматический определить ширину кнопок на экране
     var buttonsCount = this.buttonsArr.length - n; //!!!если кнопка будет создана для того чтобы разместить в другом места, а не снизу, то обратите внимание на эту строку
     //выполняем настройки позиции, размеров картинки для кнопок
@@ -4196,6 +4220,10 @@ function Buttons() { //класс для работы совсеми кнопк�
 
     this.menuButton.setSetting(this.backToStartButton.x + this.backToStartButton.w, height - (gameSpaceW / 100 * 14), (gameSpaceW) / buttonsCount, gameSpaceW / 100 * 14)
     this.menuButton.setButtonImgSrc(menuButtonImgSrc);
+    
+    this.deleteButton.setSetting(width -(gameSpaceW/100 * 5) ,0, gameSpaceW/100 * 5, gameSpaceW / 100 * 5)
+    this.deleteButton.setButtonImgSrc(buttonDeleteImgSrc);
+    this.deleteButton.setVisible(false);
     //
     //описывает обработчик onClick для кнопок
     this.mainButton.setUserData({
@@ -4210,6 +4238,12 @@ function Buttons() { //класс для работы совсеми кнопк�
         onClick: function (el) {
             if (!isOkClose || isStarted || isSecondScreen) return;
             setPreviousStateToPlayer();
+        }
+    });
+    this.deleteButton.setUserData({
+        onClick: function (el) {
+                if(lastClickedElement.commands && lastClickedElement.commands.length >0)
+                    dialog.setShowDialog(true);
         }
     });
     this.stepUpButton.setUserData({
@@ -21544,7 +21578,7 @@ var playerImageObj = null;//Картинка характеризующая иг
 var width = game.getWH().w; // Ширина всего экрана
 var height = game.getWH().h; // Высота всего экрана
 
-pjs.system.setTitle('SkillCraft - развивайся играя'); // Set Title for Tab or Window
+pjs.system.setTitle(lang[selectLang]['game_title']); // Set Title for Tab or Window
 
 //Обновление графики на экране
 function updateScreen() {
@@ -21563,11 +21597,13 @@ function updateScreen() {
     playerImageObj.draw();
     //Отрисовываем карту кода
     if(isVerticalScreen) {
-        if (isSecondScreen)
+        if (isSecondScreen) {
             codeView.drawCodeMap();
+        }
     }
-    else if (inputCommandStates == 0)
+    else if (inputCommandStates == 0) {
         codeView.drawCodeMap();
+    }
     //Отрисовываем скролы
     showCommandsMenu();
     //Отрисовываем гуи
@@ -21949,7 +21985,7 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
     initRightScroll([]);
     if(!isVerticalScreen){
         inputCommandStates = 0;
-        codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true, 1);
+        codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
         return true;
     }
     //lastClickedIndx = -1; //Очищаем индекс выбранной клетки поля
@@ -21960,6 +21996,7 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
     if (itemToAddAfterInCodeMap || itemToReplaceInCodeMap) {
         itemToAddAfterInCodeMap = undefined;
         itemToReplaceInCodeMap = undefined;
+        //codeView.resetZoomer();
         inputCommandStates = 1;
     }
     //Проверяем надо ли совсем закрывать интерфейс ввода
@@ -21971,7 +22008,7 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
         });
         //Инициализируем карту кода
         if(lastClickedElement)
-            codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true, 1);
+            codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
         return false;
     }
     if (!isVerticalScreen) {
@@ -23602,6 +23639,76 @@ function Label(x,y,text)
     }
 }
 
+function Dialog()
+{
+    var bgW = width/100 * 20;
+    var bgH = height/100 * 10;
+    var bgX = width/2 - (bgW/2);
+    var bgY = height/2 - (bgH/2);
+    var text = lang[selectLang]['dialog_delete'];
+    var bg = game.newRoundRectObject(   { 
+     x : bgX, 
+     y : bgY, 
+     w : bgW, 
+     h : bgH, 
+     radius : 5, 
+     fillColor : "#f6db7b",
+     visible : false,
+   });
+    //bgX+bgW/2 - (bgH/100*50)
+    var dialogText = game.newTextObject(   { 
+     x : bgX+2, 
+     y : bgY+2, 
+     text : text, 
+     size : bgH/100*28, 
+     color : "#000000", 
+     visible : false,
+   });
+    
+    this.dialogOkButton = new PushButton();
+    this.dialogCancelButton = new PushButton();
+    
+    allButtons.buttonsArr.push(this.dialogOkButton);
+    allButtons.buttonsArr.push(this.dialogCancelButton);
+    
+    this.dialogOkButton.setSetting(bgX+bgW - (bgH/100*60*2) ,bgY+bgH-(bgH/100*60), bgH/100*60, bgH/100*60)
+    this.dialogOkButton.setButtonImgSrc(buttonDialogImgSrc);
+    this.dialogOkButton.setVisible(false);
+    
+    this.dialogCancelButton.setSetting(this.dialogOkButton.x+this.dialogOkButton.w, bgY+bgH-(bgH/100*60), bgH/100*60, bgH/100*60)
+    this.dialogCancelButton.setButtonImgSrc(buttonDeleteImgSrc);
+    this.dialogCancelButton.setVisible(false);
+    
+    
+    this.dialogOkButton.setUserData({
+        onClick: function (el) {
+            lastClickedElement.commands.splice(0);
+            setFocused(field[lastClickedIndx],lastClickedIndx);
+            dialog.setShowDialog(false);
+        }
+    });
+    this.dialogCancelButton.setUserData({
+        onClick: function (el) {
+            dialog.setShowDialog(false);
+        }
+    });
+    
+    
+    
+    this.dialogDraw = function()
+    {
+        bg.draw();
+        dialogText.draw();
+    }
+    
+    this.setShowDialog = function(isShow)
+    {
+        bg.setVisible(isShow);
+        dialogText.setVisible(isShow);
+        this.dialogCancelButton.setVisible(isShow);
+        this.dialogOkButton.setVisible(isShow);
+    }
+}
 //СКРИПТ СОДЕРЖИТ ОПИСАНИЕ ВСЕХ ЭЛЕМЕНТОВ GUI ИГРЫ, а также методы для работы с ними
 
 var timerText = null; //текст таймера
@@ -23632,7 +23739,7 @@ function drawGUI() {
     coinItem.draw();
     clockItem.draw();
     infoText.draw();
-
+    dialog.dialogDraw();
     if(toolTip.isVisible()) toolTip.draw();
     if (inputCounterText !== null) inputCounterText.draw();
     //Отрисовываем интерфейс выбора команд
@@ -23648,7 +23755,7 @@ function initGUI() { //поочередность иницилизаии ОБЯ�
     infoText = new TextWithBG(gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH);
     timerTextInit();
     progressTextInit();
-    textbackGroundInit("#000000", 0.4);
+    textbackGroundInit("#000000", 0);
     codeMapBackGroundInit("#000000", 0.4)
     if (!isVerticalScreen) {
         //ИНИЦИАЛИЗИРУЕМ ИНТЕРФЕЙС РЕДАКТОРА КОМАНД
@@ -23793,6 +23900,7 @@ function initRightScroll(initArray) {
     if (codeView && codeView.elems.length > 0) codeView.clear();
     //Показываем кнопку ok
     allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
+    allButtons.deleteButton.setVisible(false);
 }
 
 //Возвращает графическое представление ЛЕВОГО БОКОВОГО СКРОЛА которое соответствует текущему состоянию в интерфейсе
@@ -24562,7 +24670,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
     }
 
     //Проверяет, находятся ли объекты objs внутри квадрата области полностью. Если она за пределами - setVisible(false)
-    this.checkObjsInArea = function () {
+    this.checkObjsInArea = function (full) {
         var bg = this.backGround;
         var arr = [];
         var arr1 = []
@@ -24584,12 +24692,12 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
                             max = d[i];
                     }
                     //log("MIN : " + max);
-                    itm.setAlpha(itm.getAlpha() - max / 100);
+                    itm.setAlpha(full ? 1 : itm.getAlpha() - max / 100);
                 }
                 else{//Если вышел за границы
                     for(var i = 0 ; i < d.length; i++){
                         if(d[i] > 0){
-                            itm.setAlpha(itm.getAlpha() - d[i] / 100);
+                            itm.setAlpha(full ? 1 : itm.getAlpha() - d[i] / 100);
                         }
                     }
                 }
@@ -24633,6 +24741,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
     this.clear = function () {
         parent.elems.splice(0, parent.elems.length);
         this.menu.closeMenu();
+        allButtons.deleteButton.setVisible(false);
     }
 
     //Добавляет элемент с плюсиком в кодмап
@@ -24777,12 +24886,24 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
 
     //Метод располагающий элементы this.elems в правильном порядке
     this.createCodeMap = function (x, y, arr, isPlusAdd, isOnClick, alpha, activeELement, isBreakZoomer) {
+        //Если на экран выведен правый скролл то вообще нету смысла создавать кодмап
+        for(var i = 0 ; i < Scrolls.length; i++){
+            if(Scrolls[i].name == "RIGHT" && Scrolls[i].getArrayItems().length > 0){
+                return;
+            }
+        }
+        
         this.clear();
         
         if(!isVerticalScreen)
             buildCodeMap(codeMapBG.x, codeMapBG.y, arr, parent.elems, this.elemWH, isPlusAdd, isOnClick, false);
         else buildCodeMap(x, y, arr, parent.elems, this.elemWH, isPlusAdd, isOnClick, false);
-        
+
+        if(isPlusAdd){
+                allButtons.deleteButton.setVisible(true);
+        }
+        else allButtons.deleteButton.setVisible(false);
+
         //Если есть параметр alpha - то присваиваем его всем элементам
         if (alpha && alpha >= 0 && alpha <= 1 && parent.elems.length > 0) {
             //Если alpha - значит необходимо видеть весь код мап в поле видимости - поэтому перерасчитваем размеры элементов
@@ -24881,8 +25002,21 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         if (this.menu !== undefined)
             this.menu.setSettings();
         //this.elementsMove(parent.currentShift.x - parent.backGround.x, parent.currentShift.y - parent.backGround.y, true, undefined);
+        this.checkObjsInArea(1);
+        //Проверяем надо ли смещать код мап после ресайза(Да знаю, что для этого мы и писали универсальную функцию ресайза в родительском классе, но тут особый случай, не могу придумать способа его обрабатывать без специального кода тут)
+        //Считаем разность нижней точки кодмапа с нижней точкой последнего элемента
+        var lastElemDiff =(codeMapBG.y + codeMapBG.h) - (parent.elems[parent.elems.length - 1].y + parent.elems[parent.elems.length - 1].h);
+        var shift = lastElemDiff;
+        //Если разность больше 0 то надо сдвигать
+        if(lastElemDiff > 0 ){
+            //Но если после сдвига верхние жлементы сдвинутся внутрь codeMapBG то это будет неправильно поэтому проверяем
+            if(parent.elems[0].y + parent.elems[0].h + lastElemDiff > codeMapBG.y){
+                shift = codeMapBG.y - (parent.elems[0].y);
+            }
+            this.elementsMove(0,shift, true, true);
+        }
         //ПАРАМЕТР alpha = -1 КАК ФЛАГ ТОГО ЧТОБЫ НЕ СБРАСЫВАТЬ ZOOMER при этом вызове функции(Исправить)
-        codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, !dontAddPlus, !dontClick, -1);
+        //codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, !dontAddPlus, !dontClick, -1);
     }
 
     this.elementsMove = function (shiftX, shiftY, dontSave, dontCheck) {
@@ -25189,7 +25323,6 @@ function ItemMenu() {
 }
 
 //СКРИПТ ОПИСЫВАЕТ МЕТОДЫ И ДАННЫЕ ИГРОКА, КОТОРЫЙ ПРОХОДИТ ЛАБИРИНТ
-
 //Позиция игрока на поле
 var playerPozition = 0,
     lastPlayerPoz = 0;
@@ -25203,6 +25336,7 @@ var playerFrontSide = 0; //0 верх, 1 право, 2 низ, 3 лево
 var startPlayerMoveTime = 0;
 var startPoz = 0;
 var passiveItemsAlpha = 0.35;
+var freezCounter = 0;//Счетчик того сколько ходов уже робот стоит на месте
 //Инициализация игрока
 function playerSetStart() {
     //Ищем местоположение двери
@@ -25218,6 +25352,7 @@ function playerSetStart() {
             playerSetDirection(getPlayerDirFromSide());
             //Обнуляем счетчик времени
             startPlayerMoveTime = 0;
+            freezCounter = 0;
             //Обнуляем счетчик ходов робота
             playerMoveCount = 0;
             lastPlayerPoz = -1;
@@ -25239,15 +25374,17 @@ function playerSetStart() {
 function playerMove(canRead) {
     playerMoveCount++;
     var code = field[playerPozition].code;
-    var pPoz = playerPozition;
     var dir = 0;
+
+    var pPoz = playerPozition;
+    var pozBuff = pPoz;
     var isTrueDir = true;
     var isShift = true;
     if (!canRead) { //Добавляем команды из текущего элемента поля в стек команд игрока
         addCommandsToPlayer(field[playerPozition].getCommands(true));
     }
     //Если стек пустой, то возвращаем ошибку
-    if (playerCommands.length === 0) return `Робот не знает что ему делать`;
+    if (playerCommands.length === 0) return lang[selectLang]['robot_not_know'];
     //Обрабатываем самую верхнюю команду
     var comm = playerCommands[0];
 
@@ -25325,7 +25462,7 @@ function playerMove(canRead) {
             if (res != "") return res;
             break;
         case "drop":
-            if (playerInventory === undefined || playerInventory.length == 0) return "Инвентарь робота пуст";
+            if (playerInventory === undefined || playerInventory.length == 0) return lang[selectLang]['inventory_is_empty'];
             //Если инвентарь не пуст, то выгружаем последний подобранный элемент на текущую позицию карты
             playerInventory[0].setNewPosition(playerPozition);
             playerInventory[0].startRotation();
@@ -25376,11 +25513,15 @@ function playerMove(canRead) {
         if (difficultyLevel == "EASY") { //Если уровень сложности изи то поворачиваем робота в нужную сторону
             turnToTrueDirection(dir);
             return playerMove(false);
-        } else return "Робот смотрит не в ту сторону";
+        } else return lang[selectLang]['robot_not_look_there'];
     }
-
+    //Проверяем на бесконечный цикл
+    if(freezCounter >= infinityCycleSteps){
+        return lang[selectLang]['robot_enter_infinity_cycle'];
+    }
+    freezCounter++;
     //Проверяем - сможет ли робот сдвинуться в эту сторону или нет
-    if (code == roadCode || code == exitCode) {
+    if (code == roadCode || code == exitCode || code == entryCode) {
 
         //Убираем из стека обработанную команду
         if (isShift) {
@@ -25394,9 +25535,10 @@ function playerMove(canRead) {
         if (code == exitCode) {
             return "end";
         }
-    } else return "Робот врезался в стену";
+    } else if(pozBuff !== pPoz) return lang[selectLang]['crashed_the_wall'];
     //Передвигаем игрока в нужную клетку
     movePlayerToFieldElement(field[playerPozition]);
+    if(pPoz !== pozBuff) freezCounter = 0;//Если робот дошёл до этой строчки кода, значит он ствинулся следовательно сбрасываем счетчик
     drawCommState();
     return "";
 }
@@ -25498,7 +25640,7 @@ function tryToPickUp() {
             }
         }
     }
-    return "Робот не может найти объект который можно подобрать";
+    return lang[selectLang]['robot_not_find_object'];
 }
 
 //Устанавливает текущее направление обзора робота
@@ -25618,6 +25760,7 @@ var timeTimerLaunched = false;
 var isSecondScreen = false;
 var isVerticalScreen = undefined;
 var widthBuff = width;
+var dialog = undefined;
 //Переменная для хранения состояний меню ввода команд:
 // 0 - обычный ввод
 // 1 - blockA или if или repeatif
@@ -25739,6 +25882,8 @@ function initializeGame(isInit) {
         initLabirint();
     }
     allButtons = new Buttons();
+     dialog = new Dialog();
+    //
     //Рассчитываем сколько команд можно поставить на этом поле для прохождения
     totalCommandsAllowed = (totalWidth + totalHeight) * 2;
     //Создаем игрока
@@ -25751,6 +25896,7 @@ function initializeGame(isInit) {
     if (!codeMapBG) {
         codeView = new CodeMapView(0, 0, 0, 0, "white");
     } else codeView = new CodeMapView(codeMapBG.x, codeMapBG.y, codeMapBG.w, codeMapBG.h, "white");
+    if(Scrolls) Scrolls.splice(0);
 }
 
 function initLabirint() {
@@ -25822,6 +25968,7 @@ function setFocused(fieldElem, indx) {
     //Запоминаем последний кликнутый пользователь элемент
     lastClickedElement = field[lastClickedIndx];
     inputCommandStates = 0;
+    dialog.setShowDialog(false);
     //Выделяем в рамку объект по которому нажали
     field[indx].setStroke(true);
     //Если ориентация экрана горизонтальная, то
@@ -25831,6 +25978,7 @@ function setFocused(fieldElem, indx) {
         initRightScroll([]);
         codeView.resetZoomer();
         codeView.createCodeMap(0, textbackGroundItem.h, lastClickedElement.commands, true, true, 1, true);
+        
     } else { //Если ориентация экрана вертикальная
         clearAllLayers();
         allButtons.backToStartButton.setAlpha(inactiveItemsAlpha);
@@ -25838,6 +25986,7 @@ function setFocused(fieldElem, indx) {
         allButtons.stepUpButton.setAlpha(inactiveItemsAlpha);
         //Показываем кнопку ok
         allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
+        
         game.setLoop("SecondScreen")
     }
 }
@@ -25882,6 +26031,7 @@ function addCommandToCell(commandImg, dontAdd) {
                 });
                 //Очищаем буфер для хранения обьекта для замены и скролл
                 itemToReplaceInCodeMap = undefined;
+                initLeftScroll(getCommandsImgArr(elemStor));
                 initRightScroll([]);
                 if(isVerticalScreen) initLeftScroll();
                 codeView.createCodeMap(codeMapBG.x,codeMapBG.y, lastClickedElement.commands, true, true);
@@ -25998,7 +26148,7 @@ function processRobotMove() {
         //Перезагружаем уровень с новым лабиринтом
         initializeGame();
     } else if (res == "stop") {
-        showMessage("Робот остановился и ждет дальнейших команд");
+        showMessage(lang[selectLang]['robot_is_waiting']);
         isStarted = false;
         //allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
     } else if (res != "") //Если у робота возникли проблемы

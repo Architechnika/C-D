@@ -90,29 +90,7 @@ function saveTimer() {
 function logicEventTimer(){
     //Проверяем смену ориентации экрана
     if(game.getWH().w != width){
-        if(isSecondScreen){
-            allButtons.backToStartButton.setAlpha(1);
-            allButtons.stepDownButton.setAlpha(1);
-            allButtons.stepUpButton.setAlpha(1);
-            isSecondScreen = false;
-            game.setLoop("Labyrinth");
-        }
-        if (lastClickedElement) lastClickedElement.setStroke(false);
-        width = game.getWH().w;
-        height = game.getWH().h;
-        //Пересчитываем позиции всех элементов
-        initGameSpace();
-        calcMapPosition();
-        labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
-        labView.checkGameObjects();//Ставим обьекты на место
-        Scrolls.splice(0,Scrolls.length);
-        initGUI();
-        //Инициализируем обьект для вывода карты кода
-        if (!codeMapBG) {
-            codeView = new CodeMapView(0, 0, 0, 0, "white");
-        } else codeView = new CodeMapView(codeMapBG.x, codeMapBG.y, codeMapBG.w, codeMapBG.h, "white");
-        //Показываем кнопку старт или стоп
-        allButtons.mainButton.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
+        recalcScreen();
     }
     if(toolTip && !toolTip.isVisible() && toolTipTimeCounter >= toolTipDelay){
         toolTipShowEvent(clickCoord.x,clickCoord.y);
@@ -125,6 +103,32 @@ function logicEventTimer(){
 function totalTimeTimer() {
     totalSeconds++;
     setTimeout("totalTimeTimer()", 1000);
+}
+//Функция перерасчитывает параметры всех графических элементов
+function recalcScreen(){
+    if(isSecondScreen){
+        allButtons.backToStartButton.setAlpha(1);
+        allButtons.stepDownButton.setAlpha(1);
+        allButtons.stepUpButton.setAlpha(1);
+        isSecondScreen = false;
+        game.setLoop("Labyrinth");
+    }
+    if (lastClickedElement) lastClickedElement.setStroke(false);
+    width = game.getWH().w;
+    height = game.getWH().h;
+    //Пересчитываем позиции всех элементов
+    initGameSpace();
+    calcMapPosition();
+    labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
+    labView.checkGameObjects();//Ставим обьекты на место
+    Scrolls.splice(0,Scrolls.length);
+    initGUI();
+    //Инициализируем обьект для вывода карты кода
+    if (!codeMapBG) {
+        codeView = new CodeMapView(0, 0, 0, 0, "white");
+    } else codeView = new CodeMapView(codeMapBG.x, codeMapBG.y, codeMapBG.w, codeMapBG.h, "white");
+    //Показываем кнопку старт или стоп
+    allButtons.mainButton.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
 }
 
 //Инициализация лабиринта
@@ -161,6 +165,7 @@ function initializeGame(isInit) {
         codeView = new CodeMapView(0, 0, 0, 0, "white");
     } else codeView = new CodeMapView(codeMapBG.x, codeMapBG.y, codeMapBG.w, codeMapBG.h, "white");
     if(Scrolls) Scrolls.splice(0);
+    recalcScreen();
 }
 
 function initLabirint() {
