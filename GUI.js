@@ -44,7 +44,7 @@ function initGUI() { //поочередность иницилизаии ОБЯ�
     infoText = new TextWithBG(gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH);
     timerTextInit();
     progressTextInit();
-    textbackGroundInit("#000000", 0.4);
+    textbackGroundInit("#000000", 0);
     codeMapBackGroundInit("#000000", 0.4)
     if (!isVerticalScreen) {
         //ИНИЦИАЛИЗИРУЕМ ИНТЕРФЕЙС РЕДАКТОРА КОМАНД
