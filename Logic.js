@@ -147,6 +147,7 @@ function initializeGame(isInit) {
     }
     allButtons = new Buttons();
      dialog = new Dialog();
+    //
     //Рассчитываем сколько команд можно поставить на этом поле для прохождения
     totalCommandsAllowed = (totalWidth + totalHeight) * 2;
     //Создаем игрока
