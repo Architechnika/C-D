@@ -195,7 +195,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
     }
 
     //Проверяет, находятся ли объекты objs внутри квадрата области полностью. Если она за пределами - setVisible(false)
-    this.checkObjsInArea = function () {
+    this.checkObjsInArea = function (full) {
         var bg = this.backGround;
         var arr = [];
         var arr1 = []
@@ -217,12 +217,12 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
                             max = d[i];
                     }
                     //log("MIN : " + max);
-                    itm.setAlpha(itm.getAlpha() - max / 100);
+                    itm.setAlpha(full ? 1 : itm.getAlpha() - max / 100);
                 }
                 else{//Если вышел за границы
                     for(var i = 0 ; i < d.length; i++){
                         if(d[i] > 0){
-                            itm.setAlpha(itm.getAlpha() - d[i] / 100);
+                            itm.setAlpha(full ? 1 : itm.getAlpha() - d[i] / 100);
                         }
                     }
                 }
@@ -527,8 +527,21 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         if (this.menu !== undefined)
             this.menu.setSettings();
         //this.elementsMove(parent.currentShift.x - parent.backGround.x, parent.currentShift.y - parent.backGround.y, true, undefined);
+        this.checkObjsInArea(1);
+        //Проверяем надо ли смещать код мап после ресайза(Да знаю, что для этого мы и писали универсальную функцию ресайза в родительском классе, но тут особый случай, не могу придумать способа его обрабатывать без специального кода тут)
+        //Считаем разность нижней точки кодмапа с нижней точкой последнего элемента
+        var lastElemDiff =(codeMapBG.y + codeMapBG.h) - (parent.elems[parent.elems.length - 1].y + parent.elems[parent.elems.length - 1].h);
+        var shift = lastElemDiff;
+        //Если разность больше 0 то надо сдвигать
+        if(lastElemDiff > 0 ){
+            //Но если после сдвига верхние жлементы сдвинутся внутрь codeMapBG то это будет неправильно поэтому проверяем
+            if(parent.elems[0].y + parent.elems[0].h + lastElemDiff > codeMapBG.y){
+                shift = codeMapBG.y - (parent.elems[0].y);
+            }
+            this.elementsMove(0,shift, true, true);
+        }
         //ПАРАМЕТР alpha = -1 КАК ФЛАГ ТОГО ЧТОБЫ НЕ СБРАСЫВАТЬ ZOOMER при этом вызове функции(Исправить)
-        codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, !dontAddPlus, !dontClick, -1);
+        //codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, !dontAddPlus, !dontClick, -1);
     }
 
     this.elementsMove = function (shiftX, shiftY, dontSave, dontCheck) {

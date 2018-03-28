@@ -67,11 +67,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Logic.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Logic.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Logic.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1461">
-              <caret line="301" column="16" selection-start-line="301" selection-start-column="16" selection-end-line="301" selection-end-column="105" />
+            <state relative-caret-position="306">
+              <caret line="231" column="57" lean-forward="true" selection-start-line="231" selection-start-column="57" selection-end-line="231" selection-end-column="57" />
             </state>
           </provider>
         </entry>
@@ -90,11 +90,28 @@
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file leaf-file-name="Viewer.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Viewer.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Viewer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="762" column="48" lean-forward="true" selection-start-line="762" selection-start-column="48" selection-end-line="762" selection-end-column="48" />
+            <state relative-caret-position="458">
+              <caret line="525" lean-forward="true" selection-start-line="525" selection-end-line="525" />
+              <folding>
+                <element signature="e#10788#10828#0" />
+                <element signature="e#10859#11001#0" />
+                <element signature="e#11113#11545#0" />
+                <element signature="e#11639#11952#0" />
+                <element signature="e#12067#12605#0" />
+                <element signature="e#12700#16300#0" />
+                <element signature="e#16474#19721#0" />
+                <element signature="e#19477#19511#0" />
+                <element signature="e#19617#20942#0" />
+                <element signature="e#21721#21908#0" />
+                <element signature="e#21945#22409#0" />
+                <element signature="e#22445#22865#0" />
+                <element signature="e#22972#23176#0" />
+                <element signature="e#23254#23300#0" />
+                <element signature="e#23339#23380#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -124,9 +141,9 @@
         <option value="$PROJECT_DIR$/Graphics.js" />
         <option value="$PROJECT_DIR$/PushButton.js" />
         <option value="$PROJECT_DIR$/GUI.js" />
-        <option value="$PROJECT_DIR$/Viewer.js" />
         <option value="$PROJECT_DIR$/Logic.js" />
         <option value="$PROJECT_DIR$/Input.js" />
+        <option value="$PROJECT_DIR$/Viewer.js" />
       </list>
     </option>
   </component>
@@ -197,15 +214,16 @@
       <workItem from="1522071586476" duration="1497000" />
       <workItem from="1522137043949" duration="5536000" />
       <workItem from="1522150968727" duration="6211000" />
-      <workItem from="1522230057492" duration="2698000" />
+      <workItem from="1522230057492" duration="5898000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17207000" />
+    <option name="totallyTimeSpent" value="20407000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14166667" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -232,11 +250,33 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Viewer.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="7191">
           <caret line="539" lean-forward="true" selection-start-line="539" selection-end-line="539" />
+          <folding>
+            <element signature="e#10788#10828#0" />
+            <element signature="e#10859#11001#0" />
+            <element signature="e#11113#11545#0" />
+            <element signature="e#11639#11952#0" />
+            <element signature="e#12067#12605#0" />
+            <element signature="e#12700#16300#0" />
+            <element signature="e#16474#19721#0" />
+            <element signature="e#19477#19511#0" />
+            <element signature="e#19617#20942#0" />
+            <element signature="e#21721#21908#0" />
+            <element signature="e#21945#22409#0" />
+            <element signature="e#22445#22865#0" />
+            <element signature="e#22972#23176#0" />
+            <element signature="e#23254#23300#0" />
+            <element signature="e#23339#23380#0" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -532,16 +572,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CoinObject.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Graphics.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="31" column="5" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/GUI.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="600">
@@ -556,10 +586,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Viewer.js">
+    <entry file="file://$PROJECT_DIR$/Graphics.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="762" column="48" lean-forward="true" selection-start-line="762" selection-start-column="48" selection-end-line="762" selection-end-column="48" />
+        <state relative-caret-position="493">
+          <caret line="31" column="5" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CoinObject.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Logic.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="231" column="57" lean-forward="true" selection-start-line="231" selection-start-column="57" selection-end-line="231" selection-end-column="57" />
         </state>
       </provider>
     </entry>
@@ -570,10 +610,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Logic.js">
+    <entry file="file://$PROJECT_DIR$/Viewer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1461">
-          <caret line="301" column="16" selection-start-line="301" selection-start-column="16" selection-end-line="301" selection-end-column="105" />
+        <state relative-caret-position="458">
+          <caret line="525" lean-forward="true" selection-start-line="525" selection-end-line="525" />
+          <folding>
+            <element signature="e#10788#10828#0" />
+            <element signature="e#10859#11001#0" />
+            <element signature="e#11113#11545#0" />
+            <element signature="e#11639#11952#0" />
+            <element signature="e#12067#12605#0" />
+            <element signature="e#12700#16300#0" />
+            <element signature="e#16474#19721#0" />
+            <element signature="e#19477#19511#0" />
+            <element signature="e#19617#20942#0" />
+            <element signature="e#21721#21908#0" />
+            <element signature="e#21945#22409#0" />
+            <element signature="e#22445#22865#0" />
+            <element signature="e#22972#23176#0" />
+            <element signature="e#23254#23300#0" />
+            <element signature="e#23339#23380#0" />
+          </folding>
         </state>
       </provider>
     </entry>
