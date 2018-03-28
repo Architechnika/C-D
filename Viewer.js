@@ -424,10 +424,10 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
             buildCodeMap(codeMapBG.x, codeMapBG.y, arr, parent.elems, this.elemWH, isPlusAdd, isOnClick, false);
         else buildCodeMap(x, y, arr, parent.elems, this.elemWH, isPlusAdd, isOnClick, false);
 
-        if(isPlusAdd){
-                allButtons.deleteButton.setVisible(true);
-        }
-        else allButtons.deleteButton.setVisible(false);
+//        if(isPlusAdd){
+//                allButtons.deleteButton.setVisible(true);
+//        }
+//        else allButtons.deleteButton.setVisible(false);
 
         //Если есть параметр alpha - то присваиваем его всем элементам
         if (alpha && alpha >= 0 && alpha <= 1 && parent.elems.length > 0) {
