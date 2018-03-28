@@ -150,8 +150,7 @@ function initializeGame(isInit) {
         initLabirint();
     }
     allButtons = new Buttons();
-     dialog = new Dialog();
-    //
+    dialog = new Dialog();
     //Рассчитываем сколько команд можно поставить на этом поле для прохождения
     totalCommandsAllowed = (totalWidth + totalHeight) * 2;
     //Создаем игрока
