@@ -1,0 +1,6 @@
+*{
+    background: #c7b39b url(../../img/interface_font.png); /* Цвет фона и путь к файлу */
+    color: #000; /* Цвет текста */
+    background-size: cover;
+    
+}
