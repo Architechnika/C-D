@@ -160,6 +160,7 @@ function initializeGame(isInit) {
     if (!codeMapBG) {
         codeView = new CodeMapView(0, 0, 0, 0, "white");
     } else codeView = new CodeMapView(codeMapBG.x, codeMapBG.y, codeMapBG.w, codeMapBG.h, "white");
+    if(Scrolls) Scrolls.splice(0);
 }
 
 function initLabirint() {
@@ -295,6 +296,7 @@ function addCommandToCell(commandImg, dontAdd) {
                 });
                 //Очищаем буфер для хранения обьекта для замены и скролл
                 itemToReplaceInCodeMap = undefined;
+                initLeftScroll(getCommandsImgArr(elemStor));
                 initRightScroll([]);
                 if(isVerticalScreen) initLeftScroll();
                 codeView.createCodeMap(codeMapBG.x,codeMapBG.y, lastClickedElement.commands, true, true);

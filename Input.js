@@ -340,7 +340,7 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
     initRightScroll([]);
     if(!isVerticalScreen){
         inputCommandStates = 0;
-        codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true, 1);
+        codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
         return true;
     }
     //lastClickedIndx = -1; //Очищаем индекс выбранной клетки поля
@@ -351,7 +351,7 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
     if (itemToAddAfterInCodeMap || itemToReplaceInCodeMap) {
         itemToAddAfterInCodeMap = undefined;
         itemToReplaceInCodeMap = undefined;
-        codeView.resetZoomer();
+        //codeView.resetZoomer();
         inputCommandStates = 1;
     }
     //Проверяем надо ли совсем закрывать интерфейс ввода
@@ -363,7 +363,7 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
         });
         //Инициализируем карту кода
         if(lastClickedElement)
-            codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true, 1);
+            codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
         return false;
     }
     if (!isVerticalScreen) {
