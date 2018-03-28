@@ -45,6 +45,7 @@ var okButtonImgSrc = "img/interface_button_ok.png";
 var nextStepButtonImgSrc = "img/interface_button_nextstep.png";
 var prevStepButtonImgSrc = "img/interface_button_prevstep.png";
 var buttonDeleteImgSrc = "img/interface_button_delete.png";
+var buttonDialogImgSrc = "img/interface_button_dialog_ok.png"
 var guiTextColor = "red";//ЦВЕТ ТЕКСТА ДЛЯ GUI
 //Пути для файлов для карты кода------------------------------------------------
 var itemDeleteSrc = "img/interface_codeview_delete.png";
@@ -171,7 +172,9 @@ var arrImagesForLoad = [
     "img/command_digit_6.png",
     "img/command_digit_7.png",
     "img/command_digit_8.png",
-    "img/command_digit_9.png"
+    "img/command_digit_9.png",
+    "img/interface_button_dialog_ok.png",
+    "img/interface_button_delete.png"
 ]
 arrImagesForLoad.forEach(function(e){
     new Image().src = e;

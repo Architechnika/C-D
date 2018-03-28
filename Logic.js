@@ -24,6 +24,7 @@ var timeTimerLaunched = false;
 var isSecondScreen = false;
 var isVerticalScreen = undefined;
 var widthBuff = width;
+var dialog = undefined;
 //Переменная для хранения состояний меню ввода команд:
 // 0 - обычный ввод
 // 1 - blockA или if или repeatif
@@ -53,6 +54,7 @@ game.newLoopFromConstructor('Labyrinth', function () {
         isMobile = touch.isMobileDevice();
         //Создаем все объекты для игры
         initializeGame(true);
+        dialog = new Dialog();
         //Запускаем таймер который сохраняет состояние игры
         saveTimer();
         //Инициализируем таймер времени
@@ -227,6 +229,9 @@ function setFocused(fieldElem, indx) {
     if (lastClickedElement) lastClickedElement.setStroke(false);
     //Запоминаем последний кликнутый пользователь элемент
     lastClickedElement = field[lastClickedIndx];
+    if(lastClickedElement.commands.length > 0)
+        allButtons.deleteButton.setVisible(true);
+    else allButtons.deleteButton.setVisible(false);
     inputCommandStates = 0;
     //Выделяем в рамку объект по которому нажали
     field[indx].setStroke(true);

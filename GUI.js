@@ -28,7 +28,7 @@ function drawGUI() {
     coinItem.draw();
     clockItem.draw();
     infoText.draw();
-
+    dialog.dialogDraw();
     if(toolTip.isVisible()) toolTip.draw();
     if (inputCounterText !== null) inputCounterText.draw();
     //Отрисовываем интерфейс выбора команд

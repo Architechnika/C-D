@@ -89,9 +89,8 @@ function Buttons() { //класс для работы совсеми кнопк�
     });
     this.deleteButton.setUserData({
         onClick: function (el) {
-                //описать обработчик удаление  скрипта в выделенной ячейке
-                lastClickedElement.commands.splice(0);
-                setFocused(field[lastClickedIndx],lastClickedIndx);
+                if(lastClickedElement.commands && lastClickedElement.commands.length >0)
+                    dialog.setShowDialog(true);
         }
     });
     this.stepUpButton.setUserData({
