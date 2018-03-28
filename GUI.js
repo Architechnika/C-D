@@ -189,6 +189,7 @@ function initRightScroll(initArray) {
     if (codeView && codeView.elems.length > 0) codeView.clear();
     //Показываем кнопку ok
     allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
+    allButtons.deleteButton.setVisible(false);
 }
 
 //Возвращает графическое представление ЛЕВОГО БОКОВОГО СКРОЛА которое соответствует текущему состоянию в интерфейсе
