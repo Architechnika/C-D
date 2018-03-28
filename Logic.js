@@ -231,11 +231,8 @@ function setFocused(fieldElem, indx) {
     if (lastClickedElement) lastClickedElement.setStroke(false);
     //Запоминаем последний кликнутый пользователь элемент
     lastClickedElement = field[lastClickedIndx];
-    if(lastClickedElement.commands.length > 0)
-        allButtons.deleteButton.setVisible(true);
-    else allButtons.deleteButton.setVisible(false);
-    dialog.setShowDialog(false);
     inputCommandStates = 0;
+    dialog.setShowDialog(false);
     //Выделяем в рамку объект по которому нажали
     field[indx].setStroke(true);
     //Если ориентация экрана горизонтальная, то
@@ -245,6 +242,7 @@ function setFocused(fieldElem, indx) {
         initRightScroll([]);
         codeView.resetZoomer();
         codeView.createCodeMap(0, textbackGroundItem.h, lastClickedElement.commands, true, true, 1, true);
+        
     } else { //Если ориентация экрана вертикальная
         clearAllLayers();
         allButtons.backToStartButton.setAlpha(inactiveItemsAlpha);
@@ -252,6 +250,7 @@ function setFocused(fieldElem, indx) {
         allButtons.stepUpButton.setAlpha(inactiveItemsAlpha);
         //Показываем кнопку ok
         allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
+        
         game.setLoop("SecondScreen")
     }
 }
