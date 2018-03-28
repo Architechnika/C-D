@@ -54,7 +54,6 @@ game.newLoopFromConstructor('Labyrinth', function () {
         isMobile = touch.isMobileDevice();
         //Создаем все объекты для игры
         initializeGame(true);
-        dialog = new Dialog();
         //Запускаем таймер который сохраняет состояние игры
         saveTimer();
         //Инициализируем таймер времени
@@ -147,6 +146,7 @@ function initializeGame(isInit) {
         initLabirint();
     }
     allButtons = new Buttons();
+     dialog = new Dialog();
     //Рассчитываем сколько команд можно поставить на этом поле для прохождения
     totalCommandsAllowed = (totalWidth + totalHeight) * 2;
     //Создаем игрока
@@ -232,6 +232,7 @@ function setFocused(fieldElem, indx) {
     if(lastClickedElement.commands.length > 0)
         allButtons.deleteButton.setVisible(true);
     else allButtons.deleteButton.setVisible(false);
+    dialog.setShowDialog(false);
     inputCommandStates = 0;
     //Выделяем в рамку объект по которому нажали
     field[indx].setStroke(true);
