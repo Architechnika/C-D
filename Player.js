@@ -219,9 +219,13 @@ function playerMove(canRead) {
     return "";
 }
 
-function drawCommState(){
-    if(!isVerticalScreen)
-        codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
+//Вызывает отрисовку текущей выполняемой команды на карте кода
+function drawCommState(isRegenCodeMap){
+    if(!isVerticalScreen) {
+        if(isRegenCodeMap)
+            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
+        codeView.setAlphaToElement(passiveItemsAlpha,playerCommands[0]);
+    }
 }
 
 //Удаляет верхнюю команду из стека команд робота и сохраняет состояние робота в буфер состояний
@@ -260,8 +264,7 @@ function setPreviousStateToPlayer() {
         });
         //Убираем обработанный элемент
         playerStatesBuff.shift();
-        if(!isVerticalScreen)
-            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
+        drawCommState(true);
     }
 }
 
@@ -286,8 +289,7 @@ function addCommandsToPlayer(comm, dontClear) {
             lastReadedCommands.unshift(el);
         });
     }
-    if(!isVerticalScreen)
-        codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
+    drawCommState(true);
 }
 
 function turnToTrueDirection(dir) {

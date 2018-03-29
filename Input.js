@@ -363,13 +363,13 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
         });
         //Инициализируем карту кода
         if(lastClickedElement)
-            codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
+            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         return false;
     }
     if (!isVerticalScreen) {
         initLeftScroll([]);
         //Инициализируем карту кода без возможности добавления элементов
-        codeView.createCodeMap(0, 0, lastClickedElement.commands, false, false, 1, undefined, true);
+        codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, false, false, 1, undefined, true);
         field[lastClickedIndx].setStroke(false); //Убираем выделение с поля
     } else {
         allButtons.backToStartButton.setAlpha(1);
@@ -392,6 +392,7 @@ function startBClick() {
             initLeftScroll([]);
         //Увеличиваем счетчик попыток для прохождения
         totalAttempts++;
+        codeView.createCodeMap(codeMapBG.x, codeMapBG.y, field[playerPozition].commands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
         setTimeout("processRobotMove()", robotMoveDelay);
     }
     return true;

@@ -1,5 +1,6 @@
 var iEL;
 var iEF;
+
 //Базовый класс в иерархии классов View
 function GraphicView(elements, backX, backY, backW, backH, fillCol) {
     //Массив графических обьектов
@@ -99,6 +100,9 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
                     el.setNewSize(el.x + shiftX, el.y + shiftY, el.w, el.h);
                 else
                     el.move(new point(shiftX, shiftY));
+                if(el.textObj){
+                    el.textObj = getTextObject(el,el.w);
+                }
             });
             if (!dontSave) {
                 this.currentShift.x = this.elems[0].x;
@@ -127,6 +131,9 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
                     //el.move(new point(shiftX, shiftY));
                     el.x += shiftX;
                     el.y += shiftY;
+                }
+                if(el.textObj){
+                    el.textObj = getTextObject(el,el.w);
                 }
             });
             if (!dontSave) {
@@ -180,13 +187,17 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
             xl = el.x + (counterX * delta);
             yl = el.y + (counterY * delta);
             //Изменяем размер элемента
-            if (el.setNewSize)
+            if (el.setNewSize) {
                 el.setNewSize(xl, yl, wl, hl);
+            }
             else {
                 el.x = xl;
                 el.y = yl;
                 el.w = wl;
                 el.h = hl;
+            }
+            if(el.textObj){
+                el.textObj = getTextObject(el,el.w);
             }
         });
         //log("delta : " + delta + "pozX: " + (cEl.getPositionC().x - oldX) + "pozY: " + (cEl.getPositionC().y - oldY));
@@ -202,7 +213,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         OOP.forArr(this.elems, function (el) {
             if (bg !== undefined) {
                 var itm = el.getImageObject ? el.getImageObject() : el;
-                var iP = itm.type == "TextObject" ? itm.getPosition() : itm.getPositionC();
+                var iP = itm.getPositionC();
                 var bgC = new point((bg.x + bg.w) / 2, (bg.y + bg.h) / 2);
                 //Рассчитываем удаленность итема от границ бэкргаунда(Если будет > 0 то итем вышел за границу)
                 var d = [(bgC.x - iP.x) - (bgC.x - bg.x),//Удаленность от левой границы 0
@@ -217,18 +228,27 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
                             max = d[i];
                     }
                     //log("MIN : " + max);
-                    itm.setAlpha(full ? 1 : itm.getAlpha() - max / 100);
+                    var alpha = full ? 1 : itm.getAlpha() - max / 100;
+                    itm.setAlpha(alpha);
+                    if(itm.textObj) itm.textObj.setAlpha(alpha);
                 }
                 else{//Если вышел за границы
                     for(var i = 0 ; i < d.length; i++){
                         if(d[i] > 0){
-                            itm.setAlpha(full ? 1 : itm.getAlpha() - d[i] / 100);
+                            var alpha = full ? 1 : itm.getAlpha() - d[i] / 100;
+                            itm.setAlpha(alpha);
+                            if(itm.textObj) itm.textObj.setAlpha(alpha);
                         }
                     }
                 }
-                if (itm.getAlpha() == 0)
-                    itm.setVisible(false)
-                else itm.setVisible(true)
+                if (itm.getAlpha() == 0) {
+                    itm.setVisible(false);
+                    if(itm.textObj) itm.textObj.setVisible(false);
+                }
+                else {
+                    itm.setVisible(true);
+                    if(itm.textObj) itm.textObj.setVisible(true);
+                }
             }
         });
     }
@@ -357,6 +377,9 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                     lX += elemWH;
                     //Позиционируем countBlock текущего элемента
                     addUsualCommand(lX, lY, elemWH, images, el.countBlock.imgSource, el.countBlock, isOnClick);
+                    images[images.length - 1].setUserData({
+                        textObj : getTextObject(images[images.length - 1],images[images.length - 1].w)
+                    });
                 }
                 lY += elemWH;
                 if (el.commandsBlock.actions.length > 0) {
@@ -410,12 +433,12 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
     }
 
     //Метод располагающий элементы this.elems в правильном порядке
-    this.createCodeMap = function (x, y, arr, isPlusAdd, isOnClick, alpha, activeELement, isBreakZoomer) {
+    this.createCodeMap = function (x, y, arr, isPlusAdd, isOnClick, alpha, activeELement) {
         //Если на экран выведен правый скролл то вообще нету смысла создавать кодмап
         for(var i = 0 ; i < Scrolls.length; i++){
             if(Scrolls[i].name == "RIGHT" && Scrolls[i].getArrayItems().length > 0){
                 return;
-            }
+            } 
         }
         
         this.clear();
@@ -425,97 +448,76 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         else buildCodeMap(x, y, arr, parent.elems, this.elemWH, isPlusAdd, isOnClick, false);
 
         if(isPlusAdd){
-                allButtons.deleteButton.setVisible(true);
+            allButtons.deleteButton.setVisible(true);
         }
         else allButtons.deleteButton.setVisible(false);
 
         //Если есть параметр alpha - то присваиваем его всем элементам
         if (alpha && alpha >= 0 && alpha <= 1 && parent.elems.length > 0) {
             //Если alpha - значит необходимо видеть весь код мап в поле видимости - поэтому перерасчитваем размеры элементов
-            var levels = 2;
-            var YBuff = parent.elems[0].y;
-            OOP.forArr(parent.elems, function (el) {
-                if (YBuff != el.y) {
-                    YBuff = el.y;
-                    levels++;
-                }
-                el.setAlpha(alpha);
-            });
-            var sz = (parent.backGround.y + parent.backGround.h) / levels;
-            if (sz > (height * 0.15)) sz = height * 0.15;
-            else if (sz > parent.backGround.w) sz = parent.backGround.w;
-            parent.resizeView(sz - this.elemWH, true);
-            //запоминаем новый размер для элемента
-            if (alpha == 1) this.elemWH = parent.elems[0].w;
-            //Устанавливает alpha у элемента elem из parent.elems равной 1(Чтобы выделить ее во время исполнения команд роботом)
-            if (activeELement) {
-                if (parent.elems && parent.elems.length > 0) {
-                    for (var i = 0; i < parent.elems.length; i++) {
-                        var el = parent.elems[i];
-                        //Если нашли нужную команду
-                        if (el.command && el.command == activeELement) {
-                            if(el.command.name == "repeat"){
-                                parent.elems[i + 1].setAlpha(1);
-                            }
-                            else if(el.command.name == "repeatif" || el.command.name == "if"){
-                                parent.elems[i + 1].setAlpha(1);
-                                parent.elems[i + 2].setAlpha(1);
-                            }
-                            el.setAlpha(1);
-                            break;
-                        }
-                    }
-                }
-            }
+            this.recizeAllElementsToScreen();
+            this.setAlphaToElement(alpha,activeELement);
         } else {
             this.elementsMove(parent.currentShift.x - parent.backGround.x, parent.currentShift.y - parent.backGround.y, true, undefined);
         }
         //Если карта не кликабельна, то сбрасываем ресайз(потому что она сразу в максимальном размере отрисуется)
-        if(isBreakZoomer){
+        if(!isOnClick){
             parent.zoomer = 0;
         }
-        addTextFieldsToMap(this.elemWH, parent.elems);
+        //addTextFieldsToMap(this.elemWH, parent.elems);
         //Добавляем кнопки меню элемента
         //parent.elems = parent.elems.concat(this.menu.itemsArray);
         if(alpha >= 1)
         parent.checkObjsInArea();
     }
 
-    this.resetZoomer = function(){
-        parent.zoomer = 0;
+    //Выставляет альфу всем элементам кодмапа равной disactiveAlpha и ставит альфу у activeElement = 1
+    this.setAlphaToElement = function(disactiveAlpha, activeELement){
+        //Меняем альфу всех элементов
+        //Устанавливает alpha у элемента elem из parent.elems равной 1(Чтобы выделить ее во время исполнения команд роботом)
+        if (parent.elems) {
+            for (var i = 0; i < parent.elems.length; i++) {
+                var el = parent.elems[i];
+                //Если нашли нужную команду
+                if (activeELement && el.command && el.command == activeELement) {
+                    el.setAlpha(1);
+                    if(el.command.name == "repeat"){
+                        i += 1;
+                        parent.elems[i].setAlpha(1);
+                        parent.elems[i].textObj = getTextObject(parent.elems[i],this.elemWH);
+                    }
+                    else if(el.command.name == "repeatif" || el.command.name == "if"){
+                        i += 1;
+                        parent.elems[i].setAlpha(1);
+                        i += 1;
+                        parent.elems[i].setAlpha(1);
+                    }
+                }
+                else el.setAlpha(disactiveAlpha);
+            }
+        }
     }
 
-    //Добавляем текстовые поля там где это нужно
-    var addTextFieldsToMap = function (elemWH, images) {
-        for(var i = 0 ; i < images.length; i++){
-            var el = images[i];
-            //ДОБАВИТЬ ТЕКСТОВОЕ ПОЛЕ
-            if (el.command && el.command.countBlock && el.command.countBlock.name == "counter") {
-                var count = el.command.countBlock.count;
-                var obj = game.newTextObject({
-                    x: el.x+elemWH,
-                    y: el.y,
-                    text: "count",
-                    size: elemWH / 1.6,
-                    color: "#1f75fe",
-                });
-                if (count.toString().length <= 1) {
-                    obj.text = count
-                    obj.x = (el.x+elemWH + elemWH / 2) - (elemWH / 3.2) / 2
-                    obj.y = (el.y + elemWH / 2) - (elemWH / 1.8) / 2
-                } else if (count.toString().length == 2) {
-                    obj.text = count
-                    obj.size = elemWH / 2.05
-                    obj.x = (el.x+elemWH + elemWH / 2) - (elemWH / 2) / 2
-                    obj.y = (el.y + elemWH / 2) - (elemWH / 2.2) / 2
-                } else {
-                    obj.text = "*"
-                    obj.x = (el.x+elemWH + elemWH / 2) - (elemWH / 3.2) / 2
-                    obj.y = (el.y + elemWH / 2) - (elemWH / 1.8) / 2
-                }
-                images.push(obj)
+    //ресайзит все элементы так, чтобы они влезли в экран все
+    this.recizeAllElementsToScreen = function(){
+        var levels = 2;
+        var YBuff = parent.elems[0].y;
+        OOP.forArr(parent.elems, function (el) {
+            if (YBuff != el.y) {
+                YBuff = el.y;
+                levels++;
             }
-        };
+        });
+        var sz = (parent.backGround.y + parent.backGround.h) / levels;
+        if (sz > (height * 0.15)) sz = height * 0.15;
+        else if (sz > parent.backGround.w) sz = parent.backGround.w;
+        parent.resizeView(sz - this.elemWH, true);
+        //запоминаем новый размер для элемента
+        this.elemWH = parent.elems[0].w;
+    }
+
+    this.resetZoomer = function(){
+        parent.zoomer = 0;
     }
 
     this.resizeView = function (delta, dontAddPlus,dontClick) {
@@ -559,8 +561,9 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         if (parent.elems && parent.elems.length > 0) {
             for(var i=0;i<parent.elems.length;i++)
                 {
-                    var el = parent.elems[i];
-                    el.draw();
+                    parent.elems[i].draw();
+                    if(parent.elems[i].textObj)
+                        parent.elems[i].textObj.draw();
                 }
             this.menu.draw(); //Отрисовываем дополнительные элементы если нужно
         }
@@ -630,6 +633,25 @@ function LabyrinthView(elements, backX, backY, backW, backH, fillCol) {
         //иницилизируем объекты и плеера в игровом поле
         parent.elementsMove(shiftX, shiftY);
         this.checkGameObjects();
+    }
+}
+
+//Вспомогательные функции
+//Создает обьект текстового поля и возвращает его
+var getTextObject = function (el, elemWH) {
+    //ДОБАВИТЬ ТЕКСТОВОЕ ПОЛЕ
+    if (el.command && el.command.name == "counter") {
+        var count = el.command.count;
+        var countStr =  count.toString();
+        var obj = game.newTextObject({
+            x: el.x,
+            y: el.y,
+            text: countStr.length > 2 ? "*" : countStr,
+            size: elemWH / 2,
+            padding : elemWH * 0.3,
+            color: textOnCodeMapColor,
+        });
+        return obj;
     }
 }
 

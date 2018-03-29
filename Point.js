@@ -1610,7 +1610,7 @@ function PointJS(Ta, Ua, xb, Rc) {
     this.OOP.newGroup = function() {
         return new Mc
     };
-    var Ra = 60,
+    var Ra = 20,
         N = Date.now(),
         ob = 0,
         pb = -1,

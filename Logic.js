@@ -64,6 +64,7 @@ game.newLoopFromConstructor('Labyrinth', function () {
         timeTimerLaunched = true;
         //mainbackGround = new mainBackGroundDrow();
         isEntried = true;
+        game.setFPS(5);
     };
     //Код для завершения игры
     this.exit = function () {
@@ -129,6 +130,13 @@ function recalcScreen(){
     } else codeView = new CodeMapView(codeMapBG.x, codeMapBG.y, codeMapBG.w, codeMapBG.h, "white");
     //Показываем кнопку старт или стоп
     allButtons.mainButton.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
+    //Если у робота есть команды в инвентаре или игра запущена
+    if(isStarted || playerCommands && playerCommands.length > 0){
+        //Если игра перешла в горизонтальное отображение, то надо перегенерит кодмап
+        if(!isVerticalScreen){
+            drawCommState(true);
+        }
+    }
 }
 
 //Инициализация лабиринта
