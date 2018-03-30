@@ -34,6 +34,7 @@ var dialog = undefined;
 // 5 - elseBlock
 var inputCommandStates = 0;
 var labView, codeView;
+var test = 0;
 //Игровой цикл
 game.newLoopFromConstructor('Labyrinth', function () {
     //Код для старта игры
@@ -253,6 +254,9 @@ function setFocused(fieldElem, indx) {
         initRightScroll([]);
         codeView.resetZoomer();
         codeView.createCodeMap(0, textbackGroundItem.h, lastClickedElement.commands, true, true, 1, true);
+        if(lastClickedElement.commands.length == 0){
+            onCodeMapElementClick(codeView.getAllElems()[0]);
+        }
         
     } else { //Если ориентация экрана вертикальная
         clearAllLayers();

@@ -554,7 +554,6 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
     }
 
     this.drawCodeMap = function () {
-
         if (codeMapBG && isVerticalScreen && isSecondScreen) codeMapBG.draw();
         else if (!isVerticalScreen && codeMapBG) codeMapBG.draw();
 
@@ -597,6 +596,10 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
     //Возвращает выбранный элемент
     this.getChoosenElement = function () {
         return this.menu.getElement();
+    }
+
+    this.getAllElems = function () {
+        return parent.elems;
     }
 
     this.getBackground = function () {

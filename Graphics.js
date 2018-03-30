@@ -81,6 +81,7 @@ function drawCommandsOnField() {
 
 //Рисует на экране меню команд
 function showCommandsMenu() {
+    if(!Scrolls || Scrolls.length == 0) return;
     //Отображаем скролл бары для выбора команд в клетке
     OOP.forArr(Scrolls, function (scroll) {
         scroll.DrawScrollBar();

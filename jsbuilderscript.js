@@ -3951,7 +3951,7 @@ var totalSeconds = 0; //Для хранения колличества секу�
 var playerInventory = new Array();//Инвентарь робота. На карте он может собирать и перетаскивать элементы
 var playerMoveCount = 0;//Счетчик ходов робота
 var selectLang = 'ru';
-var isDrawFPS = true;
+var isDrawFPS = false;
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------ГРАФИЧЕСКИЕ ПАРАМЕТРЫ-----------------------------------------------------------------
 //Параметры для внутриигрового текста
@@ -21657,6 +21657,7 @@ function drawCommandsOnField() {
 
 //Рисует на экране меню команд
 function showCommandsMenu() {
+    if(!Scrolls || Scrolls.length == 0) return;
     //Отображаем скролл бары для выбора команд в клетке
     OOP.forArr(Scrolls, function (scroll) {
         scroll.DrawScrollBar();
@@ -25054,7 +25055,6 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
     }
 
     this.drawCodeMap = function () {
-
         if (codeMapBG && isVerticalScreen && isSecondScreen) codeMapBG.draw();
         else if (!isVerticalScreen && codeMapBG) codeMapBG.draw();
 
@@ -25097,6 +25097,10 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
     //Возвращает выбранный элемент
     this.getChoosenElement = function () {
         return this.menu.getElement();
+    }
+
+    this.getAllElems = function () {
+        return parent.elems;
     }
 
     this.getBackground = function () {
@@ -25809,6 +25813,9 @@ game.newLoopFromConstructor('SecondScreen', function () {
         initRightScroll([]);
         codeView.resetZoomer();
         codeView.createCodeMap(0, textbackGroundItem.h, lastClickedElement.commands, true, true, 1, true);
+        if(lastClickedElement.commands.length == 0){
+            onCodeMapElementClick(codeView.getAllElems()[0]);
+        }
     }
     //Код для завершения цикла
     this.exit = function () {
@@ -25870,6 +25877,7 @@ var dialog = undefined;
 // 5 - elseBlock
 var inputCommandStates = 0;
 var labView, codeView;
+var test = 0;
 //Игровой цикл
 game.newLoopFromConstructor('Labyrinth', function () {
     //Код для старта игры
@@ -26089,6 +26097,9 @@ function setFocused(fieldElem, indx) {
         initRightScroll([]);
         codeView.resetZoomer();
         codeView.createCodeMap(0, textbackGroundItem.h, lastClickedElement.commands, true, true, 1, true);
+        if(lastClickedElement.commands.length == 0){
+            onCodeMapElementClick(codeView.getAllElems()[0]);
+        }
         
     } else { //Если ориентация экрана вертикальная
         clearAllLayers();

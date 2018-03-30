@@ -9,6 +9,9 @@ game.newLoopFromConstructor('SecondScreen', function () {
         initRightScroll([]);
         codeView.resetZoomer();
         codeView.createCodeMap(0, textbackGroundItem.h, lastClickedElement.commands, true, true, 1, true);
+        if(lastClickedElement.commands.length == 0){
+            onCodeMapElementClick(codeView.getAllElems()[0]);
+        }
     }
     //Код для завершения цикла
     this.exit = function () {
