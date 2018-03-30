@@ -26,6 +26,7 @@ var key = pjs.keyControl.initKeyControl();
 //var mouse = pjs.mouseControl.initMouseControl();
 var touch = pjs.touchControl.initTouchControl();
 // var act   = pjs.actionControl.initActionControl();
+system.initFPSCheck();
 
 Array.prototype.move = function (old_index, new_index) {
     if (new_index >= this.length) {

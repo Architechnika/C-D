@@ -691,7 +691,9 @@ function ScrollBar(posX, posY, orientation, arr, name) {
         this.GetBackGround().draw();
         if (arrayForBar != undefined) {
             OOP.forArr(arrayForBar, function (el) {
-                el.draw();
+                if(el.isInCameraStatic()) {
+                    el.draw();
+                }
             });
             indicator.DrawIndicator();
         }

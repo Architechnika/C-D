@@ -154,7 +154,22 @@ function playerMove(canRead) {
                 //addCommandsToPlayer(comms, true);
                 insertArrayAt(playerCommands, 0, comms);
                 drawCommState();
-                return "";//playerMove(false);
+                if(isVerticalScreen)
+                    return playerMove(false);
+                else {
+                    drawCommState();
+                    return "";
+                }
+            }
+            else {//Если блок условия не дал true
+                //Удаляем верхнюю команду их стека команд
+                removeUpperCommandFromPlayer();
+                if(isVerticalScreen)
+                    return playerMove(false);
+                else {
+                    drawCommState();
+                    return "";
+                }
             }
             break;
         case "repeatif":
@@ -165,8 +180,22 @@ function playerMove(canRead) {
                 isShift = false;
                 //addCommandsToPlayer(comms, true);
                 insertArrayAt(playerCommands, 0, comms);
-                drawCommState();
-                return "";//return playerMove(false);
+                if(isVerticalScreen)
+                    return playerMove(false);
+                else {
+                    drawCommState();
+                    return "";
+                }
+            }
+            else {//Если блок условия не дал true
+                //Удаляем верхнюю команду их стека команд
+                removeUpperCommandFromPlayer();
+                if(isVerticalScreen)
+                    return playerMove(false);
+                else {
+                    drawCommState();
+                    return "";
+                }
             }
             break;
         case "if":
@@ -178,8 +207,22 @@ function playerMove(canRead) {
                 //Удаляем верхнюю команду их стека команд
                 removeUpperCommandFromPlayer();
                 insertArrayAt(playerCommands, 0, comms);
-                drawCommState();
-                return "";//return playerMove(false);
+                if(isVerticalScreen)
+                    return playerMove(false);
+                else {
+                    drawCommState();
+                    return "";
+                }
+            }
+            else{//Если блок условия не дал true
+                //Удаляем верхнюю команду их стека команд
+                removeUpperCommandFromPlayer();
+                if(isVerticalScreen)
+                    return playerMove(false);
+                else {
+                    drawCommState();
+                    return "";
+                }
             }
             break;
     }

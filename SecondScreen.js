@@ -23,5 +23,13 @@ game.newLoopFromConstructor('SecondScreen', function () {
         showCommandsMenu();
         //Отрисовываем элементы интерфейса
         drawGUI();
+        if(isDrawFPS) {
+            brush.drawTextS({
+                x:width / 2,
+                text: system.getFPS(),
+                color: "lawngreen",
+                size: 30
+            });
+        }
     };
 });

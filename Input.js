@@ -392,7 +392,8 @@ function startBClick() {
             initLeftScroll([]);
         //Увеличиваем счетчик попыток для прохождения
         totalAttempts++;
-        codeView.createCodeMap(codeMapBG.x, codeMapBG.y, field[playerPozition].commands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
+        if(!isVerticalScreen)
+            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, field[playerPozition].commands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
         setTimeout("processRobotMove()", robotMoveDelay);
     }
     return true;

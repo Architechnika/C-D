@@ -14,16 +14,21 @@ function updateScreen() {
     game.clear();
     //Отрисовываем игровое поле
     for (var i = 0; i < field.length; i++) {
-        field[i].draw();
+        if(field[i].isInCameraStatic())
+            field[i].draw();
     }
     //Отрисовываем команды на поле
     drawCommandsOnField();
     //Отрисовываем обьекты на поле
     OOP.forArr(gameObjects, function (el) {
-        el.draw();
+        if(el.isInCameraStatic()) {
+            el.draw();
+        }
     });
     //Отрисовываем игрока
-    playerImageObj.draw();
+    if(playerImageObj.isInCameraStatic()) {
+        playerImageObj.draw();
+    }
     //Отрисовываем карту кода
     if(isVerticalScreen) {
         if (isSecondScreen) {
@@ -37,6 +42,14 @@ function updateScreen() {
     showCommandsMenu();
     //Отрисовываем гуи
     drawGUI();
+    if(isDrawFPS) {
+        brush.drawTextS({
+            y:20,
+            text: system.getFPS(),
+            color: "lawngreen",
+            size: 50
+        });
+    }
 }
 
 function clearAllLayers() {
@@ -47,18 +60,20 @@ function clearAllLayers() {
 //Отрисовывает команды на слое команд
 function drawCommandsOnField() {
     OOP.forArr(field, function (el) {
-        //Если это дорога
-        if (el.code == roadCode || el.code == entryCode) {
-            //Если команда назначена
-            if (el.getTotalCommands() > 0 && el.visible) {
-                var img = game.newImageObject({
-                    file: COMMANDS[0].imgSource,
-                    x: el.x,
-                    y: el.y,
-                    w: el.w,
-                    h: el.h
-                });
-                img.draw();
+        if(el.isInCameraStatic()) {
+            //Если это дорога
+            if (el.code == roadCode || el.code == entryCode) {
+                //Если команда назначена
+                if (el.getTotalCommands() > 0 && el.visible) {
+                    var img = game.newImageObject({
+                        file: COMMANDS[0].imgSource,
+                        x: el.x,
+                        y: el.y,
+                        w: el.w,
+                        h: el.h
+                    });
+                    img.draw();
+                }
             }
         }
     });

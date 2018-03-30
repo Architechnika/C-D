@@ -64,7 +64,6 @@ game.newLoopFromConstructor('Labyrinth', function () {
         timeTimerLaunched = true;
         //mainbackGround = new mainBackGroundDrow();
         isEntried = true;
-        game.setFPS(5);
     };
     //Код для завершения игры
     this.exit = function () {
