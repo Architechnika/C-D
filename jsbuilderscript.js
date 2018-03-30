@@ -3912,7 +3912,6 @@ function PointJS(Ta, Ua, xb, Rc) {
     "undefined" !== typeof POINTJS_ENGINE_CREATED_EVENT && POINTJS_ENGINE_CREATED_EVENT(this);
     k._GLOGAL_POINT_JS = this
 };
-
 var lang = {
     ru : {
        'robot_not_know'  : 'Робот не знает что ему делать',
@@ -3928,8 +3927,7 @@ var lang = {
     en : {
     
     },
-}
-//-----------------------------------------------------------------------ЛОГИЧЕСКИЕ ПАРАМЕТРЫ--------------------------------------------------------------------
+}//-----------------------------------------------------------------------ЛОГИЧЕСКИЕ ПАРАМЕТРЫ--------------------------------------------------------------------
 //Переменные для системы ВВОДА----------------------------------------------------------------------------------
 var touchTapTimeOut = 100;//Параметр указывающий сколько миллисекунд надо держать пользователю на элементе в скроле чтобы его переместить(НУЖНО ЧТОБЫ ОТДЕЛЯТЬ ПРОКРУТКУ СКРОЛА ОТ ПЕРЕМЕЩЕНИЙ ЭЛЕМЕНТОВ В СКРОЛЕ)
 var distanceOfScroll = 5; //Параметр указывающий на каком расстоянии от точки тапа при движении по экрану начинать отрабатывать события скрола
@@ -4113,8 +4111,7 @@ var arrImagesForLoad = [
 ]
 arrImagesForLoad.forEach(function(e){
     new Image().src = e;
-})
-/*
+})/*
 Содержит переменные для работы с движком
 */
 
@@ -4154,7 +4151,6 @@ Array.prototype.move = function (old_index, new_index) {
     this.splice(new_index, 0, this.splice(old_index, 1)[0]);
     return this; // for testing purposes
 };
-
 
 var isOkClose = true;
 
@@ -4304,7 +4300,6 @@ function Buttons() { //класс для работы совсеми кнопк�
         return false;
     }
 }
-
 function ToolTip()
 {
     var bgH = height/100*4;
@@ -4337,8 +4332,7 @@ function ToolTip()
         toolTipBG.draw();
         toolTipText.draw();
     }
-}
-function MessageBox()
+}function MessageBox()
 {
         var base;
         base = pjs.system.newDOM('div',true);
@@ -4382,8 +4376,7 @@ function MessageBox()
         var div = base.getElementsByTagName('input')[0];
         return div.checked;
     }
-}
-/**
+}/**
  * @license
  * Lodash <https://lodash.com/>
  * Copyright JS Foundation and other contributors <https://js.foundation/>
@@ -21480,7 +21473,6 @@ function MessageBox()
     root._ = _;
   }
 }.call(this));
-
 function UserAccaunt(login, pass, summ) {
     this.userLogin = login;
     this.userPass = pass;
@@ -21573,7 +21565,6 @@ function UserAccaunt(login, pass, summ) {
 
     }
 }
-
 /*
 Содержит методы и данные для отрисовки графики(Графическая часть игры)
 */
@@ -21663,7 +21654,6 @@ function showCommandsMenu() {
         scroll.DrawScrollBar();
     });
 }
-
 /*
 Скрипт для функций ввода. Обрабатывает touch и мышку. Клики тапы скролы и тд.
 */
@@ -22170,7 +22160,6 @@ function clickIsInObj(x, y, obj) {
     }
     return false;
 }
-
 /*
 Содержит методы и данные для алгоритмической части игры.
 Описание алгоритмических блоков, используемых для построения алгоритма прохождения лабиринта
@@ -22900,7 +22889,6 @@ function getCommandsImgArr(allCommands) {
 function getCopyOfObj(obj) {
     return _.cloneDeep(obj);
 }
-
 var isOne = true;
 var isSwaped = false;
 item1Pos = new point(-1, -1);
@@ -23605,7 +23593,6 @@ function ScrollBar(posX, posY, orientation, arr, name) {
         }
     }
 }
-
 function Label(x,y,text)
 {
     var X = x;
@@ -23663,7 +23650,6 @@ function Label(x,y,text)
         textObj.h = hl;
     }
 }
-
 function Dialog()
 {
     var bgW = width/100 * 20;
@@ -23733,8 +23719,7 @@ function Dialog()
         this.dialogCancelButton.setVisible(isShow);
         this.dialogOkButton.setVisible(isShow);
     }
-}
-//СКРИПТ СОДЕРЖИТ ОПИСАНИЕ ВСЕХ ЭЛЕМЕНТОВ GUI ИГРЫ, а также методы для работы с ними
+}//СКРИПТ СОДЕРЖИТ ОПИСАНИЕ ВСЕХ ЭЛЕМЕНТОВ GUI ИГРЫ, а также методы для работы с ними
 
 var timerText = null; //текст таймера
 var progressText = null; // количество ходов
@@ -24017,7 +24002,6 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
         text.setVisible(false)
     }
 }
-
 function GameObject(NAME, TYPE, LOCATION, IMAGE) { // основной класс, который наследуеться от ImageObject
     //внем описаны все общие методы для игровых объектов
 
@@ -24088,7 +24072,6 @@ function CoinBattery(NAME, TYPE, LOCATION, IMAGE, isROTATE) {
     }
     this.startRotation();
 }
-
 /*Содержит методы и данные для работы с картой лабиринта и его генерации.
  */
 
@@ -24498,7 +24481,6 @@ function getCloneObject(obj) {
     }
     return clone;
 }
-
 var iEL;
 var iEF;
 
@@ -25372,7 +25354,6 @@ function ItemMenu() {
         this.setMenuVisible(false);
     }
 }
-
 //СКРИПТ ОПИСЫВАЕТ МЕТОДЫ И ДАННЫЕ ИГРОКА, КОТОРЫЙ ПРОХОДИТ ЛАБИРИНТ
 //Позиция игрока на поле
 var playerPozition = 0,
@@ -25801,7 +25782,6 @@ function wait(miliSec){
 
     };
 }
-
 var back = undefined;
 game.newLoopFromConstructor('SecondScreen', function () {
     //Код для старта игры
@@ -25840,7 +25820,6 @@ game.newLoopFromConstructor('SecondScreen', function () {
         }
     };
 });
-
 /*
 Главный скрипт игры. Содержит логику игрового процесса.
 Методы и данные для работы игровой логики
@@ -26300,4 +26279,3 @@ function showMessage(text) {
 
 game.startLoop('Labyrinth');
 //game.startLoop('menu');
-

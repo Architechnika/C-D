@@ -417,8 +417,9 @@ function processRobotMove() {
             if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {
                 log("Лабиринт достиг максимально допустимого размера");
             } else {
-                totalWidth += 2;
-                totalHeight += 2;
+                labyrinthSize += 2;
+                totalWidth = labyrinthSize;
+                totalHeight = labyrinthSize;
             }
         }
         isStarted = false;
