@@ -106,6 +106,147 @@ var commandDigitsImgSrc = ["img/command_digit_0.png",//Массив изобра
 "img/command_digit_8.png",
 "img/command_digit_9.png"];
 var commandBackspaceImgSrc = "img/command_backspace.png";
+//Картинки для графики
+var graphicsImgs = [
+    //картинки внутренных стен
+    {
+        code : 2,
+        value : "img/test/field_wall_roundDown"
+    },
+    {
+        code : 3,
+        value : "img/test/field_wall_roundUp"
+    },
+    {   
+        code : 4,
+        value : "img/test/field_wall_roundRight"
+    },
+    {   
+        code : 5,
+        value : "img/test/field_wall_roundLeft"
+    },
+    {   code : 6,
+        value : "img/test/field_wall_corner_rightUp"
+    },
+    {   code : 7,
+        value : "img/test/field_wall_corner_leftUp"
+    },
+    {   code : 8,
+        value : "img/test/field_wall_corner_leftDown"
+    },
+    {   code : 9,
+        value : "img/test/field_wall_corner_rightDown"
+    },
+    {   code : 37,
+        value : "img/test/field_wall_T_down"
+    },
+    {   code : 38,
+        value : "img/test/field_wall_T_up"
+    },
+    {   code : 39,
+        value : "img/test/field_wall_T_left"
+    },
+    {   code : 40,
+        value : "img/test/field_wall_T_right"
+    },
+    {   code : 41,
+        value : "img/test/field_wall_straight_vertical"
+    },
+    {   code : 42,
+        value : "img/test/field_wall_straight_horizontal"
+    },
+    {   code : 43,
+        value : "img/test/field_wall_straight_intersection"
+    },
+    //
+    //картинки дорог
+    {   code : 10,
+        value : "img/test/field_road_straight_vertical"
+    },
+    {   code : 14,
+        value : "img/test/field_road_straight_horizontal"
+    },
+    {   code : 12,
+        value : "img/test/field_road_intersection"
+    },
+    {   code : 13,
+        value : "img/test/field_road_corner_rightUp"
+    },
+    {   code : 15,
+        value : "img/test/field_road_corner_leftDown"
+    },
+    {   code : 16,
+        value : "img/test/field_road_corner_leftUp"
+    },
+    {   code : 17,
+        value : "img/test/field_road_corner_rightDown"
+    },
+    {   code : 18,
+        value : "img/test/field_road_T_up"
+    },
+    {   code : 19,
+        value : "img/test/field_road_T_down"
+    },
+    {   code : 20,
+        value : "img/test/field_road_T_left"
+    },
+    {   code : 11,
+        value : "img/test/field_road_T_right"
+    },
+    {   code : 33,
+        value : "img/test/field_road_end_right"
+    },
+    {   code : 34,
+        value : "img/test/field_road_end_left"
+    },
+    {   code : 35,
+        value : "img/test/field_road_end_up"
+    },
+    {   code : 36,
+        value : "img/test/field_road_end_down"
+    },
+    //
+    //картинки внешних стен
+    {   code : 21,
+        value : "img/test/field_extWall_corner_leftUp"
+    },
+    {   code : 22,
+        value : "img/test/field_extWall_corner_rightDown"
+    },
+    {   code : 23,
+        value : "img/test/field_extWall_corner_rightUp"
+    },
+    {   code : 24,
+        value : "img/test/field_extWall_corner_leftDown"
+    },
+    {   code : 25,
+        value : "img/test/field_extWall_corner_up"
+    },
+    {   code : 26,
+        value : "img/test/field_extWall_corner_down"
+    },
+    {   code : 27,
+        value : "img/test/field_extWall_corner_right"
+    },
+    {   code : 28,
+        value : "img/test/field_extWall_corner_left"
+    },
+    {   code : 29,
+        value : "img/test/field_extWall_T_right"
+    },
+    {   code : 30,
+        value : "img/test/field_extWall_T_left"
+    },
+    {   code : 31,
+        value : "img/test/field_extWall_T_up"
+    },
+    {   code : 32,
+        value : "img/test/field_extWall_T_down"
+    },
+    //
+    
+];
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Предзагрузка ВСЕХ КАРТИНОК-------------------------------------------------------------------------------------------------------------------------------------
 var arrImagesForLoad = [
