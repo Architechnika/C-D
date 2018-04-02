@@ -229,15 +229,24 @@ function calcMapPosition() {
     }
 }
 
-function generateMap(w, h, x, y, elemsInLine, elemsInColumn) {
-
+function generateMap(w, h, x, y, elemsInLine, elemsInColumn, isNewGraphic) {
+    isNewGraphic = isNewGraphicLab;
     oneTileWidth = w / elemsInLine; //Расчет ширины одного элемента
     oneTileHeight = h / elemsInColumn; //Расчет высоты одного элемента
     //Получаем массив сгенерированного поля
     binMap = genBin(elemsInColumn, elemsInLine, [], [], [0, 0]);
+    var newGraphicMap = undefined;
+    if(isNewGraphic){
+        log(binMap);
+        newGraphicMap = graphicsMapSort(binMap);
+        log(binMap);
+    }
+
     var itersX = 0,
         itersY = 0;
     var gObjs = new Array();
+    var codes = new Array();
+    var indx = 0;
     //Обходим каждый элемент сгенерированного поля и создаем объекты характеризующие элементы поля
     pjs.levels.forStringArray({
             w: oneTileWidth,
@@ -245,13 +254,20 @@ function generateMap(w, h, x, y, elemsInLine, elemsInColumn) {
             source: binMap
         },
         function (S, X, Y, W, H) {
-
+            codes.push(S);
+        }
+    );
+    //Обходим каждый элемент сгенерированного поля и создаем объекты характеризующие элементы поля
+    pjs.levels.forStringArray({
+            w: oneTileWidth,
+            h: oneTileHeight,
+            source: isNewGraphic ? newGraphicMap : binMap
+        },
+        function (S, X, Y, W, H) {
             var img = bordersPath;
             var comm = new Array();
 
-            if (S == roadCode || S == entryCode || S == exitCode) {
-                img = groundPath;
-                //Если это клетка входа в лабиринт, инициализируем сразу команду для игрока в ней
+            if(isNewGraphic) {
                 if (S == entryCode) {
                     if (entrySide == "DOWN") comm.push(COMMANDS[1]);
                     else if (entrySide == "UP") comm.push(COMMANDS[2]);
@@ -259,14 +275,39 @@ function generateMap(w, h, x, y, elemsInLine, elemsInColumn) {
                     else if (entrySide == "RIGHT") comm.push(COMMANDS[3]);
                     comm[0].undeletable = true; //Делаем эту команду неудаляемой
                     img = entryPath;
-                } else if (S == exitCode) {
-                    img = exitPath;
-                    //comm.push(COMMANDS.STOP);
                 }
-            } else if (S > 0) {
-                img = wallPaths[S - 1];
+                else if (S == exitCode) {
+                    img = exitPath;
+                }
+                else {
+                    for (var i = 0; i < graphicsImgs.length; i++) {
+                        if (S == graphicsImgs[i].code.toString()) {
+                            img = graphicsImgs[i].value;
+                        }
+                    }
+                }
             }
-            var fEl = new fieldElement(img, comm, S, X + x, Y + y, oneTileWidth, oneTileHeight);
+            else {
+                if (S == roadCode || S == entryCode || S == exitCode) {
+                    img = groundPath;
+                    //Если это клетка входа в лабиринт, инициализируем сразу команду для игрока в ней
+                    if (S == entryCode) {
+                        if (entrySide == "DOWN") comm.push(COMMANDS[1]);
+                        else if (entrySide == "UP") comm.push(COMMANDS[2]);
+                        else if (entrySide == "LEFT") comm.push(COMMANDS[4]);
+                        else if (entrySide == "RIGHT") comm.push(COMMANDS[3]);
+                        comm[0].undeletable = true; //Делаем эту команду неудаляемой
+                        img = entryPath;
+                    } else if (S == exitCode) {
+                        img = exitPath;
+                        //comm.push(COMMANDS.STOP);
+                    }
+                } else if (S > 0) {
+                    img = wallPaths[S - 1];
+                }
+            }
+            var fEl = new fieldElement(img, comm, codes[indx], X + x, Y + y, oneTileWidth, oneTileHeight);
+            indx++;
             //Заполняем массив элементов лабиринта
             field.push(fEl);
         });
@@ -386,8 +427,6 @@ function genBin(hate, width, maze, walls, currentPosition) {
         //Ставим вход или выход на нижней стенке
         mazeTmp[mazeTmp.length - 1][indx] = isEntry ? exitCode : entryCode;
     }
-    log(mazeTmp);
-    log(graphicsMapSort(mazeTmp));
     return mazeTmp;
 }
 
@@ -430,7 +469,7 @@ function graphicsMapSort(arr) {
             isTopRoad = false;
             isBottomRoad = false;
 
-            if (newArr[i][j] == "8" || newArr[i][j] == "9")
+            if (newArr[i][j] == entryCode || newArr[i][j] == exitCode)
                 continue;
             //внешние стены
             if (j == 0) { //картинка для левого верхнего угла внешних стен
@@ -493,19 +532,19 @@ function graphicsMapSort(arr) {
             if (arr[i][j] == "7") {
                 //определяем наличие стен посторонам дороги
                 // если справо стена любого типа
-                if (arr[i][j + 1] != "7" && arr[i][j + 1] != "8" && arr[i][j + 1] != "9") {
+                if (arr[i][j + 1] != "7" && arr[i][j + 1] != entryCode && arr[i][j + 1] != exitCode) {
                     isRightWall = true;
                 }
                 //если слева стена
-                if (arr[i][j - 1] != "7" && arr[i][j - 1] != "8" && arr[i][j - 1] != "9") {
+                if (arr[i][j - 1] != "7" && arr[i][j - 1] != entryCode && arr[i][j - 1] != exitCode) {
                     isLeftWall = true;
                 }
                 //если снизу стена
-                if (arr[i + 1][j] != "7" && arr[i + 1][j] != "8" && arr[i + 1][j] != "9") {
+                if (arr[i + 1][j] != "7" && arr[i + 1][j] != entryCode && arr[i + 1][j] != exitCode) {
                     isBottomWall = true;
                 }
                 //если сверху стена
-                if (arr[i - 1][j] != "7" && arr[i - 1][j] != "8" && arr[i - 1][j] != "9") {
+                if (arr[i - 1][j] != "7" && arr[i - 1][j] != entryCode && arr[i - 1][j] != exitCode) {
                     isTopWall = true;
                 }
                 //
@@ -584,19 +623,19 @@ function graphicsMapSort(arr) {
             }
             if (arr[i][j] == "1") {
                 // если справо дорога любого типа
-                if (arr[i][j + 1] == "7" || arr[i][j + 1] == "8" || arr[i][j + 1] == "9") {
+                if (arr[i][j + 1] == "7" || arr[i][j + 1] == entryCode || arr[i][j + 1] == exitCode) {
                     isRightRoad = true;
                 }
                 //если слева дорога
-                if (arr[i][j - 1] == "7" || arr[i][j - 1] == "8" || arr[i][j - 1] == "9") {
+                if (arr[i][j - 1] == "7" || arr[i][j - 1] == entryCode || arr[i][j - 1] == exitCode) {
                     isLeftRoad = true;
                 }
                 //если снизу дорога
-                if (arr[i + 1][j] == "7" || arr[i + 1][j] == "8" || arr[i + 1][j] == "9") {
+                if (arr[i + 1][j] == "7" || arr[i + 1][j] == entryCode || arr[i + 1][j] == exitCode) {
                     isBottomRoad = true;
                 }
                 //если сверху дорога
-                if (arr[i - 1][j] == "7" || arr[i - 1][j] == "8" || arr[i - 1][j] == "9") {
+                if (arr[i - 1][j] == "7" || arr[i - 1][j] == entryCode || arr[i - 1][j] == exitCode) {
                     isTopRoad = true;
                 }
                 //
@@ -634,12 +673,12 @@ function graphicsMapSort(arr) {
                 }
                 if (isLeftRoad && !isRightRoad && isBottomRoad && !isTopRoad) {
                     //картинка 18
-                    newArr[i][j] = "8";
+                    newArr[i][j] = "888";
                     continue;
                 }
                 if (!isLeftRoad && isRightRoad && isBottomRoad && !isTopRoad) {
                     //картинка 19
-                    newArr[i][j] = "9";
+                    newArr[i][j] = "999";
                     continue;
                 }
                 if (!isLeftRoad && !isRightRoad && isBottomRoad && !isTopRoad) {
@@ -666,7 +705,7 @@ function graphicsMapSort(arr) {
                     newArr[i][j] = "42";
                     continue;
                 }
-                if (isLeftRoad && isRightRoad && isBottomRoad && isTopRoad) {
+                if (!isLeftRoad && !isRightRoad && !isBottomRoad && !isTopRoad) {
                     newArr[i][j] = "43";
                     continue;
                 }

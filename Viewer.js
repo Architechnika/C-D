@@ -637,13 +637,13 @@ function LabyrinthView(elements, backX, backY, backW, backH, fillCol) {
                 coin.setNewPosition(coin.position);
             } else coin.setVisible(false);
         });
-        if (parent.elems[playerPozition].visible) {
+        if (playerImageObj && parent.elems[playerPozition].visible) {
             playerImageObj.x = parent.elems[playerPozition].x;
             playerImageObj.y = parent.elems[playerPozition].y;
             playerImageObj.w = parent.elems[playerPozition].w;
             playerImageObj.h = parent.elems[playerPozition].h;
             playerImageObj.setVisible(true);
-        } else playerImageObj.setVisible(false);
+        } else if(playerImageObj) playerImageObj.setVisible(false);
     }
 
     this.resizeView = function (delta) {
