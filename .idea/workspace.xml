@@ -6,53 +6,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="227fa202-b3f4-462c-bf8a-4085ce7024c8" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/GameParams.js" afterPath="$PROJECT_DIR$/GameParams.js" />
       <change beforePath="$PROJECT_DIR$/Map.js" afterPath="$PROJECT_DIR$/Map.js" />
-      <change beforePath="$PROJECT_DIR$/Viewer.js" afterPath="$PROJECT_DIR$/Viewer.js" />
       <change beforePath="$PROJECT_DIR$/img/test/field_extWall_T_down.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_T_down.png" />
       <change beforePath="$PROJECT_DIR$/img/test/field_extWall_T_left.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_T_left.png" />
       <change beforePath="$PROJECT_DIR$/img/test/field_extWall_T_right.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_T_right.png" />
       <change beforePath="$PROJECT_DIR$/img/test/field_extWall_T_up.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_T_up.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_corner_leftDown.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_corner_leftDown.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_corner_leftUp.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_corner_leftUp.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_corner_rightDown.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_corner_rightDown.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_corner_rightUp.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_corner_rightUp.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_down.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_down.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_left.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_left.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_right.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_right.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_up.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_up.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_T_down.png" afterPath="$PROJECT_DIR$/img/test/field_road_T_down.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_T_left.png" afterPath="$PROJECT_DIR$/img/test/field_road_T_left.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_T_right.png" afterPath="$PROJECT_DIR$/img/test/field_road_T_right.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_T_up.png" afterPath="$PROJECT_DIR$/img/test/field_road_T_up.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_corner_leftDown.png" afterPath="$PROJECT_DIR$/img/test/field_road_corner_leftDown.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_corner_leftUp.png" afterPath="$PROJECT_DIR$/img/test/field_road_corner_leftUp.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_corner_rightDown.png" afterPath="$PROJECT_DIR$/img/test/field_road_corner_rightDown.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_corner_rightUp.png" afterPath="$PROJECT_DIR$/img/test/field_road_corner_rightUp.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_end_down.png" afterPath="$PROJECT_DIR$/img/test/field_road_end_down.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_end_left.png" afterPath="$PROJECT_DIR$/img/test/field_road_end_left.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_end_right.png" afterPath="$PROJECT_DIR$/img/test/field_road_end_right.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_end_up.png" afterPath="$PROJECT_DIR$/img/test/field_road_end_up.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_intersection.png" afterPath="$PROJECT_DIR$/img/test/field_road_intersection.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_straight_horizontal.png" afterPath="$PROJECT_DIR$/img/test/field_road_straight_horizontal.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_road_straight_vertical.png" afterPath="$PROJECT_DIR$/img/test/field_road_straight_vertical.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_T_down.png" afterPath="$PROJECT_DIR$/img/test/field_wall_T_down.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_T_left.png" afterPath="$PROJECT_DIR$/img/test/field_wall_T_left.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_T_right.png" afterPath="$PROJECT_DIR$/img/test/field_wall_T_right.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_T_up.png" afterPath="$PROJECT_DIR$/img/test/field_wall_T_up.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_corner_leftDown.png" afterPath="$PROJECT_DIR$/img/test/field_wall_corner_leftDown.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_corner_leftUp.png" afterPath="$PROJECT_DIR$/img/test/field_wall_corner_leftUp.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_corner_rightDown.png" afterPath="$PROJECT_DIR$/img/test/field_wall_corner_rightDown.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_corner_rightUp.png" afterPath="$PROJECT_DIR$/img/test/field_wall_corner_rightUp.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_roundDown.png" afterPath="$PROJECT_DIR$/img/test/field_wall_roundDown.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_roundLeft.png" afterPath="$PROJECT_DIR$/img/test/field_wall_roundLeft.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_roundRight.png" afterPath="$PROJECT_DIR$/img/test/field_wall_roundRight.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_roundUp.png" afterPath="$PROJECT_DIR$/img/test/field_wall_roundUp.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_straight_horizontal.png" afterPath="$PROJECT_DIR$/img/test/field_wall_straight_horizontal.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_straight_intersection.png" afterPath="$PROJECT_DIR$/img/test/field_wall_straight_intersection.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_wall_straight_vertical.png" afterPath="$PROJECT_DIR$/img/test/field_wall_straight_vertical.png" />
-      <change beforePath="$PROJECT_DIR$/jsbuilderscript.js" afterPath="$PROJECT_DIR$/jsbuilderscript.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -66,24 +25,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Map.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Map.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Map.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="247" column="28" lean-forward="false" selection-start-line="247" selection-start-column="28" selection-end-line="247" selection-end-column="28" />
+            <state relative-caret-position="544">
+              <caret line="129" column="38" lean-forward="true" selection-start-line="129" selection-start-column="38" selection-end-line="129" selection-end-column="38" />
               <folding>
                 <element signature="n#!!block;n#genBin#0" expanded="false" />
-                <element signature="n#!!block;n#graphicsMapSort#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GameParams.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GameParams.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GameParams.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="23" column="27" lean-forward="true" selection-start-line="23" selection-start-column="22" selection-end-line="23" selection-end-column="27" />
+            <state relative-caret-position="272">
+              <caret line="137" column="16" lean-forward="true" selection-start-line="137" selection-start-column="16" selection-end-line="137" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -164,7 +122,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
@@ -247,15 +205,15 @@
       <workItem from="1522411736929" duration="8000" />
       <workItem from="1522411812455" duration="1234000" />
       <workItem from="1522414309848" duration="2541000" />
-      <workItem from="1522659939025" duration="13394000" />
+      <workItem from="1522659939025" duration="14495000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="62096000" />
+    <option name="totallyTimeSpent" value="63197000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14166667" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -285,7 +243,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="4" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -667,22 +625,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Map.js">
+    <entry file="file://$PROJECT_DIR$/GameParams.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="247" column="28" lean-forward="false" selection-start-line="247" selection-start-column="28" selection-end-line="247" selection-end-column="28" />
-          <folding>
-            <element signature="n#!!block;n#genBin#0" expanded="false" />
-            <element signature="n#!!block;n#graphicsMapSort#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="272">
+          <caret line="137" column="16" lean-forward="true" selection-start-line="137" selection-start-column="16" selection-end-line="137" selection-end-column="16" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GameParams.js">
+    <entry file="file://$PROJECT_DIR$/Map.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="23" column="27" lean-forward="true" selection-start-line="23" selection-start-column="22" selection-end-line="23" selection-end-column="27" />
-          <folding />
+        <state relative-caret-position="544">
+          <caret line="129" column="38" lean-forward="true" selection-start-line="129" selection-start-column="38" selection-end-line="129" selection-end-column="38" />
+          <folding>
+            <element signature="n#!!block;n#genBin#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

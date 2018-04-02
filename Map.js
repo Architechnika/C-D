@@ -239,7 +239,7 @@ function generateMap(w, h, x, y, elemsInLine, elemsInColumn, isNewGraphic) {
     if(isNewGraphic){
         log(binMap);
         newGraphicMap = graphicsMapSort(binMap);
-        log(binMap);
+        log(newGraphicMap);
     }
 
     var itersX = 0,
@@ -667,8 +667,7 @@ function graphicsMapSort(arr) {
                 }
                 if (isLeftRoad && !isRightRoad && !isBottomRoad && isTopRoad) {
                     //картинка 17
-                    newArr[i]
-                        [j] = "7";
+                    newArr[i][j] = "777";
                     continue;
                 }
                 if (isLeftRoad && !isRightRoad && isBottomRoad && !isTopRoad) {
