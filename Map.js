@@ -404,6 +404,9 @@ function graphicsMapSort(arr) {
     //19- дорога Т-образная вниз, 20- дорога Т-образная влево, 21 -внешняя стена левый верхний угол, 22- внешняя стена правый нижний угол, 23- внешняя стена правый верхний угол
     // 24- внешняя стена левый нижний угол, 25- внешняя стена верхняя часть, 26-внешняя стена нижняя часть, 27- внешняя стена правая часть, 28- внешняя стена левая часть
     // 29- внешняя стена Т-образный право, 30- внешная стена Т-образный лево, 31- внешнаняя стена Т-образный вверх, 32-внешняя стена Т-образный вниз
+    // 33- дорога конечная точка право, 34-дорога конечная точка влево, 35-дорога конечная точка верх, 36-дорога конечная точка вниз, 37- внутренная стена Т-образная вниз
+    // 38- внутренная стена Т-образная верх, 39-внутренная стена Т-образная-лево, 40-внутренная стена Т-образная-право, 41-внутренная стена прямая вертикальная, 
+    // 42-внутренная стена прямая горизонтальная, 43-внутренная стена перекресток
     var rouColCount = labyrinthSize;
     var isLeftWall = false;
     var isRightWall = false;
@@ -507,7 +510,7 @@ function graphicsMapSort(arr) {
                 }
                 //
 
-                if (isLeftWall && isRightWall && !isTopRoad && !isRightRoad) {
+                if (isLeftWall && isRightWall && !isTopWall && !isRightWall) {
                     //картинка 1) из бумажки
                     newArr[i][j] = "10";
                     continue;
@@ -517,7 +520,7 @@ function graphicsMapSort(arr) {
                     newArr[i][j] = "18";
                     continue;
                 }
-                if (isTopWall && isBottomWall && !isLeftRoad && !isRightRoad) {
+                if (isTopWall && isBottomWall && !isLeftWall && !isRightWall) {
                     //картинка 5)
                     newArr[i][j] = "14";
                     continue;
@@ -560,6 +563,22 @@ function graphicsMapSort(arr) {
                 if (!isTopWall && !isLeftWall && isBottomWall && isRightWall) {
                     //картинка 8)
                     newArr[i][j] = "17";
+                    continue;
+                }
+                if (isTopWall && !isLeftWall && isBottomWall && isRightWall) {
+                    newArr[i][j] = "33";
+                    continue;
+                }
+                if (isTopWall && isLeftWall && isBottomWall && !isRightWall) {
+                    newArr[i][j] = "34";
+                    continue;
+                }
+                if (isTopWall && isLeftWall && !isBottomWall && isRightWall) {
+                    newArr[i][j] = "35";
+                    continue;
+                }
+                if (!isTopWall && isLeftWall && isBottomWall && isRightWall) {
+                    newArr[i][j] = "36";
                     continue;
                 }
             }
@@ -621,6 +640,34 @@ function graphicsMapSort(arr) {
                 if (!isLeftRoad && isRightRoad && isBottomRoad && !isTopRoad) {
                     //картинка 19
                     newArr[i][j] = "9";
+                    continue;
+                }
+                if (!isLeftRoad && !isRightRoad && isBottomRoad && !isTopRoad) {
+                    newArr[i][j] = "37";
+                    continue;
+                }
+                if (!isLeftRoad && !isRightRoad && !isBottomRoad && isTopRoad) {
+                    newArr[i][j] = "38";
+                    continue;
+                }
+                if (!isLeftRoad && isRightRoad && !isBottomRoad && !isTopRoad) {
+                    newArr[i][j] = "39";
+                    continue;
+                }
+                if (isLeftRoad && !isRightRoad && !isBottomRoad && !isTopRoad) {
+                    newArr[i][j] = "40";
+                    continue;
+                }
+                if (isLeftRoad && isRightRoad && !isBottomRoad && !isTopRoad) {
+                    newArr[i][j] = "41";
+                    continue;
+                }
+                if (!isLeftRoad && !isRightRoad && isBottomRoad && isTopRoad) {
+                    newArr[i][j] = "42";
+                    continue;
+                }
+                if (isLeftRoad && isRightRoad && isBottomRoad && isTopRoad) {
+                    newArr[i][j] = "43";
                     continue;
                 }
             }
