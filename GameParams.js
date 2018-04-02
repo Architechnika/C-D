@@ -9,18 +9,12 @@ var toolTipDelay = 1000;//Задержка в миллисекундах пос�
 var labyrinthSize = 3;//Стартовый размер лабиринта(Например если 5, тогда при старте игры сгенерится лабиринт размером 5x5). ДЛЯ АЛГОРИТМА ГЕНЕРАЦИИ ЭТО ДОЛЖНО БЫТЬ НЕЧЕТНОЕ ЧИСЛО
 var labyrinthMaxSize = 0;//Ограничение на максимальный размер лабиринта. Если = 0, то максимума нет.
 var isLabyrinthGrow = true;//Переключение возможности увеличения лабиринта при прохождении(Увеличивается лабиринт или нет при выходе из него)
-var robotMoveDelay = 250; //Задержка при движении робота в милисекундах(ЧЕМ МЕНЬШЕ ТЕМ БЫСТРЕЕ)
-var saveTimeout = 1000; //Таймаут для метода который следит за изменениями размера экрана и сохраняет прогресс игрока
+var robotMoveDelay = 350; //Задержка при движении робота в милисекундах(ЧЕМ МЕНЬШЕ ТЕМ БЫСТРЕЕ)
+var saveTimeout = 1000; //Таймаут для метода который следит за изменениями размера экрана
 var difficultyLevel = "EASY";//Уровень сложности(если EASY - робот сам поворачивается куда нужно при движении)
 var totalTokensOnMap = 5; //Сколько всего монеток генерится в лабиринте
 var inactiveItemsAlpha = 0.5;//Альфа канал неактивных элементов интерфейса(кнопок и тд)
-var passiveItemsAlpha = 0.5;//Альфа канал неактивных КОМАНД в кодмапе
 var infinityCycleSteps = 5;//Количество итераций которые робот может стоять просто так(Если он простоит 5 итераций ничего не сделав, то это будет считаться бесконечным циклом БЕЗДЕЙСТВИЯ)
-//РЕЖИМ ОТОБРАЖЕНИЯ ДОСТУПНЫХ КОМАНД:
-// "simple" - только простые команды перемещений и подбора батареек
-// "medium" - команды для перемещений не только туда куда едет робот, но и в направлении взгляда, команды подобрать и бросить обьект
-// "all" - все доступные команды включая сложные блоки команд
-var commandsViewMode = "all";
 //ГЛОБАЛЬНЫЕ ПЕРМЕННЫЕ КОТОРЫЕ СОДЕРЖАТ ОБЩЕИГРОВЫЕ ДАННЫЕ(МЕНЯЮТСЯ НА ПРОТЯЖЕНИИ ИГРЫ)-------------------------
 var totalSeconds = 0; //Для хранения колличества секунд которые прошли с начала прохождения уровня
 var playerInventory = new Array();//Инвентарь робота. На карте он может собирать и перетаскивать элементы
@@ -117,137 +111,137 @@ var graphicsImgs = [
     //картинки внутренных стен
     {
         code : 2,
-        value : "img/test/field_wall_roundDown"
+        value : "img/test/field_wall_roundDown.png"
     },
     {
         code : 3,
-        value : "img/test/field_wall_roundUp"
+        value : "img/test/field_wall_roundUp.png"
     },
     {   
         code : 4,
-        value : "img/test/field_wall_roundRight"
+        value : "img/test/field_wall_roundRight.png"
     },
     {   
         code : 5,
-        value : "img/test/field_wall_roundLeft"
+        value : "img/test/field_wall_roundLeft.png"
     },
     {   code : 6,
-        value : "img/test/field_wall_corner_rightUp"
+        value : "img/test/field_wall_corner_rightUp.png"
     },
     {   code : 7,
-        value : "img/test/field_wall_corner_leftUp"
+        value : "img/test/field_wall_corner_leftUp.png"
     },
     {   code : 8,
-        value : "img/test/field_wall_corner_leftDown"
+        value : "img/test/field_wall_corner_leftDown.png"
     },
     {   code : 9,
-        value : "img/test/field_wall_corner_rightDown"
+        value : "img/test/field_wall_corner_rightDown.png"
     },
     {   code : 37,
-        value : "img/test/field_wall_T_down"
+        value : "img/test/field_wall_T_down.png"
     },
     {   code : 38,
-        value : "img/test/field_wall_T_up"
+        value : "img/test/field_wall_T_up.png"
     },
     {   code : 39,
-        value : "img/test/field_wall_T_left"
+        value : "img/test/field_wall_T_left.png"
     },
     {   code : 40,
-        value : "img/test/field_wall_T_right"
+        value : "img/test/field_wall_T_right.png"
     },
     {   code : 41,
-        value : "img/test/field_wall_straight_vertical"
+        value : "img/test/field_wall_straight_vertical.png"
     },
     {   code : 42,
-        value : "img/test/field_wall_straight_horizontal"
+        value : "img/test/field_wall_straight_horizontal.png"
     },
     {   code : 43,
-        value : "img/test/field_wall_straight_intersection"
+        value : "img/test/field_wall_straight_intersection.png"
     },
     //
     //картинки дорог
     {   code : 10,
-        value : "img/test/field_road_straight_vertical"
+        value : "img/test/field_road_straight_vertical.png"
     },
     {   code : 14,
-        value : "img/test/field_road_straight_horizontal"
+        value : "img/test/field_road_straight_horizontal.png"
     },
     {   code : 12,
-        value : "img/test/field_road_intersection"
+        value : "img/test/field_road_intersection.png"
     },
     {   code : 13,
-        value : "img/test/field_road_corner_rightUp"
+        value : "img/test/field_road_corner_rightUp.png"
     },
     {   code : 15,
-        value : "img/test/field_road_corner_leftDown"
+        value : "img/test/field_road_corner_leftDown.png"
     },
     {   code : 16,
-        value : "img/test/field_road_corner_leftUp"
+        value : "img/test/field_road_corner_leftUp.png"
     },
     {   code : 17,
-        value : "img/test/field_road_corner_rightDown"
+        value : "img/test/field_road_corner_rightDown.png"
     },
     {   code : 18,
-        value : "img/test/field_road_T_up"
+        value : "img/test/field_road_T_up.png"
     },
     {   code : 19,
-        value : "img/test/field_road_T_down"
+        value : "img/test/field_road_T_down.png"
     },
     {   code : 20,
-        value : "img/test/field_road_T_left"
+        value : "img/test/field_road_T_left.png"
     },
     {   code : 11,
-        value : "img/test/field_road_T_right"
+        value : "img/test/field_road_T_right.png"
     },
     {   code : 33,
-        value : "img/test/field_road_end_right"
+        value : "img/test/field_road_end_right.png"
     },
     {   code : 34,
-        value : "img/test/field_road_end_left"
+        value : "img/test/field_road_end_left.png"
     },
     {   code : 35,
-        value : "img/test/field_road_end_up"
+        value : "img/test/field_road_end_up.png"
     },
     {   code : 36,
-        value : "img/test/field_road_end_down"
+        value : "img/test/field_road_end_down.png"
     },
     //
     //картинки внешних стен
     {   code : 21,
-        value : "img/test/field_extWall_corner_leftUp"
+        value : "img/test/field_extWall_corner_leftUp.png"
     },
     {   code : 22,
-        value : "img/test/field_extWall_corner_rightDown"
+        value : "img/test/field_extWall_corner_rightDown.png"
     },
     {   code : 23,
-        value : "img/test/field_extWall_corner_rightUp"
+        value : "img/test/field_extWall_corner_rightUp.png"
     },
     {   code : 24,
-        value : "img/test/field_extWall_corner_leftDown"
+        value : "img/test/field_extWall_corner_leftDown.png"
     },
     {   code : 25,
-        value : "img/test/field_extWall_corner_up"
+        value : "img/test/field_extWall_up.png"
     },
     {   code : 26,
-        value : "img/test/field_extWall_corner_down"
+        value : "img/test/field_extWall_down.png"
     },
     {   code : 27,
-        value : "img/test/field_extWall_corner_right"
+        value : "img/test/field_extWall_right.png"
     },
     {   code : 28,
-        value : "img/test/field_extWall_corner_left"
+        value : "img/test/field_extWall_left.png"
     },
     {   code : 29,
-        value : "img/test/field_extWall_T_right"
+        value : "img/test/field_extWall_T_right.png"
     },
     {   code : 30,
-        value : "img/test/field_extWall_T_left"
+        value : "img/test/field_extWall_T_left.png"
     },
     {   code : 31,
-        value : "img/test/field_extWall_T_up"
+        value : "img/test/field_extWall_T_up.png"
     },
     {   code : 32,
-        value : "img/test/field_extWall_T_down"
+        value : "img/test/field_extWall_T_down.png"
     },
     //
     
