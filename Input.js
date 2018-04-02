@@ -391,8 +391,10 @@ function startBClick() {
             initLeftScroll([]);
         //Увеличиваем счетчик попыток для прохождения
         totalAttempts++;
-        if (!isVerticalScreen)
-            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, field[playerPozition].commands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
+        if (!isVerticalScreen) {
+            var comms = playerCommands && playerCommands.length > 0 ? playerCommands : field[playerPozition].commands;
+            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, comms, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
+        }
         setTimeout("processRobotMove()", robotMoveDelay);
     }
     return true;
@@ -422,7 +424,7 @@ function toolTipShowEvent(x, y) {
     for (var i = 0; i < field.length; i++) {
         if (clickIsInObj(x, y, field[i])) {
             if (i == playerPozition) {
-                toolTip.setToolTip(x, y, "Это робот");
+                toolTip.setToolTip(x, y, lang[selectLang]['tooltip_robot']);
             }
         } else if (clickIsInObj(x, y, gameObjects[i])) {
             toolTip.setToolTip(x, y, "Собирай батарейки");
@@ -431,7 +433,7 @@ function toolTipShowEvent(x, y) {
     var codeViewImages = codeView.getAllElems();
     for (var i = 0; i < codeViewImages.length; i++) {
         if (clickIsInObj(x, y, codeViewImages[i])) {
-            toolTip.setToolTip(x, y, "Это команды");
+            toolTip.setToolTip(x, y, codeViewImages[i].command.name);
         }
     }
 }

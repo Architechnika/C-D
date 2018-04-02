@@ -11,7 +11,6 @@ var playerFrontSide = 0; //0 верх, 1 право, 2 низ, 3 лево
 //Время старта движения робота, с отсчетом от глобального таймера в милисекундах
 var startPlayerMoveTime = 0;
 var startPoz = 0;
-var passiveItemsAlpha = 0.35;
 var freezCounter = 0;//Счетчик того сколько ходов уже робот стоит на месте
 //Инициализация игрока
 function playerSetStart() {
@@ -395,6 +394,7 @@ function movePlayerToFieldElement(fEl) {
         playerImageObj.w = fEl.w;
         playerImageObj.h = fEl.h;
     }
+    if(labView) labView.setFocusOnElement(field[playerPozition],false);
 }
 
 //Задает направление для персонажа, исходя из того, где находится вход в лабиринт

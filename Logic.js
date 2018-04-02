@@ -137,6 +137,7 @@ function recalcScreen(){
             drawCommState(true);
         }
     }
+    movePlayerToFieldElement(field[playerPozition]);
 }
 
 //Инициализация лабиринта
@@ -161,12 +162,12 @@ function initializeGame(isInit) {
     dialog = new Dialog();
     //Рассчитываем сколько команд можно поставить на этом поле для прохождения
     totalCommandsAllowed = (totalWidth + totalHeight) * 2;
+    //Инициализируем обьекты для вывода графики лабиринта
+    labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
     //Создаем игрока
     playerSetStart();
     totalAttempts = 0;
     //mainbackGround = new mainBackGroundDrow();
-    //Инициализируем обьекты для вывода графики лабиринта
-    labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
     //Инициализируем обьект для вывода карты кода
     if (!codeMapBG) {
         codeView = new CodeMapView(0, 0, 0, 0, "white");

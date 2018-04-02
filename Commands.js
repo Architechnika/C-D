@@ -3,7 +3,6 @@
 Описание алгоритмических блоков, используемых для построения алгоритма прохождения лабиринта
 */
 
-
 //ОПИСАНИЕ ВСЕХ ВОЗМОЖНЫХ КОМАНД
 var COMMANDS = new Array();
 //ПРОСТЫЕ КОМАНДЫ ДЛЯ ДЕЙСТВИЙ
@@ -292,13 +291,24 @@ function checkConditionIF(blockA, blockB, commandsBlock, elseBlock) {
     return elseBlock ? elseBlock.actions : [];
 }
 
-
 //Возвращает массив классов oneCommandMenuElement, содержащий картинку команды и её код
 //isOnComms - флаг для того, чтобы получить команды с передвижением по направлению взгляда
 function getAllCommandsMenu(isOnComms) {
+    var src = "";
+    if(commandsViewMode == "simple"){
+        src = ['12348'];
+    }
+    else if(commandsViewMode == "medium"){
+        src = ['123489{}[]'];
+    }
+    else if(commandsViewMode == "all") {
+        src = isOnComms ? ['{}[]123498REI'] : ['123498REI'];
+    }
+    return getCommandsMenu(src);
+}
 
+var getCommandsMenu = function(src){
     var menuItems = [];
-    var src = isOnComms ? ['{}[]123498REI'] : ['123498REI'];
     //Генерим структуру меню(по 4 элемента в ряд)
     levels.forStringArray({
             source: src
