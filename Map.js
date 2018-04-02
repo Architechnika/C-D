@@ -44,7 +44,7 @@ function fieldElement(imgSource, comm, elemcode, fx, fy, fw, fh) {
     //Добавляем обработчик на клик если этот элемент дорога либо вход
     if (this.code == roadCode || this.code == entryCode) {
         this.setUserData({
-            onClick: function (index) {//index - индекс элемента в массиве где он хранится
+            onClick: function (index) { //index - индекс элемента в массиве где он хранится
                 return labyrinthRoadClick(index)
             }
         });
@@ -211,22 +211,21 @@ function calcField(w, h, x, y, elemsInLine, elemsInColumn) {
 }
 
 //Смещает всю карту в нужный размер
-function calcMapPosition(){
+function calcMapPosition() {
     oneTileWidth = gameSpaceW / totalWidth; //Расчет ширины одного элемента
     oneTileHeight = gameSpaceH / totalHeight; //Расчет высоты одного элемента
-    var poz = new point(gameSpaceX,gameSpaceY);
+    var poz = new point(gameSpaceX, gameSpaceY);
     var counter = 0;
     //Обходим все элементы поля
-    for(var i = field.length - 1; i > -1; i--){
-        field[i].setNewSize(poz.x,poz.y,oneTileWidth,oneTileHeight);
+    for (var i = field.length - 1; i > -1; i--) {
+        field[i].setNewSize(poz.x, poz.y, oneTileWidth, oneTileHeight);
         counter++;
         //Если надо сместить координаты на строку вниз
-        if(counter == totalWidth){
+        if (counter == totalWidth) {
             poz.x = gameSpaceX;
             poz.y += oneTileHeight;
             counter = 0;
-        }
-        else poz.x += oneTileWidth;//Если это следующий элемент в строке поля
+        } else poz.x += oneTileWidth; //Если это следующий элемент в строке поля
     }
 }
 
@@ -404,6 +403,7 @@ function graphicsMapSort(arr) {
     //14- дорога прямая-горизонтальная, 15- дорога угловая левый-нижний, 16- дорога угловая левый верхний угол, 17- дорога угловая правый нижний угол, 18- дорога Т-образная вверх,
     //19- дорога Т-образная вниз, 20- дорога Т-образная влево, 21 -внешняя стена левый верхний угол, 22- внешняя стена правый нижний угол, 23- внешняя стена правый верхний угол
     // 24- внешняя стена левый нижний угол, 25- внешняя стена верхняя часть, 26-внешняя стена нижняя часть, 27- внешняя стена правая часть, 28- внешняя стена левая часть
+    // 29- внешняя стена Т-образный право, 30- внешная стена Т-образный лево, 31- внешнаняя стена Т-образный вверх, 32-внешняя стена Т-образный вниз
     var rouColCount = labyrinthSize;
     var isLeftWall = false;
     var isRightWall = false;
@@ -441,6 +441,10 @@ function graphicsMapSort(arr) {
                     newArr[i][j] = "24";
                     continue;
                 }
+                if (arr[i][j + 1] == "1") {
+                    newArr[i][j] = "29";
+                    continue;
+                }
                 //картинка 27
                 newArr[i][j] = "28";
                 continue;
@@ -456,16 +460,28 @@ function graphicsMapSort(arr) {
                     newArr[i][j] = "22";
                     continue;
                 }
+                if (arr[i][j - 1] == "1") {
+                    newArr[i][j] = "30";
+                    continue;
+                }
                 //картинка 26
                 newArr[i][j] = "27";
                 continue;
             }
             if (i == rouColCount - 1) {
+                if (arr[i - 1][j] == "1") {
+                    newArr[i][j] = "31";
+                    continue;
+                }
                 newArr[i][j] = "26";
                 continue;
             }
+            //
             if (i == 0 && j != 0 && j != rouColCount - 1) {
-
+                if (arr[i + 1][j] == "1") {
+                    newArr[i][j] = "32";
+                    continue;
+                }
                 //картинка 24
                 newArr[i][j] = "25";
                 continue;
@@ -474,25 +490,25 @@ function graphicsMapSort(arr) {
             if (arr[i][j] == "7") {
                 //определяем наличие стен посторонам дороги
                 // если справо стена любого типа
-                if (arr[i][j + 1] != "7"  && arr[i][j + 1] != "8"  && arr[i][j + 1] != "9") {
+                if (arr[i][j + 1] != "7" && arr[i][j + 1] != "8" && arr[i][j + 1] != "9") {
                     isRightWall = true;
                 }
                 //если слева стена
-                if (arr[i][j - 1] != "7"  && arr[i][j - 1] != "8"  && arr[i][j - 1] != "9") {
+                if (arr[i][j - 1] != "7" && arr[i][j - 1] != "8" && arr[i][j - 1] != "9") {
                     isLeftWall = true;
                 }
                 //если снизу стена
-                if (arr[i + 1][j] != "7"  && arr[i + 1][j] != "8"  && arr[i + 1][j] != "9") {
+                if (arr[i + 1][j] != "7" && arr[i + 1][j] != "8" && arr[i + 1][j] != "9") {
                     isBottomWall = true;
                 }
                 //если сверху стена
-                if (arr[i - 1][j] != "7" && arr[i - 1][j] != "8" &&  arr[i - 1][j] != "9") {
+                if (arr[i - 1][j] != "7" && arr[i - 1][j] != "8" && arr[i - 1][j] != "9") {
                     isTopWall = true;
                 }
                 //
 
                 if (isLeftWall && isRightWall && !isTopRoad && !isRightRoad) {
-//картинка 1) из бумажки
+                    //картинка 1) из бумажки
                     newArr[i][j] = "10";
                     continue;
                 }
