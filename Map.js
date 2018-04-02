@@ -427,6 +427,8 @@ function graphicsMapSort(arr) {
             isTopRoad = false;
             isBottomRoad = false;
 
+            if (newArr[i][j] == "8" || newArr[i][j] == "9")
+                continue;
             //внешние стены
             if (j == 0) { //картинка для левого верхнего угла внешних стен
                 if (i == 0) {
@@ -458,8 +460,7 @@ function graphicsMapSort(arr) {
                 newArr[i][j] = "27";
                 continue;
             }
-            if(i == rouColCount - 1)
-            {
+            if (i == rouColCount - 1) {
                 newArr[i][j] = "26";
                 continue;
             }
@@ -473,54 +474,54 @@ function graphicsMapSort(arr) {
             if (arr[i][j] == "7") {
                 //определяем наличие стен посторонам дороги
                 // если справо стена любого типа
-                if (arr[i][j + 1] != "7" || arr[i][j + 1] != "8" || arr[i][j + 1] != "9") {
+                if (arr[i][j + 1] != "7"  && arr[i][j + 1] != "8"  && arr[i][j + 1] != "9") {
                     isRightWall = true;
                 }
                 //если слева стена
-                if (arr[i][j + 1] != "7" || arr[i][j + 1] != "8" || arr[i][j + 1] != "9") {
+                if (arr[i][j - 1] != "7"  && arr[i][j - 1] != "8"  && arr[i][j - 1] != "9") {
                     isLeftWall = true;
                 }
                 //если снизу стена
-                if (arr[i + 1][j] != "7" || arr[i + 1][j] != "8" || arr[i + 1][j] != "9") {
+                if (arr[i + 1][j] != "7"  && arr[i + 1][j] != "8"  && arr[i + 1][j] != "9") {
                     isBottomWall = true;
                 }
                 //если сверху стена
-                if (arr[i - 1][j] != "7" || arr[i - 1][j] != "8" || arr[i - 1][j] != "9") {
+                if (arr[i - 1][j] != "7" && arr[i - 1][j] != "8" &&  arr[i - 1][j] != "9") {
                     isTopWall = true;
                 }
                 //
 
-                if (isLeftWall && isRightWall) {
-                    //картинка 1) из бумажки
+                if (isLeftWall && isRightWall && !isTopRoad && !isRightRoad) {
+//картинка 1) из бумажки
                     newArr[i][j] = "10";
                     continue;
                 }
-                if (isTopWall && isLeftWall && isRightWall && !isBottomWall) {
+                if (!isTopWall && !isLeftWall && !isRightWall && isBottomWall) {
                     //картинка 9)
                     newArr[i][j] = "18";
                     continue;
                 }
-                if (isTopWall && isBottomWall) {
+                if (isTopWall && isBottomWall && !isLeftRoad && !isRightRoad) {
                     //картинка 5)
                     newArr[i][j] = "14";
                     continue;
                 }
-                if (isTopWall && isLeftWall && isBottomWall && !isRightWall) {
+                if (!isTopWall && !isLeftWall && !isBottomWall && isRightWall) {
                     //картинка 11)
                     newArr[i][j] = "20";
                     continue;
                 }
-                if (isTopWall && !isLeftWall && isBottomWall && isRightWall) {
+                if (!isTopWall && isLeftWall && !isBottomWall && !isRightWall) {
                     //картинка 2)
                     newArr[i][j] = "11";
                     continue;
                 }
-                if (isTopWall && isLeftWall && isBottomWall && isRightWall) {
+                if (!isTopWall && !isLeftWall && !isBottomWall && !isRightWall) {
                     //картинка 3)
                     newArr[i][j] = "12";
                     continue;
                 }
-                if (!isTopWall && isLeftWall && isBottomWall && isRightWall) {
+                if (isTopWall && !isLeftWall && !isBottomWall && !isRightWall) {
                     //картинка 10)
                     newArr[i][j] = "19";
                     continue;
@@ -545,12 +546,14 @@ function graphicsMapSort(arr) {
                     newArr[i][j] = "17";
                     continue;
                 }
+            }
+            if (arr[i][j] == "1") {
                 // если справо дорога любого типа
                 if (arr[i][j + 1] == "7" || arr[i][j + 1] == "8" || arr[i][j + 1] == "9") {
                     isRightRoad = true;
                 }
                 //если слева дорога
-                if (arr[i][j + 1] == "7" || arr[i][j + 1] == "8" || arr[i][j + 1] == "9") {
+                if (arr[i][j - 1] == "7" || arr[i][j - 1] == "8" || arr[i][j - 1] == "9") {
                     isLeftRoad = true;
                 }
                 //если снизу дорога
@@ -604,8 +607,8 @@ function graphicsMapSort(arr) {
                     newArr[i][j] = "9";
                     continue;
                 }
-
             }
+
         }
     }
     return newArr;

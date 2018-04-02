@@ -72,14 +72,14 @@ function onMouseDOWN(e) {
 }
 
 function onWheel(e) {
-    onRecize(e,e.deltaY,scrollStep);
+    onRecize(e, e.deltaY, scrollStep);
     e.cancelBubble = true;
 }
 
 function onMouseMove(e) {
     onMove(e);
 
-    if(toolTip.isVisible())
+    if (toolTip.isVisible())
         toolTip.hideToolTip();
     toolTipTimeCounter = 0;
 
@@ -139,7 +139,7 @@ function onTouchMove(e) {
         //Если это первая итерация то просто запоминаем эту дельту, если нет - делаем ресайз
         if (multiTouchDelta == -1) multiTouchDelta = delta;
         else {
-            onRecize(e,delta - multiTouchDelta, touchScrollVal);
+            onRecize(e, delta - multiTouchDelta, touchScrollVal);
         }
         scrolled = true;
         multiTouchDelta = delta;
@@ -149,7 +149,7 @@ function onTouchMove(e) {
     clickCoord.y = e.y;
 }
 
-function onRecize(e,delta,step){
+function onRecize(e, delta, step) {
     //Инитим нажатый элемент если находим его
     OOP.forArr(Scrolls, function (scroll) {
         if ((scroll.name == "LEFT" || scroll.name == "RIGHT") && clickIsInObj(e.x, e.y, scroll.GetBackGround())) {
@@ -166,8 +166,7 @@ function onRecize(e,delta,step){
     if (!isSecondScreen && clickIsInObj(e.x, e.y, labView.getBackGround())) {
         labView.resizeView(delta < 0 ? -1 * step : step);
         return;
-    }
-    else if (clickIsInObj(e.x, e.y, codeView.getBackGround())) {
+    } else if (clickIsInObj(e.x, e.y, codeView.getBackGround())) {
         //Ресайз поля работает только когда игрок не двигается
         if (!isStarted) {
             //Инициализируем карту кода
@@ -239,8 +238,8 @@ function onUp(e) {
                         processFieldClick(e);
                     else codeView.isClicked(e);
                 }
-                else if(!codeView.isClicked(e))
-                    processFieldClick(e);
+            else if (!codeView.isClicked(e))
+                processFieldClick(e);
         }
     }
 }
@@ -315,9 +314,9 @@ function onTouchCheckMove() {
         }
     };
     var check = true;
-    if(isVerticalScreen)
-      if(!isSecondScreen)
-          check = false;
+    if (isVerticalScreen)
+        if (!isSecondScreen)
+            check = false;
     //Обходим codeMap
     if (clickIsInObj(clickCoord.x, clickCoord.y, codeView.backGround) && check) {
         codeMapIsMoved = true;
@@ -338,7 +337,7 @@ function onTouchCheckMove() {
 function onOkBClick() { //Вернет TRUE если надо закрыть кнопку OK
     if (infoText.isVisible()) infoText.close();
     initRightScroll([]);
-    if(!isVerticalScreen){
+    if (!isVerticalScreen) {
         inputCommandStates = 0;
         codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
         return true;
@@ -362,7 +361,7 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
                 Scrolls.splice(i, 1);
         });
         //Инициализируем карту кода
-        if(lastClickedElement)
+        if (lastClickedElement)
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         return false;
     }
@@ -388,11 +387,11 @@ function startBClick() {
     if (isStarted) {
         //Запоминаем время начала движения робота
         startPlayerMoveTime = totalSeconds;
-        if(!isVerticalScreen)
+        if (!isVerticalScreen)
             initLeftScroll([]);
         //Увеличиваем счетчик попыток для прохождения
         totalAttempts++;
-        if(!isVerticalScreen)
+        if (!isVerticalScreen)
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, field[playerPozition].commands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
         setTimeout("processRobotMove()", robotMoveDelay);
     }
@@ -418,9 +417,23 @@ function labyrinthRoadClick(index) {
     return true;
 }
 
-//Обработчик события показать тултип
-function toolTipShowEvent(x,y) {
-    //X,Y - координаты позиции курсора мыши на экране
+//Обработчик события показать тултип 
+function toolTipShowEvent(x, y) {
+    for (var i = 0; i < field.length; i++) {
+        if (clickIsInObj(x, y, field[i])) {
+            if (i == playerPozition) {
+                toolTip.setToolTip(x, y, "Это робот");
+            }
+        } else if (clickIsInObj(x, y, gameObjects[i])) {
+            toolTip.setToolTip(x, y, "Собирай батарейки");
+        }
+    }
+    var codeViewImages = codeView.getAllElems();
+    for (var i = 0; i < codeViewImages.length; i++) {
+        if (clickIsInObj(x, y, codeViewImages[i])) {
+            toolTip.setToolTip(x, y, "Это команды");
+        }
+    }
 }
 
 function onCodeMapElementClick(element) {
@@ -463,8 +476,8 @@ function onKeyboardClick(el) {
     choosenCommandInElement.countBlock.count = parsedInt;
     //Задаем текст в текст бокс
     infoText.setText(text);
-   // messengBox.setShow(true);
-   // messengBox.setText(text);
+    // messengBox.setShow(true);
+    // messengBox.setText(text);
 }
 //------------------------------------------------------------------
 
