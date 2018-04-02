@@ -137,7 +137,7 @@ function recalcScreen(){
             drawCommState(true);
         }
     }
-    movePlayerToFieldElement(field[playerPozition]);
+    labView.setFocusOnElement(field[playerPozition],true);
 }
 
 //Инициализация лабиринта

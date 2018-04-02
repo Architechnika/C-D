@@ -59,7 +59,9 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
     //Ресайзит все так, чтобы elem был в центре background-а
     this.setFocusOnElement = function(elem, isCodeView) {
         //Ресайзим как надо
-        this.resizeView((this.backGround.h / 6) - this.elems[0].h,true,undefined,true);
+        if(isCodeView) {
+            this.resizeView((this.backGround.h / 6) - this.elems[0].h, true, undefined, true);
+        }
         //Ищем элемент который должен быть в центре и сдвигаем его в центр
         for(var i = 0 ; i < this.elems.length; i++){
             if(this.elems[i] == elem){

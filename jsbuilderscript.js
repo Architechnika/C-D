@@ -3939,18 +3939,24 @@ var toolTipDelay = 1000;//Задержка в миллисекундах пос�
 var labyrinthSize = 3;//Стартовый размер лабиринта(Например если 5, тогда при старте игры сгенерится лабиринт размером 5x5). ДЛЯ АЛГОРИТМА ГЕНЕРАЦИИ ЭТО ДОЛЖНО БЫТЬ НЕЧЕТНОЕ ЧИСЛО
 var labyrinthMaxSize = 0;//Ограничение на максимальный размер лабиринта. Если = 0, то максимума нет.
 var isLabyrinthGrow = true;//Переключение возможности увеличения лабиринта при прохождении(Увеличивается лабиринт или нет при выходе из него)
-var robotMoveDelay = 350; //Задержка при движении робота в милисекундах(ЧЕМ МЕНЬШЕ ТЕМ БЫСТРЕЕ)
-var saveTimeout = 1000; //Таймаут для метода который следит за изменениями размера экрана
+var robotMoveDelay = 500; //Задержка при движении робота в милисекундах(ЧЕМ МЕНЬШЕ ТЕМ БЫСТРЕЕ)
+var saveTimeout = 1000; //Таймаут для метода который следит за изменениями размера экрана и сохраняет прогресс игрока
 var difficultyLevel = "EASY";//Уровень сложности(если EASY - робот сам поворачивается куда нужно при движении)
 var totalTokensOnMap = 5; //Сколько всего монеток генерится в лабиринте
 var inactiveItemsAlpha = 0.5;//Альфа канал неактивных элементов интерфейса(кнопок и тд)
+var passiveItemsAlpha = 0.5;//Альфа канал неактивных КОМАНД в кодмапе
 var infinityCycleSteps = 5;//Количество итераций которые робот может стоять просто так(Если он простоит 5 итераций ничего не сделав, то это будет считаться бесконечным циклом БЕЗДЕЙСТВИЯ)
+//РЕЖИМ ОТОБРАЖЕНИЯ ДОСТУПНЫХ КОМАНД:
+// "simple" - только простые команды перемещений и подбора батареек
+// "medium" - команды для перемещений не только туда куда едет робот, но и в направлении взгляда, команды подобрать и бросить обьект
+// "all" - все доступные команды включая сложные блоки команд
+var commandsViewMode = "all";
 //ГЛОБАЛЬНЫЕ ПЕРМЕННЫЕ КОТОРЫЕ СОДЕРЖАТ ОБЩЕИГРОВЫЕ ДАННЫЕ(МЕНЯЮТСЯ НА ПРОТЯЖЕНИИ ИГРЫ)-------------------------
 var totalSeconds = 0; //Для хранения колличества секунд которые прошли с начала прохождения уровня
 var playerInventory = new Array();//Инвентарь робота. На карте он может собирать и перетаскивать элементы
 var playerMoveCount = 0;//Счетчик ходов робота
 var selectLang = 'ru';
-var isDrawFPS = true;
+var isDrawFPS = false;
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------ГРАФИЧЕСКИЕ ПАРАМЕТРЫ-----------------------------------------------------------------
 //Параметры для внутриигрового текста
@@ -4036,6 +4042,147 @@ var commandDigitsImgSrc = ["img/command_digit_0.png",//Массив изобра
 "img/command_digit_8.png",
 "img/command_digit_9.png"];
 var commandBackspaceImgSrc = "img/command_backspace.png";
+//Картинки для графики
+var graphicsImgs = [
+    //картинки внутренных стен
+    {
+        code : 2,
+        value : "img/test/field_wall_roundDown"
+    },
+    {
+        code : 3,
+        value : "img/test/field_wall_roundUp"
+    },
+    {   
+        code : 4,
+        value : "img/test/field_wall_roundRight"
+    },
+    {   
+        code : 5,
+        value : "img/test/field_wall_roundLeft"
+    },
+    {   code : 6,
+        value : "img/test/field_wall_corner_rightUp"
+    },
+    {   code : 7,
+        value : "img/test/field_wall_corner_leftUp"
+    },
+    {   code : 8,
+        value : "img/test/field_wall_corner_leftDown"
+    },
+    {   code : 9,
+        value : "img/test/field_wall_corner_rightDown"
+    },
+    {   code : 37,
+        value : "img/test/field_wall_T_down"
+    },
+    {   code : 38,
+        value : "img/test/field_wall_T_up"
+    },
+    {   code : 39,
+        value : "img/test/field_wall_T_left"
+    },
+    {   code : 40,
+        value : "img/test/field_wall_T_right"
+    },
+    {   code : 41,
+        value : "img/test/field_wall_straight_vertical"
+    },
+    {   code : 42,
+        value : "img/test/field_wall_straight_horizontal"
+    },
+    {   code : 43,
+        value : "img/test/field_wall_straight_intersection"
+    },
+    //
+    //картинки дорог
+    {   code : 10,
+        value : "img/test/field_road_straight_vertical"
+    },
+    {   code : 14,
+        value : "img/test/field_road_straight_horizontal"
+    },
+    {   code : 12,
+        value : "img/test/field_road_intersection"
+    },
+    {   code : 13,
+        value : "img/test/field_road_corner_rightUp"
+    },
+    {   code : 15,
+        value : "img/test/field_road_corner_leftDown"
+    },
+    {   code : 16,
+        value : "img/test/field_road_corner_leftUp"
+    },
+    {   code : 17,
+        value : "img/test/field_road_corner_rightDown"
+    },
+    {   code : 18,
+        value : "img/test/field_road_T_up"
+    },
+    {   code : 19,
+        value : "img/test/field_road_T_down"
+    },
+    {   code : 20,
+        value : "img/test/field_road_T_left"
+    },
+    {   code : 11,
+        value : "img/test/field_road_T_right"
+    },
+    {   code : 33,
+        value : "img/test/field_road_end_right"
+    },
+    {   code : 34,
+        value : "img/test/field_road_end_left"
+    },
+    {   code : 35,
+        value : "img/test/field_road_end_up"
+    },
+    {   code : 36,
+        value : "img/test/field_road_end_down"
+    },
+    //
+    //картинки внешних стен
+    {   code : 21,
+        value : "img/test/field_extWall_corner_leftUp"
+    },
+    {   code : 22,
+        value : "img/test/field_extWall_corner_rightDown"
+    },
+    {   code : 23,
+        value : "img/test/field_extWall_corner_rightUp"
+    },
+    {   code : 24,
+        value : "img/test/field_extWall_corner_leftDown"
+    },
+    {   code : 25,
+        value : "img/test/field_extWall_corner_up"
+    },
+    {   code : 26,
+        value : "img/test/field_extWall_corner_down"
+    },
+    {   code : 27,
+        value : "img/test/field_extWall_corner_right"
+    },
+    {   code : 28,
+        value : "img/test/field_extWall_corner_left"
+    },
+    {   code : 29,
+        value : "img/test/field_extWall_T_right"
+    },
+    {   code : 30,
+        value : "img/test/field_extWall_T_left"
+    },
+    {   code : 31,
+        value : "img/test/field_extWall_T_up"
+    },
+    {   code : 32,
+        value : "img/test/field_extWall_T_down"
+    },
+    //
+    
+];
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Предзагрузка ВСЕХ КАРТИНОК-------------------------------------------------------------------------------------------------------------------------------------
 var arrImagesForLoad = [
@@ -22048,8 +22195,10 @@ function startBClick() {
             initLeftScroll([]);
         //Увеличиваем счетчик попыток для прохождения
         totalAttempts++;
-        if (!isVerticalScreen)
-            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, field[playerPozition].commands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
+        if (!isVerticalScreen) {
+            var comms = playerCommands && playerCommands.length > 0 ? playerCommands : field[playerPozition].commands;
+            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, comms, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
+        }
         setTimeout("processRobotMove()", robotMoveDelay);
     }
     return true;
@@ -22088,7 +22237,7 @@ function toolTipShowEvent(x, y) {
     var codeViewImages = codeView.getAllElems();
     for (var i = 0; i < codeViewImages.length; i++) {
         if (clickIsInObj(x, y, codeViewImages[i])) {
-            toolTip.setToolTip(x, y, "Это команды");
+            toolTip.setToolTip(x, y, codeViewImages[i].command.name);
         }
     }
 }
@@ -22178,7 +22327,6 @@ function clickIsInObj(x, y, obj) {
 Содержит методы и данные для алгоритмической части игры.
 Описание алгоритмических блоков, используемых для построения алгоритма прохождения лабиринта
 */
-
 
 //ОПИСАНИЕ ВСЕХ ВОЗМОЖНЫХ КОМАНД
 var COMMANDS = new Array();
@@ -22468,13 +22616,24 @@ function checkConditionIF(blockA, blockB, commandsBlock, elseBlock) {
     return elseBlock ? elseBlock.actions : [];
 }
 
-
 //Возвращает массив классов oneCommandMenuElement, содержащий картинку команды и её код
 //isOnComms - флаг для того, чтобы получить команды с передвижением по направлению взгляда
 function getAllCommandsMenu(isOnComms) {
+    var src = "";
+    if(commandsViewMode == "simple"){
+        src = ['12348'];
+    }
+    else if(commandsViewMode == "medium"){
+        src = ['123489{}[]'];
+    }
+    else if(commandsViewMode == "all") {
+        src = isOnComms ? ['{}[]123498REI'] : ['123498REI'];
+    }
+    return getCommandsMenu(src);
+}
 
+var getCommandsMenu = function(src){
     var menuItems = [];
-    var src = isOnComms ? ['{}[]123498REI'] : ['123498REI'];
     //Генерим структуру меню(по 4 элемента в ряд)
     levels.forStringArray({
             source: src
@@ -24132,7 +24291,7 @@ function fieldElement(imgSource, comm, elemcode, fx, fy, fw, fh) {
     //Добавляем обработчик на клик если этот элемент дорога либо вход
     if (this.code == roadCode || this.code == entryCode) {
         this.setUserData({
-            onClick: function (index) {//index - индекс элемента в массиве где он хранится
+            onClick: function (index) { //index - индекс элемента в массиве где он хранится
                 return labyrinthRoadClick(index)
             }
         });
@@ -24299,22 +24458,21 @@ function calcField(w, h, x, y, elemsInLine, elemsInColumn) {
 }
 
 //Смещает всю карту в нужный размер
-function calcMapPosition(){
+function calcMapPosition() {
     oneTileWidth = gameSpaceW / totalWidth; //Расчет ширины одного элемента
     oneTileHeight = gameSpaceH / totalHeight; //Расчет высоты одного элемента
-    var poz = new point(gameSpaceX,gameSpaceY);
+    var poz = new point(gameSpaceX, gameSpaceY);
     var counter = 0;
     //Обходим все элементы поля
-    for(var i = field.length - 1; i > -1; i--){
-        field[i].setNewSize(poz.x,poz.y,oneTileWidth,oneTileHeight);
+    for (var i = field.length - 1; i > -1; i--) {
+        field[i].setNewSize(poz.x, poz.y, oneTileWidth, oneTileHeight);
         counter++;
         //Если надо сместить координаты на строку вниз
-        if(counter == totalWidth){
+        if (counter == totalWidth) {
             poz.x = gameSpaceX;
             poz.y += oneTileHeight;
             counter = 0;
-        }
-        else poz.x += oneTileWidth;//Если это следующий элемент в строке поля
+        } else poz.x += oneTileWidth; //Если это следующий элемент в строке поля
     }
 }
 
@@ -24492,6 +24650,10 @@ function graphicsMapSort(arr) {
     //14- дорога прямая-горизонтальная, 15- дорога угловая левый-нижний, 16- дорога угловая левый верхний угол, 17- дорога угловая правый нижний угол, 18- дорога Т-образная вверх,
     //19- дорога Т-образная вниз, 20- дорога Т-образная влево, 21 -внешняя стена левый верхний угол, 22- внешняя стена правый нижний угол, 23- внешняя стена правый верхний угол
     // 24- внешняя стена левый нижний угол, 25- внешняя стена верхняя часть, 26-внешняя стена нижняя часть, 27- внешняя стена правая часть, 28- внешняя стена левая часть
+    // 29- внешняя стена Т-образный право, 30- внешная стена Т-образный лево, 31- внешнаняя стена Т-образный вверх, 32-внешняя стена Т-образный вниз
+    // 33- дорога конечная точка право, 34-дорога конечная точка влево, 35-дорога конечная точка верх, 36-дорога конечная точка вниз, 37- внутренная стена Т-образная вниз
+    // 38- внутренная стена Т-образная верх, 39-внутренная стена Т-образная-лево, 40-внутренная стена Т-образная-право, 41-внутренная стена прямая вертикальная, 
+    // 42-внутренная стена прямая горизонтальная, 43-внутренная стена перекресток
     var rouColCount = labyrinthSize;
     var isLeftWall = false;
     var isRightWall = false;
@@ -24529,6 +24691,10 @@ function graphicsMapSort(arr) {
                     newArr[i][j] = "24";
                     continue;
                 }
+                if (arr[i][j + 1] == "1") {
+                    newArr[i][j] = "29";
+                    continue;
+                }
                 //картинка 27
                 newArr[i][j] = "28";
                 continue;
@@ -24544,16 +24710,28 @@ function graphicsMapSort(arr) {
                     newArr[i][j] = "22";
                     continue;
                 }
+                if (arr[i][j - 1] == "1") {
+                    newArr[i][j] = "30";
+                    continue;
+                }
                 //картинка 26
                 newArr[i][j] = "27";
                 continue;
             }
             if (i == rouColCount - 1) {
+                if (arr[i - 1][j] == "1") {
+                    newArr[i][j] = "31";
+                    continue;
+                }
                 newArr[i][j] = "26";
                 continue;
             }
+            //
             if (i == 0 && j != 0 && j != rouColCount - 1) {
-
+                if (arr[i + 1][j] == "1") {
+                    newArr[i][j] = "32";
+                    continue;
+                }
                 //картинка 24
                 newArr[i][j] = "25";
                 continue;
@@ -24562,25 +24740,25 @@ function graphicsMapSort(arr) {
             if (arr[i][j] == "7") {
                 //определяем наличие стен посторонам дороги
                 // если справо стена любого типа
-                if (arr[i][j + 1] != "7"  && arr[i][j + 1] != "8"  && arr[i][j + 1] != "9") {
+                if (arr[i][j + 1] != "7" && arr[i][j + 1] != "8" && arr[i][j + 1] != "9") {
                     isRightWall = true;
                 }
                 //если слева стена
-                if (arr[i][j - 1] != "7"  && arr[i][j - 1] != "8"  && arr[i][j - 1] != "9") {
+                if (arr[i][j - 1] != "7" && arr[i][j - 1] != "8" && arr[i][j - 1] != "9") {
                     isLeftWall = true;
                 }
                 //если снизу стена
-                if (arr[i + 1][j] != "7"  && arr[i + 1][j] != "8"  && arr[i + 1][j] != "9") {
+                if (arr[i + 1][j] != "7" && arr[i + 1][j] != "8" && arr[i + 1][j] != "9") {
                     isBottomWall = true;
                 }
                 //если сверху стена
-                if (arr[i - 1][j] != "7" && arr[i - 1][j] != "8" &&  arr[i - 1][j] != "9") {
+                if (arr[i - 1][j] != "7" && arr[i - 1][j] != "8" && arr[i - 1][j] != "9") {
                     isTopWall = true;
                 }
                 //
 
-                if (isLeftWall && isRightWall && !isTopRoad && !isRightRoad) {
-//картинка 1) из бумажки
+                if (isLeftWall && isRightWall && !isTopWall && !isRightWall) {
+                    //картинка 1) из бумажки
                     newArr[i][j] = "10";
                     continue;
                 }
@@ -24589,7 +24767,7 @@ function graphicsMapSort(arr) {
                     newArr[i][j] = "18";
                     continue;
                 }
-                if (isTopWall && isBottomWall && !isLeftRoad && !isRightRoad) {
+                if (isTopWall && isBottomWall && !isLeftWall && !isRightWall) {
                     //картинка 5)
                     newArr[i][j] = "14";
                     continue;
@@ -24632,6 +24810,22 @@ function graphicsMapSort(arr) {
                 if (!isTopWall && !isLeftWall && isBottomWall && isRightWall) {
                     //картинка 8)
                     newArr[i][j] = "17";
+                    continue;
+                }
+                if (isTopWall && !isLeftWall && isBottomWall && isRightWall) {
+                    newArr[i][j] = "33";
+                    continue;
+                }
+                if (isTopWall && isLeftWall && isBottomWall && !isRightWall) {
+                    newArr[i][j] = "34";
+                    continue;
+                }
+                if (isTopWall && isLeftWall && !isBottomWall && isRightWall) {
+                    newArr[i][j] = "35";
+                    continue;
+                }
+                if (!isTopWall && isLeftWall && isBottomWall && isRightWall) {
+                    newArr[i][j] = "36";
                     continue;
                 }
             }
@@ -24693,6 +24887,34 @@ function graphicsMapSort(arr) {
                 if (!isLeftRoad && isRightRoad && isBottomRoad && !isTopRoad) {
                     //картинка 19
                     newArr[i][j] = "9";
+                    continue;
+                }
+                if (!isLeftRoad && !isRightRoad && isBottomRoad && !isTopRoad) {
+                    newArr[i][j] = "37";
+                    continue;
+                }
+                if (!isLeftRoad && !isRightRoad && !isBottomRoad && isTopRoad) {
+                    newArr[i][j] = "38";
+                    continue;
+                }
+                if (!isLeftRoad && isRightRoad && !isBottomRoad && !isTopRoad) {
+                    newArr[i][j] = "39";
+                    continue;
+                }
+                if (isLeftRoad && !isRightRoad && !isBottomRoad && !isTopRoad) {
+                    newArr[i][j] = "40";
+                    continue;
+                }
+                if (isLeftRoad && isRightRoad && !isBottomRoad && !isTopRoad) {
+                    newArr[i][j] = "41";
+                    continue;
+                }
+                if (!isLeftRoad && !isRightRoad && isBottomRoad && isTopRoad) {
+                    newArr[i][j] = "42";
+                    continue;
+                }
+                if (isLeftRoad && isRightRoad && isBottomRoad && isTopRoad) {
+                    newArr[i][j] = "43";
                     continue;
                 }
             }
@@ -24759,6 +24981,21 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         return centrElem;
     }
 
+    //Ресайзит все так, чтобы elem был в центре background-а
+    this.setFocusOnElement = function(elem, isCodeView) {
+        //Ресайзим как надо
+        this.resizeView((this.backGround.h / 6) - this.elems[0].h,true,undefined,true);
+        //Ищем элемент который должен быть в центре и сдвигаем его в центр
+        for(var i = 0 ; i < this.elems.length; i++){
+            if(this.elems[i] == elem){
+                var bgC = this.backGround.getPositionC();
+                var elC = this.elems[i].getPositionC();
+                this.elementsMove(bgC.x - elC.x,bgC.y - elC.y,undefined,undefined,isCodeView);
+                break;
+            }
+        }
+    }
+
     //Смещает все объекты objects на shiftX и shiftY
     this.elementsMove = function (shiftX, shiftY, dontSave, dontCheck, isCodeView) {
 
@@ -24823,7 +25060,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
             if (iEL.y + shiftY > bY)
                 shiftY = bY - iEL.y;
             else if (iEF.y + iEF.h + shiftY < bY + bH)
-                shiftY = isCodeView ? 0 : ((bY + bH) - (iEF.y + iEF.h));
+                shiftY = ((bY + bH) - (iEF.y + iEF.h));
 
             //Cмещаем все элементы
             OOP.forArr(this.elems, function (el) {
@@ -24847,7 +25084,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         //this.backGround.draw();
     }
     //Ресайзит this.elements на величину delta
-    this.resizeView = function (delta, dontCheckZoomer, isCodeView) {
+    this.resizeView = function (delta, dontCheckZoomer, isCodeView, dontMove) {
         //Если ресайзить нечего
         if (!this.elems || this.elems.length == 0)
             return;
@@ -24865,6 +25102,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
             if (z < 0) delta = delta + Math.abs(z);
             this.zoomer += delta;
         }
+        else this.zoomer = this.elems[0].w + delta;
         //Начинаем ЗУМ
         //Запоминаем левую верхнюю точку бэкграунда
         var GSX = this.backGround.x;
@@ -24905,7 +25143,8 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         });
         //log("delta : " + delta + "pozX: " + (cEl.getPositionC().x - oldX) + "pozY: " + (cEl.getPositionC().y - oldY));
         //Смещаем всю карту в центр(чтобы ресайзить в центр текущей области)
-        this.elementsMove((cEl.getPositionC().x - this.backC.x) * -1, (cEl.getPositionC().y - this.backC.y) * -1, undefined, undefined, isCodeView);
+        if(!dontMove)
+            this.elementsMove((cEl.getPositionC().x - this.backC.x) * -1, (cEl.getPositionC().y - this.backC.y) * -1, undefined, undefined, isCodeView);
     }
 
     //Проверяет, находятся ли объекты objs внутри квадрата области полностью. Если она за пределами - setVisible(false)
@@ -25158,7 +25397,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         //Если есть параметр alpha - то присваиваем его всем элементам
         if (alpha && alpha >= 0 && alpha <= 1 && parent.elems.length > 0) {
             //Если alpha - значит необходимо видеть весь код мап в поле видимости - поэтому перерасчитваем размеры элементов
-            this.recizeAllElementsToScreen();
+            //this.recizeAllElementsToScreen();
             this.setAlphaToElement(alpha,activeELement);
         } else {
             this.elementsMove(parent.currentShift.x - parent.backGround.x, parent.currentShift.y - parent.backGround.y, true, undefined);
@@ -25195,6 +25434,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                         i += 1;
                         parent.elems[i].setAlpha(1);
                     }
+                    parent.setFocusOnElement(el,true);
                 }
                 else el.setAlpha(disactiveAlpha);
             }
@@ -25587,7 +25827,6 @@ var playerFrontSide = 0; //0 верх, 1 право, 2 низ, 3 лево
 //Время старта движения робота, с отсчетом от глобального таймера в милисекундах
 var startPlayerMoveTime = 0;
 var startPoz = 0;
-var passiveItemsAlpha = 0.35;
 var freezCounter = 0;//Счетчик того сколько ходов уже робот стоит на месте
 //Инициализация игрока
 function playerSetStart() {
@@ -25971,6 +26210,7 @@ function movePlayerToFieldElement(fEl) {
         playerImageObj.w = fEl.w;
         playerImageObj.h = fEl.h;
     }
+    if(labView) labView.setFocusOnElement(field[playerPozition],false);
 }
 
 //Задает направление для персонажа, исходя из того, где находится вход в лабиринт
@@ -26179,6 +26419,7 @@ function recalcScreen(){
             drawCommState(true);
         }
     }
+    movePlayerToFieldElement(field[playerPozition]);
 }
 
 //Инициализация лабиринта
@@ -26203,12 +26444,12 @@ function initializeGame(isInit) {
     dialog = new Dialog();
     //Рассчитываем сколько команд можно поставить на этом поле для прохождения
     totalCommandsAllowed = (totalWidth + totalHeight) * 2;
+    //Инициализируем обьекты для вывода графики лабиринта
+    labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
     //Создаем игрока
     playerSetStart();
     totalAttempts = 0;
     //mainbackGround = new mainBackGroundDrow();
-    //Инициализируем обьекты для вывода графики лабиринта
-    labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
     //Инициализируем обьект для вывода карты кода
     if (!codeMapBG) {
         codeView = new CodeMapView(0, 0, 0, 0, "white");
@@ -26277,7 +26518,7 @@ function getTotalCommandsOnField() {
 function setFocused(fieldElem, indx) {
 
     //Если нажали на недоспустимый элемент
-    if (fieldElem.code != roadCode && fieldElem.code != entryCode) {
+    if ((fieldElem.code != roadCode && fieldElem.code != entryCode) || isStarted) {
         return;
     }
     //Cохраняем номер текущего
