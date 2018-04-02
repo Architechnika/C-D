@@ -236,7 +236,7 @@ function getTotalCommandsOnField() {
 function setFocused(fieldElem, indx) {
 
     //Если нажали на недоспустимый элемент
-    if (fieldElem.code != roadCode && fieldElem.code != entryCode) {
+    if ((fieldElem.code != roadCode && fieldElem.code != entryCode) || isStarted) {
         return;
     }
     //Cохраняем номер текущего
