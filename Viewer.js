@@ -56,6 +56,23 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         return centrElem;
     }
 
+    //Ресайзит все так, чтобы elem был в центре background-а
+    this.setFocusOnElement = function(elem, isCodeView) {
+        //Ресайзим как надо
+        if(isCodeView) {
+            this.resizeView((this.backGround.h / 6) - this.elems[0].h, true, undefined, true);
+        }
+        //Ищем элемент который должен быть в центре и сдвигаем его в центр
+        for(var i = 0 ; i < this.elems.length; i++){
+            if(this.elems[i] == elem){
+                var bgC = this.backGround.getPositionC();
+                var elC = this.elems[i].getPositionC();
+                this.elementsMove(bgC.x - elC.x,bgC.y - elC.y,undefined,undefined,isCodeView);
+                break;
+            }
+        }
+    }
+
     //Смещает все объекты objects на shiftX и shiftY
     this.elementsMove = function (shiftX, shiftY, dontSave, dontCheck, isCodeView) {
 
@@ -120,7 +137,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
             if (iEL.y + shiftY > bY)
                 shiftY = bY - iEL.y;
             else if (iEF.y + iEF.h + shiftY < bY + bH)
-                shiftY = isCodeView ? 0 : ((bY + bH) - (iEF.y + iEF.h));
+                shiftY = ((bY + bH) - (iEF.y + iEF.h));
 
             //Cмещаем все элементы
             OOP.forArr(this.elems, function (el) {
@@ -144,7 +161,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         //this.backGround.draw();
     }
     //Ресайзит this.elements на величину delta
-    this.resizeView = function (delta, dontCheckZoomer, isCodeView) {
+    this.resizeView = function (delta, dontCheckZoomer, isCodeView, dontMove) {
         //Если ресайзить нечего
         if (!this.elems || this.elems.length == 0)
             return;
@@ -162,6 +179,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
             if (z < 0) delta = delta + Math.abs(z);
             this.zoomer += delta;
         }
+        else this.zoomer = this.elems[0].w + delta;
         //Начинаем ЗУМ
         //Запоминаем левую верхнюю точку бэкграунда
         var GSX = this.backGround.x;
@@ -202,7 +220,8 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         });
         //log("delta : " + delta + "pozX: " + (cEl.getPositionC().x - oldX) + "pozY: " + (cEl.getPositionC().y - oldY));
         //Смещаем всю карту в центр(чтобы ресайзить в центр текущей области)
-        this.elementsMove((cEl.getPositionC().x - this.backC.x) * -1, (cEl.getPositionC().y - this.backC.y) * -1, undefined, undefined, isCodeView);
+        if(!dontMove)
+            this.elementsMove((cEl.getPositionC().x - this.backC.x) * -1, (cEl.getPositionC().y - this.backC.y) * -1, undefined, undefined, isCodeView);
     }
 
     //Проверяет, находятся ли объекты objs внутри квадрата области полностью. Если она за пределами - setVisible(false)
@@ -455,7 +474,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         //Если есть параметр alpha - то присваиваем его всем элементам
         if (alpha && alpha >= 0 && alpha <= 1 && parent.elems.length > 0) {
             //Если alpha - значит необходимо видеть весь код мап в поле видимости - поэтому перерасчитваем размеры элементов
-            this.recizeAllElementsToScreen();
+            //this.recizeAllElementsToScreen();
             this.setAlphaToElement(alpha,activeELement);
         } else {
             this.elementsMove(parent.currentShift.x - parent.backGround.x, parent.currentShift.y - parent.backGround.y, true, undefined);
@@ -492,6 +511,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                         i += 1;
                         parent.elems[i].setAlpha(1);
                     }
+                    parent.setFocusOnElement(el,true);
                 }
                 else el.setAlpha(disactiveAlpha);
             }
