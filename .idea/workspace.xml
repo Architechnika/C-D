@@ -6,60 +6,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="227fa202-b3f4-462c-bf8a-4085ce7024c8" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/GameParams.js" afterPath="$PROJECT_DIR$/GameParams.js" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/clear.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/clear.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_T_down.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_T_down.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_T_left.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_T_left.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_T_right.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_T_right.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_T_up.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_T_up.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_corner_leftDown.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_corner_leftDown.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_corner_leftUp.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_corner_leftUp.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_corner_rightDown.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_corner_rightDown.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_corner_rightUp.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_corner_rightUp.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_down.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_down.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_left.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_left.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_right.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_right.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_up.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_extWall_up.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_finish_down.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_finish_down.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_finish_left.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_finish_left.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_finish_right.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_finish_right.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_finish_up.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_finish_up.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_T_down.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_T_down.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_T_left.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_T_left.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_T_right.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_T_right.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_T_up.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_T_up.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_corner_leftDown.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_corner_leftDown.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_corner_leftUp.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_corner_leftUp.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_corner_rightDown.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_corner_rightDown.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_corner_rightUp.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_corner_rightUp.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_end_down.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_end_down.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_end_left.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_end_left.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_end_right.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_end_right.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_end_up.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_end_up.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_intersection.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_intersection.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_straight_horizontal.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_straight_horizontal.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_road_straight_vertical.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_road_straight_vertical.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_start_left.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_start_left.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_start_right.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_start_right.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_start_up.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_start_up.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_T_down.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_T_down.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_T_left.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_T_left.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_T_right.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_T_right.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_T_up.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_T_up.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_corner_leftDown.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_corner_leftDown.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_corner_leftUp.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_corner_leftUp.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_corner_rightDown.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_corner_rightDown.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_corner_rightUp.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_corner_rightUp.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_roundDown.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_roundDown.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_roundLeft.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_roundLeft.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_roundRight.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_roundRight.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_roundUp.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_roundUp.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_straight_horizontal.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_straight_horizontal.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_straight_intersection.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_straight_intersection.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/field_wall_straight_vertical.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/field_wall_straight_vertical.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/filed_start_down.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/filed_start_down.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/object_battery.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/object_battery.png" />
-      <change beforePath="$PROJECT_DIR$/img/assets/racetrack/object_player.png" afterPath="$PROJECT_DIR$/img/assets/racetrack/object_player.png" />
+      <change beforePath="$PROJECT_DIR$/Input.js" afterPath="$PROJECT_DIR$/Input.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -93,11 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GameParams.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GameParams.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GameParams.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="32" column="31" lean-forward="true" selection-start-line="32" selection-start-column="31" selection-end-line="32" selection-end-column="31" />
+            <state relative-caret-position="-901">
+              <caret line="32" column="31" lean-forward="false" selection-start-line="32" selection-start-column="31" selection-end-line="32" selection-end-column="31" />
               <folding>
                 <element signature="e#13618#16338#0" expanded="false" />
               </folding>
@@ -155,11 +102,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Input.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Input.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Input.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="800">
-              <caret line="471" column="43" lean-forward="false" selection-start-line="471" selection-start-column="43" selection-end-line="472" selection-end-column="9" />
+            <state relative-caret-position="744">
+              <caret line="176" column="63" lean-forward="false" selection-start-line="176" selection-start-column="63" selection-end-line="176" selection-end-column="63" />
               <folding />
             </state>
           </provider>
@@ -233,12 +180,12 @@
         <option value="$PROJECT_DIR$/Commands.js" />
         <option value="$PROJECT_DIR$/Logic.js" />
         <option value="$PROJECT_DIR$/Graphics.js" />
-        <option value="$PROJECT_DIR$/Input.js" />
         <option value="$PROJECT_DIR$/Map.js" />
         <option value="$PROJECT_DIR$/Player.js" />
         <option value="$PROJECT_DIR$/Viewer.js" />
         <option value="$PROJECT_DIR$/CoinObject.js" />
         <option value="$PROJECT_DIR$/GameParams.js" />
+        <option value="$PROJECT_DIR$/Input.js" />
       </list>
     </option>
   </component>
@@ -332,12 +279,12 @@
       <workItem from="1522411812455" duration="1234000" />
       <workItem from="1522414309848" duration="2541000" />
       <workItem from="1522659939025" duration="14782000" />
-      <workItem from="1522742414640" duration="11735000" />
+      <workItem from="1522742414640" duration="12153000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="75219000" />
+    <option name="totallyTimeSpent" value="75637000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
@@ -673,14 +620,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Input.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="800">
-          <caret line="471" column="43" lean-forward="false" selection-start-line="471" selection-start-column="43" selection-end-line="472" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Map.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="302">
@@ -751,11 +690,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/GameParams.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="32" column="31" lean-forward="true" selection-start-line="32" selection-start-column="31" selection-end-line="32" selection-end-column="31" />
+        <state relative-caret-position="-901">
+          <caret line="32" column="31" lean-forward="false" selection-start-line="32" selection-start-column="31" selection-end-line="32" selection-end-column="31" />
           <folding>
             <element signature="e#13618#16338#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Input.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="744">
+          <caret line="176" column="63" lean-forward="false" selection-start-line="176" selection-start-column="63" selection-end-line="176" selection-end-column="63" />
+          <folding />
         </state>
       </provider>
     </entry>
