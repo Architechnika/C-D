@@ -6,7 +6,7 @@ var scrollStep = 20; //Шаг скрола в пикселях(Когда кру
 var touchScrollVal = 2;//Шаг скрола когда пальцами ресайзишь
 var toolTipDelay = 1000;//Задержка в миллисекундах после которой всплывают тултипы если держать мышку на элементе
 //Игровые параметры---------------------------------------------------------------------------------------------
-var labyrinthSize = 11;//Стартовый размер лабиринта(Например если 5, тогда при старте игры сгенерится лабиринт размером 5x5). ДЛЯ АЛГОРИТМА ГЕНЕРАЦИИ ЭТО ДОЛЖНО БЫТЬ НЕЧЕТНОЕ ЧИСЛО
+var labyrinthSize = 3;//Стартовый размер лабиринта(Например если 5, тогда при старте игры сгенерится лабиринт размером 5x5). ДЛЯ АЛГОРИТМА ГЕНЕРАЦИИ ЭТО ДОЛЖНО БЫТЬ НЕЧЕТНОЕ ЧИСЛО
 var labyrinthMaxSize = 0;//Ограничение на максимальный размер лабиринта. Если = 0, то максимума нет.
 var isLabyrinthGrow = true;//Переключение возможности увеличения лабиринта при прохождении(Увеличивается лабиринт или нет при выходе из него)
 var robotMoveDelay = 350; //Задержка при движении робота в милисекундах(ЧЕМ МЕНЬШЕ ТЕМ БЫСТРЕЕ)
@@ -282,15 +282,19 @@ var graphicsImgs = [
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Предзагрузка ВСЕХ КАРТИНОК-------------------------------------------------------------------------------------------------------------------------------------
-var arrImagesForLoad = [
+//Массив картинок для СТАРОЙ графики лабиринта
+var arrOldGraphicImagesForLoad = [
     'img/field_wall1.png',
     'img/field_wall2.png',
     'img/field_wall3.png',
     'img/field_border.png',
-    'img/command_none.png',
     'img/field_ground.png',
     'img/field_exit.png',
     'img/field_entry.png',
+]
+//Массив картинок команд и интерфейса
+var arrInterfaceAndCommandsImagesForLoad = [
+    'img/command_none.png',
     'img/object_battery.png',
     'img/interface_font.png',
     'img/interface_clock.png',
@@ -353,7 +357,20 @@ var arrImagesForLoad = [
     "img/command_digit_9.png",
     "img/interface_button_dialog_ok.png",
     "img/interface_button_delete.png"
-]
-arrImagesForLoad.forEach(function(e){
+];
+
+//Загружаем ту графику, которая была выбрана
+if(isNewGraphicLab){
+    graphicsImgs.forEach(function(e){
+        new Image().src = e.value;
+    });
+}
+else{
+    arrOldGraphicImagesForLoad.forEach(function(e){
+        new Image().src = e;
+    })
+}
+arrInterfaceAndCommandsImagesForLoad.forEach(function(e){
     new Image().src = e;
-})
+});
+

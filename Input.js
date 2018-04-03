@@ -52,7 +52,6 @@ function onMouseUP(e) {
     selectedItem = undefined;
     touchedScroll = undefined;
     touchPoint = undefined;
-    scrolled = false;
     touchTapTimeFlag = false;
     labIsMove = false;
     codeMapIsMoved = false;
@@ -64,6 +63,7 @@ function onMouseUP(e) {
 function onMouseDOWN(e) {
     clickCoord.x = e.x;
     clickCoord.y = e.y;
+    scrolled = false;
     //Запоминаем точку в которую кликнул пользователь
     touchPoint = new point(clickCoord.x, clickCoord.y);
     //Запоминаем время начала тапа
@@ -92,6 +92,7 @@ function onTouchStart(e) {
     //isMobile = true;
     clickCoord.x = e.changedTouches[0].clientX;
     clickCoord.y = e.changedTouches[0].clientY;
+    scrolled = false;
     for (var i = 0; i < Scrolls.length; i++) {
         var scroll = Scrolls[i];
         //Ищем клик по левому скролу
@@ -115,7 +116,6 @@ function onTouchEnd(e) {
     selectedItem = undefined;
     touchedScroll = undefined;
     touchPoint = undefined;
-    scrolled = false;
     touchTapTimeFlag = false;
     labIsMove = false;
     codeMapIsMoved = false;
