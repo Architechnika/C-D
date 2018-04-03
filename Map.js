@@ -470,7 +470,57 @@ function graphicsMapSort(arr) {
             isBottomRoad = false;
 
             if (newArr[i][j] == entryCode || newArr[i][j] == exitCode)
-                continue;
+                {
+                    if(newArr[i][j] == entryCode)
+                    {
+                    if(i==0)
+                        {
+                            newArr[i][j] ="44";
+                            continue;
+                        }
+                        if(i== rouColCount-1)
+                        {
+                            newArr[i][j] ="45";
+                            continue;
+                        }
+                        if(j==0)
+                        {
+                            newArr[i][j] ="47";
+                            continue;
+                        }
+                       if(j== rouColCount-1)
+                        {
+                            newArr[i][j] ="46";
+                            continue;
+                        }
+                            
+                    }
+                if(newArr[i][j] == exitCode)
+                    {
+                    if(i==0)
+                        {
+                            newArr[i][j] ="48";
+                            continue;
+                        }
+                        if(i== rouColCount-1)
+                        {
+                            newArr[i][j] ="49";
+                            continue;
+                        }
+                        if(j==0)
+                        {
+                            newArr[i][j] ="51";
+                            continue;
+                        }
+                       if(j== rouColCount-1)
+                        {
+                            newArr[i][j] ="50";
+                            continue;
+                        }
+                            
+                    }
+                }
+               
             //внешние стены
             if (j == 0) { //картинка для левого верхнего угла внешних стен
                 if (i == 0) {

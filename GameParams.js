@@ -251,6 +251,32 @@ var graphicsImgs = [
         value : "img/test/field_extWall_T_down.png"
     },
     //
+    //старт и финиш
+    {   code : 44,
+        value : "img/test/field_start_up.png"
+    },
+    {   code : 45,
+        value : "img/test/field_start_down.png"
+    },
+    {   code : 46,
+        value : "img/test/field_start_right.png"
+    },
+    {   code : 47,
+        value : "img/test/field_start_left.png"
+    },
+    {   code : 48,
+        value : "img/test/field_finish_up.png"
+    },
+    {   code : 49,
+        value : "img/test/field_finish_down.png"
+    },
+    {   code : 50,
+        value : "img/test/field_finish_right.png"
+    },
+    {   code : 51,
+        value : "img/test/field_finish_left.png"
+    },
+    //
     
 ];
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------
