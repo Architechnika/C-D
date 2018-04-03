@@ -3939,10 +3939,10 @@ var toolTipDelay = 1000;//Задержка в миллисекундах пос�
 var labyrinthSize = 3;//Стартовый размер лабиринта(Например если 5, тогда при старте игры сгенерится лабиринт размером 5x5). ДЛЯ АЛГОРИТМА ГЕНЕРАЦИИ ЭТО ДОЛЖНО БЫТЬ НЕЧЕТНОЕ ЧИСЛО
 var labyrinthMaxSize = 0;//Ограничение на максимальный размер лабиринта. Если = 0, то максимума нет.
 var isLabyrinthGrow = true;//Переключение возможности увеличения лабиринта при прохождении(Увеличивается лабиринт или нет при выходе из него)
-var robotMoveDelay = 250; //Задержка при движении робота в милисекундах(ЧЕМ МЕНЬШЕ ТЕМ БЫСТРЕЕ)
-var saveTimeout = 1000; //Таймаут для метода который следит за изменениями размера экрана и сохраняет прогресс игрока
+var robotMoveDelay = 350; //Задержка при движении робота в милисекундах(ЧЕМ МЕНЬШЕ ТЕМ БЫСТРЕЕ)
+var saveTimeout = 1000; //Таймаут для метода который следит за изменениями размера экрана
 var difficultyLevel = "EASY";//Уровень сложности(если EASY - робот сам поворачивается куда нужно при движении)
-var totalTokensOnMap = 5; //Сколько всего монеток генерится в лабиринте
+var totalTokensOnMap = 15; //Сколько всего монеток генерится в лабиринте
 var inactiveItemsAlpha = 0.5;//Альфа канал неактивных элементов интерфейса(кнопок и тд)
 var passiveItemsAlpha = 0.5;//Альфа канал неактивных КОМАНД в кодмапе
 var infinityCycleSteps = 5;//Количество итераций которые робот может стоять просто так(Если он простоит 5 итераций ничего не сделав, то это будет считаться бесконечным циклом БЕЗДЕЙСТВИЯ)
@@ -3951,6 +3951,7 @@ var infinityCycleSteps = 5;//Количество итераций которы�
 // "medium" - команды для перемещений не только туда куда едет робот, но и в направлении взгляда, команды подобрать и бросить обьект
 // "all" - все доступные команды включая сложные блоки команд
 var commandsViewMode = "all";
+var isNewGraphicLab = false;//Временная переменная флаг для генерации лабиринта с НОВОЙ ГРАФИК
 //ГЛОБАЛЬНЫЕ ПЕРМЕННЫЕ КОТОРЫЕ СОДЕРЖАТ ОБЩЕИГРОВЫЕ ДАННЫЕ(МЕНЯЮТСЯ НА ПРОТЯЖЕНИИ ИГРЫ)-------------------------
 var totalSeconds = 0; //Для хранения колличества секунд которые прошли с начала прохождения уровня
 var playerInventory = new Array();//Инвентарь робота. На карте он может собирать и перетаскивать элементы
@@ -4047,137 +4048,137 @@ var graphicsImgs = [
     //картинки внутренных стен
     {
         code : 2,
-        value : "img/test/field_wall_roundDown"
+        value : "img/test/field_wall_roundDown.png"
     },
     {
         code : 3,
-        value : "img/test/field_wall_roundUp"
+        value : "img/test/field_wall_roundUp.png"
     },
     {   
         code : 4,
-        value : "img/test/field_wall_roundRight"
+        value : "img/test/field_wall_roundRight.png"
     },
     {   
         code : 5,
-        value : "img/test/field_wall_roundLeft"
+        value : "img/test/field_wall_roundLeft.png"
     },
     {   code : 6,
-        value : "img/test/field_wall_corner_rightUp"
+        value : "img/test/field_wall_corner_rightUp.png"
     },
-    {   code : 7,
-        value : "img/test/field_wall_corner_leftUp"
+    {   code : 777,
+        value : "img/test/field_wall_corner_leftUp.png"
     },
-    {   code : 8,
-        value : "img/test/field_wall_corner_leftDown"
+    {   code : 888,
+        value : "img/test/field_wall_corner_leftDown.png"
     },
-    {   code : 9,
-        value : "img/test/field_wall_corner_rightDown"
+    {   code : 999,
+        value : "img/test/field_wall_corner_rightDown.png"
     },
     {   code : 37,
-        value : "img/test/field_wall_T_down"
+        value : "img/test/field_wall_T_down.png"
     },
     {   code : 38,
-        value : "img/test/field_wall_T_up"
+        value : "img/test/field_wall_T_up.png"
     },
     {   code : 39,
-        value : "img/test/field_wall_T_left"
+        value : "img/test/field_wall_T_left.png"
     },
     {   code : 40,
-        value : "img/test/field_wall_T_right"
+        value : "img/test/field_wall_T_right.png"
     },
     {   code : 41,
-        value : "img/test/field_wall_straight_vertical"
+        value : "img/test/field_wall_straight_vertical.png"
     },
     {   code : 42,
-        value : "img/test/field_wall_straight_horizontal"
+        value : "img/test/field_wall_straight_horizontal.png"
     },
     {   code : 43,
-        value : "img/test/field_wall_straight_intersection"
+        value : "img/test/field_wall_straight_intersection.png"
     },
     //
     //картинки дорог
     {   code : 10,
-        value : "img/test/field_road_straight_vertical"
+        value : "img/test/field_road_straight_vertical.png"
     },
     {   code : 14,
-        value : "img/test/field_road_straight_horizontal"
+        value : "img/test/field_road_straight_horizontal.png"
     },
     {   code : 12,
-        value : "img/test/field_road_intersection"
+        value : "img/test/field_road_intersection.png"
     },
     {   code : 13,
-        value : "img/test/field_road_corner_rightUp"
+        value : "img/test/field_road_corner_rightUp.png"
     },
     {   code : 15,
-        value : "img/test/field_road_corner_leftDown"
+        value : "img/test/field_road_corner_leftDown.png"
     },
     {   code : 16,
-        value : "img/test/field_road_corner_leftUp"
+        value : "img/test/field_road_corner_leftUp.png"
     },
     {   code : 17,
-        value : "img/test/field_road_corner_rightDown"
+        value : "img/test/field_road_corner_rightDown.png"
     },
     {   code : 18,
-        value : "img/test/field_road_T_up"
+        value : "img/test/field_road_T_up.png"
     },
     {   code : 19,
-        value : "img/test/field_road_T_down"
+        value : "img/test/field_road_T_down.png"
     },
     {   code : 20,
-        value : "img/test/field_road_T_left"
+        value : "img/test/field_road_T_left.png"
     },
     {   code : 11,
-        value : "img/test/field_road_T_right"
+        value : "img/test/field_road_T_right.png"
     },
     {   code : 33,
-        value : "img/test/field_road_end_right"
+        value : "img/test/field_road_end_right.png"
     },
     {   code : 34,
-        value : "img/test/field_road_end_left"
+        value : "img/test/field_road_end_left.png"
     },
     {   code : 35,
-        value : "img/test/field_road_end_up"
+        value : "img/test/field_road_end_up.png"
     },
     {   code : 36,
-        value : "img/test/field_road_end_down"
+        value : "img/test/field_road_end_down.png"
     },
     //
     //картинки внешних стен
     {   code : 21,
-        value : "img/test/field_extWall_corner_leftUp"
+        value : "img/test/field_extWall_corner_leftUp.png"
     },
     {   code : 22,
-        value : "img/test/field_extWall_corner_rightDown"
+        value : "img/test/field_extWall_corner_rightDown.png"
     },
     {   code : 23,
-        value : "img/test/field_extWall_corner_rightUp"
+        value : "img/test/field_extWall_corner_rightUp.png"
     },
     {   code : 24,
-        value : "img/test/field_extWall_corner_leftDown"
+        value : "img/test/field_extWall_corner_leftDown.png"
     },
     {   code : 25,
-        value : "img/test/field_extWall_corner_up"
+        value : "img/test/field_extWall_up.png"
     },
     {   code : 26,
-        value : "img/test/field_extWall_corner_down"
+        value : "img/test/field_extWall_down.png"
     },
     {   code : 27,
-        value : "img/test/field_extWall_corner_right"
+        value : "img/test/field_extWall_right.png"
     },
     {   code : 28,
-        value : "img/test/field_extWall_corner_left"
+        value : "img/test/field_extWall_left.png"
     },
     {   code : 29,
-        value : "img/test/field_extWall_T_right"
+        value : "img/test/field_extWall_T_right.png"
     },
     {   code : 30,
-        value : "img/test/field_extWall_T_left"
+        value : "img/test/field_extWall_T_left.png"
     },
     {   code : 31,
-        value : "img/test/field_extWall_T_up"
+        value : "img/test/field_extWall_T_up.png"
     },
     {   code : 32,
-        value : "img/test/field_extWall_T_down"
+        value : "img/test/field_extWall_T_down.png"
     },
     //
     
@@ -4259,7 +4260,10 @@ var arrImagesForLoad = [
 ]
 arrImagesForLoad.forEach(function(e){
     new Image().src = e;
-})/*
+})
+graphicsImgs.forEach(function(e){
+    new Image().src = e.value;
+});/*
 Содержит переменные для работы с движком
 */
 
@@ -21856,7 +21860,6 @@ function onMouseUP(e) {
     selectedItem = undefined;
     touchedScroll = undefined;
     touchPoint = undefined;
-    scrolled = false;
     touchTapTimeFlag = false;
     labIsMove = false;
     codeMapIsMoved = false;
@@ -21868,6 +21871,7 @@ function onMouseUP(e) {
 function onMouseDOWN(e) {
     clickCoord.x = e.x;
     clickCoord.y = e.y;
+    scrolled = false;
     //Запоминаем точку в которую кликнул пользователь
     touchPoint = new point(clickCoord.x, clickCoord.y);
     //Запоминаем время начала тапа
@@ -21896,6 +21900,7 @@ function onTouchStart(e) {
     //isMobile = true;
     clickCoord.x = e.changedTouches[0].clientX;
     clickCoord.y = e.changedTouches[0].clientY;
+    scrolled = false;
     for (var i = 0; i < Scrolls.length; i++) {
         var scroll = Scrolls[i];
         //Ищем клик по левому скролу
@@ -21919,7 +21924,6 @@ function onTouchEnd(e) {
     selectedItem = undefined;
     touchedScroll = undefined;
     touchPoint = undefined;
-    scrolled = false;
     touchTapTimeFlag = false;
     labIsMove = false;
     codeMapIsMoved = false;
@@ -24476,15 +24480,24 @@ function calcMapPosition() {
     }
 }
 
-function generateMap(w, h, x, y, elemsInLine, elemsInColumn) {
-
+function generateMap(w, h, x, y, elemsInLine, elemsInColumn, isNewGraphic) {
+    isNewGraphic = isNewGraphicLab;
     oneTileWidth = w / elemsInLine; //Расчет ширины одного элемента
     oneTileHeight = h / elemsInColumn; //Расчет высоты одного элемента
     //Получаем массив сгенерированного поля
     binMap = genBin(elemsInColumn, elemsInLine, [], [], [0, 0]);
+    var newGraphicMap = undefined;
+    if(isNewGraphic){
+        log(binMap);
+        newGraphicMap = graphicsMapSort(binMap);
+        log(newGraphicMap);
+    }
+
     var itersX = 0,
         itersY = 0;
     var gObjs = new Array();
+    var codes = new Array();
+    var indx = 0;
     //Обходим каждый элемент сгенерированного поля и создаем объекты характеризующие элементы поля
     pjs.levels.forStringArray({
             w: oneTileWidth,
@@ -24492,13 +24505,20 @@ function generateMap(w, h, x, y, elemsInLine, elemsInColumn) {
             source: binMap
         },
         function (S, X, Y, W, H) {
-
+            codes.push(S);
+        }
+    );
+    //Обходим каждый элемент сгенерированного поля и создаем объекты характеризующие элементы поля
+    pjs.levels.forStringArray({
+            w: oneTileWidth,
+            h: oneTileHeight,
+            source: isNewGraphic ? newGraphicMap : binMap
+        },
+        function (S, X, Y, W, H) {
             var img = bordersPath;
             var comm = new Array();
 
-            if (S == roadCode || S == entryCode || S == exitCode) {
-                img = groundPath;
-                //Если это клетка входа в лабиринт, инициализируем сразу команду для игрока в ней
+            if(isNewGraphic) {
                 if (S == entryCode) {
                     if (entrySide == "DOWN") comm.push(COMMANDS[1]);
                     else if (entrySide == "UP") comm.push(COMMANDS[2]);
@@ -24506,14 +24526,39 @@ function generateMap(w, h, x, y, elemsInLine, elemsInColumn) {
                     else if (entrySide == "RIGHT") comm.push(COMMANDS[3]);
                     comm[0].undeletable = true; //Делаем эту команду неудаляемой
                     img = entryPath;
-                } else if (S == exitCode) {
-                    img = exitPath;
-                    //comm.push(COMMANDS.STOP);
                 }
-            } else if (S > 0) {
-                img = wallPaths[S - 1];
+                else if (S == exitCode) {
+                    img = exitPath;
+                }
+                else {
+                    for (var i = 0; i < graphicsImgs.length; i++) {
+                        if (S == graphicsImgs[i].code.toString()) {
+                            img = graphicsImgs[i].value;
+                        }
+                    }
+                }
             }
-            var fEl = new fieldElement(img, comm, S, X + x, Y + y, oneTileWidth, oneTileHeight);
+            else {
+                if (S == roadCode || S == entryCode || S == exitCode) {
+                    img = groundPath;
+                    //Если это клетка входа в лабиринт, инициализируем сразу команду для игрока в ней
+                    if (S == entryCode) {
+                        if (entrySide == "DOWN") comm.push(COMMANDS[1]);
+                        else if (entrySide == "UP") comm.push(COMMANDS[2]);
+                        else if (entrySide == "LEFT") comm.push(COMMANDS[4]);
+                        else if (entrySide == "RIGHT") comm.push(COMMANDS[3]);
+                        comm[0].undeletable = true; //Делаем эту команду неудаляемой
+                        img = entryPath;
+                    } else if (S == exitCode) {
+                        img = exitPath;
+                        //comm.push(COMMANDS.STOP);
+                    }
+                } else if (S > 0) {
+                    img = wallPaths[S - 1];
+                }
+            }
+            var fEl = new fieldElement(img, comm, codes[indx], X + x, Y + y, oneTileWidth, oneTileHeight);
+            indx++;
             //Заполняем массив элементов лабиринта
             field.push(fEl);
         });
@@ -24633,8 +24678,6 @@ function genBin(hate, width, maze, walls, currentPosition) {
         //Ставим вход или выход на нижней стенке
         mazeTmp[mazeTmp.length - 1][indx] = isEntry ? exitCode : entryCode;
     }
-    log(mazeTmp);
-    log(graphicsMapSort(mazeTmp));
     return mazeTmp;
 }
 
@@ -24677,7 +24720,7 @@ function graphicsMapSort(arr) {
             isTopRoad = false;
             isBottomRoad = false;
 
-            if (newArr[i][j] == "8" || newArr[i][j] == "9")
+            if (newArr[i][j] == entryCode || newArr[i][j] == exitCode)
                 continue;
             //внешние стены
             if (j == 0) { //картинка для левого верхнего угла внешних стен
@@ -24740,24 +24783,24 @@ function graphicsMapSort(arr) {
             if (arr[i][j] == "7") {
                 //определяем наличие стен посторонам дороги
                 // если справо стена любого типа
-                if (arr[i][j + 1] != "7" && arr[i][j + 1] != "8" && arr[i][j + 1] != "9") {
+                if (arr[i][j + 1] != "7" && arr[i][j + 1] != entryCode && arr[i][j + 1] != exitCode) {
                     isRightWall = true;
                 }
                 //если слева стена
-                if (arr[i][j - 1] != "7" && arr[i][j - 1] != "8" && arr[i][j - 1] != "9") {
+                if (arr[i][j - 1] != "7" && arr[i][j - 1] != entryCode && arr[i][j - 1] != exitCode) {
                     isLeftWall = true;
                 }
                 //если снизу стена
-                if (arr[i + 1][j] != "7" && arr[i + 1][j] != "8" && arr[i + 1][j] != "9") {
+                if (arr[i + 1][j] != "7" && arr[i + 1][j] != entryCode && arr[i + 1][j] != exitCode) {
                     isBottomWall = true;
                 }
                 //если сверху стена
-                if (arr[i - 1][j] != "7" && arr[i - 1][j] != "8" && arr[i - 1][j] != "9") {
+                if (arr[i - 1][j] != "7" && arr[i - 1][j] != entryCode && arr[i - 1][j] != exitCode) {
                     isTopWall = true;
                 }
                 //
 
-                if (isLeftWall && isRightWall && !isTopWall && !isRightWall) {
+                if (isLeftWall && isRightWall && !isTopWall && !isBottomWall) {
                     //картинка 1) из бумажки
                     newArr[i][j] = "10";
                     continue;
@@ -24831,19 +24874,19 @@ function graphicsMapSort(arr) {
             }
             if (arr[i][j] == "1") {
                 // если справо дорога любого типа
-                if (arr[i][j + 1] == "7" || arr[i][j + 1] == "8" || arr[i][j + 1] == "9") {
+                if (arr[i][j + 1] == "7" || arr[i][j + 1] == entryCode || arr[i][j + 1] == exitCode) {
                     isRightRoad = true;
                 }
                 //если слева дорога
-                if (arr[i][j - 1] == "7" || arr[i][j - 1] == "8" || arr[i][j - 1] == "9") {
+                if (arr[i][j - 1] == "7" || arr[i][j - 1] == entryCode || arr[i][j - 1] == exitCode) {
                     isLeftRoad = true;
                 }
                 //если снизу дорога
-                if (arr[i + 1][j] == "7" || arr[i + 1][j] == "8" || arr[i + 1][j] == "9") {
+                if (arr[i + 1][j] == "7" || arr[i + 1][j] == entryCode || arr[i + 1][j] == exitCode) {
                     isBottomRoad = true;
                 }
                 //если сверху дорога
-                if (arr[i - 1][j] == "7" || arr[i - 1][j] == "8" || arr[i - 1][j] == "9") {
+                if (arr[i - 1][j] == "7" || arr[i - 1][j] == entryCode || arr[i - 1][j] == exitCode) {
                     isTopRoad = true;
                 }
                 //
@@ -24875,25 +24918,24 @@ function graphicsMapSort(arr) {
                 }
                 if (isLeftRoad && !isRightRoad && !isBottomRoad && isTopRoad) {
                     //картинка 17
-                    newArr[i]
-                        [j] = "7";
+                    newArr[i][j] = "777";
                     continue;
                 }
                 if (isLeftRoad && !isRightRoad && isBottomRoad && !isTopRoad) {
                     //картинка 18
-                    newArr[i][j] = "8";
+                    newArr[i][j] = "888";
                     continue;
                 }
                 if (!isLeftRoad && isRightRoad && isBottomRoad && !isTopRoad) {
                     //картинка 19
-                    newArr[i][j] = "9";
-                    continue;
-                }
-                if (!isLeftRoad && !isRightRoad && isBottomRoad && !isTopRoad) {
-                    newArr[i][j] = "37";
+                    newArr[i][j] = "999";
                     continue;
                 }
                 if (!isLeftRoad && !isRightRoad && !isBottomRoad && isTopRoad) {
+                    newArr[i][j] = "37";
+                    continue;
+                }
+                if (!isLeftRoad && !isRightRoad && isBottomRoad && !isTopRoad) {
                     newArr[i][j] = "38";
                     continue;
                 }
@@ -24913,7 +24955,7 @@ function graphicsMapSort(arr) {
                     newArr[i][j] = "42";
                     continue;
                 }
-                if (isLeftRoad && isRightRoad && isBottomRoad && isTopRoad) {
+                if (!isLeftRoad && !isRightRoad && !isBottomRoad && !isTopRoad) {
                     newArr[i][j] = "43";
                     continue;
                 }
@@ -25562,13 +25604,13 @@ function LabyrinthView(elements, backX, backY, backW, backH, fillCol) {
                 coin.setNewPosition(coin.position);
             } else coin.setVisible(false);
         });
-        if (parent.elems[playerPozition].visible) {
+        if (playerImageObj && parent.elems[playerPozition].visible) {
             playerImageObj.x = parent.elems[playerPozition].x;
             playerImageObj.y = parent.elems[playerPozition].y;
             playerImageObj.w = parent.elems[playerPozition].w;
             playerImageObj.h = parent.elems[playerPozition].h;
             playerImageObj.setVisible(true);
-        } else playerImageObj.setVisible(false);
+        } else if(playerImageObj) playerImageObj.setVisible(false);
     }
 
     this.resizeView = function (delta) {

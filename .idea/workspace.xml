@@ -6,12 +6,45 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="227fa202-b3f4-462c-bf8a-4085ce7024c8" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/GameParams.js" afterPath="$PROJECT_DIR$/GameParams.js" />
-      <change beforePath="$PROJECT_DIR$/Map.js" afterPath="$PROJECT_DIR$/Map.js" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_T_down.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_T_down.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_T_left.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_T_left.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_T_right.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_T_right.png" />
-      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_T_up.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_T_up.png" />
+      <change beforePath="$PROJECT_DIR$/Input.js" afterPath="$PROJECT_DIR$/Input.js" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_corner_leftDown.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_corner_leftDown.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_corner_leftUp.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_corner_leftUp.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_corner_rightDown.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_corner_rightDown.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_extWall_corner_rightUp.png" afterPath="$PROJECT_DIR$/img/test/field_extWall_corner_rightUp.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_T_down.png" afterPath="$PROJECT_DIR$/img/test/field_road_T_down.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_T_left.png" afterPath="$PROJECT_DIR$/img/test/field_road_T_left.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_T_right.png" afterPath="$PROJECT_DIR$/img/test/field_road_T_right.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_T_up.png" afterPath="$PROJECT_DIR$/img/test/field_road_T_up.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_corner_leftDown.png" afterPath="$PROJECT_DIR$/img/test/field_road_corner_leftDown.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_corner_leftUp.png" afterPath="$PROJECT_DIR$/img/test/field_road_corner_leftUp.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_corner_rightDown.png" afterPath="$PROJECT_DIR$/img/test/field_road_corner_rightDown.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_corner_rightUp.png" afterPath="$PROJECT_DIR$/img/test/field_road_corner_rightUp.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_end_down.png" afterPath="$PROJECT_DIR$/img/test/field_road_end_down.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_end_left.png" afterPath="$PROJECT_DIR$/img/test/field_road_end_left.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_end_right.png" afterPath="$PROJECT_DIR$/img/test/field_road_end_right.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_end_up.png" afterPath="$PROJECT_DIR$/img/test/field_road_end_up.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_intersection.png" afterPath="$PROJECT_DIR$/img/test/field_road_intersection.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_straight_horizontal.png" afterPath="$PROJECT_DIR$/img/test/field_road_straight_horizontal.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_road_straight_vertical.png" afterPath="$PROJECT_DIR$/img/test/field_road_straight_vertical.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_T_down.png" afterPath="$PROJECT_DIR$/img/test/field_wall_T_down.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_T_left.png" afterPath="$PROJECT_DIR$/img/test/field_wall_T_left.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_T_right.png" afterPath="$PROJECT_DIR$/img/test/field_wall_T_right.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_T_up.png" afterPath="$PROJECT_DIR$/img/test/field_wall_T_up.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_corner_leftDown.png" afterPath="$PROJECT_DIR$/img/test/field_wall_corner_leftDown.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_corner_leftUp.png" afterPath="$PROJECT_DIR$/img/test/field_wall_corner_leftUp.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_corner_rightDown.png" afterPath="$PROJECT_DIR$/img/test/field_wall_corner_rightDown.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_corner_rightUp.png" afterPath="$PROJECT_DIR$/img/test/field_wall_corner_rightUp.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_roundDown.png" afterPath="$PROJECT_DIR$/img/test/field_wall_roundDown.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_roundLeft.png" afterPath="$PROJECT_DIR$/img/test/field_wall_roundLeft.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_roundRight.png" afterPath="$PROJECT_DIR$/img/test/field_wall_roundRight.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_roundUp.png" afterPath="$PROJECT_DIR$/img/test/field_wall_roundUp.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_straight_horizontal.png" afterPath="$PROJECT_DIR$/img/test/field_wall_straight_horizontal.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_straight_intersection.png" afterPath="$PROJECT_DIR$/img/test/field_wall_straight_intersection.png" />
+      <change beforePath="$PROJECT_DIR$/img/test/field_wall_straight_vertical.png" afterPath="$PROJECT_DIR$/img/test/field_wall_straight_vertical.png" />
+      <change beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change beforePath="$PROJECT_DIR$/jsbuilderscript.js" afterPath="$PROJECT_DIR$/jsbuilderscript.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -25,14 +58,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Map.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Map.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Map.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="544">
-              <caret line="129" column="38" lean-forward="true" selection-start-line="129" selection-start-column="38" selection-end-line="129" selection-end-column="38" />
-              <folding>
-                <element signature="n#!!block;n#genBin#0" expanded="false" />
-              </folding>
+            <state relative-caret-position="4267">
+              <caret line="312" column="11" lean-forward="false" selection-start-line="312" selection-start-column="11" selection-end-line="312" selection-end-column="11" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -40,8 +71,30 @@
       <file leaf-file-name="GameParams.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GameParams.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="137" column="16" lean-forward="true" selection-start-line="137" selection-start-column="16" selection-end-line="137" selection-end-column="16" />
+            <state relative-caret-position="629">
+              <caret line="38" column="26" lean-forward="true" selection-start-line="38" selection-start-column="26" selection-end-line="38" selection-end-column="26" />
+              <folding>
+                <element signature="e#12140#14247#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Graphics.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Graphics.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="765">
+              <caret line="47" column="18" lean-forward="false" selection-start-line="47" selection-start-column="18" selection-end-line="47" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Input.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Input.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="460">
+              <caret line="469" column="55" lean-forward="true" selection-start-line="469" selection-start-column="55" selection-end-line="469" selection-end-column="55" />
               <folding />
             </state>
           </provider>
@@ -50,8 +103,8 @@
       <file leaf-file-name="Logic.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Logic.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="397">
-              <caret line="180" column="26" lean-forward="false" selection-start-line="180" selection-start-column="26" selection-end-line="180" selection-end-column="26" />
+            <state relative-caret-position="873">
+              <caret line="139" column="58" lean-forward="false" selection-start-line="139" selection-start-column="58" selection-end-line="139" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -83,6 +136,9 @@
       <find>playerImageObj =</find>
       <find>walls</find>
       <find>borderCode</find>
+      <find>onRecize</find>
+      <find>scrollDynamic</find>
+      <find>scrolled</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -101,17 +157,17 @@
         <option value="$PROJECT_DIR$/CoinObject.js" />
         <option value="$PROJECT_DIR$/Engine_params.js" />
         <option value="$PROJECT_DIR$/dynamicBackground.js" />
-        <option value="$PROJECT_DIR$/Graphics.js" />
         <option value="$PROJECT_DIR$/game.html" />
         <option value="$PROJECT_DIR$/SecondScreen.js" />
         <option value="$PROJECT_DIR$/lodash.js" />
         <option value="$PROJECT_DIR$/CloneFabrick.js" />
-        <option value="$PROJECT_DIR$/Input.js" />
         <option value="$PROJECT_DIR$/Commands.js" />
         <option value="$PROJECT_DIR$/Viewer.js" />
         <option value="$PROJECT_DIR$/Player.js" />
-        <option value="$PROJECT_DIR$/Logic.js" />
         <option value="$PROJECT_DIR$/Map.js" />
+        <option value="$PROJECT_DIR$/Logic.js" />
+        <option value="$PROJECT_DIR$/Graphics.js" />
+        <option value="$PROJECT_DIR$/Input.js" />
         <option value="$PROJECT_DIR$/GameParams.js" />
       </list>
     </option>
@@ -122,7 +178,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
@@ -143,6 +199,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -155,7 +212,6 @@
         </subPane>
       </pane>
       <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -205,15 +261,16 @@
       <workItem from="1522411736929" duration="8000" />
       <workItem from="1522411812455" duration="1234000" />
       <workItem from="1522414309848" duration="2541000" />
-      <workItem from="1522659939025" duration="14495000" />
+      <workItem from="1522659939025" duration="14782000" />
+      <workItem from="1522742414640" duration="4075000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="63197000" />
+    <option name="totallyTimeSpent" value="67559000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1096" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14166667" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -532,27 +589,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Graphics.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="19" column="34" lean-forward="false" selection-start-line="19" selection-start-column="34" selection-end-line="19" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/PushButton.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
           <caret line="76" column="32" lean-forward="false" selection-start-line="76" selection-start-column="32" selection-end-line="76" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Input.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="420" column="0" lean-forward="false" selection-start-line="420" selection-start-column="0" selection-end-line="420" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -560,7 +600,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2159">
           <caret line="14" column="52" lean-forward="false" selection-start-line="14" selection-start-column="52" selection-end-line="14" selection-end-column="52" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -597,15 +636,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="425">
           <caret line="28" column="17" lean-forward="false" selection-start-line="28" selection-start-column="17" selection-end-line="28" selection-end-column="17" />
-          <folding>
-            <element signature="e#9011#9898#0" expanded="false" />
-            <element signature="n#!!block;n#getAllInteractGameObjects#0" expanded="false" />
-            <element signature="n#!!block;n#getAllDirections#0" expanded="false" />
-            <element signature="n#!!block;n#getRepeatScrollBarPattern#0" expanded="false" />
-            <element signature="n#!!block;n#getRepeatIFScrollBarPattern#0" expanded="false" />
-            <element signature="n#!!block;n#getIFScrollBarPattern#0" expanded="false" />
-            <element signature="n#!!block;n#getDigitKeyboardImages#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -613,33 +643,48 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="544">
           <caret line="396" column="16" lean-forward="false" selection-start-line="396" selection-start-column="16" selection-end-line="396" selection-end-column="71" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Logic.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="397">
-          <caret line="180" column="26" lean-forward="false" selection-start-line="180" selection-start-column="26" selection-end-line="180" selection-end-column="26" />
+        <state relative-caret-position="873">
+          <caret line="139" column="58" lean-forward="false" selection-start-line="139" selection-start-column="58" selection-end-line="139" selection-end-column="58" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GameParams.js">
+    <entry file="file://$PROJECT_DIR$/Graphics.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="137" column="16" lean-forward="true" selection-start-line="137" selection-start-column="16" selection-end-line="137" selection-end-column="16" />
+        <state relative-caret-position="765">
+          <caret line="47" column="18" lean-forward="false" selection-start-line="47" selection-start-column="18" selection-end-line="47" selection-end-column="18" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Map.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
-          <caret line="129" column="38" lean-forward="true" selection-start-line="129" selection-start-column="38" selection-end-line="129" selection-end-column="38" />
+        <state relative-caret-position="4267">
+          <caret line="312" column="11" lean-forward="false" selection-start-line="312" selection-start-column="11" selection-end-line="312" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GameParams.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="629">
+          <caret line="38" column="26" lean-forward="true" selection-start-line="38" selection-start-column="26" selection-end-line="38" selection-end-column="26" />
           <folding>
-            <element signature="n#!!block;n#genBin#0" expanded="false" />
+            <element signature="e#12140#14247#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Input.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="460">
+          <caret line="469" column="55" lean-forward="true" selection-start-line="469" selection-start-column="55" selection-end-line="469" selection-end-column="55" />
+          <folding />
         </state>
       </provider>
     </entry>
