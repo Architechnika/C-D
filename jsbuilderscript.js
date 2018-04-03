@@ -3960,7 +3960,7 @@ var selectLang = 'ru';
 var isDrawFPS = false;
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------ГРАФИЧЕСКИЕ ПАРАМЕТРЫ-----------------------------------------------------------------
-var currentAsset = "racetrack";
+var currentAsset = "greenland";
 //Параметры для внутриигрового текста
 var textOnCodeMapColor = "#1f75fe";//Цвет цифр когда вводишь итерации в команду repeat
 
@@ -4274,6 +4274,7 @@ var arrInterfaceAndCommandsImagesForLoad = [
 graphicsImgs.forEach(function(e){
     new Image().src = e.value;
 });
+
 arrInterfaceAndCommandsImagesForLoad.forEach(function(e){
     new Image().src = e;
 });
@@ -21987,7 +21988,7 @@ function onRecize(e, delta, step) {
         }
     });
     if (!isSecondScreen && clickIsInObj(e.x, e.y, labView.getBackGround())) {
-        labView.resizeView(delta < 0 ? -1 * step : step);
+        labView.resizeView(delta < 0 ? step : -1 * step);
         return;
     } else if (clickIsInObj(e.x, e.y, codeView.getBackGround())) {
         //Ресайз поля работает только когда игрок не двигается
@@ -21996,8 +21997,8 @@ function onRecize(e, delta, step) {
             //Проверяем надо ли совсем закрывать интерфейс ввода
             if (!field[lastClickedIndx].isStroke) {
                 //codeView.createCodeMap(0, 0, lastClickedElement.commands, false, false, 1);
-                codeView.resizeView(delta < 0 ? -1 * step : step, true, true);
-            } else codeView.resizeView(delta < 0 ? -1 * step : step);
+                codeView.resizeView(delta < 0 ? step : -1 * step, true, true);
+            } else codeView.resizeView(delta < 0 ? step : -1 * step);
         }
         return;
     }
