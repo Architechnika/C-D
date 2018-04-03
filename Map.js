@@ -5,14 +5,12 @@ var roadCode = '7'; //Представление элемента дороги �
 var borderCode = '0'; //Представление элемента внешних стенок в виде числа
 var entryCode = '8'; //Представление элемента входа в лаюиринт в виде числа
 var exitCode = '9'; //Представление элемента выхода из лабиринта в виде числа
-var wallCode1 = '1'; //Всего доступно 3 типа стенок внутри игры КОДЫ 1,2,3
-var wallCode2 = '1'; //Всего доступно 3 типа стенок внутри игры КОДЫ 1,2,3
-var wallCode3 = '1'; //Всего доступно 3 типа стенок внутри игры КОДЫ 1,2,3
+var wallCode = '1'; //Всего доступно 3 типа стенок внутри игры КОДЫ 1,2,3
 //Коды игровых предметов
 var coinCode = '4'; //КОД МОНЕТКИ
 
 //Массив содержащий игровые код всех игровых элементов
-var allGameItemsCode = [roadCode, borderCode, coinCode, exitCode, entryCode, wallCode1, wallCode2, wallCode3];
+var allGameItemsCode = [roadCode, borderCode, coinCode, exitCode, entryCode, wallCode];
 
 //Разрешение одного тайла на поле
 var oneTileWidth = 100;
@@ -241,10 +239,6 @@ function generateMap(w, h, x, y, elemsInLine, elemsInColumn, isNewGraphic) {
         newGraphicMap = graphicsMapSort(binMap);
         log(newGraphicMap);
     }
-
-    var itersX = 0,
-        itersY = 0;
-    var gObjs = new Array();
     var codes = new Array();
     var indx = 0;
     //Обходим каждый элемент сгенерированного поля и создаем объекты характеризующие элементы поля
@@ -264,46 +258,18 @@ function generateMap(w, h, x, y, elemsInLine, elemsInColumn, isNewGraphic) {
             source: isNewGraphic ? newGraphicMap : binMap
         },
         function (S, X, Y, W, H) {
-            var img = bordersPath;
+            var img = "";
             var comm = new Array();
-
-            if(isNewGraphic) {
-                if (S == entryCode) {
-                    if (entrySide == "DOWN") comm.push(COMMANDS[1]);
-                    else if (entrySide == "UP") comm.push(COMMANDS[2]);
-                    else if (entrySide == "LEFT") comm.push(COMMANDS[4]);
-                    else if (entrySide == "RIGHT") comm.push(COMMANDS[3]);
-                    comm[0].undeletable = true; //Делаем эту команду неудаляемой
-                    img = entryPath;
-                }
-                else if (S == exitCode) {
-                    img = exitPath;
-                }
-                else {
-                    for (var i = 0; i < graphicsImgs.length; i++) {
-                        if (S == graphicsImgs[i].code.toString()) {
-                            img = graphicsImgs[i].value;
-                        }
-                    }
-                }
+            if (codes[indx] == entryCode) {
+                if (entrySide == "DOWN") comm.push(COMMANDS[1]);
+                else if (entrySide == "UP") comm.push(COMMANDS[2]);
+                else if (entrySide == "LEFT") comm.push(COMMANDS[4]);
+                else if (entrySide == "RIGHT") comm.push(COMMANDS[3]);
+                comm[0].undeletable = true; //Делаем эту команду неудаляемой
             }
-            else {
-                if (S == roadCode || S == entryCode || S == exitCode) {
-                    img = groundPath;
-                    //Если это клетка входа в лабиринт, инициализируем сразу команду для игрока в ней
-                    if (S == entryCode) {
-                        if (entrySide == "DOWN") comm.push(COMMANDS[1]);
-                        else if (entrySide == "UP") comm.push(COMMANDS[2]);
-                        else if (entrySide == "LEFT") comm.push(COMMANDS[4]);
-                        else if (entrySide == "RIGHT") comm.push(COMMANDS[3]);
-                        comm[0].undeletable = true; //Делаем эту команду неудаляемой
-                        img = entryPath;
-                    } else if (S == exitCode) {
-                        img = exitPath;
-                        //comm.push(COMMANDS.STOP);
-                    }
-                } else if (S > 0) {
-                    img = wallPaths[S - 1];
+            for (var i = 0; i < graphicsImgs.length; i++) {
+                if (S == graphicsImgs[i].code.toString()) {
+                    img = graphicsImgs[i].value;
                 }
             }
             var fEl = new fieldElement(img, comm, codes[indx], X + x, Y + y, oneTileWidth, oneTileHeight);
@@ -378,7 +344,7 @@ function genBin(hate, width, maze, walls, currentPosition) {
         for (var j = 1; j < mazeTmp.length - 1; j++) {
             mazeTmp[i][j] = maze[i - 1][j - 1];
             if (mazeTmp[i][j] == borderCode) {
-                mazeTmp[i][j] = wallCode1; //Генерит случайную стенку внутри лабиринта КОДЫ 1 2 3
+                mazeTmp[i][j] = wallCode; //Генерит случайную стенку внутри лабиринта КОДЫ 1 2 3
             }
         }
     }
