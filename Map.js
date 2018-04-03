@@ -549,7 +549,7 @@ function graphicsMapSort(arr) {
                 }
                 //
 
-                if (isLeftWall && isRightWall && !isTopWall && !isRightWall) {
+                if (isLeftWall && isRightWall && !isTopWall && !isBottomWall) {
                     //картинка 1) из бумажки
                     newArr[i][j] = "10";
                     continue;
@@ -680,11 +680,11 @@ function graphicsMapSort(arr) {
                     newArr[i][j] = "999";
                     continue;
                 }
-                if (!isLeftRoad && !isRightRoad && isBottomRoad && !isTopRoad) {
+                if (!isLeftRoad && !isRightRoad && !isBottomRoad && isTopRoad) {
                     newArr[i][j] = "37";
                     continue;
                 }
-                if (!isLeftRoad && !isRightRoad && !isBottomRoad && isTopRoad) {
+                if (!isLeftRoad && !isRightRoad && isBottomRoad && !isTopRoad) {
                     newArr[i][j] = "38";
                     continue;
                 }
