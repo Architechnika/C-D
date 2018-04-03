@@ -10,10 +10,10 @@ function GameObject(NAME, TYPE, LOCATION, IMAGE) { // основной клас�
     //Указываем в качестве родителя ImageObject
     this.__proto__ = game.newImageObject({
         file: IMAGE,
-        x: field[this.position].x + field[this.position].w / 4,
-        y: field[this.position].y + field[this.position].h / 4,
-        w: field[this.position].w / 2,
-        h: field[this.position].h / 2,
+        x: field[this.position].x,// + field[this.position].w / 4,
+        y: field[this.position].y, //+ field[this.position].h / 4,
+        w: field[this.position].w,/// 2,
+        h: field[this.position].h// / 2,
     });
 
     this.setImage = function (img) {
@@ -34,10 +34,10 @@ function GameObject(NAME, TYPE, LOCATION, IMAGE) { // основной клас�
     }
     
     this.setSize = function (imgObj) {
-        this.x = imgObj.x + imgObj.w / 4,
-        this.y = imgObj.y + imgObj.h / 4,
-        this.w = imgObj.w / 2
-        this.h = imgObj.h / 2
+        this.x = imgObj.x,
+        this.y = imgObj.y,
+        this.w = imgObj.w,
+        this.h = imgObj.h
     }
 
 }

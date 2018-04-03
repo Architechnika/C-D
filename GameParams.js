@@ -4,9 +4,9 @@ var touchTapTimeOut = 100;//Параметр указывающий скольк
 var distanceOfScroll = 5; //Параметр указывающий на каком расстоянии от точки тапа при движении по экрану начинать отрабатывать события скрола
 var scrollStep = 20; //Шаг скрола в пикселях(Когда крутишь колесиком мыши)
 var touchScrollVal = 2;//Шаг скрола когда пальцами ресайзишь
-var toolTipDelay = 1000;//Задержка в миллисекундах после которой всплывают тултипы если держать мышку на элементе
+var toolTipDelay = 1000000000;//Задержка в миллисекундах после которой всплывают тултипы если держать мышку на элементе
 //Игровые параметры---------------------------------------------------------------------------------------------
-var labyrinthSize = 35;//Стартовый размер лабиринта(Например если 5, тогда при старте игры сгенерится лабиринт размером 5x5). ДЛЯ АЛГОРИТМА ГЕНЕРАЦИИ ЭТО ДОЛЖНО БЫТЬ НЕЧЕТНОЕ ЧИСЛО
+var labyrinthSize = 3;//Стартовый размер лабиринта(Например если 5, тогда при старте игры сгенерится лабиринт размером 5x5). ДЛЯ АЛГОРИТМА ГЕНЕРАЦИИ ЭТО ДОЛЖНО БЫТЬ НЕЧЕТНОЕ ЧИСЛО
 var labyrinthMaxSize = 0;//Ограничение на максимальный размер лабиринта. Если = 0, то максимума нет.
 var isLabyrinthGrow = true;//Переключение возможности увеличения лабиринта при прохождении(Увеличивается лабиринт или нет при выходе из него)
 var robotMoveDelay = 350; //Задержка при движении робота в милисекундах(ЧЕМ МЕНЬШЕ ТЕМ БЫСТРЕЕ)
@@ -64,7 +64,7 @@ var entryImgComm = "img/commands/command_interact_entry.png";
 var groundImgComm = "img/commands/command_interact_road.png";
 var lineImg = "img/commands/command_line.png";
 //Пути до файлов с изображением робота--------------------------------------------
-var playerImgSrc = "img/assets/"+currentAsset+"/object_player.png";;
+var playerImgSrc = "img/assets/"+currentAsset+"/object_player.png";
 //Пути до файлов с изображением команд--------------------------------------------
 var commandNoneImgSrc = "img/commands/command_none.png";
 var commandUpImgSrc = "img/commands/command_up.png";
@@ -344,6 +344,7 @@ var arrInterfaceAndCommandsImagesForLoad = [
 graphicsImgs.forEach(function(e){
     new Image().src = e.value;
 });
+
 arrInterfaceAndCommandsImagesForLoad.forEach(function(e){
     new Image().src = e;
 });
