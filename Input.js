@@ -508,7 +508,7 @@ function processFieldClick(e) {
 
 //Вернет true если клик был внутри координат прямоугольника obj
 function clickIsInObj(x, y, obj) {
-    if (obj && obj.visible != "false") {
+    if (obj && obj.visible != false) {
         if (x >= obj.x && y >= obj.y)
             if (x <= obj.x + obj.w && y <= obj.y + obj.h)
                 return true;

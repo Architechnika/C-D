@@ -207,7 +207,7 @@ function initGameSpace() {
 
     if (width < height) {
         gameSpaceX = 0;
-        gameSpaceY = height / 100 * 15
+        gameSpaceY = ((height - (height * 0.14)) / 2) - (width / 2);
         gameSpaceW = width;
         gameSpaceH = gameSpaceW;
         isVerticalScreen = true;

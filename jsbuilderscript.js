@@ -4010,6 +4010,7 @@ var audio_field_click = pjs.audio.newAudio("audio/clickField.ogg");
 var audio_object_up = pjs.audio.newAudio("audio/gameObjectUp.ogg");
 var audio_object_down = pjs.audio.newAudio("audio/gameObjectDown.ogg");
 var audio_object_messeng = pjs.audio.newAudio("audio/messeng.ogg");
+var audio_scroll_click = pjs.audio.newAudio("audio/scrollClick.ogg");
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------ГРАФИЧЕСКИЕ ПАРАМЕТРЫ-----------------------------------------------------------------
 //ТЕКУЩИЙ ВЫБРАННЫЙ ГРАФИЧЕСКИЙ ПАК(ПО ИМЕНИ ПАПКИ В КОТОРОЙ НАХОДЯТСЯ РЕСУРСЫ В img/assets/...)
@@ -22355,7 +22356,7 @@ function processFieldClick(e) {
 
 //Вернет true если клик был внутри координат прямоугольника obj
 function clickIsInObj(x, y, obj) {
-    if (obj && obj.visible != "false") {
+    if (obj && obj.visible != false) {
         if (x >= obj.x && y >= obj.y)
             if (x <= obj.x + obj.w && y <= obj.y + obj.h)
                 return true;
@@ -22693,7 +22694,7 @@ var getCommandsMenu = function(src){
                     obj.setUserData({
                         command: getCopyOfObj(COMMANDS[comm]),
                         onClick: function (el) {
-                             audio_GUI_click.play();
+                            audio_scroll_click.play();
                             return onChooseCommandClick(el);
                         }
                     });
@@ -22739,7 +22740,7 @@ function getAllInteractGameObjects() {
             name: "blockB"
         },
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -22758,7 +22759,7 @@ function getAllInteractGameObjects() {
             name: "blockB"
         },
         onClick: function (el) {
-             audio_GUI_click.play();
+            audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -22777,7 +22778,7 @@ function getAllInteractGameObjects() {
             name: "blockB"
         },
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -22796,7 +22797,7 @@ function getAllInteractGameObjects() {
             name: "blockB"
         },
         onClick: function (el) {
-             audio_GUI_click.play();
+            audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -22815,7 +22816,7 @@ function getAllInteractGameObjects() {
             name: "blockB"
         },
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -22837,7 +22838,7 @@ function getAllDirections() {
     allObj[allObj.length - 1].setUserData({
         command: COMMANDS[18],
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -22852,7 +22853,7 @@ function getAllDirections() {
     allObj[allObj.length - 1].setUserData({
         command: COMMANDS[19],
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -22867,7 +22868,7 @@ function getAllDirections() {
     allObj[allObj.length - 1].setUserData({
         command: COMMANDS[20],
         onClick: function (el) {
-             audio_GUI_click.play();
+            audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -22882,7 +22883,7 @@ function getAllDirections() {
     allObj[allObj.length - 1].setUserData({
         command: COMMANDS[21],
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -22897,7 +22898,7 @@ function getAllDirections() {
     allObj[allObj.length - 1].setUserData({
         command: COMMANDS[22],
         onClick: function (el) {
-             audio_GUI_click.play();
+            audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -23047,7 +23048,7 @@ function getDigitKeyboardImages() {
                 value: i
             },
             onClick: function (el) {
-                 audio_GUI_click.play();
+                audio_scroll_click.play();
                 return onKeyboardClick(el);
             }
         });
@@ -23066,7 +23067,7 @@ function getDigitKeyboardImages() {
             value: 0
         },
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onKeyboardClick(el);
         }
     });
@@ -23083,7 +23084,7 @@ function getDigitKeyboardImages() {
             name: "backspace"
         },
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onKeyboardClick(el);
         }
     });
@@ -25046,6 +25047,10 @@ function graphicsMapSort(arr) {
         }
     }
     return newArr;
+}
+
+function getOptimalLabRoute(lab){
+
 }
 var iEL;
 var iEF;

@@ -731,3 +731,7 @@ function graphicsMapSort(arr) {
     }
     return newArr;
 }
+
+function getOptimalLabRoute(lab){
+
+}
