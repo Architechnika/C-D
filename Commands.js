@@ -329,7 +329,7 @@ var getCommandsMenu = function(src){
                     obj.setUserData({
                         command: getCopyOfObj(COMMANDS[comm]),
                         onClick: function (el) {
-                             audio_GUI_click.play();
+                            audio_scroll_click.play();
                             return onChooseCommandClick(el);
                         }
                     });
@@ -375,7 +375,7 @@ function getAllInteractGameObjects() {
             name: "blockB"
         },
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -394,7 +394,7 @@ function getAllInteractGameObjects() {
             name: "blockB"
         },
         onClick: function (el) {
-             audio_GUI_click.play();
+            audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -413,7 +413,7 @@ function getAllInteractGameObjects() {
             name: "blockB"
         },
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -432,7 +432,7 @@ function getAllInteractGameObjects() {
             name: "blockB"
         },
         onClick: function (el) {
-             audio_GUI_click.play();
+            audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -451,7 +451,7 @@ function getAllInteractGameObjects() {
             name: "blockB"
         },
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -473,7 +473,7 @@ function getAllDirections() {
     allObj[allObj.length - 1].setUserData({
         command: COMMANDS[18],
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -488,7 +488,7 @@ function getAllDirections() {
     allObj[allObj.length - 1].setUserData({
         command: COMMANDS[19],
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -503,7 +503,7 @@ function getAllDirections() {
     allObj[allObj.length - 1].setUserData({
         command: COMMANDS[20],
         onClick: function (el) {
-             audio_GUI_click.play();
+            audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -518,7 +518,7 @@ function getAllDirections() {
     allObj[allObj.length - 1].setUserData({
         command: COMMANDS[21],
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -533,7 +533,7 @@ function getAllDirections() {
     allObj[allObj.length - 1].setUserData({
         command: COMMANDS[22],
         onClick: function (el) {
-             audio_GUI_click.play();
+            audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
@@ -683,7 +683,7 @@ function getDigitKeyboardImages() {
                 value: i
             },
             onClick: function (el) {
-                 audio_GUI_click.play();
+                audio_scroll_click.play();
                 return onKeyboardClick(el);
             }
         });
@@ -702,7 +702,7 @@ function getDigitKeyboardImages() {
             value: 0
         },
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onKeyboardClick(el);
         }
     });
@@ -719,7 +719,7 @@ function getDigitKeyboardImages() {
             name: "backspace"
         },
         onClick: function (el) {
-             audio_GUI_click.play();
+             audio_scroll_click.play();
             return onKeyboardClick(el);
         }
     });

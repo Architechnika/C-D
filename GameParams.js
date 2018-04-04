@@ -35,6 +35,7 @@ var audio_field_click = pjs.audio.newAudio("audio/clickField.ogg");
 var audio_object_up = pjs.audio.newAudio("audio/gameObjectUp.ogg");
 var audio_object_down = pjs.audio.newAudio("audio/gameObjectDown.ogg");
 var audio_object_messeng = pjs.audio.newAudio("audio/messeng.ogg");
+var audio_scroll_click = pjs.audio.newAudio("audio/scrollClick.ogg");
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------ГРАФИЧЕСКИЕ ПАРАМЕТРЫ-----------------------------------------------------------------
 //ТЕКУЩИЙ ВЫБРАННЫЙ ГРАФИЧЕСКИЙ ПАК(ПО ИМЕНИ ПАПКИ В КОТОРОЙ НАХОДЯТСЯ РЕСУРСЫ В img/assets/...)
