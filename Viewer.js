@@ -25,34 +25,22 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
     }
 
     var getCenterElemOnScreen = function (elems, background) {
-        var buff = [];
         var indx = 0;
         //Центральный элемент
         var centrElem = elems[0];
-        //Буфер для разности между центрами
-        var diffXBuff = background.w + background.x, diffYBuff = background.h + background.y, diffX = 0, diffY = 0;
-        //Центр экрана
-        var bCX = (background.x + background.w) / 2;
-        var bCY = (background.y + background.h) / 2;
-        //log("ЦЕНТР " + bCX + " : " + bCY);
         OOP.forArr(elems, function (el, i) {
             //Если элемент входит в бэкграунд игрового поля
             if (el.isIntersect(background)) {
-                //buff.push(el);
-                //Рассчитываем удаленность элемента от центра бэкграунда как сумму разностей координат по модулю
-                var elC = el.getPositionC();
-                diffX = Math.abs(bCX - elC.x);
-                diffY = Math.abs(bCY - elC.y);
-                if(diffX <= diffXBuff && diffY <= diffYBuff) {
-                    indx = i > 0 ? i - 1 : i;
-                    centrElem = elems[indx];
-                    diffXBuff = diffX;
-                    diffYBuff = diffY;
-                }
-                //log(indx);
+                var bcx = background.getPositionC().x;
+                var bcy = background.getPositionC().y;
+
+                if(bcx >= el.x && bcx <= el.x + el.w)
+                    if(bcy >= el.y && bcy <= el.y + el.h){
+                        centrElem = el;
+                        indx = i;
+                    }
             }
         });
-        //log("ВСЕГО: " + elems.length + " ЦЕНТР : " + indx);
         return centrElem;
     }
 
@@ -188,8 +176,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         var counterX = 0;
         var counterY = 0;
         //Запоминаем нужные параметры для сдвига в центр после ресайза
-        //var cIndx = Math.floor(this.elems.length / 2);
-        var cEl = getCenterElemOnScreen(this.elems, this.backGround); //this.elems[cIndx];
+        var cEl = getCenterElemOnScreen(this.elems, this.backGround);
         var xl, yl, wl, hl;
         //Обходим все элементы массива
         OOP.forArr(this.elems, function (el, i) {
@@ -665,13 +652,17 @@ var getTextObject = function (el, elemWH) {
     //ДОБАВИТЬ ТЕКСТОВОЕ ПОЛЕ
     if (el.command && el.command.name == "counter") {
         var count = el.command.count;
-        var countStr =  count.toString();
+        var countStr = count.toString();
+        var txt = countStr.length > 2 ? "*" : countStr;
+        //Рассчитываем местоположение текстового обьекта относительно квадрата к которому он принадлежит
+        var tX = txt.length == 1 ? el.x + elemWH * 0.4 : el.x + elemWH * 0.28;
+        var tY = el.y + elemWH * 0.28;
+
         var obj = game.newTextObject({
-            x: el.x,
-            y: el.y,
-            text: countStr.length > 2 ? "*" : countStr,
-            size: elemWH / 2,
-            padding : elemWH * 0.3,
+            x: tX,
+            y: tY,
+            text: txt,
+            size: elemWH / 2.3,
             color: textOnCodeMapColor,
         });
         return obj;
