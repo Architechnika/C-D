@@ -1,7 +1,13 @@
 function Dialog()
 {
+
     var bgW = width/100 * 20;
     var bgH = height/100 * 10;
+    if(height < 450)
+        {
+             bgW = width/100 * 30;
+             bgH = height/100 * 20;
+        }
     var bgX = width/2 - (bgW/2);
     var bgY = height/2 - (bgH/2);
     var text = lang[selectLang]['dialog_delete'];

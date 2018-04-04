@@ -67,8 +67,12 @@ function Buttons() { //класс для работы совсеми кнопк�
 
     this.menuButton.setSetting(this.backToStartButton.x + this.backToStartButton.w, height - (gameSpaceW / 100 * 14), (gameSpaceW) / buttonsCount, gameSpaceW / 100 * 14)
     this.menuButton.setButtonImgSrc(menuButtonImgSrc);
-    
-    this.deleteButton.setSetting(width -(gameSpaceW/100 * 5) ,0, gameSpaceW/100 * 5, gameSpaceW / 100 * 5)
+
+    if (height < 450) {
+            this.deleteButton.setSetting(width - (gameSpaceW / 100 * 10), 0, gameSpaceW / 100 * 10, gameSpaceW / 100 * 10)
+    } else {
+        this.deleteButton.setSetting(width - (gameSpaceW / 100 * 5), 0, gameSpaceW / 100 * 5, gameSpaceW / 100 * 5)
+    }
     this.deleteButton.setButtonImgSrc(buttonDeleteImgSrc);
     this.deleteButton.setVisible(false);
     //
@@ -89,8 +93,8 @@ function Buttons() { //класс для работы совсеми кнопк�
     });
     this.deleteButton.setUserData({
         onClick: function (el) {
-                if(lastClickedElement.commands && lastClickedElement.commands.length >0)
-                    dialog.setShowDialog(true);
+            if (lastClickedElement.commands && lastClickedElement.commands.length > 0)
+                dialog.setShowDialog(true);
         }
     });
     this.stepUpButton.setUserData({
