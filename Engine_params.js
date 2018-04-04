@@ -1,7 +1,7 @@
 /*
 Содержит переменные для работы с движком
 */
-
+var backgroundImgPath = "img/interface/interface_font.png"; //Картинка для фона за либиринтом
 var pjs = new PointJS(640, 480, {
     //backgroundColor : '#3333ff',
     //backgroundColor : '#4b4843' ,// optional
