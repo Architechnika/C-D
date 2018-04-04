@@ -88,16 +88,15 @@ function saveTimer() {
 }
 
 //Таймер, который контролирует логические процессы игры(Смена ориентации экрана, события тултипов)-----------------------------------------------------------
-function logicEventTimer(){
+function logicEventTimer() {
     //Проверяем смену ориентации экрана
-    if(game.getWH().w != width){
+    if (game.getWH().w != width) {
         recalcScreen();
     }
-    if(toolTip && !toolTip.isVisible() && toolTipTimeCounter >= toolTipDelay){
-        toolTipShowEvent(clickCoord.x,clickCoord.y);
+    if (toolTip && !toolTip.isVisible() && toolTipTimeCounter >= toolTipDelay) {
+        toolTipShowEvent(clickCoord.x, clickCoord.y);
         toolTipTimeCounter = 0;
-    }
-    else toolTipTimeCounter += 40;
+    } else toolTipTimeCounter += 40;
     setTimeout("logicEventTimer()", 40);
 }
 
@@ -106,8 +105,8 @@ function totalTimeTimer() {
     setTimeout("totalTimeTimer()", 1000);
 }
 //Функция перерасчитывает параметры всех графических элементов
-function recalcScreen(){
-    if(isSecondScreen){
+function recalcScreen() {
+    if (isSecondScreen) {
         allButtons.backToStartButton.setAlpha(1);
         allButtons.stepDownButton.setAlpha(1);
         allButtons.stepUpButton.setAlpha(1);
@@ -121,8 +120,8 @@ function recalcScreen(){
     initGameSpace();
     calcMapPosition();
     labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
-    labView.checkGameObjects();//Ставим обьекты на место
-    Scrolls.splice(0,Scrolls.length);
+    labView.checkGameObjects(); //Ставим обьекты на место
+    Scrolls.splice(0, Scrolls.length);
     initGUI();
     //Инициализируем обьект для вывода карты кода
     if (!codeMapBG) {
@@ -131,13 +130,13 @@ function recalcScreen(){
     //Показываем кнопку старт или стоп
     allButtons.mainButton.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
     //Если у робота есть команды в инвентаре или игра запущена
-    if(isStarted || playerCommands && playerCommands.length > 0){
+    if (isStarted || playerCommands && playerCommands.length > 0) {
         //Если игра перешла в горизонтальное отображение, то надо перегенерит кодмап
-        if(!isVerticalScreen){
+        if (!isVerticalScreen) {
             drawCommState(true);
         }
     }
-    labView.setFocusOnElement(field[playerPozition],true);
+    labView.setFocusOnElement(field[playerPozition], true);
 }
 
 //Инициализация лабиринта
@@ -172,7 +171,7 @@ function initializeGame(isInit) {
     if (!codeMapBG) {
         codeView = new CodeMapView(0, 0, 0, 0, "white");
     } else codeView = new CodeMapView(codeMapBG.x, codeMapBG.y, codeMapBG.w, codeMapBG.h, "white");
-    if(Scrolls) Scrolls.splice(0);
+    if (Scrolls) Scrolls.splice(0);
     recalcScreen();
 }
 
@@ -255,10 +254,10 @@ function setFocused(fieldElem, indx) {
         initRightScroll([]);
         codeView.resetZoomer();
         codeView.createCodeMap(0, textbackGroundItem.h, lastClickedElement.commands, true, true, 1, true);
-        if(lastClickedElement.commands.length == 0){
+        if (lastClickedElement.commands.length == 0) {
             onCodeMapElementClick(codeView.getAllElems()[0]);
         }
-        
+
     } else { //Если ориентация экрана вертикальная
         clearAllLayers();
         allButtons.backToStartButton.setAlpha(inactiveItemsAlpha);
@@ -266,7 +265,7 @@ function setFocused(fieldElem, indx) {
         allButtons.stepUpButton.setAlpha(inactiveItemsAlpha);
         //Показываем кнопку ok
         allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
-        
+
         game.setLoop("SecondScreen")
     }
 }
@@ -287,17 +286,17 @@ function addCommandToCell(commandImg, dontAdd) {
             comm.lookCommand = commandImg.command; //Инитим параметр lookCommand
             choosenCommandInElement.blockA = comm;
             inputCommandStates = 0;
-            if(isVerticalScreen) initLeftScroll();
+            if (isVerticalScreen) initLeftScroll();
             else initLeftScroll([]);
             initRightScroll([]);
-            codeView.createCodeMap(codeMapBG.x,codeMapBG.y, lastClickedElement.commands, true, true);
+            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         } else if (inputCommandStates == 3) { //Если выбираем blockB
             choosenCommandInElement.blockB = commandImg.command;
             inputCommandStates = 0;
-            if(isVerticalScreen) initLeftScroll();
+            if (isVerticalScreen) initLeftScroll();
             else initLeftScroll([]);
             initRightScroll([]);
-            codeView.createCodeMap(codeMapBG.x,codeMapBG.y, lastClickedElement.commands, true, true);
+            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         } else if (inputCommandStates == 0) { //Если редактируем команды из codeView
             if (itemToReplaceInCodeMap) { //Если нужно заменить элемент
                 //Находим массив в котором хранится команда для замены
@@ -313,8 +312,8 @@ function addCommandToCell(commandImg, dontAdd) {
                 itemToReplaceInCodeMap = undefined;
                 initLeftScroll(getCommandsImgArr(elemStor));
                 initRightScroll([]);
-                if(isVerticalScreen) initLeftScroll();
-                codeView.createCodeMap(codeMapBG.x,codeMapBG.y, lastClickedElement.commands, true, true);
+                if (isVerticalScreen) initLeftScroll();
+                codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
             }
             if (itemToAddAfterInCodeMap) { //Если нужно добавить элемент не в конец списка а после опредленного
                 //Находим массив в котором хранится команда для замены
@@ -372,8 +371,23 @@ function changeMenuState(commandImg) {
         inputCommandStates = 4;
         initLeftScroll([]);
         //Инициализируем клавиатуру для ввода цифр
-        initRightScroll(getDigitKeyboardImages());
-        infoText.setText(choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count + "");
+        if (!isVerticalScreen) {
+            initRightScroll(getDigitKeyboardImages());
+            infoText.setText(choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count + "");
+        } else {
+            //при вертикальном положении экрана коректируем окно ввода чисел
+            var rScroll = initRightScroll(getDigitKeyboardImages());//получаем скрол с числами чтобы позицанировать
+            //позицанируем скрол - общая высота экрана минус "элемент скрола на количество строк в скроле этим узнаем высоту скрола" минус высота кнопок GUI
+            rScroll.GetBackGround().y = height - rScroll.getArrayItems()[0].h*rScroll.scrollRowCount - allButtons.mainButton.h;
+            //реиницилизируем для потверждение позицианирования
+            rScroll.initArrayItems(getDigitKeyboardImages())
+            //меняем позиции и высоту текстового окна
+            infoText.BG.x = rScroll.GetBackGround().x;
+            infoText.BG.y = textbackGroundItem.h;
+            infoText.BG.h = rScroll.GetBackGround().y-textbackGroundItem.h;// textbackGroundItem.h это высота верхней части экрана где время и количество очков 
+            //
+            infoText.setText(choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count + "");
+        }
     }
 }
 
