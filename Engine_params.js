@@ -39,3 +39,7 @@ Array.prototype.move = function (old_index, new_index) {
     return this; // for testing purposes
 };
 
+function sleep(milliseconds) {
+    var start = (new Date()).getTime();
+    while ((new Date()).getTime() - start <= milliseconds) {}
+}

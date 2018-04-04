@@ -47,6 +47,7 @@ function Dialog()
     
     this.dialogOkButton.setUserData({
         onClick: function (el) {
+            audio_GUI_click.play();
             lastClickedElement.commands.splice(0);
             setFocused(field[lastClickedIndx],lastClickedIndx);
             dialog.setShowDialog(false);
@@ -54,6 +55,7 @@ function Dialog()
     });
     this.dialogCancelButton.setUserData({
         onClick: function (el) {
+            audio_GUI_click.play();
             dialog.setShowDialog(false);
         }
     });
@@ -68,6 +70,8 @@ function Dialog()
     
     this.setShowDialog = function(isShow)
     {
+        if(isShow)
+            audio_object_messeng.play();
         bg.setVisible(isShow);
         dialogText.setVisible(isShow);
         this.dialogCancelButton.setVisible(isShow);

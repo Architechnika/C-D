@@ -69,7 +69,7 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.menuButton.setButtonImgSrc(menuButtonImgSrc);
 
     if (height < 450) {
-            this.deleteButton.setSetting(width - (gameSpaceW / 100 * 10), 0, gameSpaceW / 100 * 10, gameSpaceW / 100 * 10)
+        this.deleteButton.setSetting(width - (gameSpaceW / 100 * 10), 0, gameSpaceW / 100 * 10, gameSpaceW / 100 * 10)
     } else {
         this.deleteButton.setSetting(width - (gameSpaceW / 100 * 5), 0, gameSpaceW / 100 * 5, gameSpaceW / 100 * 5)
     }
@@ -79,6 +79,7 @@ function Buttons() { //класс для работы совсеми кнопк�
     //описывает обработчик onClick для кнопок
     this.mainButton.setUserData({
         onClick: function (el) {
+            audio_GUI_click.play();
             if (el.file == okButtonImgSrc) isOkClose = onOkBClick(); //Обрабатываем на нажатие по ОК
             else startBClick(); //Обрабатываем клик по СТАРТ/СТОП
             //Задаем картинку кнопке в соответствии с ее состоянием
@@ -87,24 +88,28 @@ function Buttons() { //класс для работы совсеми кнопк�
     });
     this.stepDownButton.setUserData({
         onClick: function (el) {
+            audio_GUI_click.play();
             if (!isOkClose || isStarted || isSecondScreen) return;
             setPreviousStateToPlayer();
         }
     });
     this.deleteButton.setUserData({
         onClick: function (el) {
+            audio_GUI_click.play();
             if (lastClickedElement.commands && lastClickedElement.commands.length > 0)
                 dialog.setShowDialog(true);
         }
     });
     this.stepUpButton.setUserData({
         onClick: function (el) {
+            audio_GUI_click.play();
             if (!isOkClose || isStarted || isSecondScreen) return;
             processRobotMove();
         }
     });
     this.backToStartButton.setUserData({
         onClick: function (el) {
+            audio_GUI_click.play();
             if (!isOkClose || isSecondScreen) return;
             if (!isStarted) {
                 //Останавливаем цикл движения игры
@@ -123,6 +128,8 @@ function Buttons() { //класс для работы совсеми кнопк�
     });
     this.menuButton.setUserData({
         onClick: function (el) {
+            audio_GUI_click.play();
+            sleep(80);
             menuBClick();
         }
     });

@@ -134,11 +134,13 @@ function playerMove(canRead) {
             break;
         case "pickup":
             var res = tryToPickUp();
+            audio_object_up.play();
             if (res != "") return res;
             break;
         case "drop":
             if (playerInventory === undefined || playerInventory.length == 0) return lang[selectLang]['inventory_is_empty'];
             //Если инвентарь не пуст, то выгружаем последний подобранный элемент на текущую позицию карты
+            audio_object_down.play();
             playerInventory[0].setNewPosition(playerPozition);
             playerInventory[0].startRotation();
             gameObjects.push(playerInventory[0]);
