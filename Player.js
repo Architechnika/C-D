@@ -379,7 +379,7 @@ function playerSetDirection(direction) {
 }
 
 //Перемещает игрока на заданный элемент поля
-function movePlayerToFieldElement(fEl) {
+function movePlayerToFieldElement(fEl, dontFocus) {
     //Если объект игрока ещё не создан
     if (playerImageObj === null) {
         playerImageObj = game.newImageObject({
@@ -396,7 +396,7 @@ function movePlayerToFieldElement(fEl) {
         playerImageObj.w = fEl.w;
         playerImageObj.h = fEl.h;
     }
-    if(labView) labView.setFocusOnElement(field[playerPozition],false);
+    if(labView && !dontFocus) labView.setFocusOnElement(field[playerPozition],false);
 }
 
 //Задает направление для персонажа, исходя из того, где находится вход в лабиринт

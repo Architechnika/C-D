@@ -19,6 +19,7 @@ var oneTileHeight = 100;
 var binMap = null;
 //Массив хранящий игровые объекты(монетки)
 var gameObjects = new Array();
+var optimalRoute = [];
 
 var entrySide = "NONE" //Хранит местоположение входа в лабиринте - необходимо для инициализации робота
 
@@ -278,7 +279,8 @@ function generateMap(w, h, x, y, elemsInLine, elemsInColumn, isNewGraphic) {
             //Заполняем массив элементов лабиринта
             field.push(fEl);
         });
-
+    //Рассчитываем оптимальный маршрут для прохождения
+    optimalRoute = getOptimalLabRoute(field);
     //ГЕНЕРИМ МЕСТОПОЛОЖЕНИЕ ИГРОВЫХ ОБЪЕКТОВ ЕСЛИ НАДО
     if (totalTokensOnMap !== 0) {
         gameObjects = new Array();
@@ -732,6 +734,7 @@ function graphicsMapSort(arr) {
     return newArr;
 }
 
+//Производит поиск оптимального маршрута для прохождения лабиринта
 function getOptimalLabRoute(lab){
 
 }
