@@ -21,7 +21,7 @@ function ScrollBar(posX, posY, orientation, arr, name) {
     var scrollBarCase = undefined;
     var items = undefined;
     this.itemW = 0
-     this.scrollRowCount = 0;
+    this.scrollRowCount = 0;
     var caseVisible = false;
 
     if (orientation == "Vertical") {

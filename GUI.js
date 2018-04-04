@@ -270,7 +270,7 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
     }
     this.setText = function (t) {
         text.text = t;
-        var sz = height/100*30;
+        var sz = height/100*23;
         text.size = sz
         if(!isVerticalScreen)
         text.x = (this.BG.x + this.BG.w / 2) - text.w + textSize - text.x / 2;
