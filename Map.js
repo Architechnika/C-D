@@ -280,7 +280,7 @@ function generateMap(w, h, x, y, elemsInLine, elemsInColumn, isNewGraphic) {
             field.push(fEl);
         });
     //Рассчитываем оптимальный маршрут для прохождения
-    optimalRoute = getOptimalLabRoute(field);
+    optimalRoute = getOptimalLabRoute(field, binMap);
     //ГЕНЕРИМ МЕСТОПОЛОЖЕНИЕ ИГРОВЫХ ОБЪЕКТОВ ЕСЛИ НАДО
     if (totalTokensOnMap !== 0) {
         gameObjects = new Array();
@@ -735,6 +735,29 @@ function graphicsMapSort(arr) {
 }
 
 //Производит поиск оптимального маршрута для прохождения лабиринта
-function getOptimalLabRoute(lab){
+function getOptimalLabRoute(f,bM){
+    var matrix = [];
+    var entryP = undefined;
+    var exitP = undefined;
+    for(var i = 0 ; i < bM.length; i++) {
+        matrix.push([]);
+        for(var j = 0; j < bM[i].length;j++){
 
+            if(bM[i][j] == entryCode)
+                entryP = new point(i,j);
+            if(bM[i][j] == exitCode)
+                exitP = new point(i,j);
+
+            var d = parseInt(bM[i][j]);
+            if(bM[i][j] == roadCode || bM[i][j] == exitCode || bM[i][j] == entryCode) d = 0;//0 - проход
+            else d = 1;//1 - барьер
+            matrix[i].push(d);
+
+        }
+    }
+    var grid = new PF.Grid(matrix);
+    var finder = new PF.AStarFinder();
+    //Cодержит массив с точками по которым надо перемещаться чтобы дойти до выхода
+    var path = finder.findPath(entryP.y, entryP.x, exitP.y, exitP.x, grid);
+    //Реализовать конвертер этих точек в конкретные элементы массива field и вернуть этот массив
 }
