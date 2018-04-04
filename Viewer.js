@@ -652,13 +652,17 @@ var getTextObject = function (el, elemWH) {
     //ДОБАВИТЬ ТЕКСТОВОЕ ПОЛЕ
     if (el.command && el.command.name == "counter") {
         var count = el.command.count;
-        var countStr =  count.toString();
+        var countStr = count.toString();
+        var txt = countStr.length > 2 ? "*" : countStr;
+        //Рассчитываем местоположение текстового обьекта относительно квадрата к которому он принадлежит
+        var tX = txt.length == 1 ? el.x + elemWH * 0.4 : el.x + elemWH * 0.28;
+        var tY = el.y + elemWH * 0.28;
+
         var obj = game.newTextObject({
-            x: el.x,
-            y: el.y,
-            text: countStr.length > 2 ? "*" : countStr,
-            size: elemWH / 2,
-            padding : elemWH * 0.3,
+            x: tX,
+            y: tY,
+            text: txt,
+            size: elemWH / 2.3,
             color: textOnCodeMapColor,
         });
         return obj;
