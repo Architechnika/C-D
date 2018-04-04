@@ -191,6 +191,7 @@ function initRightScroll(initArray) {
     //Показываем кнопку ok
     allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
     allButtons.deleteButton.setVisible(false);
+    return Scrolls[found];
 }
 
 //Возвращает графическое представление ЛЕВОГО БОКОВОГО СКРОЛА которое соответствует текущему состоянию в интерфейсе
@@ -234,7 +235,7 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
     var alphaBG = 0.7;
     var textColor = "#ffffff"
     var BGcolor = "#000000"
-    var BG = game.newRoundRectObject({
+    this.BG = game.newRoundRectObject({
         x: X,
         y: Y,
         w: W,
@@ -242,8 +243,8 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
         radius: _radius,
         fillColor: BGcolor
     })
-    var textX = (BG.x + BG.w / 2) - textSize / 2;
-    var textY = (BG.y + BG.h / 2) - textSize / 2;
+    var textX = (this.BG.x + this.BG.w / 2) - textSize / 2;
+    var textY = (this.BG.y + this.BG.h / 2) - textSize / 2;
     var text = game.newTextObject({
         x: textX,
         y: textY,
@@ -252,8 +253,8 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
         size: textSize,
         alpha: 1
     })
-    BG.setAlpha(alphaBG)
-    BG.setVisible(false)
+    this.BG.setAlpha(alphaBG)
+    this.BG.setVisible(false)
     text.setVisible(false)
 
     this.isVisible = function () {
@@ -261,7 +262,7 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
     }
 
     this.draw = function () {
-        BG.draw();
+        this.BG.draw();
         text.draw();
     }
     this.getText = function () {
@@ -271,13 +272,15 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
         text.text = t;
         var sz = height/100*30;
         text.size = sz
-        text.x = (BG.x + BG.w / 2) - text.w + textSize - text.x / 2;
-        text.y = (BG.y + BG.h / 2) - text.h / 2;
-        BG.setVisible(true)
+        if(!isVerticalScreen)
+        text.x = (this.BG.x + this.BG.w / 2) - text.w + textSize - text.x / 2;
+        else text.x = this.BG.x;
+        text.y = (this.BG.y + this.BG.h / 2) - text.h / 2;
+        this.BG.setVisible(true)
         text.setVisible(true)
     }
     this.close = function () {
-        BG.setVisible(false)
+        this.BG.setVisible(false)
         text.setVisible(false)
     }
 }
