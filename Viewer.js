@@ -13,6 +13,8 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         h: backH,
         fillColor: fillCol
     });
+    this.minItemSize = this.backGround.h / 18;
+    this.maxItemSize = this.backGround.h / 6;
     //Центр бэкргаунда
     this.backC = new point(this.backGround.x + this.backGround.w / 2, this.backGround.y + this.backGround.h / 2);
     //Текущее смещение на скроле
@@ -43,13 +45,17 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         });
         return centrElem;
     }
+    //Ресайзит все элементы в максимальный размер
+    this.resizeToMax = function(){
+        this.resizeView((this.maxItemSize / 2) - this.elems[0].h, true, undefined, true);
+    }
 
     //Ресайзит все так, чтобы elem был в центре background-а
     this.setFocusOnElement = function(elem, isCodeView) {
         //Ресайзим как надо
-        if(isCodeView) {
-            this.resizeView((this.backGround.h / 6) - this.elems[0].h, true, undefined, true);
-        }
+        //if(isCodeView) {
+            //this.resizeView((this.maxItemSize) - this.elems[0].h, true, undefined, true);
+        //}
         //Ищем элемент который должен быть в центре и сдвигаем его в центр
         for(var i = 0 ; i < this.elems.length; i++){
             if(this.elems[i] == elem){
@@ -154,20 +160,40 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         if (!this.elems || this.elems.length == 0)
             return;
         //Проверяем можно ли зумить
-        if (!dontCheckZoomer) {
-            //Проверяем на то чтобы не скролить меньше минимального порога
-            if (this.zoomer == 0 && delta < 0) return;
-            //Проверяем на то чтобы не скролить больше максимального порога
-            if (delta > 0){
-                //Если высота одного элемента в массиве элементов больше чем одна шестая бэкграунда то не увеличиваем больше
-                if(this.elems && this.elems.length > 0 && this.elems[0].h > (this.backGround.h / 6))
-                    return;
+        if(isCodeView){
+            if(this.elems[0].w <= this.minItemSize && delta < 0)
+                return;
+            if(this.elems[0].w >= this.maxItemSize && delta > 0)
+                return;
+
+            if(this.elems[0].w + delta > this.maxItemSize){
+                delta = this.maxItemSize - this.elems[0].w;
             }
-            var z = this.zoomer + delta;
-            if (z < 0) delta = delta + Math.abs(z);
-            this.zoomer += delta;
+            else if(this.elems[0].w + delta < this.minItemSize){
+                delta = this.elems[0].w - this.minItemSize;
+                delta *= -1;
+            }
+            this.zoomer = this.elems[0].w + delta;
         }
-        else this.zoomer = this.elems[0].w + delta;
+        else{
+            if (!dontCheckZoomer) {
+                //Проверяем на то чтобы не скролить меньше минимального порога
+                if (this.zoomer == 0 && delta < 0) return;
+                //Проверяем на то чтобы не скролить больше максимального порога
+                if (delta > 0){
+                    //Если высота одного элемента в массиве элементов больше чем одна шестая бэкграунда то не увеличиваем больше
+                    if(this.elems && this.elems.length > 0 && this.elems[0].h > (this.maxItemSize))
+                        return;
+                }
+                var z = this.zoomer + delta;
+                if (z < 0) delta = delta + Math.abs(z);
+                this.zoomer += delta;
+            }
+            else {
+                this.zoomer = this.elems[0].w + delta;
+            }
+        }
+
         //Начинаем ЗУМ
         //Запоминаем левую верхнюю точку бэкграунда
         var GSX = this.backGround.x;
@@ -439,7 +465,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
     }
 
     //Метод располагающий элементы this.elems в правильном порядке
-    this.createCodeMap = function (x, y, arr, isPlusAdd, isOnClick, alpha, activeELement) {
+    this.createCodeMap = function (x, y, arr, isPlusAdd, isOnClick, alpha, activeELement, dontResetZoomer) {
         //Если на экран выведен правый скролл то вообще нету смысла создавать кодмап
         for(var i = 0 ; i < Scrolls.length; i++){
             if(Scrolls[i].name == "RIGHT" && Scrolls[i].getArrayItems().length > 0){
@@ -474,7 +500,12 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         //Добавляем кнопки меню элемента
         //parent.elems = parent.elems.concat(this.menu.itemsArray);
         if(alpha >= 1)
-        parent.checkObjsInArea();
+            parent.checkObjsInArea();
+        if(!isPlusAdd && !isOnClick) {
+            this.nonClickMode = true;
+            this.resizeToMax();
+        }
+        else this.nonClickMode = false;
     }
 
     //Выставляет альфу всем элементам кодмапа равной disactiveAlpha и ставит альфу у activeElement = 1
@@ -527,16 +558,17 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         parent.zoomer = 0;
     }
 
-    this.resizeView = function (delta, dontAddPlus,dontClick) {
+    this.resizeView = function (delta) {
         if(!parent.elems || parent.elems.length == 0) return;
-        parent.resizeView(delta, undefined, true);
+        parent.resizeView(delta, false, true);
         //запоминаем новый размер для элемента
         this.elemWH = parent.elems[0].w;
 
         if (this.menu !== undefined)
             this.menu.setSettings();
         //this.elementsMove(parent.currentShift.x - parent.backGround.x, parent.currentShift.y - parent.backGround.y, true, undefined);
-        this.checkObjsInArea(1);
+        if(!isStarted)
+            this.checkObjsInArea(1);
         //Проверяем надо ли смещать код мап после ресайза(Да знаю, что для этого мы и писали универсальную функцию ресайза в родительском классе, но тут особый случай, не могу придумать способа его обрабатывать без специального кода тут)
         //Считаем разность нижней точки кодмапа с нижней точкой последнего элемента
         var lastElemDiff =(codeMapBG.y + codeMapBG.h) - (parent.elems[parent.elems.length - 1].y + parent.elems[parent.elems.length - 1].h);
@@ -549,8 +581,6 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
             }
             this.elementsMove(0,shift, true, true);
         }
-        //ПАРАМЕТР alpha = -1 КАК ФЛАГ ТОГО ЧТОБЫ НЕ СБРАСЫВАТЬ ZOOMER при этом вызове функции(Исправить)
-        //codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, !dontAddPlus, !dontClick, -1);
     }
 
     this.elementsMove = function (shiftX, shiftY, dontSave, dontCheck) {
@@ -653,6 +683,7 @@ var getTextObject = function (el, elemWH) {
     if (el.command && el.command.name == "counter") {
         var count = el.command.count;
         var countStr = count.toString();
+        //Определяем длину текста
         var txt = countStr.length > 2 ? "*" : countStr;
         //Рассчитываем местоположение текстового обьекта относительно квадрата к которому он принадлежит
         var tX = txt.length == 1 ? el.x + elemWH * 0.4 : el.x + elemWH * 0.28;

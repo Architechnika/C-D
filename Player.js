@@ -265,7 +265,7 @@ function playerMove(canRead) {
 function drawCommState(isRegenCodeMap){
     if(!isVerticalScreen) {
         if(isRegenCodeMap)
-            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
+            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0], true);
         codeView.setAlphaToElement(passiveItemsAlpha,playerCommands[0]);
     }
 }

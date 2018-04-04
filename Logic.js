@@ -467,7 +467,6 @@ function processRobotMove() {
         codeView.clear();
         showMessage(res);
     } else if (isStarted) setTimeout("processRobotMove()", robotMoveDelay);
-    //camera.follow( playerImageObj, 1 );
 }
 
 function showMessage(text) {
