@@ -168,14 +168,10 @@ function onRecize(e, delta, step) {
         return;
     } else if (clickIsInObj(e.x, e.y, codeView.getBackGround())) {
         //Ресайз поля работает только когда игрок не двигается
-        if (!isStarted) {
+        //if (!isStarted) {
             //Инициализируем карту кода
-            //Проверяем надо ли совсем закрывать интерфейс ввода
-            if (!field[lastClickedIndx].isStroke) {
-                //codeView.createCodeMap(0, 0, lastClickedElement.commands, false, false, 1);
-                codeView.resizeView(delta < 0 ? step : -1 * step, true, true);
-            } else codeView.resizeView(delta < 0 ? step : -1 * step);
-        }
+            codeView.resizeView(delta < 0 ? step : -1 * step);
+        //}
         return;
     }
 }

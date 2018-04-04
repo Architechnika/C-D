@@ -31,13 +31,13 @@ var isDrawFPS = false;
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------ГРАФИЧЕСКИЕ ПАРАМЕТРЫ-----------------------------------------------------------------
 //ТЕКУЩИЙ ВЫБРАННЫЙ ГРАФИЧЕСКИЙ ПАК(ПО ИМЕНИ ПАПКИ В КОТОРОЙ НАХОДЯТСЯ РЕСУРСЫ В img/assets/...)
-var currentAsset = "greenland";
+var currentAsset = "racetrack";
 //Параметры для внутриигрового текста
 var textOnCodeMapColor = "#1f75fe";//Цвет цифр когда вводишь итерации в команду repeat
 
 //Путь к файлам отображения ИНТЕРФЕЙСА И КОМАНД---------------------------------------
 var nonePath = "img/commands/command_none.png";//Картинка пустой команды
-var coinPath = "img/assets/"+currentAsset+"/object_battery.png"; //Картинка для отображения монетки
+var coinPath = "img/assets/"+currentAsset+"/field/object_battery.png"; //Картинка для отображения монетки
 //Пути до файлов с изображениями для интерфейса-------------------------------
 var backgroundImgPath = "img/interface/interface_font.png"; //Картинка для фона за либиринтом
 var clockPath = "img/interface/interface_clock.png";
@@ -58,14 +58,14 @@ var itemAddSrc = "img/interface/interface_codeview_add.png";
 var itemMoveSrc = "img/interface/interface_codeview_move.png";
 var itemPlusSrc = "img/interface/interface_codeview_plus.png";
 //Файлы команд для карты кода---------------------------------------------------
-var wallImgComm = "img/commands/command_interact_wall.png";
-var coinImgComm = "img/commands/command_interact_coin.png";
-var exitImgComm = "img/commands/command_interact_exit.png";
-var entryImgComm = "img/commands/command_interact_entry.png";
-var groundImgComm = "img/commands/command_interact_road.png";
+var wallImgComm = "img/assets/"+currentAsset+"/commands/command_interact_wall.png";
+var coinImgComm = "img/assets/"+currentAsset+"/commands/command_interact_coin.png";
+var exitImgComm = "img/assets/"+currentAsset+"/commands/command_interact_exit.png";
+var entryImgComm = "img/assets/"+currentAsset+"/commands/command_interact_entry.png";
+var groundImgComm = "img/assets/"+currentAsset+"/commands/command_interact_road.png";
 var lineImg = "img/commands/command_line.png";
 //Пути до файлов с изображением робота--------------------------------------------
-var playerImgSrc = "img/assets/"+currentAsset+"/object_player.png";
+var playerImgSrc = "img/assets/"+currentAsset+"/field/object_player.png";
 //Пути до файлов с изображением команд--------------------------------------------
 var commandNoneImgSrc = "img/commands/command_none.png";
 var commandUpImgSrc = "img/commands/command_up.png";
@@ -114,163 +114,163 @@ var graphicsImgs = [
     //картинки внутренных стен
     {
         code : 2,
-        value : "img/assets/"+currentAsset+"/field_wall_roundDown.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_roundDown.png"
     },
     {
         code : 3,
-        value : "img/assets/"+currentAsset+"/field_wall_roundUp.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_roundUp.png"
     },
     {
         code : 4,
-        value : "img/assets/"+currentAsset+"/field_wall_roundRight.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_roundRight.png"
     },
     {
         code : 5,
-        value : "img/assets/"+currentAsset+"/field_wall_roundLeft.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_roundLeft.png"
     },
     {   code : 6,
-        value : "img/assets/"+currentAsset+"/field_wall_corner_rightUp.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_corner_rightUp.png"
     },
     {   code : 777,
-        value : "img/assets/"+currentAsset+"/field_wall_corner_leftUp.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_corner_leftUp.png"
     },
     {   code : 888,
-        value : "img/assets/"+currentAsset+"/field_wall_corner_leftDown.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_corner_leftDown.png"
     },
     {   code : 999,
-        value : "img/assets/"+currentAsset+"/field_wall_corner_rightDown.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_corner_rightDown.png"
     },
     {   code : 37,
-        value : "img/assets/"+currentAsset+"/field_wall_T_down.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_T_down.png"
     },
     {   code : 38,
-        value : "img/assets/"+currentAsset+"/field_wall_T_up.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_T_up.png"
     },
     {   code : 39,
-        value : "img/assets/"+currentAsset+"/field_wall_T_left.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_T_left.png"
     },
     {   code : 40,
-        value : "img/assets/"+currentAsset+"/field_wall_T_right.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_T_right.png"
     },
     {   code : 41,
-        value : "img/assets/"+currentAsset+"/field_wall_straight_vertical.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_straight_vertical.png"
     },
     {   code : 42,
-        value : "img/assets/"+currentAsset+"/field_wall_straight_horizontal.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_straight_horizontal.png"
     },
     {   code : 43,
-        value : "img/assets/"+currentAsset+"/field_wall_straight_intersection.png"
+        value : "img/assets/"+currentAsset+"/field/field_wall_straight_intersection.png"
     },
     //
     //картинки дорог
     {   code : 10,
-        value : "img/assets/"+currentAsset+"/field_road_straight_vertical.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_straight_vertical.png"
     },
     {   code : 14,
-        value : "img/assets/"+currentAsset+"/field_road_straight_horizontal.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_straight_horizontal.png"
     },
     {   code : 12,
-        value : "img/assets/"+currentAsset+"/field_road_intersection.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_intersection.png"
     },
     {   code : 13,
-        value : "img/assets/"+currentAsset+"/field_road_corner_rightUp.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_corner_rightUp.png"
     },
     {   code : 15,
-        value : "img/assets/"+currentAsset+"/field_road_corner_leftDown.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_corner_leftDown.png"
     },
     {   code : 16,
-        value : "img/assets/"+currentAsset+"/field_road_corner_leftUp.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_corner_leftUp.png"
     },
     {   code : 17,
-        value : "img/assets/"+currentAsset+"/field_road_corner_rightDown.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_corner_rightDown.png"
     },
     {   code : 18,
-        value : "img/assets/"+currentAsset+"/field_road_T_up.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_T_up.png"
     },
     {   code : 19,
-        value : "img/assets/"+currentAsset+"/field_road_T_down.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_T_down.png"
     },
     {   code : 20,
-        value : "img/assets/"+currentAsset+"/field_road_T_left.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_T_left.png"
     },
     {   code : 11,
-        value : "img/assets/"+currentAsset+"/field_road_T_right.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_T_right.png"
     },
     {   code : 33,
-        value : "img/assets/"+currentAsset+"/field_road_end_right.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_end_right.png"
     },
     {   code : 34,
-        value : "img/assets/"+currentAsset+"/field_road_end_left.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_end_left.png"
     },
     {   code : 35,
-        value : "img/assets/"+currentAsset+"/field_road_end_up.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_end_up.png"
     },
     {   code : 36,
-        value : "img/assets/"+currentAsset+"/field_road_end_down.png"
+        value : "img/assets/"+currentAsset+"/field/field_road_end_down.png"
     },
     //
     //картинки внешних стен
     {   code : 21,
-        value : "img/assets/"+currentAsset+"/field_extWall_corner_leftUp.png"
+        value : "img/assets/"+currentAsset+"/field/field_extWall_corner_leftUp.png"
     },
     {   code : 22,
-        value : "img/assets/"+currentAsset+"/field_extWall_corner_rightDown.png"
+        value : "img/assets/"+currentAsset+"/field/field_extWall_corner_rightDown.png"
     },
     {   code : 23,
-        value : "img/assets/"+currentAsset+"/field_extWall_corner_rightUp.png"
+        value : "img/assets/"+currentAsset+"/field/field_extWall_corner_rightUp.png"
     },
     {   code : 24,
-        value : "img/assets/"+currentAsset+"/field_extWall_corner_leftDown.png"
+        value : "img/assets/"+currentAsset+"/field/field_extWall_corner_leftDown.png"
     },
     {   code : 25,
-        value : "img/assets/"+currentAsset+"/field_extWall_up.png"
+        value : "img/assets/"+currentAsset+"/field/field_extWall_up.png"
     },
     {   code : 26,
-        value : "img/assets/"+currentAsset+"/field_extWall_down.png"
+        value : "img/assets/"+currentAsset+"/field/field_extWall_down.png"
     },
     {   code : 27,
-        value : "img/assets/"+currentAsset+"/field_extWall_right.png"
+        value : "img/assets/"+currentAsset+"/field/field_extWall_right.png"
     },
     {   code : 28,
-        value : "img/assets/"+currentAsset+"/field_extWall_left.png"
+        value : "img/assets/"+currentAsset+"/field/field_extWall_left.png"
     },
     {   code : 29,
-        value : "img/assets/"+currentAsset+"/field_extWall_T_right.png"
+        value : "img/assets/"+currentAsset+"/field/field_extWall_T_right.png"
     },
     {   code : 30,
-        value : "img/assets/"+currentAsset+"/field_extWall_T_left.png"
+        value : "img/assets/"+currentAsset+"/field/field_extWall_T_left.png"
     },
     {   code : 31,
-        value : "img/assets/"+currentAsset+"/field_extWall_T_up.png"
+        value : "img/assets/"+currentAsset+"/field/field_extWall_T_up.png"
     },
     {   code : 32,
-        value : "img/assets/"+currentAsset+"/field_extWall_T_down.png"
+        value : "img/assets/"+currentAsset+"/field/field_extWall_T_down.png"
     },
     //
     //старт и финиш
     {   code : 44,
-        value : "img/assets/"+currentAsset+"/field_start_up.png"
+        value : "img/assets/"+currentAsset+"/field/field_start_up.png"
     },
     {   code : 45,
-        value : "img/assets/"+currentAsset+"/field_start_down.png"
+        value : "img/assets/"+currentAsset+"/field/field_start_down.png"
     },
     {   code : 46,
-        value : "img/assets/"+currentAsset+"/field_start_right.png"
+        value : "img/assets/"+currentAsset+"/field/field_start_right.png"
     },
     {   code : 47,
-        value : "img/assets/"+currentAsset+"/field_start_left.png"
+        value : "img/assets/"+currentAsset+"/field/field_start_left.png"
     },
     {   code : 48,
-        value : "img/assets/"+currentAsset+"/field_finish_up.png"
+        value : "img/assets/"+currentAsset+"/field/field_finish_up.png"
     },
     {   code : 49,
-        value : "img/assets/"+currentAsset+"/field_finish_down.png"
+        value : "img/assets/"+currentAsset+"/field/field_finish_down.png"
     },
     {   code : 50,
-        value : "img/assets/"+currentAsset+"/field_finish_right.png"
+        value : "img/assets/"+currentAsset+"/field/field_finish_right.png"
     },
     {   code : 51,
-        value : "img/assets/"+currentAsset+"/field_finish_left.png"
+        value : "img/assets/"+currentAsset+"/field/field_finish_left.png"
     },
     //
 
