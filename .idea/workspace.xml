@@ -5,7 +5,9 @@
     <bookmark url="file://$PROJECT_DIR$/lodash.js" line="1437" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="227fa202-b3f4-462c-bf8a-4085ce7024c8" name="Default" comment="" />
+    <list default="true" id="227fa202-b3f4-462c-bf8a-4085ce7024c8" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/img/assets/greenland/field/filed_start_down.png" afterPath="" />
+    </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -21,8 +23,8 @@
       <file leaf-file-name="Player.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Player.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-373">
-              <caret line="389" column="56" lean-forward="false" selection-start-line="389" selection-start-column="56" selection-end-line="389" selection-end-column="56" />
+            <state relative-caret-position="4098">
+              <caret line="385" column="42" lean-forward="true" selection-start-line="385" selection-start-column="42" selection-end-line="385" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -62,11 +64,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GameParams.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="GameParams.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/GameParams.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="28" column="22" lean-forward="false" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
+            <state relative-caret-position="438">
+              <caret line="264" column="18" lean-forward="true" selection-start-line="264" selection-start-column="18" selection-end-line="264" selection-end-column="18" />
               <folding>
                 <element signature="e#14841#17561#0" expanded="false" />
               </folding>
@@ -94,11 +96,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Logic.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Logic.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Logic.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="443">
-              <caret line="448" column="28" lean-forward="false" selection-start-line="448" selection-start-column="28" selection-end-line="448" selection-end-column="28" />
+            <state relative-caret-position="562">
+              <caret line="455" column="67" lean-forward="true" selection-start-line="455" selection-start-column="67" selection-end-line="455" selection-end-column="67" />
               <folding />
             </state>
           </provider>
@@ -136,7 +138,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>function isArray</find>
       <find>function initCloneArray</find>
       <find>hasOwnProperty</find>
       <find>var hasOwnProperty</find>
@@ -166,6 +167,7 @@
       <find>movePlayer</find>
       <find>onRecize</find>
       <find>playerSetDire</find>
+      <find>down</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -206,7 +208,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="208" />
     <option name="y" value="-18" />
     <option name="width" value="1936" />
@@ -296,15 +298,15 @@
       <workItem from="1522828801691" duration="10453000" />
       <workItem from="1522839878745" duration="10190000" />
       <workItem from="1522915579613" duration="10850000" />
-      <workItem from="1522933135164" duration="931000" />
+      <workItem from="1522933135164" duration="1133000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="108381000" />
+    <option name="totallyTimeSpent" value="108583000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14166667" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -617,14 +619,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/accountData.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="39" lean-forward="false" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Viewer.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3740">
@@ -661,14 +655,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Commands.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="3" column="2" lean-forward="false" selection-start-line="3" selection-start-column="2" selection-end-line="3" selection-end-column="2" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Animations.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -685,29 +671,45 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Logic.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="562">
+          <caret line="455" column="67" lean-forward="true" selection-start-line="455" selection-start-column="67" selection-end-line="455" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Player.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-373">
-          <caret line="389" column="56" lean-forward="false" selection-start-line="389" selection-start-column="56" selection-end-line="389" selection-end-column="56" />
+        <state relative-caret-position="4098">
+          <caret line="385" column="42" lean-forward="true" selection-start-line="385" selection-start-column="42" selection-end-line="385" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="3" column="2" lean-forward="false" selection-start-line="3" selection-start-column="2" selection-end-line="3" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/accountData.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="39" lean-forward="false" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/GameParams.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="28" column="22" lean-forward="false" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
+        <state relative-caret-position="438">
+          <caret line="264" column="18" lean-forward="true" selection-start-line="264" selection-start-column="18" selection-end-line="264" selection-end-column="18" />
           <folding>
             <element signature="e#14841#17561#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Logic.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="443">
-          <caret line="448" column="28" lean-forward="false" selection-start-line="448" selection-start-column="28" selection-end-line="448" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
