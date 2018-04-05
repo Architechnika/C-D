@@ -86,9 +86,11 @@ function fieldElement(imgSource, comm, elemcode, fx, fy, fw, fh) {
     this.setStroke = function (isStroke) {
         this.isStroke = isStroke;
         if (this.isStroke) {
-            this.__proto__.strokeWidth = 100;
+            //this.__proto__.strokeWidth = 100;
+            this.__proto__.setAlpha(0.8)
         } else {
-            this.__proto__.strokeWidth = 0;
+            this.__proto__.setAlpha(1)
+            //this.__proto__.strokeWidth = 0;
         }
     }
     //Возвращает массив ImageObject-ов элементов команд по заданному index из стека

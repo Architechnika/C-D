@@ -47,6 +47,7 @@ var textOnCodeMapColor = "#1f75fe";//Цвет цифр когда вводишь
 var nonePath = "img/commands/command_none.png";//Картинка пустой команды
 var coinPath = "img/assets/"+currentAsset+"/field/object_battery.png"; //Картинка для отображения монетки
 //Пути до файлов с изображениями для интерфейса-------------------------------
+var cursorImgSrc = "img/assets/"+currentAsset+"/ui/cursor.png";
 var clockPath = "img/interface/interface_clock.png";
 var buttonStartImgSrc = "img/interface/interface_button_start.png";
 var buttonStopImgSrc = "img/interface/interface_button_pause.png";

@@ -17,7 +17,7 @@ var Scrolls = new Array(); // массив всех скролбаров
 var infoText = undefined;
 var toolTip = new ToolTip();
 var messageBox = new MessageBox();
-
+pjs.mouseControl.setCursorImage(cursorImgSrc);
 //Отрисовывает элементы интерфейса
 function drawGUI() {
     //Отрисовываем кнопки
