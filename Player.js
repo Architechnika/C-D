@@ -12,6 +12,8 @@ var playerFrontSide = 0; //0 верх, 1 право, 2 низ, 3 лево
 var startPlayerMoveTime = 0;
 var startPoz = 0;
 var freezCounter = 0;//Счетчик того сколько ходов уже робот стоит на месте
+var localEXP = 0;//Переменная для хранения опыта робота набираемого за один лабиринт
+var globalEXP = 0;
 //Инициализация игрока
 function playerSetStart() {
     //Ищем местоположение двери
@@ -23,6 +25,8 @@ function playerSetStart() {
             startPoz = indx;
             //Генерим графическое представление игрока для отображение
             movePlayerToFieldElement(field[playerPozition]);
+            if(labView)
+                labView.setFocusOnElement(field[playerPozition],false, true);
             //Задаем направление, куда смотрит персонаж
             playerSetDirection(getPlayerDirFromSide());
             //Обнуляем счетчик времени
@@ -41,7 +45,6 @@ function playerSetStart() {
         }
     });
 }
-
 //Делает ход. Обрабатывает исходную команду и запоминает новую
 //Возвращает end - если робот достиг выхода из лабиринта
 //Возвращает "", если робот все сделал правильно и выполнил команду
@@ -258,9 +261,20 @@ function playerMove(canRead) {
     } else if(pozBuff !== pPoz) return lang[selectLang]['crashed_the_wall'];
     //Передвигаем игрока в нужную клетку
     movePlayerToFieldElement(field[playerPozition]);
+    getLocalEXP();
     if(pPoz !== pozBuff) freezCounter = 0;//Если робот дошёл до этой строчки кода, значит он ствинулся следовательно сбрасываем счетчик
     drawCommState();
     return "";
+}
+
+function getLocalEXP(){
+    for(var i = 0 ; i < optimalRoute.length; i++){
+        if(optimalRoute[i].isActive && playerPozition == optimalRoute[i].id){
+            localEXP = localEXP + (playerInventory.length + 1);
+            optimalRoute[i].isActive = false;
+        }
+    }
+    log("LOCAL: " + localEXP);
 }
 
 //Вызывает отрисовку текущей выполняемой команды на карте кода
@@ -427,4 +441,31 @@ function wait(miliSec){
     while (new Date().getTime() <= e) {
 
     };
+}
+
+//Возвращает массив команд для прохождения лабиринта оптимальным маршрутом от старта до финиша
+function getOptimalRouteCommands(){
+    var r=[];
+    var p = playerPozition;
+    var f = field;
+    var o = optimalRoute;
+    for(var i = 0 ; i < o.length; i++){//for(var i = o.length - 1; i >= 0; i--){
+        if(p + 1 == o[i].id){//Лево
+            r.push(getCopyOfObj(COMMANDS[3]));
+            p += 1;
+        }
+        else if(p - 1 == o[i].id){//Право
+            r.push(getCopyOfObj(COMMANDS[4]));
+            p -= 1;
+        }
+        else if(p + totalWidth == o[i].id){//Верх
+            r.push(getCopyOfObj(COMMANDS[1]));
+            p += totalWidth;
+        }
+        else if(p - totalWidth == o[i].id){//Низ
+            r.push(getCopyOfObj(COMMANDS[2]));
+            p -= totalWidth;
+        }
+    }
+    return r;
 }

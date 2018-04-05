@@ -51,11 +51,11 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
     }
 
     //Ресайзит все так, чтобы elem был в центре background-а
-    this.setFocusOnElement = function(elem, isCodeView) {
+    this.setFocusOnElement = function(elem, isCodeView, isRecize) {
         //Ресайзим как надо
-        //if(isCodeView) {
-            //this.resizeView((this.maxItemSize) - this.elems[0].h, true, undefined, true);
-        //}
+        if(isRecize) {
+            this.resizeView((this.maxItemSize) - this.elems[0].h, true, undefined, true);
+        }
         //Ищем элемент который должен быть в центре и сдвигаем его в центр
         for(var i = 0 ; i < this.elems.length; i++){
             if(this.elems[i] == elem){

@@ -735,7 +735,9 @@ function graphicsMapSort(arr) {
 }
 
 //Производит поиск оптимального маршрута для прохождения лабиринта
+//Возвращает последовательность элементов массива field по которым надо двигаться чтобы дойти от входа до выхода
 function getOptimalLabRoute(f,bM){
+    var route = [];
     var matrix = [];
     var entryP = undefined;
     var exitP = undefined;
@@ -744,9 +746,9 @@ function getOptimalLabRoute(f,bM){
         for(var j = 0; j < bM[i].length;j++){
 
             if(bM[i][j] == entryCode)
-                entryP = new point(i,j);
+                entryP = new point(j,i);
             if(bM[i][j] == exitCode)
-                exitP = new point(i,j);
+                exitP = new point(j,i);
 
             var d = parseInt(bM[i][j]);
             if(bM[i][j] == roadCode || bM[i][j] == exitCode || bM[i][j] == entryCode) d = 0;//0 - проход
@@ -758,6 +760,28 @@ function getOptimalLabRoute(f,bM){
     var grid = new PF.Grid(matrix);
     var finder = new PF.AStarFinder();
     //Cодержит массив с точками по которым надо перемещаться чтобы дойти до выхода
-    var path = finder.findPath(entryP.y, entryP.x, exitP.y, exitP.x, grid);
+    var path = finder.findPath(entryP.x, entryP.y, exitP.x, exitP.y, grid);
     //Реализовать конвертер этих точек в конкретные элементы массива field и вернуть этот массив
+    var indx = 0;
+    var isBr = false;
+    for(var z = 0; z < path.length; z++){
+        isBr = false;
+        for(var i = matrix.length - 1 ; i >= 0;i--){
+            for(var j = matrix[i].length - 1 ; j >= 0;j--){
+                if(path[z][0] == j && path[z][1] == i){
+                    route.push({
+                        isActive : true,
+                        id : indx
+                    });
+                    isBr = true;
+                    break;
+                }
+                indx++;
+            }
+            if(isBr) break;
+        }
+        indx = 0;
+    }
+
+    return route;
 }

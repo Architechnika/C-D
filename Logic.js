@@ -163,8 +163,6 @@ function initializeGame(isInit) {
     totalCommandsAllowed = (totalWidth + totalHeight) * 2;
     //Инициализируем обьекты для вывода графики лабиринта
     labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
-    //Создаем игрока
-    playerSetStart();
     totalAttempts = 0;
     //mainbackGround = new mainBackGroundDrow();
     //Инициализируем обьект для вывода карты кода
@@ -173,6 +171,8 @@ function initializeGame(isInit) {
     } else codeView = new CodeMapView(codeMapBG.x, codeMapBG.y, codeMapBG.w, codeMapBG.h, "white");
     if (Scrolls) Scrolls.splice(0);
     recalcScreen();
+    //Создаем игрока
+    playerSetStart();
 }
 
 function initLabirint() {
@@ -445,6 +445,7 @@ function processRobotMove() {
         isStarted = false;
         allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
         totalLabCompleted++;
+        calcEXP();
         //Перезагружаем уровень с новым лабиринтом
         initializeGame();
     } else if (res == "stop") {
@@ -473,6 +474,16 @@ function showMessage(text) {
     messageBox.setShow(true);
     messageBox.setText(text);
     //allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
+}
+
+//Производит расчет очков опыта набранных игроком в процессе прохождения лабиринта
+function calcEXP(){
+    if(totalSeconds != 0)
+        globalEXP += localEXP / totalSeconds;
+    //Очищаем значения которые надо очистить
+    playerInventory.splice(0, playerInventory.length);
+    localEXP = 0;
+    log("GLOBAL: " + globalEXP);
 }
 
 game.startLoop('Labyrinth');
