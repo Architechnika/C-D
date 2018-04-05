@@ -3957,7 +3957,6 @@ var key = pjs.keyControl.initKeyControl();
 var touch = pjs.touchControl.initTouchControl();
 // var act   = pjs.actionControl.initActionControl();
 system.initFPSCheck();
-
 Array.prototype.move = function (old_index, new_index) {
     if (new_index >= this.length) {
         var k = new_index - this.length;
@@ -4022,6 +4021,7 @@ var textOnCodeMapColor = "#1f75fe";//Цвет цифр когда вводишь
 var nonePath = "img/commands/command_none.png";//Картинка пустой команды
 var coinPath = "img/assets/"+currentAsset+"/field/object_battery.png"; //Картинка для отображения монетки
 //Пути до файлов с изображениями для интерфейса-------------------------------
+var cursorImgSrc = "img/assets/"+currentAsset+"/ui/cursor.png";
 var clockPath = "img/interface/interface_clock.png";
 var buttonStartImgSrc = "img/interface/interface_button_start.png";
 var buttonStopImgSrc = "img/interface/interface_button_pause.png";
@@ -4332,7 +4332,31 @@ arrInterfaceAndCommandsImagesForLoad.forEach(function(e){
     new Image().src = e;
 });
 
-var isOkClose = true;
+//анимация клика по полю
+var tupAnimation = game.newAnimationObject(   { 
+     animation : pjs.tiles.newImage("animations/tup.png").getAnimation(0, 0, 128, 128, 10), 
+     x : 100, 
+     y : 100, 
+     w : 50, 
+     h : 50, 
+     angle : 0, 
+     alpha : 1, 
+     visible : false 
+   });
+tupAnimation.setDelay(1)
+
+
+var animationsArray = [];
+animationsArray.push(tupAnimation);
+
+function animationsControl()
+{
+    if(tupAnimation.getFrame()== tupAnimation.getLastFrame())
+        {//если анимация закончилась, то обнуляем его и скрывет до следующего клика
+            tupAnimation.setVisible(false)
+            tupAnimation.setFrame(0);
+        }
+}var isOkClose = true;
 
 function PushButton() { //Класс наследуеться от newImageObject, экзепляры класса это кнопки
     var parent = game.newImageObject({
@@ -21778,6 +21802,7 @@ function updateScreen() {
     }
     //Отрисовываем команды на поле
     drawCommandsOnField();
+     OOP.drawArr(animationsArray)
     //Отрисовываем обьекты на поле
     OOP.forArr(gameObjects, function (el) {
         if(el.isInCameraStatic()) {
@@ -21810,6 +21835,7 @@ function updateScreen() {
         });
     }
 }
+
 
 function clearAllLayers() {
     allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
@@ -21896,7 +21922,7 @@ function removeInputEvents() {
 function onMouseUP(e) {
     clickCoord.x = 0;
     clickCoord.y = 0;
-    onUp(e);
+     onUp(e);
     selectedItem = undefined;
     touchedScroll = undefined;
     touchPoint = undefined;
@@ -22083,7 +22109,11 @@ function onUp(e) {
                     else codeView.isClicked(e);
                 }
             else if (!codeView.isClicked(e))
-                processFieldClick(e);
+                {
+                    tupAnimation.setVisible(true);
+                    tupAnimation.setPositionC(pjs.vector.point(e.x,e.y))
+                    processFieldClick(e);
+                }
         }
     }
 }
@@ -23963,6 +23993,7 @@ function Dialog() {
 
 var timerText = null; //текст таймера
 var progressText = null; // количество ходов
+var expText = null;//Cколько всего набрано опыта
 var inputCounterText = null; //Текстовое поле для ввода чисел
 
 var menuItemH = 0; // стандартная высота элемента меню
@@ -23977,7 +24008,7 @@ var Scrolls = new Array(); // массив всех скролбаров
 var infoText = undefined;
 var toolTip = new ToolTip();
 var messageBox = new MessageBox();
-
+pjs.mouseControl.setCursorImage(cursorImgSrc);
 //Отрисовывает элементы интерфейса
 function drawGUI() {
     //Отрисовываем кнопки
@@ -23986,6 +24017,7 @@ function drawGUI() {
     updateTextOnGui();
     timerText.textDraw();
     progressText.textDraw();
+    //expText.textDraw();
     coinItem.draw();
     clockItem.draw();
     infoText.draw();
@@ -24006,6 +24038,7 @@ function initGUI() { //поочередность иницилизаии ОБЯ�
     infoText = new TextWithBG(gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH);
     timerTextInit();
     progressTextInit();
+    expTextInit();
     textbackGroundInit("#000000", 0);
     codeMapBackGroundInit("#000000", 0.4)
     if (!isVerticalScreen) {
@@ -24028,6 +24061,8 @@ function updateTextOnGui() {
     var sec = totalSeconds - (min * 60); //Math.floor(totalMiliSeconds / 200 - min * 60);
     //Обновляем инфу о времени
     timerText.setText((min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec))
+    var expG = (globalEXP * 100).toFixed();
+    expText.setText("ОПЫТ: " + expG + ":" + localEXP);
 }
 
 
@@ -24057,6 +24092,12 @@ function progressTextInit() {
     progressText.setTextPosition(coinItem.x + coinItem.w + 5, 0);
     progressText.setTextSize(coinItem.w);
     progressText.setTextColor(guiTextColor);
+}
+
+function expTextInit(){
+    expText = new Label(coinItem.x + coinItem.w * 2 + 5,coinItem.y, "00");
+    expText.setTextSize(coinItem.w);
+    expText.setTextColor(guiTextColor);
 }
 
 function textbackGroundInit(color, alpha) {
@@ -24403,9 +24444,11 @@ function fieldElement(imgSource, comm, elemcode, fx, fy, fw, fh) {
     this.setStroke = function (isStroke) {
         this.isStroke = isStroke;
         if (this.isStroke) {
-            this.__proto__.strokeWidth = 100;
+            //this.__proto__.strokeWidth = 100;
+            this.__proto__.setAlpha(0.8)
         } else {
-            this.__proto__.strokeWidth = 0;
+            this.__proto__.setAlpha(1)
+            //this.__proto__.strokeWidth = 0;
         }
     }
     //Возвращает массив ImageObject-ов элементов команд по заданному index из стека
@@ -25052,7 +25095,9 @@ function graphicsMapSort(arr) {
 }
 
 //Производит поиск оптимального маршрута для прохождения лабиринта
+//Возвращает последовательность элементов массива field по которым надо двигаться чтобы дойти от входа до выхода
 function getOptimalLabRoute(f,bM){
+    var route = [];
     var matrix = [];
     var entryP = undefined;
     var exitP = undefined;
@@ -25061,9 +25106,9 @@ function getOptimalLabRoute(f,bM){
         for(var j = 0; j < bM[i].length;j++){
 
             if(bM[i][j] == entryCode)
-                entryP = new point(i,j);
+                entryP = new point(j,i);
             if(bM[i][j] == exitCode)
-                exitP = new point(i,j);
+                exitP = new point(j,i);
 
             var d = parseInt(bM[i][j]);
             if(bM[i][j] == roadCode || bM[i][j] == exitCode || bM[i][j] == entryCode) d = 0;//0 - проход
@@ -25075,8 +25120,30 @@ function getOptimalLabRoute(f,bM){
     var grid = new PF.Grid(matrix);
     var finder = new PF.AStarFinder();
     //Cодержит массив с точками по которым надо перемещаться чтобы дойти до выхода
-    var path = finder.findPath(entryP.y, entryP.x, exitP.y, exitP.x, grid);
+    var path = finder.findPath(entryP.x, entryP.y, exitP.x, exitP.y, grid);
     //Реализовать конвертер этих точек в конкретные элементы массива field и вернуть этот массив
+    var indx = 0;
+    var isBr = false;
+    for(var z = 0; z < path.length; z++){
+        isBr = false;
+        for(var i = matrix.length - 1 ; i >= 0;i--){
+            for(var j = matrix[i].length - 1 ; j >= 0;j--){
+                if(path[z][0] == j && path[z][1] == i){
+                    route.push({
+                        isActive : true,
+                        id : indx
+                    });
+                    isBr = true;
+                    break;
+                }
+                indx++;
+            }
+            if(isBr) break;
+        }
+        indx = 0;
+    }
+
+    return route;
 }
 var iEL;
 var iEF;
@@ -26009,6 +26076,8 @@ var playerFrontSide = 0; //0 верх, 1 право, 2 низ, 3 лево
 var startPlayerMoveTime = 0;
 var startPoz = 0;
 var freezCounter = 0;//Счетчик того сколько ходов уже робот стоит на месте
+var localEXP = 0;//Переменная для хранения опыта робота набираемого за один лабиринт
+var globalEXP = 0;
 //Инициализация игрока
 function playerSetStart() {
     //Ищем местоположение двери
@@ -26040,7 +26109,6 @@ function playerSetStart() {
         }
     });
 }
-
 //Делает ход. Обрабатывает исходную команду и запоминает новую
 //Возвращает end - если робот достиг выхода из лабиринта
 //Возвращает "", если робот все сделал правильно и выполнил команду
@@ -26257,9 +26325,20 @@ function playerMove(canRead) {
     } else if(pozBuff !== pPoz) return lang[selectLang]['crashed_the_wall'];
     //Передвигаем игрока в нужную клетку
     movePlayerToFieldElement(field[playerPozition]);
+    getLocalEXP();
     if(pPoz !== pozBuff) freezCounter = 0;//Если робот дошёл до этой строчки кода, значит он ствинулся следовательно сбрасываем счетчик
     drawCommState();
     return "";
+}
+
+function getLocalEXP(){
+    for(var i = 0 ; i < optimalRoute.length; i++){
+        if(optimalRoute[i].isActive && playerPozition == optimalRoute[i].id){
+            localEXP = localEXP + (playerInventory.length + 1);
+            optimalRoute[i].isActive = false;
+        }
+    }
+    log("LOCAL: " + localEXP);
 }
 
 //Вызывает отрисовку текущей выполняемой команды на карте кода
@@ -26381,13 +26460,17 @@ function playerSetDirection(direction) {
 function movePlayerToFieldElement(fEl, dontFocus) {
     //Если объект игрока ещё не создан
     if (playerImageObj === null) {
-        playerImageObj = game.newImageObject({
-            file: playerImgSrc,
-            x: fEl.x,
-            y: fEl.y,
-            w: fEl.w,
-            h: fEl.h
-        });
+        playerImageObj  = game.newAnimationObject(   { 
+     animation : pjs.tiles.newImage("animations/carExhaust.png").getAnimation(0, 0, 128, 128, 8), 
+    x: fEl.x,
+    y: fEl.y,
+    w: fEl.w,
+    h: fEl.h,
+     angle : 0, 
+     alpha : 1, 
+     visible : true 
+   });
+    playerImageObj.setDelay(1);
     } else //Если он уже есть, то просто смещаем его в нужную позицию
     {
         playerImageObj.x = fEl.x;
@@ -26426,6 +26509,33 @@ function wait(miliSec){
     while (new Date().getTime() <= e) {
 
     };
+}
+
+//Возвращает массив команд для прохождения лабиринта оптимальным маршрутом от старта до финиша
+function getOptimalRouteCommands(){
+    var r=[];
+    var p = playerPozition;
+    var f = field;
+    var o = optimalRoute;
+    for(var i = 0 ; i < o.length; i++){//for(var i = o.length - 1; i >= 0; i--){
+        if(p + 1 == o[i].id){//Лево
+            r.push(getCopyOfObj(COMMANDS[3]));
+            p += 1;
+        }
+        else if(p - 1 == o[i].id){//Право
+            r.push(getCopyOfObj(COMMANDS[4]));
+            p -= 1;
+        }
+        else if(p + totalWidth == o[i].id){//Верх
+            r.push(getCopyOfObj(COMMANDS[1]));
+            p += totalWidth;
+        }
+        else if(p - totalWidth == o[i].id){//Низ
+            r.push(getCopyOfObj(COMMANDS[2]));
+            p -= totalWidth;
+        }
+    }
+    return r;
 }
 var back = undefined;
 game.newLoopFromConstructor('SecondScreen', function () {
@@ -26542,6 +26652,8 @@ game.newLoopFromConstructor('Labyrinth', function () {
     this.update = function () {
         //Обновляем графику
         updateScreen();
+        //контроль поведений анимаций
+        animationsControl();
     };
 });
 
@@ -26904,14 +27016,15 @@ function processRobotMove() {
             if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {
                 log("Лабиринт достиг максимально допустимого размера");
             } else {
-                labyrinthSize += 2;
-                totalWidth = labyrinthSize;
-                totalHeight = labyrinthSize;
+                totalWidth += 2;
+                totalHeight += 2;
+                labyrinthSize = totalWidth;
             }
         }
         isStarted = false;
         allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
         totalLabCompleted++;
+        calcEXP();
         //Перезагружаем уровень с новым лабиринтом
         initializeGame();
     } else if (res == "stop") {
@@ -26940,6 +27053,16 @@ function showMessage(text) {
     messageBox.setShow(true);
     messageBox.setText(text);
     //allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
+}
+
+//Производит расчет очков опыта набранных игроком в процессе прохождения лабиринта
+function calcEXP(){
+    if(totalSeconds != 0)
+        globalEXP += localEXP / totalSeconds;
+    //Очищаем значения которые надо очистить
+    playerInventory.splice(0, playerInventory.length);
+    localEXP = 0;
+    log("GLOBAL: " + globalEXP);
 }
 
 game.startLoop('Labyrinth');

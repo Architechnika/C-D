@@ -26,7 +26,7 @@ function drawGUI() {
     updateTextOnGui();
     timerText.textDraw();
     progressText.textDraw();
-    expText.textDraw();
+    //expText.textDraw();
     coinItem.draw();
     clockItem.draw();
     infoText.draw();
