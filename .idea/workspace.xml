@@ -5,18 +5,7 @@
     <bookmark url="file://$PROJECT_DIR$/lodash.js" line="1437" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="227fa202-b3f4-462c-bf8a-4085ce7024c8" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/GUI.js" afterPath="$PROJECT_DIR$/GUI.js" />
-      <change beforePath="$PROJECT_DIR$/Logic.js" afterPath="$PROJECT_DIR$/Logic.js" />
-      <change beforePath="$PROJECT_DIR$/core/DiagonalMovement.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/core/Grid.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/core/Heuristic.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/core/Node.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/core/Util.js" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/game.html" afterPath="$PROJECT_DIR$/game.html" />
-      <change beforePath="$PROJECT_DIR$/jsbuilderscript.js" afterPath="$PROJECT_DIR$/jsbuilderscript.js" />
-    </list>
+    <list default="true" id="227fa202-b3f4-462c-bf8a-4085ce7024c8" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -108,8 +97,8 @@
       <file leaf-file-name="Logic.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Logic.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="341">
-              <caret line="442" column="33" lean-forward="true" selection-start-line="442" selection-start-column="33" selection-end-line="442" selection-end-column="33" />
+            <state relative-caret-position="443">
+              <caret line="448" column="28" lean-forward="false" selection-start-line="448" selection-start-column="28" selection-end-line="448" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -307,12 +296,12 @@
       <workItem from="1522828801691" duration="10453000" />
       <workItem from="1522839878745" duration="10190000" />
       <workItem from="1522915579613" duration="10850000" />
-      <workItem from="1522933135164" duration="122000" />
+      <workItem from="1522933135164" duration="931000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="107572000" />
+    <option name="totallyTimeSpent" value="108381000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
@@ -716,8 +705,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Logic.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="341">
-          <caret line="442" column="33" lean-forward="true" selection-start-line="442" selection-start-column="33" selection-end-line="442" selection-end-column="33" />
+        <state relative-caret-position="443">
+          <caret line="448" column="28" lean-forward="false" selection-start-line="448" selection-start-column="28" selection-end-line="448" selection-end-column="28" />
           <folding />
         </state>
       </provider>
