@@ -48,7 +48,7 @@ function removeInputEvents() {
 function onMouseUP(e) {
     clickCoord.x = 0;
     clickCoord.y = 0;
-    onUp(e);
+     onUp(e);
     selectedItem = undefined;
     touchedScroll = undefined;
     touchPoint = undefined;
@@ -235,7 +235,11 @@ function onUp(e) {
                     else codeView.isClicked(e);
                 }
             else if (!codeView.isClicked(e))
-                processFieldClick(e);
+                {
+                    tupAnimation.setVisible(true);
+                    tupAnimation.setPositionC(pjs.vector.point(e.x,e.y))
+                    processFieldClick(e);
+                }
         }
     }
 }

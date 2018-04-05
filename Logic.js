@@ -75,6 +75,8 @@ game.newLoopFromConstructor('Labyrinth', function () {
     this.update = function () {
         //Обновляем графику
         updateScreen();
+        //контроль поведений анимаций
+        animationsControl();
     };
 });
 

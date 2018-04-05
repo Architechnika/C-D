@@ -53,6 +53,7 @@ function updateScreen() {
     }
 }
 
+
 function clearAllLayers() {
     allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
     game.clear();
