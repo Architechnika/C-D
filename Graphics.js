@@ -17,6 +17,7 @@ function updateScreen() {
         if(field[i].isInCameraStatic())
             field[i].draw();
     }
+    OOP.drawArr(animationsArray)
     //Отрисовываем команды на поле
     drawCommandsOnField();
     //Отрисовываем обьекты на поле
