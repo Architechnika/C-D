@@ -397,6 +397,8 @@ function movePlayerToFieldElement(fEl, dontFocus) {
         playerImageObj.h = fEl.h;
         carExhaust.x = playerImageObj.x + playerImageObj.w;
         carExhaust.y = playerImageObj.y;
+        carExhaust.w = playerImageObj.w*0.7
+        carExhaust.h = playerImageObj.h*0.7
     }
     if(labView && !dontFocus) labView.setFocusOnElement(field[playerPozition],false);
 }

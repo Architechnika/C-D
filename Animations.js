@@ -9,7 +9,7 @@ var tupAnimation = game.newAnimationObject(   {
      alpha : 1, 
      visible : false 
    });
-tupAnimation.setDelay(2)
+tupAnimation.setDelay(1)
 
 //анимация выхлопа машины
 var carExhaust = game.newAnimationObject(   { 
@@ -22,7 +22,7 @@ var carExhaust = game.newAnimationObject(   {
      alpha : 1, 
      visible : true 
    });
-carExhaust.setDelay(2)
+carExhaust.setDelay(4)
 
 var animationsArray = [];
 animationsArray.push(tupAnimation);
