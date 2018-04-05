@@ -2,6 +2,7 @@
 
 var timerText = null; //текст таймера
 var progressText = null; // количество ходов
+var expText = null;//Cколько всего набрано опыта
 var inputCounterText = null; //Текстовое поле для ввода чисел
 
 var menuItemH = 0; // стандартная высота элемента меню
@@ -25,6 +26,7 @@ function drawGUI() {
     updateTextOnGui();
     timerText.textDraw();
     progressText.textDraw();
+    expText.textDraw();
     coinItem.draw();
     clockItem.draw();
     infoText.draw();
@@ -45,6 +47,7 @@ function initGUI() { //поочередность иницилизаии ОБЯ�
     infoText = new TextWithBG(gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH);
     timerTextInit();
     progressTextInit();
+    expTextInit();
     textbackGroundInit("#000000", 0);
     codeMapBackGroundInit("#000000", 0.4)
     if (!isVerticalScreen) {
@@ -67,6 +70,8 @@ function updateTextOnGui() {
     var sec = totalSeconds - (min * 60); //Math.floor(totalMiliSeconds / 200 - min * 60);
     //Обновляем инфу о времени
     timerText.setText((min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec))
+    var expG = (globalEXP * 100).toFixed();
+    expText.setText("ОПЫТ: " + expG + ":" + localEXP);
 }
 
 
@@ -96,6 +101,12 @@ function progressTextInit() {
     progressText.setTextPosition(coinItem.x + coinItem.w + 5, 0);
     progressText.setTextSize(coinItem.w);
     progressText.setTextColor(guiTextColor);
+}
+
+function expTextInit(){
+    expText = new Label(coinItem.x + coinItem.w * 2 + 5,coinItem.y, "00");
+    expText.setTextSize(coinItem.w);
+    expText.setTextColor(guiTextColor);
 }
 
 function textbackGroundInit(color, alpha) {
