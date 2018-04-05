@@ -72,7 +72,7 @@ function onMouseDOWN(e) {
 }
 
 function onWheel(e) {
-    onRecize(e, e.deltaY, scrollStep);
+    onRecize(e, e.deltaY * -1, scrollStep);
     e.cancelBubble = true;
 }
 
@@ -164,13 +164,13 @@ function onRecize(e, delta, step) {
         }
     });
     if (!isSecondScreen && clickIsInObj(e.x, e.y, labView.getBackGround())) {
-        labView.resizeView(delta < 0 ? step : -1 * step);
+        labView.resizeView(delta < 0 ? -1 * step : step);
         return;
     } else if (clickIsInObj(e.x, e.y, codeView.getBackGround())) {
         //Ресайз поля работает только когда игрок не двигается
         //if (!isStarted) {
             //Инициализируем карту кода
-            codeView.resizeView(delta < 0 ? step : -1 * step);
+            codeView.resizeView(delta < 0 ? -1 * step : step);
         //}
         return;
     }
