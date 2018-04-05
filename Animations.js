@@ -1,17 +1,32 @@
+//анимация клика по полю
 var tupAnimation = game.newAnimationObject(   { 
      animation : pjs.tiles.newImage("animations/tup.png").getAnimation(0, 0, 128, 128, 10), 
      x : 100, 
      y : 100, 
-     w : 25, 
-     h : 25, 
+     w : 50, 
+     h : 50, 
      angle : 0, 
      alpha : 1, 
      visible : false 
    });
 tupAnimation.setDelay(2)
 
+//анимация выхлопа машины
+var carExhaust = game.newAnimationObject(   { 
+     animation : pjs.tiles.newImage("animations/carExhaust.png").getAnimation(0, 0, 150, 75, 8), 
+     x : 100, 
+     y : 100, 
+     w : 50, 
+     h : 50, 
+     angle : 0, 
+     alpha : 1, 
+     visible : true 
+   });
+carExhaust.setDelay(2)
+
 var animationsArray = [];
 animationsArray.push(tupAnimation);
+animationsArray.push(carExhaust);
 
 function animationsControl()
 {
