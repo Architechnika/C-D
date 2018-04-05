@@ -6,7 +6,7 @@ var scrollStep = 20; //Шаг скрола в пикселях(Когда кру
 var touchScrollVal = 2;//Шаг скрола когда пальцами ресайзишь
 var toolTipDelay = 1000000000;//Задержка в миллисекундах после которой всплывают тултипы если держать мышку на элементе
 //Игровые параметры---------------------------------------------------------------------------------------------
-var labyrinthSize = 35;//Стартовый размер лабиринта(Например если 5, тогда при старте игры сгенерится лабиринт размером 5x5). ДЛЯ АЛГОРИТМА ГЕНЕРАЦИИ ЭТО ДОЛЖНО БЫТЬ НЕЧЕТНОЕ ЧИСЛО
+var labyrinthSize = 11;//Стартовый размер лабиринта(Например если 5, тогда при старте игры сгенерится лабиринт размером 5x5). ДЛЯ АЛГОРИТМА ГЕНЕРАЦИИ ЭТО ДОЛЖНО БЫТЬ НЕЧЕТНОЕ ЧИСЛО
 var labyrinthMaxSize = 0;//Ограничение на максимальный размер лабиринта. Если = 0, то максимума нет.
 var isLabyrinthGrow = true;//Переключение возможности увеличения лабиринта при прохождении(Увеличивается лабиринт или нет при выходе из него)
 var robotMoveDelay = 350; //Задержка при движении робота в милисекундах(ЧЕМ МЕНЬШЕ ТЕМ БЫСТРЕЕ)
@@ -47,6 +47,7 @@ var textOnCodeMapColor = "#1f75fe";//Цвет цифр когда вводишь
 var nonePath = "img/commands/command_none.png";//Картинка пустой команды
 var coinPath = "img/assets/"+currentAsset+"/field/object_battery.png"; //Картинка для отображения монетки
 //Пути до файлов с изображениями для интерфейса-------------------------------
+var cursorImgSrc = "img/assets/"+currentAsset+"/ui/cursor.png";
 var clockPath = "img/interface/interface_clock.png";
 var buttonStartImgSrc = "img/interface/interface_button_start.png";
 var buttonStopImgSrc = "img/interface/interface_button_pause.png";
