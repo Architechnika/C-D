@@ -11,22 +11,9 @@ var tupAnimation = game.newAnimationObject(   {
    });
 tupAnimation.setDelay(1)
 
-//анимация выхлопа машины
-var carExhaust = game.newAnimationObject(   { 
-     animation : pjs.tiles.newImage("animations/carExhaust.png").getAnimation(0, 0, 150, 75, 8), 
-     x : 100, 
-     y : 100, 
-     w : 50, 
-     h : 50, 
-     angle : 0, 
-     alpha : 1, 
-     visible : true 
-   });
-carExhaust.setDelay(4)
 
 var animationsArray = [];
 animationsArray.push(tupAnimation);
-animationsArray.push(carExhaust);
 
 function animationsControl()
 {

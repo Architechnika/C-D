@@ -396,23 +396,23 @@ function playerSetDirection(direction) {
 function movePlayerToFieldElement(fEl, dontFocus) {
     //Если объект игрока ещё не создан
     if (playerImageObj === null) {
-        playerImageObj = game.newImageObject({
-            file: playerImgSrc,
-            x: fEl.x,
-            y: fEl.y,
-            w: fEl.w,
-            h: fEl.h
-        });
+        playerImageObj  = game.newAnimationObject(   { 
+     animation : pjs.tiles.newImage("animations/carExhaust.png").getAnimation(0, 0, 128, 128, 8), 
+    x: fEl.x,
+    y: fEl.y,
+    w: fEl.w,
+    h: fEl.h,
+     angle : 0, 
+     alpha : 1, 
+     visible : true 
+   });
+    playerImageObj.setDelay(1);
     } else //Если он уже есть, то просто смещаем его в нужную позицию
     {
         playerImageObj.x = fEl.x;
         playerImageObj.y = fEl.y;
         playerImageObj.w = fEl.w;
         playerImageObj.h = fEl.h;
-        carExhaust.x = playerImageObj.x + playerImageObj.w;
-        carExhaust.y = playerImageObj.y;
-        carExhaust.w = playerImageObj.w*0.7
-        carExhaust.h = playerImageObj.h*0.7
     }
     if(labView && !dontFocus) labView.setFocusOnElement(field[playerPozition],false);
 }
