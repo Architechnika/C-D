@@ -378,20 +378,20 @@ function changeMenuState(commandImg) {
             infoText.setText(choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count + "");
         } else {
             //при вертикальном положении экрана коректируем окно ввода чисел
-            var rScroll = initRightScroll(getDigitKeyboardImages());//получаем скрол с числами чтобы позицанировать
+            var rScroll = initRightScroll(getDigitKeyboardImages()); //получаем скрол с числами чтобы позицанировать
             initLeftScroll();
             //позицанируем скрол - общая высота экрана минус "элемент скрола на количество строк в скроле этим узнаем высоту скрола" минус высота кнопок GUI
             rScroll.GetBackGround().x = 0;
             rScroll.GetBackGround().w = width;
-            rScroll.GetBackGround().y = height - rScroll.getArrayItems()[0].h*rScroll.scrollRowCount - allButtons.mainButton.h;
+            rScroll.GetBackGround().y = height - rScroll.getArrayItems()[0].h * rScroll.scrollRowCount - allButtons.mainButton.h;
             //реиницилизируем для потверждение позицианирования
             rScroll.initArrayItems(getDigitKeyboardImages());
-             rScroll.GetBackGround().y = height - rScroll.getArrayItems()[0].h*rScroll.scrollRowCount - allButtons.mainButton.h;
+            rScroll.GetBackGround().y = height - rScroll.getArrayItems()[0].h * rScroll.scrollRowCount - allButtons.mainButton.h;
             rScroll.initArrayItems(getDigitKeyboardImages());
             //меняем позиции и высоту текстового окна
             infoText.BG.x = rScroll.GetBackGround().x;
             infoText.BG.y = textbackGroundItem.h;
-            infoText.BG.h = rScroll.GetBackGround().y-textbackGroundItem.h;// textbackGroundItem.h это высота верхней части экрана где время и количество очков 
+            infoText.BG.h = rScroll.GetBackGround().y - textbackGroundItem.h; // textbackGroundItem.h это высота верхней части экрана где время и количество очков 
             //
             infoText.setText(choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count + "");
         }
@@ -479,8 +479,8 @@ function showMessage(text) {
 }
 
 //Производит расчет очков опыта набранных игроком в процессе прохождения лабиринта
-function calcEXP(){
-    if(totalSeconds != 0)
+function calcEXP() {
+    if (totalSeconds != 0)
         globalEXP += localEXP / totalSeconds;
     //Очищаем значения которые надо очистить
     playerInventory.splice(0, playerInventory.length);
