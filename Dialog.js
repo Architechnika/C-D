@@ -2,7 +2,7 @@ function Dialog() {
 
     var bgW = width / 100 * 20;
     var bgH = height / 100 * 10;
-    if (height < 450) {
+    if (height < 450 || width < 450) {
         bgW = width / 100 * 30;
         bgH = height / 100 * 20;
     }
