@@ -1,3 +1,22 @@
+        @font-face {
+
+            font-family: 'my';
+
+            src: url('../font/7fonts.ru_SFComicScriptCondensed.eot');
+
+            src: url('../font/7fonts.ru_SFComicScriptCondensed.eot?#iefix') format('embedded-opentype'),
+
+            url('../font/7fonts.ru_SFComicScriptCondensed.woff') format('woff'),
+
+            url('../font/7fonts.ru_SFComicScriptCondensed.ttf') format('truetype'),
+
+            url('../font/7fonts.ru_SFComicScriptCondensed.svg#webfont') format('svg');
+
+            font-weight: normal;
+
+            font-style: normal;
+
+        }
 .tn-box {/*РАМКА*/
 	width: 96%;
 	position: fixed;
@@ -11,6 +30,7 @@
 	filter: alpha(opacity=0);	
 	cursor: default;
 	display: none;
+    font-family: "my";
 }
 
 .tn-box p {/*ТЕКСТ*/
