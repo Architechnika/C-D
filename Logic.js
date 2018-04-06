@@ -34,7 +34,7 @@ var dialog = undefined;
 // 5 - elseBlock
 var inputCommandStates = 0;
 var labView, codeView;
-var test = 0;
+var test = "dd";
 //Игровой цикл
 game.newLoopFromConstructor('Labyrinth', function () {
     //Код для старта игры
