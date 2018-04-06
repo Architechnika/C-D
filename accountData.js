@@ -11,6 +11,9 @@ function UserAccaunt(login, pass, summ) {
     this.isSaved = false;
     this.gameSpasePos = "";
     this.gameObjsPos = "";
+    this.playerOptimalRoute = "" // что то связанное с опытом игрока
+    this.playerLocalEXP = 0 // локальный опыт игрока
+    this.playerGlobalEXP = 0 // глобальный опыт игркоа
     this.copy = function (obj) {
         this.userLogin = obj.userLogin;
         this.userPass = obj.userPass;
@@ -23,13 +26,20 @@ function UserAccaunt(login, pass, summ) {
         this.totalWH = obj.totalWH;
         this.gameSpasePos = obj.gameSpasePos;
         this.isSaved = obj.isSaved;
-        this.gameObjsPos = obj.gameObjsPos
+        this.gameObjsPos = obj.gameObjsPos;
+        this.playerOptimalRoute = obj.playerOptimalRoute;
+        this.playerLocalEXP = obj.playerLocalEXP;
+        this.playerGlobalEXP = obj.playerGlobalEXP;
 
     }
     this.save = function (isGameSpaseUp, totalSeconds, field, playerInventory, gameObjects, entrySide) {
-        this.labyrinth = JSON.stringify(field,function(key, value){
+        this.labyrinth = JSON.stringify(field, function (key, value) {
             return value
-        },4);
+        }, 4);
+
+        this.playerOptimalRoute = JSON.stringify(optimalRoute);
+        this.playerLocalEXP = localEXP;
+        this.playerGlobalEXP = globalEXP;
         this.gameTime = totalSeconds;
         this.gameCoin = JSON.stringify(playerInventory);
         this.coinsArray = JSON.stringify(gameObjects);
@@ -47,10 +57,20 @@ function UserAccaunt(login, pass, summ) {
     this.load = function (isGameSpaseUp, gameObjects, playerInventory, initGUI) {
         field = new Array();
         if (this.isSaved) {
-            tmpField = JSON.parse(userData.labyrinth)
-            tmpGameObjsPos = JSON.parse(userData.gameObjsPos);
-            tmpGameObjects = JSON.parse(userData.coinsArray);
-            tmpPlayerInventary = JSON.parse(userData.gameCoin);
+            if (userData.playerOptimalRoute !== undefined)
+                optimalRoute = JSON.parse(userData.playerOptimalRoute);
+            if (userData.playerLocalEXP !== undefined)
+                localEXP = userData.playerLocalEXP;
+            if (userData.playerGlobalEXP !== undefined)
+                globalEXP = userData.playerGlobalEXP;
+            if (userData.labyrinth !== undefined)
+                tmpField = JSON.parse(userData.labyrinth)
+            if (userData.gameObjsPos !== undefined)
+                tmpGameObjsPos = JSON.parse(userData.gameObjsPos);
+            if (userData.coinsArray !== undefined)
+                tmpGameObjects = JSON.parse(userData.coinsArray);
+            if (userData.gameCoin !== undefined)
+                tmpPlayerInventary = JSON.parse(userData.gameCoin);
             var roadEl = Array();
             for (var i = 0; i < tmpField.length; i++) {
                 var img = tmpField[i].parent.file;
@@ -60,12 +80,6 @@ function UserAccaunt(login, pass, summ) {
                 var ty = tmpField[i].parent.y;
                 var tw = tmpField[i].parent.w;
                 var th = tmpField[i].parent.h;
-//                if (isGameSpaseUp && this.gameSpasePos != "Up") {
-//                    ty -= (height / 100 * 15)
-//                }
-//                if (!isGameSpaseUp && this.gameSpasePos == "Up") {
-//                    ty += (height / 100 * 15)
-//                }
                 field.push(new fieldElement(img, comm, S, tx, ty, tw, th))
             }
 

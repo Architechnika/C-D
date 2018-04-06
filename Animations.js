@@ -10,7 +10,7 @@ var tupAnimation = game.newAnimationObject(   {
      visible : false 
    });
 tupAnimation.setDelay(1)
-
+//
 
 var animationsArray = [];
 animationsArray.push(tupAnimation);
