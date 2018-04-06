@@ -317,12 +317,18 @@ function setPreviousStateToPlayer() {
         playerSetDirection(playerStatesBuff[0].direction);
         //Инициализируем стек команд робота
         playerCommands = [];
-        OOP.forArr(playerStatesBuff[0].commands, function (el) {
+        OOP.forArr(playerStatesBuff[0].commands, function (el, i) {
+            if (el.name == "pickup" && i == playerStatesBuff[0].commands.length - 1) {
+                gameObjects.push(playerInventory[playerInventory.length - 1]);
+                gameObjects[gameObjects.length - 1].__proto__ = playerInventory[playerInventory.length - 1].__proto__;
+                gameObjects[gameObjects.length - 1].startRotation();
+                playerInventory.splice(playerInventory.length - 1, 1);
+            }
             playerCommands.push(el);
         });
         //Убираем обработанный элемент
         playerStatesBuff.shift();
-        drawCommState(true);
+        drawCommState(false);
     }
 }
 

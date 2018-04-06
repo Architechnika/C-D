@@ -308,6 +308,9 @@ function onTouchCheckMove() {
                 }
             }
         } else if (scroll.name == "RIGHT" && clickIsInObj(clickCoord.x, clickCoord.y, scroll.GetBackGround())) {
+            if (Date.now() - touchTimespan < touchTapTimeOut) { //Если время не вышло то вопринимаем сдвиг как прокрутку скрола
+                scrolled = true;
+            } 
             touchedScroll = scroll;
             touchTapTimeFlag = true;
             return;
