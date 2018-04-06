@@ -42,6 +42,7 @@ var audio_scroll_click = pjs.audio.newAudio("audio/scrollClick.ogg");
 var currentAsset = "greenland";
 //Параметры для внутриигрового текста
 var textOnCodeMapColor = "#1f75fe";//Цвет цифр когда вводишь итерации в команду repeat
+var textFont = "comic"; //шрифт текста
 
 //Путь к файлам отображения ИНТЕРФЕЙСА И КОМАНД---------------------------------------
 var nonePath = "img/commands/command_none.png";//Картинка пустой команды

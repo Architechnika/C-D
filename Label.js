@@ -7,7 +7,7 @@ function Label(x,y,text)
     var hl=10;
     var sizel;
     var colorl = "red";
-    var textObj = game.newTextObject({x : X,y : Y,h : hl, w: wl, text : textLoc, size: sizel, color : colorl});
+    var textObj = game.newTextObject({x : X,y : Y,h : hl, w: wl, text : textLoc, size: sizel, color : colorl, font:textFont});
 
     this.getTextObject = function()
     {

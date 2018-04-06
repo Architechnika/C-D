@@ -1,61 +1,50 @@
-        @font-face {
-
-            font-family: 'my';
-
-            src: url('../font/7fonts.ru_SFComicScriptCondensed.eot');
-
-            src: url('../font/7fonts.ru_SFComicScriptCondensed.eot?#iefix') format('embedded-opentype'),
-
-            url('../font/7fonts.ru_SFComicScriptCondensed.woff') format('woff'),
-
-            url('../font/7fonts.ru_SFComicScriptCondensed.ttf') format('truetype'),
-
-            url('../font/7fonts.ru_SFComicScriptCondensed.svg#webfont') format('svg');
-
-            font-weight: normal;
-
-            font-style: normal;
-
-        }
-.tn-box {/*РАМКА*/
-	width: 96%;
-	position: fixed;
-/*	margin: 0 auto 20px auto;*/
-	padding: 2% 2%;
-	text-align: left;
-	border-radius: 5px;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.6);  
-/*	opacity: 0;*/
-	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-	filter: alpha(opacity=0);	
-	cursor: default;
-	display: none;
-    font-family: "my";
+@font-face {
+    font-family: comic;
+    src: url('../../font/NeSkidComica.ttf');
 }
 
-.tn-box p {/*ТЕКСТ*/
-	font-weight: bold;
-	font-size: 16px;
-	margin: 0;
-	padding: 0 10px 0 60px;
-	text-shadow: 0 1px 1px rgba(255,255,255,0.6);
+.tn-box {
+    /*РАМКА*/
+    width: 96%;
+    position: fixed;
+    /*	margin: 0 auto 20px auto;*/
+    padding: 2% 2%;
+    text-align: left;
+    border-radius: 5px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    /*	opacity: 0;*/
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    cursor: default;
+    display: none;
+    font-family: 'comic';
 }
-.tn-box p:before{
-	text-align: center;
-	border: 3px solid rgba(255, 255, 255, 1);
-	margin-top: -17px;
-	top: 50%;
-	left: 20px;
-	width: 30px;
-	content: 'i';
-	font-size: 30px;
-	color: rgba(255, 255, 255, 1);
-	position: absolute;
-	height: 30px;
-	line-height: 30px;
-	border-radius: 50%;
-	text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
-	box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+
+.tn-box p {
+    /*ТЕКСТ*/
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0;
+    padding: 0 10px 0 60px;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+
+.tn-box p:before {
+    text-align: center;
+    border: 3px solid rgba(255, 255, 255, 1);
+    margin-top: -17px;
+    top: 50%;
+    left: 20px;
+    width: 30px;
+    content: 'i';
+    font-size: 30px;
+    color: rgba(255, 255, 255, 1);
+    position: absolute;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 /*
@@ -75,51 +64,55 @@
 
 /* Colors */
 
-.tn-box-color-1{
-	background: #ffe691;
-	border: 1px solid #f6db7b;
+.tn-box-color-1 {
+    background: #ffe691;
+    border: 1px solid #f6db7b;
 }
+
 .tn-box-color-1 p {
-	color: #7d5912;
+    color: #7d5912;
 }
 
-.tn-box-color-2{
-	background: #99ffb1;
-	border: 1px solid #7ce294;
+.tn-box-color-2 {
+    background: #99ffb1;
+    border: 1px solid #7ce294;
 }
+
 .tn-box-color-2 p {
-	color: #2d8241;
+    color: #2d8241;
 }
 
-.tn-box-color-3{
-	background: #dd9aff;
-	border: 1px solid #b367db;
+.tn-box-color-3 {
+    background: #dd9aff;
+    border: 1px solid #b367db;
 }
+
 .tn-box-color-3 p {
-	color: #69288b;
+    color: #69288b;
 }
 
 /* Fire the animations */
-input.fire-check
-{
+
+input.fire-check {
     display: none;
 }
+
 input.fire-check:checked ~ section .tn-box {
-	display: block;
-	-webkit-animation: fadeOut 5s linear forwards;
-	-moz-animation: fadeOut 5s linear forwards;
-	-o-animation: fadeOut 5s linear forwards;
-	-ms-animation: fadeOut 5s linear forwards;
-	animation: fadeOut 5s linear forwards;
+    display: block;
+    -webkit-animation: fadeOut 5s linear forwards;
+    -moz-animation: fadeOut 5s linear forwards;
+    -o-animation: fadeOut 5s linear forwards;
+    -ms-animation: fadeOut 5s linear forwards;
+    animation: fadeOut 5s linear forwards;
 }
 
 input.fire-check:checked ~ section .tn-box .tn-progress {
-  
-	-webkit-animation: runProgress 4s linear forwards 0.5s;
-	-moz-animation: runProgress 4s linear forwards 0.5s;
-	-o-animation: runProgress 4s linear forwards 0.5s;
-	-ms-animation: runProgress 4s linear forwards 0.5s;
-	animation: runProgress 4s linear forwards 0.5s;
+
+    -webkit-animation: runProgress 4s linear forwards 0.5s;
+    -moz-animation: runProgress 4s linear forwards 0.5s;
+    -o-animation: runProgress 4s linear forwards 0.5s;
+    -ms-animation: runProgress 4s linear forwards 0.5s;
+    animation: runProgress 4s linear forwards 0.5s;
 }
 
 /* If you use JavaScript you could add a class instead: */
@@ -145,12 +138,18 @@ input.fire-check:checked ~ section .tn-box .tn-progress {
 }
 */
 
-
 @-webkit-keyframes fadeOut {
-	0% { opacity: 0; }
-	10% { opacity: 1; }
-	90% { opacity: 1; -webkit-transform: translateY(0px);}
-/*
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+        -webkit-transform: translateY(0px);
+    }
+    /*
 	99% { opacity: 0; -webkit-transform: translateY(-30px);}
 	100% { opacity: 0; }
 */
@@ -216,7 +215,6 @@ input.fire-check:checked ~ section .tn-box .tn-progress {
 	100%{ width: 96%; background: rgba(255,255,255,1); }
 }
 */
-
 
 /* Let's add some different durations for the demo */
 

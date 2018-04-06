@@ -8,10 +8,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width,user-scalable=no" />
     <canvas id="tutorial" width="150" height="150"></canvas>
+
 </head>
 
 <body>
-
     <script type="text/javascript" src="Point.js"></script>
     <script type="text/javascript" src="Language.js"></script>
     <script type="text/javascript" src="Engine_params.js"></script>
@@ -44,6 +44,11 @@
     </div>
 
     <style type="text/css">
+        @font-face {
+            font-family: comic;
+            src: url('font/NeSkidComica.ttf');
+        }
+
         #preloader_malc {
             position: fixed;
             top: 0;
@@ -60,7 +65,7 @@
             height: 40px;
             line-height: 40px;
             border-radius: 8px;
-            font-family: arial;
+            font-family: 'comic';
             font-size: 15px;
             color: #111;
             text-align: center;

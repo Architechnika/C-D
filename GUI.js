@@ -262,7 +262,8 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
         text: "test",
         color: textColor,
         size: textSize,
-        alpha: 1
+        alpha: 1,
+        font : textFont,
     })
     this.BG.setAlpha(alphaBG)
     this.BG.setVisible(false)
