@@ -25,6 +25,7 @@ var isSecondScreen = false;
 var isVerticalScreen = undefined;
 var widthBuff = width;
 var dialog = undefined;
+var lastAddedCommand = undefined;
 //Переменная для хранения состояний меню ввода команд:
 // 0 - обычный ввод
 // 1 - blockA или if или repeatif
@@ -280,10 +281,12 @@ function addCommandToCell(commandImg, dontAdd) {
     if (!dontAdd) { //Если добавляем команду
 
         if (inputCommandStates == 1) { //Если у нас простая команда и мы добавляем ее тупо в клетку
-            choosenCommandInElement.push(getCopyOfObj(commandImg.command));
+            lastAddedCommand = getCopyOfObj(commandImg.command);
+            choosenCommandInElement.push(lastAddedCommand);
             if (commandImg.command.commandsBlock) onOkBClick();
             else initLeftScroll(getCommandsImgArr(choosenCommandInElement));
         } else if (inputCommandStates == 2) { //Если выбираем blockA
+            lastAddedCommand = undefined;
             var comm = getCopyOfObj(COMMANDS[10]); //Инициализируем команду whatisit
             comm.lookCommand = commandImg.command; //Инитим параметр lookCommand
             choosenCommandInElement.blockA = comm;
@@ -293,6 +296,7 @@ function addCommandToCell(commandImg, dontAdd) {
             initRightScroll([]);
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         } else if (inputCommandStates == 3) { //Если выбираем blockB
+            lastAddedCommand = undefined;
             choosenCommandInElement.blockB = commandImg.command;
             inputCommandStates = 0;
             if (isVerticalScreen) initLeftScroll();
@@ -301,6 +305,7 @@ function addCommandToCell(commandImg, dontAdd) {
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         } else if (inputCommandStates == 0) { //Если редактируем команды из codeView
             if (itemToReplaceInCodeMap) { //Если нужно заменить элемент
+                lastAddedCommand = undefined;
                 //Находим массив в котором хранится команда для замены
                 var elemStor = findObjStorage(lastClickedElement.commands, itemToReplaceInCodeMap.command);
                 //Находим ее в массиве и заменяем
@@ -331,6 +336,7 @@ function addCommandToCell(commandImg, dontAdd) {
                 var clone = getCopyOfObj(commandImg.command);
                 elemStor.splice(indx, 0, clone);
                 itemToAddAfterInCodeMap.command = clone;
+                lastAddedCommand = clone;
                 if (commandImg.command.commandsBlock) onOkBClick();
                 initLeftScroll(getCommandsImgArr(choosenCommandInElement));
             }

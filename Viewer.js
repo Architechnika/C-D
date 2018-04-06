@@ -61,7 +61,8 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
             if(this.elems[i] == elem){
                 var bgC = this.backGround.getPositionC();
                 var elC = this.elems[i].getPositionC();
-                this.elementsMove(bgC.x - elC.x,bgC.y - elC.y,undefined,undefined,isCodeView);
+                this.elementsMove(bgC.x - elC.x, bgC.y - elC.y, undefined, undefined, isCodeView);
+                //this.currentShift = new point(bgC.x - elC.x, bgC.y - elC.y);
                 break;
             }
         }
@@ -148,6 +149,9 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
                 }
             });
             if (!dontSave) {
+                if (isCodeView) {
+                    log(" 1123");
+                }
                 this.currentShift.x = this.elems[0].x;
                 this.currentShift.y = this.elems[0].y;
             }
@@ -474,9 +478,9 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                 return;
             } 
         }
-        
+
         this.clear();
-        
+
         if(!isVerticalScreen)
             buildCodeMap(codeMapBG.x, codeMapBG.y, arr, parent.elems, this.elemWH, isPlusAdd, isOnClick, false);
         else buildCodeMap(x, y, arr, parent.elems, this.elemWH, isPlusAdd, isOnClick, false);
@@ -492,7 +496,17 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
             //this.recizeAllElementsToScreen();
             this.setAlphaToElement(alpha,activeELement);
         } else {
-            this.elementsMove(parent.currentShift.x - parent.backGround.x, parent.currentShift.y - parent.backGround.y, true, undefined);
+            if (lastAddedCommand) {
+                for (var i = 0; i < parent.elems.length; i++) {
+                    if (parent.elems[i].command && parent.elems[i].command == lastAddedCommand) {
+                        this.setFocusOnElement(parent.elems[i], true);
+                        break;
+                    }
+                }
+            }
+            else {
+                this.elementsMove(parent.currentShift.x - parent.backGround.x, parent.currentShift.y - parent.backGround.y, true, undefined);
+            }
         }
         //Если карта не кликабельна, то сбрасываем ресайз(потому что она сразу в максимальном размере отрисуется)
         if(!isOnClick){
@@ -562,7 +576,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
 
     this.resizeView = function (delta) {
         if(!parent.elems || parent.elems.length == 0) return;
-        parent.resizeView(delta, false, true);
+        parent.resizeView(delta, false, true, true);
         //запоминаем новый размер для элемента
         this.elemWH = parent.elems[0].w;
 
@@ -573,8 +587,8 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
             this.checkObjsInArea(1);
         //Проверяем надо ли смещать код мап после ресайза(Да знаю, что для этого мы и писали универсальную функцию ресайза в родительском классе, но тут особый случай, не могу придумать способа его обрабатывать без специального кода тут)
         //Считаем разность нижней точки кодмапа с нижней точкой последнего элемента
-        var lastElemDiff =(codeMapBG.y + codeMapBG.h) - (parent.elems[parent.elems.length - 1].y + parent.elems[parent.elems.length - 1].h);
-        var shift = lastElemDiff;
+        var lastElemDiff = (codeMapBG.y + codeMapBG.h) - (parent.elems[parent.elems.length - 1].y + parent.elems[parent.elems.length - 1].h);
+        var shift = lastElemDiff;        
         //Если разность больше 0 то надо сдвигать
         if(lastElemDiff > 0 ){
             //Но если после сдвига верхние жлементы сдвинутся внутрь codeMapBG то это будет неправильно поэтому проверяем
@@ -610,7 +624,6 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
     this.isClicked = function (e) {
         if (!this.menu.isClicked(e)) {
             if (!parent.isClicked(e)){
-                this.resizeView(0);
                 this.menu.closeMenu();
             }
             else return true;
