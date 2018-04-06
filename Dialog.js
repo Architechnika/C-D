@@ -26,6 +26,7 @@ function Dialog() {
         size: bgH / 100 * 28,
         color: "#000000",
         visible: false,
+        font: textFont,
     });
 
     this.dialogOkButton = new PushButton();
