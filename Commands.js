@@ -119,7 +119,6 @@ COMMANDS.push({
 COMMANDS.push({
     code: 'B',
     name: "blockB",
-    conditions: [],
     imgSource: commandBlockBImgSrc,
     undeletable: true
 }); //[15]
@@ -205,7 +204,7 @@ COMMANDS.push({
 });
 //ИНИЦИАЛИЗИРУЕМ ШАБЛОН КОМАНДЫ IF
 COMMANDS[11].blockA = COMMANDS[14];
-COMMANDS[11].blockB = COMMANDS[15];
+COMMANDS[11].blockB = [COMMANDS[15]];
 COMMANDS[11].commandsBlock = COMMANDS[9];
 COMMANDS[11].elseBlock = COMMANDS[23];
 //ИНИЦИАЛИЗИРУЕМ ШАБЛОН КОМАНДЫ REPEAT
@@ -213,7 +212,7 @@ COMMANDS[12].countBlock = COMMANDS[16]
 COMMANDS[12].commandsBlock = COMMANDS[9];
 //ИНИЦИАЛИЗИРУЕМ ШАБЛОН КОМАНДЫ repeatIF
 COMMANDS[13].blockA = COMMANDS[14];
-COMMANDS[13].blockB = COMMANDS[15];
+COMMANDS[13].blockB = [COMMANDS[15]];
 COMMANDS[13].commandsBlock = COMMANDS[9];
 
 function gameFieldElement(fCode, iCode) {
@@ -275,10 +274,10 @@ function checkConditionIF(blockA, blockB, commandsBlock, elseBlock) {
     if (blockA.name == "whatisit") {
         blockA = checkWhatIsIt(blockA.lookCommand, playerPozition, field, totalWidth, gameObjects, playerFrontSide)
     }
-    if (blockB.conditions && blockB.conditions.length && blockB.conditions.length > 0) {//Если условий несколько
-        for (var i = 0; i < blockB.conditions.length; i++){
-            if (blockB.conditions[i].code == coinCode) {//Если в условии выбран игровой обьект(монетка и тд)
-                if (blockA.itemCode && blockA.itemCode == blockB.conditions[i].code)
+    if (blockB && blockB.length && blockB.length > 0) {//Если условий несколько
+        for (var i = 0; i < blockB.length; i++){
+            if (blockB[i].code == coinCode) {//Если в условии выбран игровой обьект(монетка и тд)
+                if (blockA.itemCode && blockA.itemCode == blockB[i].code)
                     return commandsBlock.actions;
             } else {//Если выбран обьект ландшафта(стены, вход или выход)
                 //Парсим в int
@@ -287,7 +286,7 @@ function checkConditionIF(blockA, blockB, commandsBlock, elseBlock) {
                 //Если стены внутренние то код элемента 0(Любые стены для нас пока равнозначны)
                 if (val > 0 && val < 4)
                     blockA.fieldCode = borderCode;
-                if (blockA.fieldCode == blockB.conditions[i].code)
+                if (blockA.fieldCode == blockB[i].code)
                     return commandsBlock.actions;
             }
         }

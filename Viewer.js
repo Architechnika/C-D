@@ -410,14 +410,14 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                     //Позиционируем blockA текущего элемента
                     addUsualCommand(lX, lY, elemWH, images, imgS, el.blockA, isOnClick);
                     lX += elemWH;
-                    if (el.blockB.conditions.length > 0) {
-                        for (var i = 0; i < el.blockB.conditions.length; i++) {
-
-                        }
-                    }
                     //Позиционируем blockB текущего элемента
-                    addUsualCommand(lX, lY, elemWH, images, el.blockB.imgSource, el.blockB, isOnClick);
-                    lX -= elemWH;
+                    if (el.blockB.length > 0) {
+                        for (var cI = 0; cI < el.blockB.length; cI++) {
+                            addUsualCommand(lX, lY, elemWH, images, el.blockB[cI].imgSource, el.blockB[cI], isOnClick);
+                            lX += elemWH;
+                        }
+                        lX -= elemWH * (el.blockB.length + 1);
+                    }
                 } else if (el.name == "repeat") {
                     lX += elemWH;
                     //Позиционируем countBlock текущего элемента
@@ -549,8 +549,10 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                     else if(el.command.name == "repeatif" || el.command.name == "if"){
                         i += 1;
                         parent.elems[i].setAlpha(1);
-                        i += 1;
-                        parent.elems[i].setAlpha(1);
+                        for (var c = 0; c < el.command.blockB.length; c++){
+                            i++;
+                            parent.elems[i].setAlpha(1);
+                        }
                     }
                     parent.setFocusOnElement(el,true);
                 }
@@ -732,8 +734,12 @@ var findObjStorage = function (container, obj) {
                 if (el.blockA == obj)
                     return el;
             if (obj.name == "blockB")
-                if (el.blockB == obj)
-                    return el;
+                for (var c = 0; c < el.blockB.length; c++) {
+                    if (el.blockB[c] == obj) {
+                        blockBElemIndx = c;
+                        return el;
+                    }
+                }
         } else if (el.name == "repeat") {
             if (obj.name == "counter")
                 if (el.countBlock == obj)

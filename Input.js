@@ -17,6 +17,7 @@ var codeMapIsMoved = false; //Флаг для сдвига карты кода
 var multiTouchDelta = -1; //Буфер для хранения элемента который сдвигают в нижнем скроле(чтобы вернуть его в исходное состояние если что)
 var touchTimespan = undefined;
 var toolTipTimeCounter = undefined;
+var blockBElemIndx = -1;
 //Отменяем вывод контестного меню на страничке
 document.oncontextmenu = function () {
     return false
@@ -475,23 +476,16 @@ function onChooseCommandClick(el) {
 
 //Обработчик для ввода с цифр
 function onKeyboardClick(el) {
-    var count = el.command.name != "backspace" ? el.command.value : -1;
-    var text = choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count.toString();
-    if (count != -1) { //Если элемент добавляют        
-        if (text.length < 4) {
-            text = text + count.toString();
-        }
-    } else if (text.length > 0) text = text.substring(0, text.length - 1) //Если стирают
-    var parsedInt = parseInt(text);
-    parsedInt = isNaN(parsedInt) ? 0 : parsedInt;
-    //Инитим текст в блок итераций
-    choosenCommandInElement.countBlock.count = parsedInt;
-    //Задаем текст в текст бокс
-    infoText.setText(text);
-    // messengBox.setShow(true);
-    // messengBox.setText(text);
+    if (key.isDown("LEFT")) {
+        allButtons.stepDownButton.onClick();
+    }
+    else if (key.isDown("RIGHT")) {
+        allButtons.stepUpButton.onClick();
+    }
+    else if (key.isDown("SPACE")) {
+        allButtons.mainButton.onClick();
+    }
 }
-//------------------------------------------------------------------
 
 //Функция обеспечивающая динамический скролл
 function scrollDynamic(speed, scrollElement) {

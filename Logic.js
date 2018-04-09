@@ -100,6 +100,7 @@ function logicEventTimer() {
         toolTipShowEvent(clickCoord.x, clickCoord.y);
         toolTipTimeCounter = 0;
     } else toolTipTimeCounter += 40;
+    onKeyboardClick();
     setTimeout("logicEventTimer()", 40);
 }
 
@@ -297,7 +298,14 @@ function addCommandToCell(commandImg, dontAdd) {
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         } else if (inputCommandStates == 3) { //Если выбираем blockB
             lastAddedCommand = undefined;
-            choosenCommandInElement.blockB.conditions.push(commandImg.command);
+            if (blockBElemIndx != -1) {
+                choosenCommandInElement.blockB[blockBElemIndx] = commandImg.command;
+                if (choosenCommandInElement.blockB[choosenCommandInElement.blockB.length - 1].code !== COMMANDS[15].code) {
+                    choosenCommandInElement.blockB.push(getCopyOfObj(COMMANDS[15]));
+                }
+                blockBElemIndx = -1;
+            }
+            else choosenCommandInElement.blockB.push(commandImg.command);
             inputCommandStates = 0;
             if (isVerticalScreen) initLeftScroll();
             else initLeftScroll([]);
@@ -441,9 +449,10 @@ function processRobotMove() {
 
     if (res == "end") { //Если мы прошли до конца карты
         robotOn = false;
-        if (isLabyrinthGrow) {
+        totalLabCompleted++;
+        var isGr = calcEXP();
+        if (isLabyrinthGrow && isGr) {
             if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {
-                log("Лабиринт достиг максимально допустимого размера");
             } else {
                 totalWidth += 2;
                 totalHeight += 2;
@@ -452,8 +461,6 @@ function processRobotMove() {
         }
         isStarted = false;
         allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
-        totalLabCompleted++;
-        calcEXP();
         //Перезагружаем уровень с новым лабиринтом
         initializeGame();
     } else if (res == "stop") {
@@ -494,7 +501,9 @@ function calcEXP() {
     if (globalEXP > nextLevelEXP) {
         currentPlayerLevel++;
         nextLevelEXP = nextLevelEXP + (1.5 * currentPlayerLevel);
+        return true;
     }
+    return false;
 }
 
 game.startLoop('Labyrinth');
