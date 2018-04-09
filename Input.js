@@ -483,7 +483,7 @@ function onKeyboardClick(el) {
         allButtons.stepUpButton.onClick();
     }
     else if (key.isDown("SPACE")) {
-        allButtons.mainButton.onClick();
+        allButtons.mainButton.onClick(allButtons.mainButton);
     }
 }
 
