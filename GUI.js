@@ -325,7 +325,7 @@ function PlayerLevelVisualisation() {
         radius: 6,
         fillColor: "red",
     });
-    var expText = new Label(mainBG.x + mainBG.w + 3, mainBG.y, "Уровень: " + lvl + " ");
+    var expText = new Label(mainBG.x + mainBG.w + 2, mainBG.y, "Уровень: " + lvl);
     expText.setTextSize(mainBG.h * 1.5);
     expText.setTextColor(guiTextColor);
 
