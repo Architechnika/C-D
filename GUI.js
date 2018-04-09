@@ -314,7 +314,16 @@ function PlayerLevelVisualisation() {
         w: mainBG.w,
         h: mainBG.h,
         radius: 6,
+        fillColor: "#e6e6e6",
+    });
+    var bgMembrane = game.newRoundRectObject({
+        x: mainBG.x,
+        y: (bg.y + bg.h/2) - ((mainBG.h/2)/2),
+        w: mainBG.w,
+        h: mainBG.h/2,
+        radius: 6,
         fillColor: "#ffffff",
+        alpha : 0.35,
     });
 
     var lvlLine = game.newRoundRectObject({
@@ -323,7 +332,16 @@ function PlayerLevelVisualisation() {
         w: lineW,
         h: mainBG.h,
         radius: 6,
+        fillColor: "#eb0000",
+    });
+    var lvlLineMembrane = game.newRoundRectObject({
+        x: mainBG.x,
+        y: (lvlLine.y + lvlLine.h/2) - ((mainBG.h/2)/2),
+        w: lvlLine.w,
+        h: mainBG.h/2,
+        radius: 6,
         fillColor: "red",
+        alpha: 0.7,
     });
     var expText = new Label(mainBG.x + mainBG.w + 2, mainBG.y, "Уровень: " + lvl);
     expText.setTextSize(mainBG.h * 1.5);
@@ -338,8 +356,10 @@ function PlayerLevelVisualisation() {
         var expPerc = (globalEXP / nextLevelEXP) * 100;
         var lvlLinePerc = (bg.w / 100) * expPerc;
         lvlLine.w = lvlLinePerc;
+        lvlLineMembrane.w = lvlLinePerc
         if (globalEXP > nextLevelEXP) {
             lvlLine.w = 0;
+             lvlLineMembrane.w = 0;
             this.setLevel(currentPlayerLevel)
         }
 
@@ -347,8 +367,10 @@ function PlayerLevelVisualisation() {
 
     this.drawPlayerLevel = function () {
         bg.draw();
+        bgMembrane.draw();
         if (lvlLine.w > 3) {
             lvlLine.draw();
+             lvlLineMembrane.draw();
         }
         expText.textDraw();
     }
