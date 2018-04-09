@@ -47,6 +47,10 @@ function Label(x,y,text)
     {
         return textObj;
     }
+    this.getText = function()
+    {
+        return text;
+    }
     this.setWAndH = function(w,h)
     {
         wl =w;

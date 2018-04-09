@@ -2,7 +2,7 @@
 
 var timerText = null; //текст таймера
 var progressText = null; // количество ходов
-var expText = null;//Cколько всего набрано опыта
+//var expText = null;//Cколько всего набрано опыта
 var inputCounterText = null; //Текстовое поле для ввода чисел
 
 var menuItemH = 0; // стандартная высота элемента меню
@@ -16,6 +16,7 @@ var allButtons = undefined; //Класс для всех кнопок
 var Scrolls = new Array(); // массив всех скролбаров
 var infoText = undefined;
 var toolTip = new ToolTip();
+var playerLevelVisual = undefined;
 var messageBox = new MessageBox();
 pjs.mouseControl.setCursorImage(cursorImgSrc);
 //Отрисовывает элементы интерфейса
@@ -26,11 +27,11 @@ function drawGUI() {
     updateTextOnGui();
     timerText.textDraw();
     progressText.textDraw();
-    expText.textDraw();
     coinItem.draw();
     clockItem.draw();
     infoText.draw();
     dialog.dialogDraw();
+    playerLevelVisual.drawPlayerLevel();
     if(toolTip.isVisible()) toolTip.draw();
     if (inputCounterText !== null) inputCounterText.draw();
     //Отрисовываем интерфейс выбора команд
@@ -47,9 +48,9 @@ function initGUI() { //поочередность иницилизаии ОБЯ�
     infoText = new TextWithBG(gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH);
     timerTextInit();
     progressTextInit();
-    expTextInit();
     textbackGroundInit("#000000", 0);
     codeMapBackGroundInit("#000000", 0.4)
+    playerLevelVisual = new PlayerLevelVisualisation();
     if (!isVerticalScreen) {
         //ИНИЦИАЛИЗИРУЕМ ИНТЕРФЕЙС РЕДАКТОРА КОМАНД
         if (Scrolls.length == 0) {
@@ -71,7 +72,7 @@ function updateTextOnGui() {
     //Обновляем инфу о времени
     timerText.setText((min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec))
     var expG = (globalEXP * 100).toFixed();
-    expText.setText("ОПЫТ: " + expG + ":" + localEXP);
+   // expText.setText("ОПЫТ: " + expG + ":" + localEXP);
 }
 
 
@@ -93,7 +94,7 @@ function timerTextInit() {
 function progressTextInit() {
     var wh = gameSpaceW / 100 * 4;
     coinItem = game.newImageObject({
-        x: timerText.getObj().x + timerText.getObj().w * 4,
+        x: gameSpaceX + gameSpaceW*0.15,
         y: 0,
         w: wh,
         h: wh,
@@ -103,12 +104,6 @@ function progressTextInit() {
     progressText.setTextPosition(coinItem.x + coinItem.w + 5, 0);
     progressText.setTextSize(wh);
     progressText.setTextColor(guiTextColor);
-}
-
-function expTextInit(){
-    expText = new Label(coinItem.x + coinItem.w * 2 + 5,coinItem.y, "00");
-    expText.setTextSize(coinItem.w);
-    expText.setTextColor(guiTextColor);
 }
 
 function textbackGroundInit(color, alpha) {
@@ -296,5 +291,62 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
     this.close = function () {
         this.BG.setVisible(false)
         text.setVisible(false)
+    }
+}
+
+function PlayerLevelVisualisation()
+{
+    var lineW = 50;
+    var lvl = 15;
+    var textW = 0;
+    var mainBG = game.newRectObject(   { 
+     x : gameSpaceX+gameSpaceW - (gameSpaceW*0.4), 
+     y : textbackGroundItem.y+(textbackGroundItem.h*0.2), 
+     w : gameSpaceW*0.4, 
+     h : textbackGroundItem.h/1.5, 
+     fillColor : "#FBFE6F",
+     alpha : 0,
+   });
+    var bg = game.newRoundRectObject(   { 
+     x : mainBG.x, 
+     y : mainBG.y, 
+     w : mainBG.w, 
+     h : mainBG.h, 
+     radius : 6, 
+     fillColor : "#FBFE6F", 
+   });
+    
+    var lvlLine = game.newRoundRectObject(   { 
+     x : mainBG.x, 
+     y : mainBG.y, 
+     w : lineW, 
+     h : mainBG.h, 
+     radius : 6, 
+     fillColor : "red", 
+   });
+    var expText = new Label(mainBG.x+mainBG.w+3, mainBG.y, "Уровень:"+lvl);
+    expText.setTextSize(mainBG.h*1.5);
+    expText.setTextColor(guiTextColor);
+    
+    textW = expText.getText().toString().length * gameSpaceW*0.022;
+    expText.setTextPosition(mainBG.x - textW)
+    this.setLevel = function(lvl)
+    {
+        expText.setText(lvl);
+    }
+    this.setMaxExp = function()
+    {
+        
+    }
+    this.setExp = function(exp)
+    {
+        lvlLine.w = exp;
+    }
+    
+    this.drawPlayerLevel = function()
+    {
+        bg.draw();
+        lvlLine.draw();
+        expText.textDraw();
     }
 }
