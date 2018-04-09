@@ -72,6 +72,13 @@ function onMouseDOWN(e) {
 }
 
 function onWheel(e) {
+    if (clickIsInObj(e.x, e.y, codeView.getBackGround())) {    
+        if (key.isDown("CTRL")) {
+            codeView.resizeView((e.deltaY * -1) < 0 ? -1 * scrollStep : scrollStep);
+        }
+        else codeView.elementsMove(0, e.deltaY * 0.3 * -1);
+        return;
+    }
     onRecize(e, e.deltaY * -1, scrollStep);
     e.cancelBubble = true;
 }
