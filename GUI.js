@@ -76,30 +76,32 @@ function updateTextOnGui() {
 
 
 function timerTextInit() {
+    var wh = gameSpaceW / 100 * 4;
     clockItem = game.newImageObject({
         x: gameSpaceX,
         y: 0,
-        w: gameSpaceW / 100 * 4,
-        h: gameSpaceW / 100 * 4,
+        w: wh,
+        h: wh,
         file: clockPath
     })
     timerText = new Label(0, 0, "00:00");
     timerText.setTextPosition((clockItem.x + clockItem.w) + 5, 0);
-    timerText.setTextSize(clockItem.w);
+    timerText.setTextSize(wh);
     timerText.setTextColor(guiTextColor);
 }
 
 function progressTextInit() {
+    var wh = gameSpaceW / 100 * 4;
     coinItem = game.newImageObject({
         x: timerText.getObj().x + timerText.getObj().w * 4,
         y: 0,
-        w: gameSpaceW / 100 * 4,
-        h: gameSpaceW / 100 * 4,
+        w: wh,
+        h: wh,
         file: coinPath
     })
     progressText = new Label(0, 0, "00");
     progressText.setTextPosition(coinItem.x + coinItem.w + 5, 0);
-    progressText.setTextSize(coinItem.w);
+    progressText.setTextSize(wh);
     progressText.setTextColor(guiTextColor);
 }
 
