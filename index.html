@@ -23,19 +23,21 @@
     function readOptions()
     {//
 
-        if(sessionStorage.getItem("tmpUserData"))
-        {
-            userID = sessionStorage.getItem("userdata");
-            var tud = JSON.parse(sessionStorage.getItem("tmpUserData"));
-            userdata.user = tud.userName;
-            userName.innerHTML = tud.userName;
-        }else if (localStorage.getItem("tmpUserData"))
+//        if(sessionStorage.getItem("tmpUserData"))
+//        {
+//            userID = sessionStorage.getItem("userdata");
+//            var tud = JSON.parse(sessionStorage.getItem("tmpUserData"));
+//            userdata.user = tud.userName;
+//            userName.innerHTML = tud.userName;
+//        }else 
+        if (localStorage.getItem("tmpUserData"))
         {
             var tud = JSON.parse(localStorage.getItem("tmpUserData"));
             userID = tud.userId;
             userdata.user = tud.userName;
             userName.innerHTML = tud.userName;   
-        }
+             
+        }else loginShow()
 
     }
   </script>
@@ -88,7 +90,7 @@
                     <div class="mbr-buttons btn-inverse mbr-buttons--left">
                         <a class="mbr-buttons__btn btn btn-lg animated fadeInUp delay btn-danger" onclick="newGame()"  href="game.html" >Новая игра</a>
                         <a class="mbr-buttons__btn btn btn-lg animated fadeInUp delay btn-info" onclick="continueGame()" href="game.html">Продолжить</a> 
-                        <a class="mbr-buttons__btn btn btn-lg animated fadeInUp delay btn-success" onclick="loginShow()">Войти/Регистрация</a> 
+<!--                        <a class="mbr-buttons__btn btn btn-lg animated fadeInUp delay btn-success" onclick="loginShow()">Войти/Регистрация</a> -->
                         <a class="mbr-buttons__btn btn btn-lg animated fadeInUp delay btn-default" onclick="optionsShow()" href="SettingsPage/settings.html">Настройки</a> 
                         <a class="mbr-buttons__btn btn btn-lg animated fadeInUp delay btn-primary" href="instruction.html">Инструкция</a>
                     </div>
