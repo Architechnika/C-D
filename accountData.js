@@ -62,23 +62,23 @@ function UserAccaunt(login, pass, summ) {
     this.load = function (isGameSpaseUp, gameObjects, playerInventory, initGUI) {
         field = new Array();
         if (this.isSaved) {
-            if (userData.playerOptimalRoute)
+            if (userData.playerOptimalRoute != undefined)
                 optimalRoute = JSON.parse(userData.playerOptimalRoute);
-            if (userData.playerLocalEXP)
+            if (userData.playerLocalEXP != undefined)
                 localEXP = userData.playerLocalEXP;
-            if (userData.playerGlobalEXP)
+            if (userData.playerGlobalEXP != undefined)
                 globalEXP = userData.playerGlobalEXP;
-            if (userData.playerNextLvlEXP)
+            if (userData.playerNextLvlEXP != undefined)
                 nextLevelEXP = userData.playerNextLvlEXP;
-            if (userData.playerCurrentLevel)
+            if (userData.playerCurrentLevel != undefined)
                 currentPlayerLevel = userData.playerCurrentLevel;
-            if (userData.labyrinth)
+            if (userData.labyrinth != undefined)
                 tmpField = JSON.parse(userData.labyrinth)
-            if (userData.gameObjsPos)
+            if (userData.gameObjsPos != undefined)
                 tmpGameObjsPos = JSON.parse(userData.gameObjsPos);
-            if (userData.coinsArray)
+            if (userData.coinsArray != undefined)
                 tmpGameObjects = JSON.parse(userData.coinsArray);
-            if (userData.gameCoin)
+            if (userData.gameCoin != undefined)
                 tmpPlayerInventary = JSON.parse(userData.gameCoin);
             var roadEl = Array();
             for (var i = 0; i < tmpField.length; i++) {
