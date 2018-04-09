@@ -13,7 +13,9 @@ var startPlayerMoveTime = 0;
 var startPoz = 0;
 var freezCounter = 0;//Счетчик того сколько ходов уже робот стоит на месте
 var localEXP = 0;//Переменная для хранения опыта робота набираемого за один лабиринт
-var globalEXP = 0;
+var globalEXP = 0;//Переменная для хранения общего опыта игрока в лабиринте
+var currentPlayerLevel = 0;//Переменная для хранения текущего уровня персонажа
+var nextLevelEXP = 0;//Переменная для хранения необходимого количества опыта для перехода на следующий уровень персонажа
 //Инициализация игрока
 function playerSetStart() {
     //Ищем местоположение двери
@@ -168,7 +170,7 @@ function playerMove(canRead) {
             else {//Если блок условия не дал true
                 //Удаляем верхнюю команду их стека команд
                 removeUpperCommandFromPlayer();
-                if(isVerticalScreen)
+                if (isVerticalScreen || !isVisualizeCodeMap)
                     return playerMove(false);
                 else {
                     drawCommState();
@@ -184,7 +186,7 @@ function playerMove(canRead) {
                 isShift = false;
                 //addCommandsToPlayer(comms, true);
                 insertArrayAt(playerCommands, 0, comms);
-                if(isVerticalScreen)
+                if (isVerticalScreen || !isVisualizeCodeMap)
                     return playerMove(false);
                 else {
                     drawCommState();
@@ -194,7 +196,7 @@ function playerMove(canRead) {
             else {//Если блок условия не дал true
                 //Удаляем верхнюю команду их стека команд
                 removeUpperCommandFromPlayer();
-                if(isVerticalScreen)
+                if (isVerticalScreen || !isVisualizeCodeMap)
                     return playerMove(false);
                 else {
                     drawCommState();
@@ -211,7 +213,7 @@ function playerMove(canRead) {
                 //Удаляем верхнюю команду их стека команд
                 removeUpperCommandFromPlayer();
                 insertArrayAt(playerCommands, 0, comms);
-                if(isVerticalScreen)
+                if (isVerticalScreen || !isVisualizeCodeMap)
                     return playerMove(false);
                 else {
                     drawCommState();
@@ -221,7 +223,7 @@ function playerMove(canRead) {
             else{//Если блок условия не дал true
                 //Удаляем верхнюю команду их стека команд
                 removeUpperCommandFromPlayer();
-                if(isVerticalScreen)
+                if (isVerticalScreen || !isVisualizeCodeMap)
                     return playerMove(false);
                 else {
                     drawCommState();
@@ -279,7 +281,7 @@ function getLocalEXP(){
 
 //Вызывает отрисовку текущей выполняемой команды на карте кода
 function drawCommState(isRegenCodeMap){
-    if(!isVerticalScreen) {
+    if (!isVerticalScreen && isVisualizeCodeMap) {
         if(isRegenCodeMap)
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0], true);
         codeView.setAlphaToElement(passiveItemsAlpha,playerCommands[0]);

@@ -76,7 +76,7 @@ function onWheel(e) {
         if (key.isDown("CTRL")) {
             codeView.resizeView((e.deltaY * -1) < 0 ? -1 * scrollStep : scrollStep);
         }
-        else codeView.elementsMove(0, e.deltaY * 0.3 * -1);
+        else codeView.elementsMove(0, e.deltaY * 0. * -1);
         return;
     }
     onRecize(e, e.deltaY * -1, scrollStep);
@@ -401,7 +401,7 @@ function startBClick() {
             initLeftScroll([]);
         //Увеличиваем счетчик попыток для прохождения
         totalAttempts++;
-        if (!isVerticalScreen) {
+        if (!isVerticalScreen && isVisualizeCodeMap) {
             var comms = playerCommands && playerCommands.length > 0 ? playerCommands : field[playerPozition].commands;
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, comms, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
         }

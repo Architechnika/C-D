@@ -491,7 +491,10 @@ function calcEXP() {
     //Очищаем значения которые надо очистить
     playerInventory.splice(0, playerInventory.length);
     localEXP = 0;
-    log("GLOBAL: " + globalEXP);
+    if (globalEXP > nextLevelEXP) {
+        currentPlayerLevel++;
+        nextLevelEXP = nextLevelEXP + (1.5 * currentPlayerLevel);
+    }
 }
 
 game.startLoop('Labyrinth');

@@ -46,8 +46,10 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         return centrElem;
     }
     //Ресайзит все элементы в максимальный размер
-    this.resizeToMax = function(){
-        this.resizeView((this.maxItemSize / 2) - this.elems[0].h, true, undefined, true);
+    this.resizeToMax = function () {
+        if (this.elems && this.elems.length > 0) {
+            this.resizeView((this.maxItemSize / 2) - this.elems[0].h, true, undefined, true);
+        }
     }
 
     //Ресайзит все так, чтобы elem был в центре background-а

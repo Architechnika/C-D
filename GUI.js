@@ -71,7 +71,9 @@ function updateTextOnGui() {
     //Обновляем инфу о времени
     timerText.setText((min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec))
     var expG = (globalEXP * 100).toFixed();
-    expText.setText("ОПЫТ: " + expG + ":" + localEXP);
+    var nexp = (nextLevelEXP * 100).toFixed();
+    //Обновляем инфу об опыте
+    expText.setText("УРОВЕНЬ: " + currentPlayerLevel + " lvl (" + expG + "/" + nexp + ")");
 }
 
 
