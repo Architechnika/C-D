@@ -43,4 +43,9 @@ function MessageBox()
         var div = base.getElementsByTagName('input')[0];
         return div.checked;
     }
+    this.setColor = function(color)
+    {
+        var div = base.getElementsByTagName('div')[0];
+        div.style.background = 'red';
+    }
 }
