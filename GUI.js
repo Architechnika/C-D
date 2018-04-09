@@ -32,7 +32,7 @@ function drawGUI() {
     infoText.draw();
     dialog.dialogDraw();
     playerLevelVisual.drawPlayerLevel();
-    if(toolTip.isVisible()) toolTip.draw();
+    if (toolTip.isVisible()) toolTip.draw();
     if (inputCounterText !== null) inputCounterText.draw();
     //Отрисовываем интерфейс выбора команд
     //showCommandsMenu();
@@ -74,7 +74,8 @@ function updateTextOnGui() {
     var expG = (globalEXP * 100).toFixed();
     var nexp = (nextLevelEXP * 100).toFixed();
     //Обновляем инфу об опыте
-    expText.setText("УРОВЕНЬ: " + currentPlayerLevel + " lvl (" + expG + "/" + nexp + ")");
+    // expText.setText("УРОВЕНЬ: " + currentPlayerLevel + " lvl (" + expG + "/" + nexp + ")");
+    playerLevelVisual.setExp();
 }
 
 
@@ -96,7 +97,7 @@ function timerTextInit() {
 function progressTextInit() {
     var wh = gameSpaceW / 100 * 4;
     coinItem = game.newImageObject({
-        x: gameSpaceX + gameSpaceW*0.15,
+        x: gameSpaceX + gameSpaceW * 0.15,
         y: 0,
         w: wh,
         h: wh,
@@ -142,8 +143,7 @@ function codeMapBackGroundInit(color, alpha) {
                 radius: 0,
                 fillColor: color
             });
-        }
-        else{
+        } else {
             codeMapBG = game.newRoundRectObject({
                 x: 0,
                 y: textbackGroundItem.h,
@@ -172,10 +172,10 @@ function initRightScroll(initArray) {
             return;
         }
     });
-    if (isDel){
+    if (isDel) {
         //inputCommandStates = 0;
         //Показываем кнопку старт или стоп
-        if(!isVerticalScreen)
+        if (!isVerticalScreen)
             allButtons.mainButton.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
         return;
     }
@@ -240,7 +240,7 @@ function initLeftScroll(initMass) {
 }
 
 function TextWithBG(X, Y, W, H) { //класс для рисования текста с задним фоном, первоначально была разработана для того чтобы над лаберинтом выводить цифры введенные в блоки цикла по количеству
-    var textSize = height/100*30;
+    var textSize = height / 100 * 30;
     var _radius = 0;
     var alphaBG = 0.7;
     var textColor = "#ffffff"
@@ -262,7 +262,7 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
         color: textColor,
         size: textSize,
         alpha: 1,
-        font : textFont,
+        font: textFont,
     })
     this.BG.setAlpha(alphaBG)
     this.BG.setVisible(false)
@@ -281,10 +281,10 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
     }
     this.setText = function (t) {
         text.text = t;
-        var sz = height/100*23;
+        var sz = height / 100 * 23;
         text.size = sz
-        if(!isVerticalScreen)
-        text.x = (this.BG.x + this.BG.w / 2) - text.w + textSize - text.x / 2;
+        if (!isVerticalScreen)
+            text.x = (this.BG.x + this.BG.w / 2) - text.w + textSize - text.x / 2;
         else text.x = this.BG.x;
         text.y = (this.BG.y + this.BG.h / 2) - text.h / 2;
         this.BG.setVisible(true)
@@ -296,57 +296,56 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
     }
 }
 
-function PlayerLevelVisualisation()
-{
+function PlayerLevelVisualisation() {
     var lineW = 50;
-    var lvl = 15;
+    var lvl = currentPlayerLevel;
     var textW = 0;
-    var mainBG = game.newRectObject(   { 
-     x : gameSpaceX+gameSpaceW - (gameSpaceW*0.4), 
-     y : textbackGroundItem.y+(textbackGroundItem.h*0.2), 
-     w : gameSpaceW*0.4, 
-     h : textbackGroundItem.h/1.5, 
-     fillColor : "#FBFE6F",
-     alpha : 0,
-   });
-    var bg = game.newRoundRectObject(   { 
-     x : mainBG.x, 
-     y : mainBG.y, 
-     w : mainBG.w, 
-     h : mainBG.h, 
-     radius : 6, 
-     fillColor : "#FBFE6F", 
-   });
-    
-    var lvlLine = game.newRoundRectObject(   { 
-     x : mainBG.x, 
-     y : mainBG.y, 
-     w : lineW, 
-     h : mainBG.h, 
-     radius : 6, 
-     fillColor : "red", 
-   });
-    var expText = new Label(mainBG.x+mainBG.w+3, mainBG.y, "Уровень:"+lvl);
-    expText.setTextSize(mainBG.h*1.5);
+    var mainBG = game.newRectObject({
+        x: gameSpaceX + gameSpaceW - (gameSpaceW * 0.4),
+        y: textbackGroundItem.y + (textbackGroundItem.h * 0.2),
+        w: gameSpaceW * 0.4,
+        h: textbackGroundItem.h / 1.5,
+        fillColor: "#000000",
+        alpha: 0,
+    });
+    var bg = game.newRoundRectObject({
+        x: mainBG.x,
+        y: mainBG.y,
+        w: mainBG.w,
+        h: mainBG.h,
+        radius: 6,
+        fillColor: "#ffffff",
+    });
+
+    var lvlLine = game.newRoundRectObject({
+        x: mainBG.x,
+        y: mainBG.y,
+        w: lineW,
+        h: mainBG.h,
+        radius: 6,
+        fillColor: "#2f95d0",
+    });
+    var expText = new Label(mainBG.x + mainBG.w + 3, mainBG.y, "Уровень:" + lvl);
+    expText.setTextSize(mainBG.h * 1.5);
     expText.setTextColor(guiTextColor);
-    
-    textW = expText.getText().toString().length * gameSpaceW*0.022;
+
+    textW = expText.getText().toString().length * gameSpaceW * 0.022;
     expText.setTextPosition(mainBG.x - textW)
-    this.setLevel = function(lvl)
-    {
+    this.setLevel = function (lvl) {
         expText.setText(lvl);
     }
-    this.setMaxExp = function()
-    {
-        
+    this.setExp = function () {
+        var expPerc = (globalEXP / nextLevelEXP) * 100;
+        var lvlLinePerc = (bg.w / 100) * expPerc;
+        lvlLine.w = lvlLinePerc;
+        if (globalEXP > nextLevelEXP) {
+            lvlLine.w = 0;
+            this.setLevel(currentPlayerLevel)
+        }
+
     }
-    this.setExp = function(exp)
-    {
-        lvlLine.w = exp;
-    }
-    
-    this.drawPlayerLevel = function()
-    {
+
+    this.drawPlayerLevel = function () {
         bg.draw();
         lvlLine.draw();
         expText.textDraw();

@@ -6,7 +6,7 @@ function Label(x,y,text)
     var wl=10;
     var hl=10;
     var sizel;
-    var colorl = "red";
+    var colorl = guiTextColor;
     var textObj = game.newTextObject({x : X,y : Y,h : hl, w: wl, text : textLoc, size: sizel, color : colorl, font:textFont});
 
     this.getTextObject = function()
@@ -27,8 +27,7 @@ function Label(x,y,text)
     }
     this.setTextColor = function(colorll)
     {
-        colorl = colorll;
-        textObj.color = colorl;
+        textObj.color = colorll;
     }
     this.setTextPosition = function(x,y)
     {

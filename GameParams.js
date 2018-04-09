@@ -44,6 +44,7 @@ var currentAsset = "greenland";
 //Параметры для внутриигрового текста
 var textOnCodeMapColor = "#1f75fe";//Цвет цифр когда вводишь итерации в команду repeat
 var textFont = "comic"; //шрифт текста
+var guiTextColor = "#bb7f43";//ЦВЕТ ТЕКСТА ДЛЯ GUI 
 
 //Путь к файлам отображения ИНТЕРФЕЙСА И КОМАНД---------------------------------------
 var nonePath = "img/commands/command_none.png";//Картинка пустой команды
@@ -60,7 +61,6 @@ var nextStepButtonImgSrc = "img/interface/interface_button_nextstep.png";
 var prevStepButtonImgSrc = "img/interface/interface_button_prevstep.png";
 var buttonDeleteImgSrc = "img/interface/interface_button_delete.png";
 var buttonDialogImgSrc = "img/interface/interface_button_dialog_ok.png"
-var guiTextColor = "red";//ЦВЕТ ТЕКСТА ДЛЯ GUI
 //Пути для файлов для карты кода------------------------------------------------
 var itemDeleteSrc = "img/interface/interface_codeview_delete.png";
 var itemReplaceSrc = "img/interface/interface_codeview_replace.png";
