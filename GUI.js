@@ -347,7 +347,9 @@ function PlayerLevelVisualisation() {
 
     this.drawPlayerLevel = function () {
         bg.draw();
-        lvlLine.draw();
+        if (lvlLine.w > 3) {
+            lvlLine.draw();
+        }
         expText.textDraw();
     }
 }
