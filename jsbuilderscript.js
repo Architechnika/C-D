@@ -3928,7 +3928,8 @@ var lang = {
     en : {
     
     },
-}/*
+}
+/*
 Содержит переменные для работы с движком
 */
 var backgroundImgPath = "img/interface/interface_font.png"; //Картинка для фона за либиринтом
@@ -3983,13 +3984,14 @@ var toolTipDelay = 1000000000;//Задержка в миллисекундах �
 var labyrinthSize = 3;//Стартовый размер лабиринта(Например если 5, тогда при старте игры сгенерится лабиринт размером 5x5). ДЛЯ АЛГОРИТМА ГЕНЕРАЦИИ ЭТО ДОЛЖНО БЫТЬ НЕЧЕТНОЕ ЧИСЛО
 var labyrinthMaxSize = 0;//Ограничение на максимальный размер лабиринта. Если = 0, то максимума нет.
 var isLabyrinthGrow = true;//Переключение возможности увеличения лабиринта при прохождении(Увеличивается лабиринт или нет при выходе из него)
+var isVisualizeCodeMap = true;//Флаг для визуализации комманд исполняемых роботом
 var robotMoveDelay = 350; //Задержка при движении робота в милисекундах(ЧЕМ МЕНЬШЕ ТЕМ БЫСТРЕЕ)
 var saveTimeout = 1000; //Таймаут для метода который следит за изменениями размера экрана
 var difficultyLevel = "EASY";//Уровень сложности(если EASY - робот сам поворачивается куда нужно при движении)
 var totalTokensOnMap = 15; //Сколько всего монеток генерится в лабиринте
 var inactiveItemsAlpha = 0.5;//Альфа канал неактивных элементов интерфейса(кнопок и тд)
 var passiveItemsAlpha = 0.5;//Альфа канал неактивных КОМАНД в кодмапе
-var infinityCycleSteps = 5;//Количество итераций которые робот может стоять просто так(Если он простоит 5 итераций ничего не сделав, то это будет считаться бесконечным циклом БЕЗДЕЙСТВИЯ)
+var infinityCycleSteps = 5;//Количество итераций которые робот может стоять просто так(Если он простоит 5 итераций ничего не сделав, то это будет считаться бесконечным циклом БЕЗДЕЙСТВИЯ
 //РЕЖИМ ОТОБРАЖЕНИЯ ДОСТУПНЫХ КОМАНД:
 // "simple" - только простые команды перемещений и подбора батареек
 // "medium" - команды для перемещений не только туда куда едет робот, но и в направлении взгляда, команды подобрать и бросить обьект
@@ -4004,18 +4006,19 @@ var selectLang = 'ru';
 var isDrawFPS = false;
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------ЗВУКОВЫЕ ФАЙЛЫ-----------------------------------------------------------------
-var audio_GUI_click = pjs.audio.newAudio("audio/clickGUI.ogg");
-var audio_field_click = pjs.audio.newAudio("audio/clickField.ogg");
-var audio_object_up = pjs.audio.newAudio("audio/gameObjectUp.ogg");
-var audio_object_down = pjs.audio.newAudio("audio/gameObjectDown.ogg");
-var audio_object_messeng = pjs.audio.newAudio("audio/messeng.ogg");
-var audio_scroll_click = pjs.audio.newAudio("audio/scrollClick.ogg");
+var audio_GUI_click = pjs.audio.newAudio(["audio/clickGUI.ogg","audio/clickGUI.aac"]);
+var audio_field_click = pjs.audio.newAudio(["audio/clickField.ogg","audio/clickField.aac"]);
+var audio_object_up = pjs.audio.newAudio(["audio/gameObjectUp.ogg","audio/gameObjectUp.aac"]);
+var audio_object_down = pjs.audio.newAudio(["audio/gameObjectDown.ogg","audio/gameObjectDown.aac"]);
+var audio_object_messeng = pjs.audio.newAudio(["audio/messeng.ogg","audio/messeng.aac"]);
+var audio_scroll_click = pjs.audio.newAudio(["audio/scrollClick.ogg","audio/scrollClick.aac"]);
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------ГРАФИЧЕСКИЕ ПАРАМЕТРЫ-----------------------------------------------------------------
 //ТЕКУЩИЙ ВЫБРАННЫЙ ГРАФИЧЕСКИЙ ПАК(ПО ИМЕНИ ПАПКИ В КОТОРОЙ НАХОДЯТСЯ РЕСУРСЫ В img/assets/...)
 var currentAsset = "greenland";
 //Параметры для внутриигрового текста
 var textOnCodeMapColor = "#1f75fe";//Цвет цифр когда вводишь итерации в команду repeat
+var textFont = "comic"; //шрифт текста
 
 //Путь к файлам отображения ИНТЕРФЕЙСА И КОМАНД---------------------------------------
 var nonePath = "img/commands/command_none.png";//Картинка пустой команды
@@ -4426,13 +4429,18 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.menuButton.setSetting(this.backToStartButton.x + this.backToStartButton.w, height - (gameSpaceW / 100 * 14), (gameSpaceW) / buttonsCount, gameSpaceW / 100 * 14)
     this.menuButton.setButtonImgSrc(menuButtonImgSrc);
 
-    if (height < 450) {
-        this.deleteButton.setSetting(width - (gameSpaceW / 100 * 10), 0, gameSpaceW / 100 * 10, gameSpaceW / 100 * 10)
+    //кнопка удаление кодмапа
+    var delButtY = 0;
+    if(isVerticalScreen)
+        delButtY = gameSpaceW / 100 * 4;
+    if (height < 450 || width<450) {
+        this.deleteButton.setSetting(width - (gameSpaceW / 100 * 10), delButtY, gameSpaceW / 100 * 10, gameSpaceW / 100 * 10)
     } else {
-        this.deleteButton.setSetting(width - (gameSpaceW / 100 * 5), 0, gameSpaceW / 100 * 5, gameSpaceW / 100 * 5)
+        this.deleteButton.setSetting(width - (gameSpaceW / 100 * 5), delButtY, gameSpaceW / 100 * 5, gameSpaceW / 100 * 5)
     }
     this.deleteButton.setButtonImgSrc(buttonDeleteImgSrc);
     this.deleteButton.setVisible(false);
+    //
     //
     //описывает обработчик onClick для кнопок
     this.mainButton.setUserData({
@@ -4591,6 +4599,11 @@ function ToolTip()
     {
         var div = base.getElementsByTagName('input')[0];
         return div.checked;
+    }
+    this.setColor = function(color)
+    {
+        var div = base.getElementsByTagName('div')[0];
+        div.style.background = 'red';
     }
 }/**
  * @license
@@ -21705,6 +21718,8 @@ function UserAccaunt(login, pass, summ) {
     this.playerOptimalRoute = "" // что то связанное с опытом игрока
     this.playerLocalEXP = 0 // локальный опыт игрока
     this.playerGlobalEXP = 0 // глобальный опыт игркоа
+    this.playerNextLvlEXP = 0 //количество опыта необходимое для перехода на следующий уровень
+    this.playerCurrentLevel = 0 // текущий уровень игрока
     this.copy = function (obj) {
         this.userLogin = obj.userLogin;
         this.userPass = obj.userPass;
@@ -21721,7 +21736,8 @@ function UserAccaunt(login, pass, summ) {
         this.playerOptimalRoute = obj.playerOptimalRoute;
         this.playerLocalEXP = obj.playerLocalEXP;
         this.playerGlobalEXP = obj.playerGlobalEXP;
-
+        this.playerNextLvlEXP = obj.playerNextLvlEXP;
+        this.playerCurrentLevel = obj.playerCurrentLevel;
     }
     this.save = function (isGameSpaseUp, totalSeconds, field, playerInventory, gameObjects, entrySide) {
         this.labyrinth = JSON.stringify(field, function (key, value) {
@@ -21731,6 +21747,8 @@ function UserAccaunt(login, pass, summ) {
         this.playerOptimalRoute = JSON.stringify(optimalRoute);
         this.playerLocalEXP = localEXP;
         this.playerGlobalEXP = globalEXP;
+        this.playerNextLvlEXP = nextLevelEXP;
+        this.playerCurrentLevel = currentPlayerLevel;
         this.gameTime = totalSeconds;
         this.gameCoin = JSON.stringify(playerInventory);
         this.coinsArray = JSON.stringify(gameObjects);
@@ -21748,19 +21766,23 @@ function UserAccaunt(login, pass, summ) {
     this.load = function (isGameSpaseUp, gameObjects, playerInventory, initGUI) {
         field = new Array();
         if (this.isSaved) {
-            if (userData.playerOptimalRoute !== undefined)
+            if (userData.playerOptimalRoute)
                 optimalRoute = JSON.parse(userData.playerOptimalRoute);
-            if (userData.playerLocalEXP !== undefined)
+            if (userData.playerLocalEXP)
                 localEXP = userData.playerLocalEXP;
-            if (userData.playerGlobalEXP !== undefined)
+            if (userData.playerGlobalEXP)
                 globalEXP = userData.playerGlobalEXP;
-            if (userData.labyrinth !== undefined)
+            if (userData.playerNextLvlEXP)
+                nextLevelEXP = userData.playerNextLvlEXP;
+            if (userData.playerCurrentLevel)
+                currentPlayerLevel = userData.playerCurrentLevel;
+            if (userData.labyrinth)
                 tmpField = JSON.parse(userData.labyrinth)
-            if (userData.gameObjsPos !== undefined)
+            if (userData.gameObjsPos)
                 tmpGameObjsPos = JSON.parse(userData.gameObjsPos);
-            if (userData.coinsArray !== undefined)
+            if (userData.coinsArray)
                 tmpGameObjects = JSON.parse(userData.coinsArray);
-            if (userData.gameCoin !== undefined)
+            if (userData.gameCoin)
                 tmpPlayerInventary = JSON.parse(userData.gameCoin);
             var roadEl = Array();
             for (var i = 0; i < tmpField.length; i++) {
@@ -21960,6 +21982,13 @@ function onMouseDOWN(e) {
 }
 
 function onWheel(e) {
+    if (clickIsInObj(e.x, e.y, codeView.getBackGround())) {    
+        if (key.isDown("CTRL")) {
+            codeView.resizeView((e.deltaY * -1) < 0 ? -1 * scrollStep : scrollStep);
+        }
+        else codeView.elementsMove(0, e.deltaY * 0. * -1);
+        return;
+    }
     onRecize(e, e.deltaY * -1, scrollStep);
     e.cancelBubble = true;
 }
@@ -22282,7 +22311,7 @@ function startBClick() {
             initLeftScroll([]);
         //Увеличиваем счетчик попыток для прохождения
         totalAttempts++;
-        if (!isVerticalScreen) {
+        if (!isVerticalScreen && isVisualizeCodeMap) {
             var comms = playerCommands && playerCommands.length > 0 ? playerCommands : field[playerPozition].commands;
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, comms, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
         }
@@ -23878,7 +23907,7 @@ function Label(x,y,text)
     var hl=10;
     var sizel;
     var colorl = "red";
-    var textObj = game.newTextObject({x : X,y : Y,h : hl, w: wl, text : textLoc, size: sizel, color : colorl});
+    var textObj = game.newTextObject({x : X,y : Y,h : hl, w: wl, text : textLoc, size: sizel, color : colorl, font:textFont});
 
     this.getTextObject = function()
     {
@@ -23930,7 +23959,7 @@ function Dialog() {
 
     var bgW = width / 100 * 20;
     var bgH = height / 100 * 10;
-    if (height < 450) {
+    if (height < 450 || width < 450) {
         bgW = width / 100 * 30;
         bgH = height / 100 * 20;
     }
@@ -23954,6 +23983,7 @@ function Dialog() {
         size: bgH / 100 * 28,
         color: "#000000",
         visible: false,
+        font: textFont,
     });
 
     this.dialogOkButton = new PushButton();
@@ -24079,35 +24109,39 @@ function updateTextOnGui() {
     //Обновляем инфу о времени
     timerText.setText((min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec))
     var expG = (globalEXP * 100).toFixed();
-    expText.setText("ОПЫТ: " + expG + ":" + localEXP);
+    var nexp = (nextLevelEXP * 100).toFixed();
+    //Обновляем инфу об опыте
+    expText.setText("УРОВЕНЬ: " + currentPlayerLevel + " lvl (" + expG + "/" + nexp + ")");
 }
 
 
 function timerTextInit() {
+    var wh = gameSpaceW / 100 * 4;
     clockItem = game.newImageObject({
         x: gameSpaceX,
         y: 0,
-        w: gameSpaceW / 100 * 4,
-        h: gameSpaceW / 100 * 4,
+        w: wh,
+        h: wh,
         file: clockPath
     })
     timerText = new Label(0, 0, "00:00");
     timerText.setTextPosition((clockItem.x + clockItem.w) + 5, 0);
-    timerText.setTextSize(clockItem.w);
+    timerText.setTextSize(wh);
     timerText.setTextColor(guiTextColor);
 }
 
 function progressTextInit() {
+    var wh = gameSpaceW / 100 * 4;
     coinItem = game.newImageObject({
         x: timerText.getObj().x + timerText.getObj().w * 4,
         y: 0,
-        w: gameSpaceW / 100 * 4,
-        h: gameSpaceW / 100 * 4,
+        w: wh,
+        h: wh,
         file: coinPath
     })
     progressText = new Label(0, 0, "00");
     progressText.setTextPosition(coinItem.x + coinItem.w + 5, 0);
-    progressText.setTextSize(coinItem.w);
+    progressText.setTextSize(wh);
     progressText.setTextColor(guiTextColor);
 }
 
@@ -24270,7 +24304,8 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
         text: "test",
         color: textColor,
         size: textSize,
-        alpha: 1
+        alpha: 1,
+        font : textFont,
     })
     this.BG.setAlpha(alphaBG)
     this.BG.setVisible(false)
@@ -25210,8 +25245,10 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         return centrElem;
     }
     //Ресайзит все элементы в максимальный размер
-    this.resizeToMax = function(){
-        this.resizeView((this.maxItemSize / 2) - this.elems[0].h, true, undefined, true);
+    this.resizeToMax = function () {
+        if (this.elems && this.elems.length > 0) {
+            this.resizeView((this.maxItemSize / 2) - this.elems[0].h, true, undefined, true);
+        }
     }
 
     //Ресайзит все так, чтобы elem был в центре background-а
@@ -25225,7 +25262,8 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
             if(this.elems[i] == elem){
                 var bgC = this.backGround.getPositionC();
                 var elC = this.elems[i].getPositionC();
-                this.elementsMove(bgC.x - elC.x,bgC.y - elC.y,undefined,undefined,isCodeView);
+                this.elementsMove(bgC.x - elC.x, bgC.y - elC.y, undefined, undefined, isCodeView);
+                //this.currentShift = new point(bgC.x - elC.x, bgC.y - elC.y);
                 break;
             }
         }
@@ -25312,6 +25350,9 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
                 }
             });
             if (!dontSave) {
+                if (isCodeView) {
+                    log(" 1123");
+                }
                 this.currentShift.x = this.elems[0].x;
                 this.currentShift.y = this.elems[0].y;
             }
@@ -25638,9 +25679,9 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                 return;
             } 
         }
-        
+
         this.clear();
-        
+
         if(!isVerticalScreen)
             buildCodeMap(codeMapBG.x, codeMapBG.y, arr, parent.elems, this.elemWH, isPlusAdd, isOnClick, false);
         else buildCodeMap(x, y, arr, parent.elems, this.elemWH, isPlusAdd, isOnClick, false);
@@ -25656,7 +25697,17 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
             //this.recizeAllElementsToScreen();
             this.setAlphaToElement(alpha,activeELement);
         } else {
-            this.elementsMove(parent.currentShift.x - parent.backGround.x, parent.currentShift.y - parent.backGround.y, true, undefined);
+            if (lastAddedCommand) {
+                for (var i = 0; i < parent.elems.length; i++) {
+                    if (parent.elems[i].command && parent.elems[i].command == lastAddedCommand) {
+                        this.setFocusOnElement(parent.elems[i], true);
+                        break;
+                    }
+                }
+            }
+            else {
+                this.elementsMove(parent.currentShift.x - parent.backGround.x, parent.currentShift.y - parent.backGround.y, true, undefined);
+            }
         }
         //Если карта не кликабельна, то сбрасываем ресайз(потому что она сразу в максимальном размере отрисуется)
         if(!isOnClick){
@@ -25726,7 +25777,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
 
     this.resizeView = function (delta) {
         if(!parent.elems || parent.elems.length == 0) return;
-        parent.resizeView(delta, false, true);
+        parent.resizeView(delta, false, true, true);
         //запоминаем новый размер для элемента
         this.elemWH = parent.elems[0].w;
 
@@ -25737,8 +25788,8 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
             this.checkObjsInArea(1);
         //Проверяем надо ли смещать код мап после ресайза(Да знаю, что для этого мы и писали универсальную функцию ресайза в родительском классе, но тут особый случай, не могу придумать способа его обрабатывать без специального кода тут)
         //Считаем разность нижней точки кодмапа с нижней точкой последнего элемента
-        var lastElemDiff =(codeMapBG.y + codeMapBG.h) - (parent.elems[parent.elems.length - 1].y + parent.elems[parent.elems.length - 1].h);
-        var shift = lastElemDiff;
+        var lastElemDiff = (codeMapBG.y + codeMapBG.h) - (parent.elems[parent.elems.length - 1].y + parent.elems[parent.elems.length - 1].h);
+        var shift = lastElemDiff;        
         //Если разность больше 0 то надо сдвигать
         if(lastElemDiff > 0 ){
             //Но если после сдвига верхние жлементы сдвинутся внутрь codeMapBG то это будет неправильно поэтому проверяем
@@ -25774,7 +25825,6 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
     this.isClicked = function (e) {
         if (!this.menu.isClicked(e)) {
             if (!parent.isClicked(e)){
-                this.resizeView(0);
                 this.menu.closeMenu();
             }
             else return true;
@@ -26094,7 +26144,9 @@ var startPlayerMoveTime = 0;
 var startPoz = 0;
 var freezCounter = 0;//Счетчик того сколько ходов уже робот стоит на месте
 var localEXP = 0;//Переменная для хранения опыта робота набираемого за один лабиринт
-var globalEXP = 0;
+var globalEXP = 0;//Переменная для хранения общего опыта игрока в лабиринте
+var currentPlayerLevel = 0;//Переменная для хранения текущего уровня персонажа
+var nextLevelEXP = 0;//Переменная для хранения необходимого количества опыта для перехода на следующий уровень персонажа
 //Инициализация игрока
 function playerSetStart() {
     //Ищем местоположение двери
@@ -26249,7 +26301,7 @@ function playerMove(canRead) {
             else {//Если блок условия не дал true
                 //Удаляем верхнюю команду их стека команд
                 removeUpperCommandFromPlayer();
-                if(isVerticalScreen)
+                if (isVerticalScreen || !isVisualizeCodeMap)
                     return playerMove(false);
                 else {
                     drawCommState();
@@ -26265,7 +26317,7 @@ function playerMove(canRead) {
                 isShift = false;
                 //addCommandsToPlayer(comms, true);
                 insertArrayAt(playerCommands, 0, comms);
-                if(isVerticalScreen)
+                if (isVerticalScreen || !isVisualizeCodeMap)
                     return playerMove(false);
                 else {
                     drawCommState();
@@ -26275,7 +26327,7 @@ function playerMove(canRead) {
             else {//Если блок условия не дал true
                 //Удаляем верхнюю команду их стека команд
                 removeUpperCommandFromPlayer();
-                if(isVerticalScreen)
+                if (isVerticalScreen || !isVisualizeCodeMap)
                     return playerMove(false);
                 else {
                     drawCommState();
@@ -26292,7 +26344,7 @@ function playerMove(canRead) {
                 //Удаляем верхнюю команду их стека команд
                 removeUpperCommandFromPlayer();
                 insertArrayAt(playerCommands, 0, comms);
-                if(isVerticalScreen)
+                if (isVerticalScreen || !isVisualizeCodeMap)
                     return playerMove(false);
                 else {
                     drawCommState();
@@ -26302,7 +26354,7 @@ function playerMove(canRead) {
             else{//Если блок условия не дал true
                 //Удаляем верхнюю команду их стека команд
                 removeUpperCommandFromPlayer();
-                if(isVerticalScreen)
+                if (isVerticalScreen || !isVisualizeCodeMap)
                     return playerMove(false);
                 else {
                     drawCommState();
@@ -26360,7 +26412,7 @@ function getLocalEXP(){
 
 //Вызывает отрисовку текущей выполняемой команды на карте кода
 function drawCommState(isRegenCodeMap){
-    if(!isVerticalScreen) {
+    if (!isVerticalScreen && isVisualizeCodeMap) {
         if(isRegenCodeMap)
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0], true);
         codeView.setAlphaToElement(passiveItemsAlpha,playerCommands[0]);
@@ -26625,6 +26677,7 @@ var isSecondScreen = false;
 var isVerticalScreen = undefined;
 var widthBuff = width;
 var dialog = undefined;
+var lastAddedCommand = undefined;
 //Переменная для хранения состояний меню ввода команд:
 // 0 - обычный ввод
 // 1 - blockA или if или repeatif
@@ -26880,10 +26933,12 @@ function addCommandToCell(commandImg, dontAdd) {
     if (!dontAdd) { //Если добавляем команду
 
         if (inputCommandStates == 1) { //Если у нас простая команда и мы добавляем ее тупо в клетку
-            choosenCommandInElement.push(getCopyOfObj(commandImg.command));
+            lastAddedCommand = getCopyOfObj(commandImg.command);
+            choosenCommandInElement.push(lastAddedCommand);
             if (commandImg.command.commandsBlock) onOkBClick();
             else initLeftScroll(getCommandsImgArr(choosenCommandInElement));
         } else if (inputCommandStates == 2) { //Если выбираем blockA
+            lastAddedCommand = undefined;
             var comm = getCopyOfObj(COMMANDS[10]); //Инициализируем команду whatisit
             comm.lookCommand = commandImg.command; //Инитим параметр lookCommand
             choosenCommandInElement.blockA = comm;
@@ -26893,6 +26948,7 @@ function addCommandToCell(commandImg, dontAdd) {
             initRightScroll([]);
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         } else if (inputCommandStates == 3) { //Если выбираем blockB
+            lastAddedCommand = undefined;
             choosenCommandInElement.blockB = commandImg.command;
             inputCommandStates = 0;
             if (isVerticalScreen) initLeftScroll();
@@ -26901,6 +26957,7 @@ function addCommandToCell(commandImg, dontAdd) {
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         } else if (inputCommandStates == 0) { //Если редактируем команды из codeView
             if (itemToReplaceInCodeMap) { //Если нужно заменить элемент
+                lastAddedCommand = undefined;
                 //Находим массив в котором хранится команда для замены
                 var elemStor = findObjStorage(lastClickedElement.commands, itemToReplaceInCodeMap.command);
                 //Находим ее в массиве и заменяем
@@ -26931,6 +26988,7 @@ function addCommandToCell(commandImg, dontAdd) {
                 var clone = getCopyOfObj(commandImg.command);
                 elemStor.splice(indx, 0, clone);
                 itemToAddAfterInCodeMap.command = clone;
+                lastAddedCommand = clone;
                 if (commandImg.command.commandsBlock) onOkBClick();
                 initLeftScroll(getCommandsImgArr(choosenCommandInElement));
             }
@@ -26978,20 +27036,20 @@ function changeMenuState(commandImg) {
             infoText.setText(choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count + "");
         } else {
             //при вертикальном положении экрана коректируем окно ввода чисел
-            var rScroll = initRightScroll(getDigitKeyboardImages());//получаем скрол с числами чтобы позицанировать
+            var rScroll = initRightScroll(getDigitKeyboardImages()); //получаем скрол с числами чтобы позицанировать
             initLeftScroll();
             //позицанируем скрол - общая высота экрана минус "элемент скрола на количество строк в скроле этим узнаем высоту скрола" минус высота кнопок GUI
             rScroll.GetBackGround().x = 0;
             rScroll.GetBackGround().w = width;
-            rScroll.GetBackGround().y = height - rScroll.getArrayItems()[0].h*rScroll.scrollRowCount - allButtons.mainButton.h;
+            rScroll.GetBackGround().y = height - rScroll.getArrayItems()[0].h * rScroll.scrollRowCount - allButtons.mainButton.h;
             //реиницилизируем для потверждение позицианирования
             rScroll.initArrayItems(getDigitKeyboardImages());
-             rScroll.GetBackGround().y = height - rScroll.getArrayItems()[0].h*rScroll.scrollRowCount - allButtons.mainButton.h;
+            rScroll.GetBackGround().y = height - rScroll.getArrayItems()[0].h * rScroll.scrollRowCount - allButtons.mainButton.h;
             rScroll.initArrayItems(getDigitKeyboardImages());
             //меняем позиции и высоту текстового окна
             infoText.BG.x = rScroll.GetBackGround().x;
             infoText.BG.y = textbackGroundItem.h;
-            infoText.BG.h = rScroll.GetBackGround().y-textbackGroundItem.h;// textbackGroundItem.h это высота верхней части экрана где время и количество очков 
+            infoText.BG.h = rScroll.GetBackGround().y - textbackGroundItem.h; // textbackGroundItem.h это высота верхней части экрана где время и количество очков 
             //
             infoText.setText(choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count + "");
         }
@@ -27079,13 +27137,16 @@ function showMessage(text) {
 }
 
 //Производит расчет очков опыта набранных игроком в процессе прохождения лабиринта
-function calcEXP(){
-    if(totalSeconds != 0)
+function calcEXP() {
+    if (totalSeconds != 0)
         globalEXP += localEXP / totalSeconds;
     //Очищаем значения которые надо очистить
     playerInventory.splice(0, playerInventory.length);
     localEXP = 0;
-    log("GLOBAL: " + globalEXP);
+    if (globalEXP > nextLevelEXP) {
+        currentPlayerLevel++;
+        nextLevelEXP = nextLevelEXP + (1.5 * currentPlayerLevel);
+    }
 }
 
 game.startLoop('Labyrinth');
