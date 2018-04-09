@@ -410,6 +410,11 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                     //Позиционируем blockA текущего элемента
                     addUsualCommand(lX, lY, elemWH, images, imgS, el.blockA, isOnClick);
                     lX += elemWH;
+                    if (el.blockB.conditions.length > 0) {
+                        for (var i = 0; i < el.blockB.conditions.length; i++) {
+
+                        }
+                    }
                     //Позиционируем blockB текущего элемента
                     addUsualCommand(lX, lY, elemWH, images, el.blockB.imgSource, el.blockB, isOnClick);
                     lX -= elemWH;

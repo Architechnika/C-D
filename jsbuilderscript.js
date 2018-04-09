@@ -4019,6 +4019,7 @@ var currentAsset = "greenland";
 //Параметры для внутриигрового текста
 var textOnCodeMapColor = "#1f75fe";//Цвет цифр когда вводишь итерации в команду repeat
 var textFont = "comic"; //шрифт текста
+var guiTextColor = "red";//ЦВЕТ ТЕКСТА ДЛЯ GUI 
 
 //Путь к файлам отображения ИНТЕРФЕЙСА И КОМАНД---------------------------------------
 var nonePath = "img/commands/command_none.png";//Картинка пустой команды
@@ -4035,7 +4036,6 @@ var nextStepButtonImgSrc = "img/interface/interface_button_nextstep.png";
 var prevStepButtonImgSrc = "img/interface/interface_button_prevstep.png";
 var buttonDeleteImgSrc = "img/interface/interface_button_delete.png";
 var buttonDialogImgSrc = "img/interface/interface_button_dialog_ok.png"
-var guiTextColor = "red";//ЦВЕТ ТЕКСТА ДЛЯ GUI
 //Пути для файлов для карты кода------------------------------------------------
 var itemDeleteSrc = "img/interface/interface_codeview_delete.png";
 var itemReplaceSrc = "img/interface/interface_codeview_replace.png";
@@ -21983,10 +21983,10 @@ function onMouseDOWN(e) {
 
 function onWheel(e) {
     if (clickIsInObj(e.x, e.y, codeView.getBackGround())) {    
-        if (key.isDown("CTRL")) {
+        if (!key.isDown("SHIFT")) {
             codeView.resizeView((e.deltaY * -1) < 0 ? -1 * scrollStep : scrollStep);
         }
-        else codeView.elementsMove(0, e.deltaY * 0. * -1);
+        else codeView.elementsMove(0, e.deltaY * 0.5 * -1);
         return;
     }
     onRecize(e, e.deltaY * -1, scrollStep);
@@ -22560,6 +22560,7 @@ COMMANDS.push({
 COMMANDS.push({
     code: 'B',
     name: "blockB",
+    conditions: [],
     imgSource: commandBlockBImgSrc,
     undeletable: true
 }); //[15]
@@ -22715,20 +22716,24 @@ function checkConditionIF(blockA, blockB, commandsBlock, elseBlock) {
     if (blockA.name == "whatisit") {
         blockA = checkWhatIsIt(blockA.lookCommand, playerPozition, field, totalWidth, gameObjects, playerFrontSide)
     }
-
-    if (blockB.code == coinCode) {//Если в условии выбран игровой обьект(монетка и тд)
-        if (blockA.itemCode === undefined) return elseBlock ? elseBlock.actions : [];
-        else if (blockA.itemCode == blockB.code) return commandsBlock.actions;
-    } else {//Если выбран обьект ландшафта(стены, вход или выход)
-        //Парсим в int
-        var val = parseInt(blockA.fieldCode);
-        val = isNaN(val) ? 0 : val;
-        //Если стены внутренние то код элемента 0(Любые стены для нас пока равнозначны)
-        if(val > 0 && val < 4)
-            blockA.fieldCode = borderCode;
-        if (blockA.fieldCode == blockB.code)
-            return commandsBlock.actions;
+    if (blockB.conditions && blockB.conditions.length && blockB.conditions.length > 0) {//Если условий несколько
+        for (var i = 0; i < blockB.conditions.length; i++){
+            if (blockB.conditions[i].code == coinCode) {//Если в условии выбран игровой обьект(монетка и тд)
+                if (blockA.itemCode && blockA.itemCode == blockB.conditions[i].code)
+                    return commandsBlock.actions;
+            } else {//Если выбран обьект ландшафта(стены, вход или выход)
+                //Парсим в int
+                var val = parseInt(blockA.fieldCode);
+                val = isNaN(val) ? 0 : val;
+                //Если стены внутренние то код элемента 0(Любые стены для нас пока равнозначны)
+                if (val > 0 && val < 4)
+                    blockA.fieldCode = borderCode;
+                if (blockA.fieldCode == blockB.conditions[i].code)
+                    return commandsBlock.actions;
+            }
+        }
     }
+   
     return elseBlock ? elseBlock.actions : [];
 }
 
@@ -23906,7 +23911,7 @@ function Label(x,y,text)
     var wl=10;
     var hl=10;
     var sizel;
-    var colorl = "red";
+    var colorl = guiTextColor;
     var textObj = game.newTextObject({x : X,y : Y,h : hl, w: wl, text : textLoc, size: sizel, color : colorl, font:textFont});
 
     this.getTextObject = function()
@@ -23927,8 +23932,7 @@ function Label(x,y,text)
     }
     this.setTextColor = function(colorll)
     {
-        colorl = colorll;
-        textObj.color = colorl;
+        textObj.color = colorll;
     }
     this.setTextPosition = function(x,y)
     {
@@ -23946,6 +23950,10 @@ function Label(x,y,text)
     this.getObj = function()
     {
         return textObj;
+    }
+    this.getText = function()
+    {
+        return text;
     }
     this.setWAndH = function(w,h)
     {
@@ -24040,7 +24048,7 @@ function Dialog() {
 
 var timerText = null; //текст таймера
 var progressText = null; // количество ходов
-var expText = null;//Cколько всего набрано опыта
+//var expText = null;//Cколько всего набрано опыта
 var inputCounterText = null; //Текстовое поле для ввода чисел
 
 var menuItemH = 0; // стандартная высота элемента меню
@@ -24054,6 +24062,7 @@ var allButtons = undefined; //Класс для всех кнопок
 var Scrolls = new Array(); // массив всех скролбаров
 var infoText = undefined;
 var toolTip = new ToolTip();
+var playerLevelVisual = undefined;
 var messageBox = new MessageBox();
 pjs.mouseControl.setCursorImage(cursorImgSrc);
 //Отрисовывает элементы интерфейса
@@ -24064,12 +24073,12 @@ function drawGUI() {
     updateTextOnGui();
     timerText.textDraw();
     progressText.textDraw();
-    expText.textDraw();
     coinItem.draw();
     clockItem.draw();
     infoText.draw();
     dialog.dialogDraw();
-    if(toolTip.isVisible()) toolTip.draw();
+    playerLevelVisual.drawPlayerLevel();
+    if (toolTip.isVisible()) toolTip.draw();
     if (inputCounterText !== null) inputCounterText.draw();
     //Отрисовываем интерфейс выбора команд
     //showCommandsMenu();
@@ -24085,9 +24094,9 @@ function initGUI() { //поочередность иницилизаии ОБЯ�
     infoText = new TextWithBG(gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH);
     timerTextInit();
     progressTextInit();
-    expTextInit();
     textbackGroundInit("#000000", 0);
     codeMapBackGroundInit("#000000", 0.4)
+    playerLevelVisual = new PlayerLevelVisualisation();
     if (!isVerticalScreen) {
         //ИНИЦИАЛИЗИРУЕМ ИНТЕРФЕЙС РЕДАКТОРА КОМАНД
         if (Scrolls.length == 0) {
@@ -24111,7 +24120,8 @@ function updateTextOnGui() {
     var expG = (globalEXP * 100).toFixed();
     var nexp = (nextLevelEXP * 100).toFixed();
     //Обновляем инфу об опыте
-    expText.setText("УРОВЕНЬ: " + currentPlayerLevel + " lvl (" + expG + "/" + nexp + ")");
+    // expText.setText("УРОВЕНЬ: " + currentPlayerLevel + " lvl (" + expG + "/" + nexp + ")");
+    playerLevelVisual.setExp();
 }
 
 
@@ -24133,7 +24143,7 @@ function timerTextInit() {
 function progressTextInit() {
     var wh = gameSpaceW / 100 * 4;
     coinItem = game.newImageObject({
-        x: timerText.getObj().x + timerText.getObj().w * 4,
+        x: gameSpaceX + gameSpaceW * 0.15,
         y: 0,
         w: wh,
         h: wh,
@@ -24143,12 +24153,6 @@ function progressTextInit() {
     progressText.setTextPosition(coinItem.x + coinItem.w + 5, 0);
     progressText.setTextSize(wh);
     progressText.setTextColor(guiTextColor);
-}
-
-function expTextInit(){
-    expText = new Label(coinItem.x + coinItem.w * 2 + 5,coinItem.y, "00");
-    expText.setTextSize(coinItem.w);
-    expText.setTextColor(guiTextColor);
 }
 
 function textbackGroundInit(color, alpha) {
@@ -24185,8 +24189,7 @@ function codeMapBackGroundInit(color, alpha) {
                 radius: 0,
                 fillColor: color
             });
-        }
-        else{
+        } else {
             codeMapBG = game.newRoundRectObject({
                 x: 0,
                 y: textbackGroundItem.h,
@@ -24215,10 +24218,10 @@ function initRightScroll(initArray) {
             return;
         }
     });
-    if (isDel){
+    if (isDel) {
         //inputCommandStates = 0;
         //Показываем кнопку старт или стоп
-        if(!isVerticalScreen)
+        if (!isVerticalScreen)
             allButtons.mainButton.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
         return;
     }
@@ -24283,7 +24286,7 @@ function initLeftScroll(initMass) {
 }
 
 function TextWithBG(X, Y, W, H) { //класс для рисования текста с задним фоном, первоначально была разработана для того чтобы над лаберинтом выводить цифры введенные в блоки цикла по количеству
-    var textSize = height/100*30;
+    var textSize = height / 100 * 30;
     var _radius = 0;
     var alphaBG = 0.7;
     var textColor = "#ffffff"
@@ -24305,7 +24308,7 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
         color: textColor,
         size: textSize,
         alpha: 1,
-        font : textFont,
+        font: textFont,
     })
     this.BG.setAlpha(alphaBG)
     this.BG.setVisible(false)
@@ -24324,10 +24327,10 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
     }
     this.setText = function (t) {
         text.text = t;
-        var sz = height/100*23;
+        var sz = height / 100 * 23;
         text.size = sz
-        if(!isVerticalScreen)
-        text.x = (this.BG.x + this.BG.w / 2) - text.w + textSize - text.x / 2;
+        if (!isVerticalScreen)
+            text.x = (this.BG.x + this.BG.w / 2) - text.w + textSize - text.x / 2;
         else text.x = this.BG.x;
         text.y = (this.BG.y + this.BG.h / 2) - text.h / 2;
         this.BG.setVisible(true)
@@ -24336,6 +24339,62 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
     this.close = function () {
         this.BG.setVisible(false)
         text.setVisible(false)
+    }
+}
+
+function PlayerLevelVisualisation() {
+    var lineW = 50;
+    var lvl = currentPlayerLevel;
+    var textW = 0;
+    var mainBG = game.newRectObject({
+        x: gameSpaceX + gameSpaceW - (gameSpaceW * 0.4),
+        y: textbackGroundItem.y + (textbackGroundItem.h * 0.2),
+        w: gameSpaceW * 0.4,
+        h: textbackGroundItem.h / 1.5,
+        fillColor: "#000000",
+        alpha: 0,
+    });
+    var bg = game.newRoundRectObject({
+        x: mainBG.x,
+        y: mainBG.y,
+        w: mainBG.w,
+        h: mainBG.h,
+        radius: 6,
+        fillColor: "#ffffff",
+    });
+
+    var lvlLine = game.newRoundRectObject({
+        x: mainBG.x,
+        y: mainBG.y,
+        w: lineW,
+        h: mainBG.h,
+        radius: 6,
+        fillColor: "red",
+    });
+    var expText = new Label(mainBG.x + mainBG.w + 3, mainBG.y, "Уровень:" + lvl);
+    expText.setTextSize(mainBG.h * 1.5);
+    expText.setTextColor(guiTextColor);
+
+    textW = expText.getText().toString().length * gameSpaceW * 0.022;
+    expText.setTextPosition(mainBG.x - textW)
+    this.setLevel = function (lvl) {
+        expText.setText(lvl);
+    }
+    this.setExp = function () {
+        var expPerc = (globalEXP / nextLevelEXP) * 100;
+        var lvlLinePerc = (bg.w / 100) * expPerc;
+        lvlLine.w = lvlLinePerc;
+        if (globalEXP > nextLevelEXP) {
+            lvlLine.w = 0;
+            this.setLevel(currentPlayerLevel)
+        }
+
+    }
+
+    this.drawPlayerLevel = function () {
+        bg.draw();
+        lvlLine.draw();
+        expText.textDraw();
     }
 }
 function GameObject(NAME, TYPE, LOCATION, IMAGE) { // основной класс, который наследуеться от ImageObject
@@ -25609,6 +25668,11 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                     //Позиционируем blockA текущего элемента
                     addUsualCommand(lX, lY, elemWH, images, imgS, el.blockA, isOnClick);
                     lX += elemWH;
+                    if (el.blockB.conditions.length > 0) {
+                        for (var i = 0; i < el.blockB.conditions.length; i++) {
+
+                        }
+                    }
                     //Позиционируем blockB текущего элемента
                     addUsualCommand(lX, lY, elemWH, images, el.blockB.imgSource, el.blockB, isOnClick);
                     lX -= elemWH;
@@ -26146,7 +26210,7 @@ var freezCounter = 0;//Счетчик того сколько ходов уже 
 var localEXP = 0;//Переменная для хранения опыта робота набираемого за один лабиринт
 var globalEXP = 0;//Переменная для хранения общего опыта игрока в лабиринте
 var currentPlayerLevel = 0;//Переменная для хранения текущего уровня персонажа
-var nextLevelEXP = 0;//Переменная для хранения необходимого количества опыта для перехода на следующий уровень персонажа
+var nextLevelEXP = 0.001;//Переменная для хранения необходимого количества опыта для перехода на следующий уровень персонажа
 //Инициализация игрока
 function playerSetStart() {
     //Ищем местоположение двери
@@ -26949,7 +27013,7 @@ function addCommandToCell(commandImg, dontAdd) {
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         } else if (inputCommandStates == 3) { //Если выбираем blockB
             lastAddedCommand = undefined;
-            choosenCommandInElement.blockB = commandImg.command;
+            choosenCommandInElement.blockB.conditions.push(commandImg.command);
             inputCommandStates = 0;
             if (isVerticalScreen) initLeftScroll();
             else initLeftScroll([]);

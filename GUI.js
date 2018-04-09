@@ -88,7 +88,7 @@ function timerTextInit() {
         h: wh,
         file: clockPath
     })
-    timerText = new Label(0, 0, "00:00");
+    timerText = new Label(0, 0, "00:00 ");
     timerText.setTextPosition((clockItem.x + clockItem.w) + 5, 0);
     timerText.setTextSize(wh);
     timerText.setTextColor(guiTextColor);
@@ -97,7 +97,7 @@ function timerTextInit() {
 function progressTextInit() {
     var wh = gameSpaceW / 100 * 4;
     coinItem = game.newImageObject({
-        x: gameSpaceX + gameSpaceW * 0.15,
+        x: gameSpaceX + gameSpaceW * 0.20,
         y: 0,
         w: wh,
         h: wh,
@@ -323,9 +323,9 @@ function PlayerLevelVisualisation() {
         w: lineW,
         h: mainBG.h,
         radius: 6,
-        fillColor: "#2f95d0",
+        fillColor: "red",
     });
-    var expText = new Label(mainBG.x + mainBG.w + 3, mainBG.y, "Уровень:" + lvl);
+    var expText = new Label(mainBG.x + mainBG.w + 3, mainBG.y, "Уровень: " + lvl + " ");
     expText.setTextSize(mainBG.h * 1.5);
     expText.setTextColor(guiTextColor);
 

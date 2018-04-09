@@ -119,6 +119,7 @@ COMMANDS.push({
 COMMANDS.push({
     code: 'B',
     name: "blockB",
+    conditions: [],
     imgSource: commandBlockBImgSrc,
     undeletable: true
 }); //[15]
@@ -274,20 +275,24 @@ function checkConditionIF(blockA, blockB, commandsBlock, elseBlock) {
     if (blockA.name == "whatisit") {
         blockA = checkWhatIsIt(blockA.lookCommand, playerPozition, field, totalWidth, gameObjects, playerFrontSide)
     }
-
-    if (blockB.code == coinCode) {//Если в условии выбран игровой обьект(монетка и тд)
-        if (blockA.itemCode === undefined) return elseBlock ? elseBlock.actions : [];
-        else if (blockA.itemCode == blockB.code) return commandsBlock.actions;
-    } else {//Если выбран обьект ландшафта(стены, вход или выход)
-        //Парсим в int
-        var val = parseInt(blockA.fieldCode);
-        val = isNaN(val) ? 0 : val;
-        //Если стены внутренние то код элемента 0(Любые стены для нас пока равнозначны)
-        if(val > 0 && val < 4)
-            blockA.fieldCode = borderCode;
-        if (blockA.fieldCode == blockB.code)
-            return commandsBlock.actions;
+    if (blockB.conditions && blockB.conditions.length && blockB.conditions.length > 0) {//Если условий несколько
+        for (var i = 0; i < blockB.conditions.length; i++){
+            if (blockB.conditions[i].code == coinCode) {//Если в условии выбран игровой обьект(монетка и тд)
+                if (blockA.itemCode && blockA.itemCode == blockB.conditions[i].code)
+                    return commandsBlock.actions;
+            } else {//Если выбран обьект ландшафта(стены, вход или выход)
+                //Парсим в int
+                var val = parseInt(blockA.fieldCode);
+                val = isNaN(val) ? 0 : val;
+                //Если стены внутренние то код элемента 0(Любые стены для нас пока равнозначны)
+                if (val > 0 && val < 4)
+                    blockA.fieldCode = borderCode;
+                if (blockA.fieldCode == blockB.conditions[i].code)
+                    return commandsBlock.actions;
+            }
+        }
     }
+   
     return elseBlock ? elseBlock.actions : [];
 }
 

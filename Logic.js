@@ -297,7 +297,7 @@ function addCommandToCell(commandImg, dontAdd) {
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         } else if (inputCommandStates == 3) { //Если выбираем blockB
             lastAddedCommand = undefined;
-            choosenCommandInElement.blockB = commandImg.command;
+            choosenCommandInElement.blockB.conditions.push(commandImg.command);
             inputCommandStates = 0;
             if (isVerticalScreen) initLeftScroll();
             else initLeftScroll([]);

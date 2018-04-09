@@ -44,7 +44,7 @@ var currentAsset = "greenland";
 //Параметры для внутриигрового текста
 var textOnCodeMapColor = "#1f75fe";//Цвет цифр когда вводишь итерации в команду repeat
 var textFont = "comic"; //шрифт текста
-var guiTextColor = "#bb7f43";//ЦВЕТ ТЕКСТА ДЛЯ GUI 
+var guiTextColor = "red";//ЦВЕТ ТЕКСТА ДЛЯ GUI 
 
 //Путь к файлам отображения ИНТЕРФЕЙСА И КОМАНД---------------------------------------
 var nonePath = "img/commands/command_none.png";//Картинка пустой команды
