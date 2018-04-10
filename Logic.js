@@ -11,7 +11,6 @@ var gameSpaceW = 0,
 var totalWidth = labyrinthSize; //Колличество блоков в строку(в начале игры)
 var totalHeight = labyrinthSize; //Колличество блоков в столбец(в начале игры)
 var totalCommandsAllowed = 0; //Колличество команд, которое разрешено поставить на данном поле(рассчитывается при генерации лабиринта)
-var totalLabCompleted = 0; //Счетчик пройденных лабиринтов
 var totalAttempts = 0; //Счетчик попыток прохождения уровня
 var lastClickedElement = undefined; //Последний элемент карты по которому кликал пользователь(нужно для построения карты кода)
 var choosenCommandInElement = undefined; //Индекс команды в массиве команд которую редактирует игрок
@@ -545,4 +544,4 @@ function checkAchievements() {
 }
 
 game.startLoop('Labyrinth');
-//game.startLoop('menu');
+//game.startLoop('LastLevelWindow');
