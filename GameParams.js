@@ -46,6 +46,7 @@ var textOnCodeMapColor = "#1f75fe";//Цвет цифр когда вводишь
 var textFont = "comic"; //шрифт текста
 var guiTextColor = "red";//ЦВЕТ ТЕКСТА ДЛЯ GUI 
 
+var totalLabCompleted = 0; //Счетчик пройденных лабиринтов
 //Путь к файлам отображения ИНТЕРФЕЙСА И КОМАНД---------------------------------------
 var nonePath = "img/commands/command_none.png";//Картинка пустой команды
 var coinPath = "img/assets/"+currentAsset+"/field/object_battery.png"; //Картинка для отображения монетки
@@ -61,6 +62,7 @@ var nextStepButtonImgSrc = "img/interface/interface_button_nextstep.png";
 var prevStepButtonImgSrc = "img/interface/interface_button_prevstep.png";
 var buttonDeleteImgSrc = "img/interface/interface_button_delete.png";
 var buttonDialogImgSrc = "img/interface/interface_button_dialog_ok.png"
+var medal1ImgSrc = "img/interface/medal1.png"
 //Пути для файлов для карты кода------------------------------------------------
 var itemDeleteSrc = "img/interface/interface_codeview_delete.png";
 var itemReplaceSrc = "img/interface/interface_codeview_replace.png";

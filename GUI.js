@@ -296,15 +296,23 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
     }
 }
 
-function PlayerLevelVisualisation() {
+function PlayerLevelVisualisation(X,Y,W,H,LastWindow) {
     var lineW = 50;
     var lvl = currentPlayerLevel;
     var textW = 0;
+    if(X == undefined)
+        X = gameSpaceX + gameSpaceW - (gameSpaceW * 0.4);
+    if(Y == undefined)
+        Y = textbackGroundItem.y + (textbackGroundItem.h * 0.2);
+    if(W == undefined)
+        W = gameSpaceW * 0.4;
+    if(H == undefined)
+        H = textbackGroundItem.h / 1.5;
     var mainBG = game.newRectObject({
-        x: gameSpaceX + gameSpaceW - (gameSpaceW * 0.4),
-        y: textbackGroundItem.y + (textbackGroundItem.h * 0.2),
-        w: gameSpaceW * 0.4,
-        h: textbackGroundItem.h / 1.5,
+        x: X,
+        y: Y,
+        w: W,
+        h: H,
         fillColor: "#000000",
         alpha: 0,
     });
@@ -346,9 +354,24 @@ function PlayerLevelVisualisation() {
     var expText = new Label(mainBG.x + mainBG.w + 2, mainBG.y, "Уровень: " + lvl);
     expText.setTextSize(mainBG.h * 1.5);
     expText.setTextColor(guiTextColor);
+    this.setTextColor = function(color)
+    {
+        expText.setTextColor(color);
+    }
+    this.setTextPos = function(x,y)
+    {
+        expText.setTextPosition(x,y);
+    }
 
+    if(!LastWindow)
+        {
     textW = expText.getText().toString().length * gameSpaceW * 0.022;
     expText.setTextPosition(mainBG.x - textW)
+        }
+    this.setTextSize = function(sz)
+    {
+        expText.setTextSize(sz);
+    }
     this.setLevel = function (lvl) {
         expText.setText(lvl);
     }
