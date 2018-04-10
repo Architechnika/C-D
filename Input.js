@@ -239,7 +239,7 @@ function onUp(e) {
             }
         });
         if (!clicked && !touchTapTimeFlag) { //Если клик не был обнаружен выше
-            if (!allButtons.checkButtonsClicked(e))
+            if (allButtons && !allButtons.checkButtonsClicked(e))
                 if (isVerticalScreen) {
                     //Если ориентация вертикальная то проверяем клики по полю только когда находимся на экране с полем
                     if (!isSecondScreen)

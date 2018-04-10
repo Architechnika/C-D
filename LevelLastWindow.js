@@ -64,12 +64,14 @@ game.newLoopFromConstructor('LastLevelWindow', function () {
     //Код для старта игры
     this.entry = function () 
     {
-        initInputEvents();
+        addEventListener("mouseup", mouseUpEvent);
+        addEventListener("touchend", touchUpEvent);
     }
     //Код для завершения цикла
     this.exit = function () 
     {
-        removeInputEvents();
+        removeEventListener("mouseup", mouseUpEvent);
+        removeEventListener("touchend", touchUpEvent);
     };
 
     //Код для апдейта игры
@@ -79,3 +81,23 @@ game.newLoopFromConstructor('LastLevelWindow', function () {
         drawWindow();
     };
 });
+
+function mouseUpEvent(e) {
+    if (clickIsInObj(e.x, e.y, buttonNext)){
+        game.setLoop('Labyrinth');
+    }
+    else if (clickIsInObj(e.x, e.y, buttonReload)){
+
+    }
+}
+
+function touchUpEvent(e) {
+    e.x = e.changedTouches[0].clientX;
+    e.y = e.changedTouches[0].clientY;
+    if (clickIsInObj(e.x, e.y, buttonNext)) {
+        game.setLoop('Labyrinth');
+    }
+    else if (clickIsInObj(e.x, e.y, buttonReload)){
+
+    }
+}

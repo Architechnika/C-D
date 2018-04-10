@@ -467,6 +467,7 @@ function processRobotMove() {
         isStarted = false;
         allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
         codeView.clear();
+        game.startLoop('LastLevelWindow');
         //Перезагружаем уровень с новым лабиринтом
         initializeGame();
     } else if (res == "stop") {
@@ -544,4 +545,3 @@ function checkAchievements() {
 }
 
 game.startLoop('Labyrinth');
-//game.startLoop('LastLevelWindow');
