@@ -100,7 +100,7 @@ function logicEventTimer() {
         toolTipShowEvent(clickCoord.x, clickCoord.y);
         toolTipTimeCounter = 0;
     } else toolTipTimeCounter += 40;
-    onKeyboardClick();
+    //onKeyboardClick();
     setTimeout("logicEventTimer()", 40);
 }
 
