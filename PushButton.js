@@ -150,11 +150,12 @@ function Buttons() { //класс для работы совсеми кнопк�
         }
     }
     //Проверка на клик по кнопке и запуск обработчика кнопки если клик есть
-    this.checkButtonsClicked = function (e) {
+    this.checkButtonsClicked = function (e, dontprocess) {
         if (this.buttonsArr) {
             for (var i = 0; i < this.buttonsArr.length; i++) {
                 if (clickIsInObj(e.x, e.y, this.buttonsArr[i])) {
-                    this.buttonsArr[i].onClick(this.buttonsArr[i]);
+                    if (!dontprocess)
+                        this.buttonsArr[i].onClick(this.buttonsArr[i]);
                     return true;
                 }
             }

@@ -64,6 +64,8 @@ function onMouseUP(e) {
 function onMouseDOWN(e) {
     clickCoord.x = e.x;
     clickCoord.y = e.y;
+    if (allButtons.checkButtonsClicked(clickCoord, true))
+        return;
     scrolled = false;
     //Запоминаем точку в которую кликнул пользователь
     touchPoint = new point(clickCoord.x, clickCoord.y);
@@ -101,6 +103,8 @@ function onTouchStart(e) {
     clickCoord.x = e.changedTouches[0].clientX;
     clickCoord.y = e.changedTouches[0].clientY;
     scrolled = false;
+    if (allButtons.checkButtonsClicked(clickCoord, true))
+        return;
     for (var i = 0; i < Scrolls.length; i++) {
         var scroll = Scrolls[i];
         //Ищем клик по левому скролу
