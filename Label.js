@@ -15,10 +15,9 @@ function Label(x,y,text)
             return textObj;
         else return -1;
     }
-    this.setText= function(text)
+    this.setText= function(textl)
     {
-        textLoc = text;
-        textObj.text = textLoc;
+        textObj.text = textl;
     }
     this.setTextSize = function(sizel)
     {

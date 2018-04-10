@@ -382,10 +382,9 @@ function PlayerLevelVisualisation(X,Y,W,H,LastWindow) {
         lvlLineMembrane.w = lvlLinePerc
         if (globalEXP > nextLevelEXP) {
             lvlLine.w = 0;
-             lvlLineMembrane.w = 0;
-            this.setLevel(currentPlayerLevel)
+            lvlLineMembrane.w = 0;
         }
-
+        this.setLevel("Уровень: " + currentPlayerLevel)
     }
 
     this.drawPlayerLevel = function () {

@@ -450,26 +450,7 @@ function processRobotMove() {
     var res = playerMove();
 
     if (res == "end") { //Если мы прошли до конца карты
-        robotOn = false;
-        totalLabCompleted++;
-        //Проверка на ачивки
-        playerMovesHistory.push(playerPozition);
-        var bonus = checkAchievements();
-        var isGr = calcEXP(bonus);
-        if (isLabyrinthGrow && isGr) {
-            if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {
-            } else {
-                totalWidth += 2;
-                totalHeight += 2;
-                labyrinthSize = totalWidth;
-            }
-        }
-        isStarted = false;
-        allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
-        codeView.clear();
         game.startLoop('LastLevelWindow');
-        //Перезагружаем уровень с новым лабиринтом
-        initializeGame();
     } else if (res == "stop") {
         showMessage(lang[selectLang]['robot_is_waiting']);
         isStarted = false;
@@ -497,51 +478,6 @@ function showMessage(text) {
     messageBox.setShow(true);
     messageBox.setText(text);
     //allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
-}
-
-//Производит расчет очков опыта набранных игроком в процессе прохождения лабиринта
-function calcEXP(bonus) {
-    if (totalSeconds != 0)
-        globalEXP += (localEXP / (totalSeconds * 0.5)) + bonus;
-    //Очищаем значения которые надо очистить
-    playerInventory.splice(0, playerInventory.length);
-    localEXP = 0;
-    if (globalEXP > nextLevelEXP) {
-        currentPlayerLevel++;
-        nextLevelEXP = nextLevelEXP + (currentPlayerLevel * currentPlayerLevel);
-        return true;
-    }
-    return false;
-}
-
-//Возвращает бонусы очков опыта от ачивок:
-//"opt" - прохождение лабиринта оптимальным маршрутом
-//"noerrors" - прохождение без единой ошибки
-function checkAchievements() {
-    if (totalWidth < 5) return 0;
-
-    var text = "ПОЛУЧЕНЫ ДОСТИЖЕНИЯ:   ";
-    var bonus = 0;
-    //Проверяем ачивку на оптимальный маршрут
-    if (playerMovesHistory.length == optimalRoute.length) {
-        var isOpt = true;
-        for (var i = 0; i < optimalRoute.length; i++) {
-            if (playerMovesHistory[i] != optimalRoute[i].id) {
-                isOpt = false;
-                break;
-            }
-        }
-        if (isOpt) {//АЧИВКА ОПТИМАЛЬНЫЙ МАРШРУТ
-            bonus += nextLevelEXP * 0.1;
-            text += "ОПИТМАЛЬНЫЙ МАРШРУТ";
-        }
-    }
-    if (achievement_noErrors) {//АЧИВКА - ПРОХОЖДЕНИЕ БЕЗ ОШИБОК
-        bonus += nextLevelEXP * 0.1;
-        text += ", ПРОХОЖДЕНИЕ БЕЗ ОШИБОК";
-    }
-    showMessage(text);
-    return bonus;//result;
 }
 
 game.startLoop('Labyrinth');
