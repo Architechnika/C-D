@@ -97,7 +97,7 @@ function touchUpEvent(e) {
         nextLevel();
     }
     else if (clickIsInObj(e.x, e.y, buttonReload)) {
-        replaylevel();
+        replayLevel();
     }
 }
 
