@@ -102,10 +102,12 @@ function touchUpEvent(e) {
 }
 
 function replayLevel() {
+    audio_GUI_click.play();
 
 }
 
 function nextLevel() {
+    audio_GUI_click.play();
     robotOn = false;
     totalLabCompleted++;
     //Проверка на ачивки
