@@ -99,7 +99,7 @@ function logicEventTimer() {
         toolTipShowEvent(clickCoord.x, clickCoord.y);
         toolTipTimeCounter = 0;
     } else toolTipTimeCounter += 40;
-    onKeyboardClick();
+    //onKeyboardClick();
     setTimeout("logicEventTimer()", 40);
 }
 
@@ -241,6 +241,7 @@ function setFocused(fieldElem, indx) {
     if ((fieldElem.code != roadCode && fieldElem.code != entryCode) || isStarted) {
         return;
     }
+    if (fieldElem.isCommandsReaded) fieldElem.isCommandsReaded = false;
     //Cохраняем номер текущего
     lastClickedIndx = indx;
     if (lastClickedElement) lastClickedElement.setStroke(false);
@@ -449,7 +450,16 @@ function processRobotMove() {
     if (res == "end") { //Если мы прошли до конца карты
         robotOn = false;
         totalLabCompleted++;
-        var isGr = calcEXP();
+        //Проверяем на ачивки
+        playerMovesHistory.push(playerPozition);
+        var achievements = checkAchievements();
+        var bonus = 0;
+        if (achievements && achievements.length > 0 && achievements[0] == "opt") {
+            bonus = nextLevelEXP * 0.1;
+            showMessage("Получена ачивка - ОПИТМАЛЬНЫЙ МАРШРУТ");
+        }
+
+        var isGr = calcEXP(bonus);
         if (isLabyrinthGrow && isGr) {
             if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {
             } else {
@@ -460,6 +470,7 @@ function processRobotMove() {
         }
         isStarted = false;
         allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
+        codeView.clear();
         //Перезагружаем уровень с новым лабиринтом
         initializeGame();
     } else if (res == "stop") {
@@ -491,9 +502,9 @@ function showMessage(text) {
 }
 
 //Производит расчет очков опыта набранных игроком в процессе прохождения лабиринта
-function calcEXP() {
+function calcEXP(bonus) {
     if (totalSeconds != 0)
-        globalEXP += localEXP / totalSeconds;
+        globalEXP += (localEXP / totalSeconds) + bonus;
     //Очищаем значения которые надо очистить
     playerInventory.splice(0, playerInventory.length);
     localEXP = 0;
@@ -503,6 +514,26 @@ function calcEXP() {
         return true;
     }
     return false;
+}
+
+//Возвращает массив с полученными достижениями:
+//"opt" - прохождение лабиринта оптимальным маршрутом
+function checkAchievements() {
+    var result = [];
+    //Проверяем ачивку на оптимальный маршрут
+    if (playerMovesHistory.length == optimalRoute.length) {
+        var isOpt = true;
+        for (var i = 0; i < optimalRoute.length; i++) {
+            if (playerMovesHistory[i] != optimalRoute[i].id) {
+                isOpt = false;
+                break;
+            }
+        }
+        if (isOpt) {
+            result.push("opt");
+        }
+    }
+    return result;
 }
 
 game.startLoop('Labyrinth');

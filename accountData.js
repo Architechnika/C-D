@@ -102,6 +102,7 @@ function UserAccaunt(login, pass, summ) {
             entrySide = this.entrySide;
             totalHeight = this.totalWH;
             totalWidth = this.totalWH;
+            labyrinthSize = totalWidth;
             totalSeconds = this.gameTime;
             oneTileWidth = field[0].W;
             oneTileHeight = field[0].H;

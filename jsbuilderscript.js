@@ -21866,7 +21866,7 @@ function updateScreen() {
         brush.drawTextS({
             y:20,
             text: system.getFPS(),
-            color: "lawngreen",
+            color: "red",
             size: 50
         });
     }
@@ -21927,6 +21927,7 @@ var codeMapIsMoved = false; //Флаг для сдвига карты кода
 var multiTouchDelta = -1; //Буфер для хранения элемента который сдвигают в нижнем скроле(чтобы вернуть его в исходное состояние если что)
 var touchTimespan = undefined;
 var toolTipTimeCounter = undefined;
+var blockBElemIndx = -1;
 //Отменяем вывод контестного меню на страничке
 document.oncontextmenu = function () {
     return false
@@ -22385,23 +22386,16 @@ function onChooseCommandClick(el) {
 
 //Обработчик для ввода с цифр
 function onKeyboardClick(el) {
-    var count = el.command.name != "backspace" ? el.command.value : -1;
-    var text = choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count.toString();
-    if (count != -1) { //Если элемент добавляют        
-        if (text.length < 4) {
-            text = text + count.toString();
-        }
-    } else if (text.length > 0) text = text.substring(0, text.length - 1) //Если стирают
-    var parsedInt = parseInt(text);
-    parsedInt = isNaN(parsedInt) ? 0 : parsedInt;
-    //Инитим текст в блок итераций
-    choosenCommandInElement.countBlock.count = parsedInt;
-    //Задаем текст в текст бокс
-    infoText.setText(text);
-    // messengBox.setShow(true);
-    // messengBox.setText(text);
+    if (key.isDown("LEFT")) {
+        allButtons.stepDownButton.onClick();
+    }
+    else if (key.isDown("RIGHT")) {
+        allButtons.stepUpButton.onClick();
+    }
+    else if (key.isDown("SPACE")) {
+        allButtons.mainButton.onClick(allButtons.mainButton);
+    }
 }
-//------------------------------------------------------------------
 
 //Функция обеспечивающая динамический скролл
 function scrollDynamic(speed, scrollElement) {
@@ -22560,7 +22554,6 @@ COMMANDS.push({
 COMMANDS.push({
     code: 'B',
     name: "blockB",
-    conditions: [],
     imgSource: commandBlockBImgSrc,
     undeletable: true
 }); //[15]
@@ -22646,7 +22639,7 @@ COMMANDS.push({
 });
 //ИНИЦИАЛИЗИРУЕМ ШАБЛОН КОМАНДЫ IF
 COMMANDS[11].blockA = COMMANDS[14];
-COMMANDS[11].blockB = COMMANDS[15];
+COMMANDS[11].blockB = [COMMANDS[15]];
 COMMANDS[11].commandsBlock = COMMANDS[9];
 COMMANDS[11].elseBlock = COMMANDS[23];
 //ИНИЦИАЛИЗИРУЕМ ШАБЛОН КОМАНДЫ REPEAT
@@ -22654,7 +22647,7 @@ COMMANDS[12].countBlock = COMMANDS[16]
 COMMANDS[12].commandsBlock = COMMANDS[9];
 //ИНИЦИАЛИЗИРУЕМ ШАБЛОН КОМАНДЫ repeatIF
 COMMANDS[13].blockA = COMMANDS[14];
-COMMANDS[13].blockB = COMMANDS[15];
+COMMANDS[13].blockB = [COMMANDS[15]];
 COMMANDS[13].commandsBlock = COMMANDS[9];
 
 function gameFieldElement(fCode, iCode) {
@@ -22716,10 +22709,10 @@ function checkConditionIF(blockA, blockB, commandsBlock, elseBlock) {
     if (blockA.name == "whatisit") {
         blockA = checkWhatIsIt(blockA.lookCommand, playerPozition, field, totalWidth, gameObjects, playerFrontSide)
     }
-    if (blockB.conditions && blockB.conditions.length && blockB.conditions.length > 0) {//Если условий несколько
-        for (var i = 0; i < blockB.conditions.length; i++){
-            if (blockB.conditions[i].code == coinCode) {//Если в условии выбран игровой обьект(монетка и тд)
-                if (blockA.itemCode && blockA.itemCode == blockB.conditions[i].code)
+    if (blockB && blockB.length && blockB.length > 0) {//Если условий несколько
+        for (var i = 0; i < blockB.length; i++){
+            if (blockB[i].code == coinCode) {//Если в условии выбран игровой обьект(монетка и тд)
+                if (blockA.itemCode && blockA.itemCode == blockB[i].code)
                     return commandsBlock.actions;
             } else {//Если выбран обьект ландшафта(стены, вход или выход)
                 //Парсим в int
@@ -22728,7 +22721,7 @@ function checkConditionIF(blockA, blockB, commandsBlock, elseBlock) {
                 //Если стены внутренние то код элемента 0(Любые стены для нас пока равнозначны)
                 if (val > 0 && val < 4)
                     blockA.fieldCode = borderCode;
-                if (blockA.fieldCode == blockB.conditions[i].code)
+                if (blockA.fieldCode == blockB[i].code)
                     return commandsBlock.actions;
             }
         }
@@ -24360,7 +24353,16 @@ function PlayerLevelVisualisation() {
         w: mainBG.w,
         h: mainBG.h,
         radius: 6,
+        fillColor: "#e6e6e6",
+    });
+    var bgMembrane = game.newRoundRectObject({
+        x: mainBG.x,
+        y: (bg.y + bg.h/2) - ((mainBG.h/2)/2),
+        w: mainBG.w,
+        h: mainBG.h/2,
+        radius: 6,
         fillColor: "#ffffff",
+        alpha : 0.35,
     });
 
     var lvlLine = game.newRoundRectObject({
@@ -24369,7 +24371,16 @@ function PlayerLevelVisualisation() {
         w: lineW,
         h: mainBG.h,
         radius: 6,
+        fillColor: "#eb0000",
+    });
+    var lvlLineMembrane = game.newRoundRectObject({
+        x: mainBG.x,
+        y: (lvlLine.y + lvlLine.h/2) - ((mainBG.h/2)/2),
+        w: lvlLine.w,
+        h: mainBG.h/2,
+        radius: 6,
         fillColor: "red",
+        alpha: 0.7,
     });
     var expText = new Label(mainBG.x + mainBG.w + 2, mainBG.y, "Уровень: " + lvl);
     expText.setTextSize(mainBG.h * 1.5);
@@ -24384,8 +24395,10 @@ function PlayerLevelVisualisation() {
         var expPerc = (globalEXP / nextLevelEXP) * 100;
         var lvlLinePerc = (bg.w / 100) * expPerc;
         lvlLine.w = lvlLinePerc;
+        lvlLineMembrane.w = lvlLinePerc
         if (globalEXP > nextLevelEXP) {
             lvlLine.w = 0;
+             lvlLineMembrane.w = 0;
             this.setLevel(currentPlayerLevel)
         }
 
@@ -24393,8 +24406,10 @@ function PlayerLevelVisualisation() {
 
     this.drawPlayerLevel = function () {
         bg.draw();
+        bgMembrane.draw();
         if (lvlLine.w > 3) {
             lvlLine.draw();
+             lvlLineMembrane.draw();
         }
         expText.textDraw();
     }
@@ -25670,14 +25685,14 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                     //Позиционируем blockA текущего элемента
                     addUsualCommand(lX, lY, elemWH, images, imgS, el.blockA, isOnClick);
                     lX += elemWH;
-                    if (el.blockB.conditions.length > 0) {
-                        for (var i = 0; i < el.blockB.conditions.length; i++) {
-
-                        }
-                    }
                     //Позиционируем blockB текущего элемента
-                    addUsualCommand(lX, lY, elemWH, images, el.blockB.imgSource, el.blockB, isOnClick);
-                    lX -= elemWH;
+                    if (el.blockB.length > 0) {
+                        for (var cI = 0; cI < el.blockB.length; cI++) {
+                            addUsualCommand(lX, lY, elemWH, images, el.blockB[cI].imgSource, el.blockB[cI], isOnClick);
+                            lX += elemWH;
+                        }
+                        lX -= elemWH * (el.blockB.length + 1);
+                    }
                 } else if (el.name == "repeat") {
                     lX += elemWH;
                     //Позиционируем countBlock текущего элемента
@@ -25809,8 +25824,10 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                     else if(el.command.name == "repeatif" || el.command.name == "if"){
                         i += 1;
                         parent.elems[i].setAlpha(1);
-                        i += 1;
-                        parent.elems[i].setAlpha(1);
+                        for (var c = 0; c < el.command.blockB.length; c++){
+                            i++;
+                            parent.elems[i].setAlpha(1);
+                        }
                     }
                     parent.setFocusOnElement(el,true);
                 }
@@ -25992,8 +26009,12 @@ var findObjStorage = function (container, obj) {
                 if (el.blockA == obj)
                     return el;
             if (obj.name == "blockB")
-                if (el.blockB == obj)
-                    return el;
+                for (var c = 0; c < el.blockB.length; c++) {
+                    if (el.blockB[c] == obj) {
+                        blockBElemIndx = c;
+                        return el;
+                    }
+                }
         } else if (el.name == "repeat") {
             if (obj.name == "counter")
                 if (el.countBlock == obj)
@@ -26818,6 +26839,7 @@ function logicEventTimer() {
         toolTipShowEvent(clickCoord.x, clickCoord.y);
         toolTipTimeCounter = 0;
     } else toolTipTimeCounter += 40;
+    //onKeyboardClick();
     setTimeout("logicEventTimer()", 40);
 }
 
@@ -27015,7 +27037,14 @@ function addCommandToCell(commandImg, dontAdd) {
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         } else if (inputCommandStates == 3) { //Если выбираем blockB
             lastAddedCommand = undefined;
-            choosenCommandInElement.blockB.conditions.push(commandImg.command);
+            if (blockBElemIndx != -1) {
+                choosenCommandInElement.blockB[blockBElemIndx] = commandImg.command;
+                if (choosenCommandInElement.blockB[choosenCommandInElement.blockB.length - 1].code !== COMMANDS[15].code) {
+                    choosenCommandInElement.blockB.push(getCopyOfObj(COMMANDS[15]));
+                }
+                blockBElemIndx = -1;
+            }
+            else choosenCommandInElement.blockB.push(commandImg.command);
             inputCommandStates = 0;
             if (isVerticalScreen) initLeftScroll();
             else initLeftScroll([]);

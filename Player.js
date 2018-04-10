@@ -16,6 +16,7 @@ var localEXP = 0;//Переменная для хранения опыта ро�
 var globalEXP = 0;//Переменная для хранения общего опыта игрока в лабиринте
 var currentPlayerLevel = 0;//Переменная для хранения текущего уровня персонажа
 var nextLevelEXP = 0.001;//Переменная для хранения необходимого количества опыта для перехода на следующий уровень персонажа
+var playerMovesHistory = [];
 //Инициализация игрока
 function playerSetStart() {
     //Ищем местоположение двери
@@ -26,7 +27,7 @@ function playerSetStart() {
             playerPozition = indx;
             startPoz = indx;
             //Генерим графическое представление игрока для отображение
-            movePlayerToFieldElement(field[playerPozition]);
+            movePlayerToFieldElement(field[playerPozition], undefined, playerPozition);
             if(labView)
                 labView.setFocusOnElement(field[playerPozition],false, true);
             //Задаем направление, куда смотрит персонаж
@@ -37,6 +38,8 @@ function playerSetStart() {
             //Обнуляем счетчик ходов робота
             playerMoveCount = 0;
             lastPlayerPoz = -1;
+            //Инициализируем буфер для статистики перемещений робота
+            playerMovesHistory = [playerPozition];
             //Инициализируем стек команд
             playerCommands = new Array();
             //Инициализируем стек состояний игрока
@@ -152,6 +155,9 @@ function playerMove(canRead) {
             playerInventory.splice(0, 1);
             break;
         case "repeat":
+            if (comm.countBlock.count == 0) {
+                return lang[selectLang]['robot_left_counter_countblock'];
+            }
             //Выполняем итерацию цикла(получаем команды)
             var comms = checkConditionREPEAT(comm.countBlock, comm.commandsBlock);
             //Добавляем их в стек команд
@@ -179,6 +185,9 @@ function playerMove(canRead) {
             }
             break;
         case "repeatif":
+            if (comm.blockA.code == 'A' || (!comm.blockB || !comm.blockB.length || comm.blockB.length == 1)) {
+                return lang[selectLang]['robot_left_condition_repeatif'];
+            }
             //Выполняем итерацию цикла(получаем команды)
             var comms = checkConditionIF(comm.blockA, comm.blockB, comm.commandsBlock, undefined);
             //Добавляем их в стек команд
@@ -205,6 +214,9 @@ function playerMove(canRead) {
             }
             break;
         case "if":
+            if (comm.blockA.code == 'A' || (!comm.blockB || !comm.blockB.length || comm.blockB.length == 1)) {
+                return lang[selectLang]['robot_left_condition_if'];
+            }
             //Выполняем итерацию цикла(получаем команды)
             var comms = checkConditionIF(comm.blockA, comm.blockB, comm.commandsBlock, comm.elseBlock);
             //Добавляем их в стек команд
@@ -260,9 +272,9 @@ function playerMove(canRead) {
         if (code == exitCode) {
             return "end";
         }
-    } else if(pozBuff !== pPoz) return lang[selectLang]['crashed_the_wall'];
+    } else if (pozBuff !== pPoz) return lang[selectLang]['crashed_the_wall'];
     //Передвигаем игрока в нужную клетку
-    movePlayerToFieldElement(field[playerPozition]);
+    movePlayerToFieldElement(field[playerPozition], undefined, playerPozition);
     getLocalEXP();
     if(pPoz !== pozBuff) freezCounter = 0;//Если робот дошёл до этой строчки кода, значит он ствинулся следовательно сбрасываем счетчик
     drawCommState();
@@ -314,7 +326,10 @@ function setPreviousStateToPlayer() {
                 el.isCommandsReaded = false;
             });
             return;
-        } else movePlayerToFieldElement(field[playerStatesBuff[0].position]);
+        } else {
+            playerMovesHistory.push(playerStatesBuff[0].position);
+            movePlayerToFieldElement(field[playerStatesBuff[0].position], undefined, playerStatesBuff[0].position);
+        }
         //Разворачиваем его куда нужно
         playerSetDirection(playerStatesBuff[0].direction);
         //Инициализируем стек команд робота
@@ -401,7 +416,7 @@ function playerSetDirection(direction) {
 }
 
 //Перемещает игрока на заданный элемент поля
-function movePlayerToFieldElement(fEl, dontFocus) {
+function movePlayerToFieldElement(fEl, dontFocus, indx) {
     //Если объект игрока ещё не создан
     if (playerImageObj === null) {
         playerImageObj  = game.newAnimationObject(   { 
@@ -422,7 +437,9 @@ function movePlayerToFieldElement(fEl, dontFocus) {
         playerImageObj.w = fEl.w;
         playerImageObj.h = fEl.h;
     }
-    if(labView && !dontFocus) labView.setFocusOnElement(field[playerPozition],false);
+    if (labView && !dontFocus) labView.setFocusOnElement(field[playerPozition], false);
+    if (indx && playerMovesHistory[playerMovesHistory.length - 1] != indx)
+        playerMovesHistory.push(indx);
 }
 
 //Задает направление для персонажа, исходя из того, где находится вход в лабиринт

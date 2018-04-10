@@ -47,7 +47,7 @@ function updateScreen() {
         brush.drawTextS({
             y:20,
             text: system.getFPS(),
-            color: "lawngreen",
+            color: "red",
             size: 50
         });
     }
