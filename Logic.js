@@ -20,6 +20,7 @@ var isStarted = false; //Флаг для старта/стопа игры
 var itemToReplaceInCodeMap = undefined; //Переменная для хранения ссылки на обьект который нужно заменить в codeView
 var itemToAddAfterInCodeMap = undefined; //Переменная которая хранит обьект из codeMap после которого надо добавить элемент
 var timeTimerLaunched = false;
+var logicTimerLaunched = false;
 var isSecondScreen = false;
 var isVerticalScreen = undefined;
 var widthBuff = width;
@@ -60,10 +61,13 @@ game.newLoopFromConstructor('Labyrinth', function () {
         saveTimer();
         //Инициализируем таймер времени
         if (!timeTimerLaunched) {
+            timeTimerLaunched = true;
             totalTimeTimer();
+        }
+        if (!logicTimerLaunched) {
+            logicTimerLaunched = true;
             logicEventTimer();
         }
-        timeTimerLaunched = true;
         //mainbackGround = new mainBackGroundDrow();
         isEntried = true;
     };
@@ -101,12 +105,16 @@ function logicEventTimer() {
         toolTipTimeCounter = 0;
     } else toolTipTimeCounter += 40;
     //onKeyboardClick();
-    setTimeout("logicEventTimer()", 40);
+    if (logicTimerLaunched) {
+        setTimeout("logicEventTimer()", 40);
+    }
 }
 
 function totalTimeTimer() {
-    totalSeconds++;
-    setTimeout("totalTimeTimer()", 1000);
+    if (timeTimerLaunched) {
+        totalSeconds++;
+        setTimeout("totalTimeTimer()", 1000);
+    }
 }
 //Функция перерасчитывает параметры всех графических элементов
 function recalcScreen() {
@@ -141,6 +149,7 @@ function recalcScreen() {
         }
     }
     labView.setFocusOnElement(field[playerPozition], true);
+    initLastWindow();
 }
 
 //Инициализация лабиринта
@@ -450,6 +459,7 @@ function processRobotMove() {
     var res = playerMove();
 
     if (res == "end") { //Если мы прошли до конца карты
+        timeTimerLaunched = false;
         game.startLoop('LastLevelWindow');
     } else if (res == "stop") {
         showMessage(lang[selectLang]['robot_is_waiting']);

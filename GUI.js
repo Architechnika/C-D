@@ -74,7 +74,6 @@ function updateTextOnGui() {
     var expG = (globalEXP * 100).toFixed();
     var nexp = (nextLevelEXP * 100).toFixed();
     //Обновляем инфу об опыте
-    // expText.setText("УРОВЕНЬ: " + currentPlayerLevel + " lvl (" + expG + "/" + nexp + ")");
     playerLevelVisual.setExp();
 }
 
