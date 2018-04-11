@@ -141,6 +141,8 @@ function touchUpEvent(e) {
 
 function replayLevel() {
     audio_GUI_click.play();
+    totalLabCompleted--;
+    totalSeconds = 0;
 
 }
 
@@ -148,14 +150,6 @@ function calcEXPResult() {
     totalLabCompleted++;
     //Выводим опыт
     calcEXP(checkAchievements());
-    if (isLabyrinthGrow && isLevelUp) {
-        if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {
-        } else {
-            totalWidth += 2;
-            totalHeight += 2;
-            labyrinthSize = totalWidth;
-        }
-    }
     playerLvl.setExp();
 }
 
@@ -165,10 +159,19 @@ function nextLevel() {
     isStarted = false;
     allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
     codeView.clear();
+    if (isLabyrinthGrow && isLevelUp) {
+        if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {
+        } else {
+            totalWidth += 2;
+            totalHeight += 2;
+            labyrinthSize = totalWidth;
+        }
+    }
     //Перезагружаем уровень с новым лабиринтом
     initializeGame();
     timeTimerLaunched = true;
     totalTimeTimer();
+    codeView.clear();
     game.setLoop('Labyrinth');
 }
 

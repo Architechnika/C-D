@@ -36,7 +36,13 @@ var achievement_noErrors = true;
 // 5 - elseBlock
 var inputCommandStates = 0;
 var labView, codeView;
-var test = "dd";
+//Буфер для хранения стартового состояния игры(для того чтобы переигрывать уровень)
+var buffGameCondition = {
+    map: "",
+    gObjs: "",
+    gExp: "",
+    opRoute: ""
+}
 //Игровой цикл
 game.newLoopFromConstructor('Labyrinth', function () {
     //Код для старта игры
@@ -104,7 +110,6 @@ function logicEventTimer() {
         toolTipShowEvent(clickCoord.x, clickCoord.y);
         toolTipTimeCounter = 0;
     } else toolTipTimeCounter += 40;
-    //onKeyboardClick();
     if (logicTimerLaunched) {
         setTimeout("logicEventTimer()", 40);
     }
@@ -187,6 +192,17 @@ function initializeGame(isInit) {
     achievement_noErrors = true;
     //Создаем игрока
     playerSetStart();
+    //Инициализируем буфер состояния игры
+    var buffGameCondition = {
+        map: "",
+        gObjs: "",
+        gExp: "",
+        opRoute: ""
+    }
+    buffGameCondition.map = getCopyOfObj(field);
+    buffGameCondition.gObjs = getCopyOfObj(gameObjects);
+    buffGameCondition.opRoute = getCopyOfObj(optimalRoute);
+    buffGameCondition.gExp = globalEXP;
 }
 
 function initLabirint() {
@@ -392,7 +408,10 @@ function changeMenuState(commandImg) {
     } else if (commName == "blockB") {
         inputCommandStates = 3;
         initLeftScroll([]);
-        initRightScroll(getAllInteractGameObjects());
+        if (choosenCommandInElement.blockB && choosenCommandInElement.blockB.length > 1 && commandImg.command.code != "B") {
+            initRightScroll(getAllInteractGameObjects(true, commandImg.command));
+        }
+        else initRightScroll(getAllInteractGameObjects());
 
     } else if (commName == "counter") {
         inputCommandStates = 4;

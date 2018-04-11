@@ -416,6 +416,16 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                         for (var cI = 0; cI < el.blockB.length; cI++) {
                             addUsualCommand(lX, lY, elemWH, images, el.blockB[cI].imgSource, el.blockB[cI], isOnClick);
                             lX += elemWH;
+                            /*if (cI + 1 < el.blockB.length) {
+                                images.push(game.newImageObject({
+                                    x: lX,
+                                    y: lY,
+                                    w: elemWH / 4,
+                                    h: elemWH,
+                                    file: commandBlockBOrImgSrc
+                                }));
+                                lX += elemWH / 4;
+                            }*/
                         }
                         lX -= elemWH * (el.blockB.length + 1);
                     }

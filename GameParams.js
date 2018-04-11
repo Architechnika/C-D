@@ -96,6 +96,9 @@ var commandRepeatImgSrc = "img/commands/command_block_repeat.png";
 var commandRepeatIfImgSrc = "img/commands/command_block_repeatif.png";
 var commandBlockAImgSrc = "img/commands/command_block_a.png";
 var commandBlockBImgSrc = "img/commands/command_block_b.png";
+var commandBlockBDeleteImgSrc = "img/commands/command_block_b_delete.png";
+var commandBlockBOrImgSrc = "img/commands/OR.png";
+var commandBlockBOAndImgSrc = "img/commands/AND.png"
 var commandCounterImgSrc = "img/commands/command_counter.png";
 var commandOkImgSrc = "img/commands/command_ok.png";
 var commandLookUpImgSrc = "img/commands/command_look_up.png";
@@ -108,7 +111,7 @@ var commandForwardImgSrc = "img/commands/command_forward.png";
 var commandOnLeftImgSrc = "img/commands/command_onleft.png";
 var commandOnRightImgSrc = "img/commands/command_onright.png";
 var commandBackwardImgSrc = "img/commands/command_backward.png";
-var commandDigitsImgSrc = ["img/commands/command_digit_0.svg",//Массив изображений для цифровой клавиатуры
+var commandDigitsImgSrc = ["img/commands/command_digit_0.png",//Массив изображений для цифровой клавиатуры
 "img/commands/command_digit_1.png",
 "img/commands/command_digit_2.png",
 "img/commands/command_digit_3.png",
@@ -352,7 +355,10 @@ var arrInterfaceAndCommandsImagesForLoad = [
     "img/commands/command_digit_8.png",
     "img/commands/command_digit_9.png",
     "img/interface/interface_button_dialog_ok.png",
-    "img/interface/interface_button_delete.png"
+    "img/interface/interface_button_delete.png",
+    "img/commands/command_block_b_delete.png",
+    "img/commands/AND.png",
+    "img/commands/OR.png"
 ];
 
 graphicsImgs.forEach(function(e){
