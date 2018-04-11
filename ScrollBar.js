@@ -537,11 +537,22 @@ function ScrollBar(posX, posY, orientation, arr, name) {
         var rowCount = 1;
         OOP.forArr(sortArr, function (el, i) {
             iter++;
-            el.w = itemHW;
-            el.h = itemHW;
+            if (el.name == "saveItem") {
+                el.setW(itemHW);
+                el.setH(itemHW);
+            } else {
+                el.w = itemHW;
+                el.h = itemHW;
+            }
+
             if (orientation == "Vertical") {
-                el.x = oldY;
-                el.y = oldX;
+                if (el.name == "saveItem") {
+                    el.setX(oldY);
+                    el.setY(oldX);
+                } else {
+                    el.x = oldY;
+                    el.y = oldX;
+                }
                 if (iter % scrollLineCount == 0) {
                     rowCount++;
                     oldY = X - itemHW;
@@ -551,8 +562,13 @@ function ScrollBar(posX, posY, orientation, arr, name) {
                 oldY += itemHW;
                 if (lineCount > 1) {}
             } else {
-                el.x = oldX;
-                el.y = oldY;
+                if (el.name == "saveItem") {
+                    el.setX(oldX);
+                    el.setY(oldY);
+                } else {
+                    el.x = oldX;
+                    el.y = oldY;
+                }
                 oldX += itemHW;
             }
             if (el.isIntersect && !el.isIntersect(backGround.getBackGround())) {
@@ -693,7 +709,7 @@ function ScrollBar(posX, posY, orientation, arr, name) {
         this.GetBackGround().draw();
         if (arrayForBar != undefined) {
             OOP.forArr(arrayForBar, function (el) {
-                if(el.isInCameraStatic()) {
+                if (el.isInCameraStatic()) {
                     el.draw();
                 }
             });
