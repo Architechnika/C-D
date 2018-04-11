@@ -169,6 +169,7 @@ function nextLevel() {
     initializeGame();
     timeTimerLaunched = true;
     totalTimeTimer();
+    codeView.clear();
     game.setLoop('Labyrinth');
 }
 

@@ -95,6 +95,7 @@ var commandRepeatImgSrc = "img/commands/command_block_repeat.png";
 var commandRepeatIfImgSrc = "img/commands/command_block_repeatif.png";
 var commandBlockAImgSrc = "img/commands/command_block_a.png";
 var commandBlockBImgSrc = "img/commands/command_block_b.png";
+var commandBlockBDeleteImgSrc = "img/commands/command_block_b_delete.png";
 var commandCounterImgSrc = "img/commands/command_counter.png";
 var commandOkImgSrc = "img/commands/command_ok.png";
 var commandLookUpImgSrc = "img/commands/command_look_up.png";
@@ -351,7 +352,8 @@ var arrInterfaceAndCommandsImagesForLoad = [
     "img/commands/command_digit_8.png",
     "img/commands/command_digit_9.png",
     "img/interface/interface_button_dialog_ok.png",
-    "img/interface/interface_button_delete.png"
+    "img/interface/interface_button_delete.png",
+    "img/commands/command_block_b_delete.png"
 ];
 
 graphicsImgs.forEach(function(e){

@@ -362,8 +362,25 @@ function addDataToCommandsBlock(data) {
 
 //ПЕРЕПИСАТЬ ВЕСЬ КОД КАСАЮЩИЙСЯ ИГРОВЫХ ОБЪЕКТОВ. ОБЬЕДИНИТЬ КОДЫ ИГРОВЫХ ЭЛЕМЕНТОВ С ИХ ГРАФИЧЕСКИМ ОТОБРАЖЕНИЕМ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //Возвращает список всех объектов игры, доступных для взаимодействия с роботом
-function getAllInteractGameObjects() {
+function getAllInteractGameObjects(addDeleteComm, commToDelete) {
     var allObj = new Array();
+    if (addDeleteComm) {
+        //КОМАНДА УДАЛЕНИЯ ЭЛЕМЕНТА
+        allObj.push(game.newImageObject({
+            file: commandBlockBDeleteImgSrc,
+            x: 0,
+            y: 0,
+            w: 10,
+            h: 10
+        }));
+        allObj[allObj.length - 1].setUserData({
+            command: commToDelete,
+            onClick: function (el) {
+                audio_scroll_click.play();
+                return onBlockBDeleteElem(el);
+            }
+        });
+    }
     //СТЕНА
     allObj.push(game.newImageObject({
         file: wallImgComm,
@@ -455,11 +472,10 @@ function getAllInteractGameObjects() {
             name: "blockB"
         },
         onClick: function (el) {
-             audio_scroll_click.play();
+            audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
-
     return allObj;
 }
 

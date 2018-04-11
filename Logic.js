@@ -391,7 +391,10 @@ function changeMenuState(commandImg) {
     } else if (commName == "blockB") {
         inputCommandStates = 3;
         initLeftScroll([]);
-        initRightScroll(getAllInteractGameObjects());
+        if (choosenCommandInElement.blockB && choosenCommandInElement.blockB.length > 1 && commandImg.command.code != "B") {
+            initRightScroll(getAllInteractGameObjects(true, commandImg.command));
+        }
+        else initRightScroll(getAllInteractGameObjects());
 
     } else if (commName == "counter") {
         inputCommandStates = 4;

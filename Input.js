@@ -473,6 +473,18 @@ function onCodeMapElementClick(element) {
     }
 }
 
+//Удаляет элемент из массива blockB выбранного элемента
+function onBlockBDeleteElem(elem) {
+    choosenCommandInElement.blockB.splice(choosenCommandInElement.blockB.indexOf(elem.command), 1);
+    lastAddedCommand = undefined;
+    blockBElemIndx = -1;
+    inputCommandStates = 0;
+    if (isVerticalScreen) initLeftScroll();
+    else initLeftScroll([]);
+    initRightScroll([]);
+    codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
+}
+
 function onChooseCommandClick(el) {
     //ОБРАБАТЫВАЕМ КЛИК
     addCommandToCell(el);
