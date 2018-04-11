@@ -36,7 +36,13 @@ var achievement_noErrors = true;
 // 5 - elseBlock
 var inputCommandStates = 0;
 var labView, codeView;
-var test = "dd";
+//Буфер для хранения стартового состояния игры(для того чтобы переигрывать уровень)
+var buffGameCondition = {
+    map: "",
+    gObjs: "",
+    gExp: "",
+    opRoute: ""
+}
 //Игровой цикл
 game.newLoopFromConstructor('Labyrinth', function () {
     //Код для старта игры
@@ -186,6 +192,17 @@ function initializeGame(isInit) {
     achievement_noErrors = true;
     //Создаем игрока
     playerSetStart();
+    //Инициализируем буфер состояния игры
+    var buffGameCondition = {
+        map: "",
+        gObjs: "",
+        gExp: "",
+        opRoute: ""
+    }
+    buffGameCondition.map = getCopyOfObj(field);
+    buffGameCondition.gObjs = getCopyOfObj(gameObjects);
+    buffGameCondition.opRoute = getCopyOfObj(optimalRoute);
+    buffGameCondition.gExp = globalEXP;
 }
 
 function initLabirint() {
