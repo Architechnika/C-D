@@ -271,6 +271,7 @@ function setFocused(fieldElem, indx) {
         codeView.createCodeMap(0, textbackGroundItem.h, lastClickedElement.commands, true, true, 1, true);
         if (lastClickedElement.commands.length == 0) {
             onCodeMapElementClick(codeView.getAllElems()[0]);
+            initSaveItems();
         }
 
     } else { //Если ориентация экрана вертикальная
@@ -315,8 +316,7 @@ function addCommandToCell(commandImg, dontAdd) {
                     choosenCommandInElement.blockB.push(getCopyOfObj(COMMANDS[15]));
                 }
                 blockBElemIndx = -1;
-            }
-            else choosenCommandInElement.blockB.push(commandImg.command);
+            } else choosenCommandInElement.blockB.push(commandImg.command);
             inputCommandStates = 0;
             if (isVerticalScreen) initLeftScroll();
             else initLeftScroll([]);
@@ -488,6 +488,12 @@ function showMessage(text) {
     messageBox.setShow(true);
     messageBox.setText(text);
     //allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
+}
+
+function initSaveItems() 
+{ //сортируем сохраненные пользователем скрипты в правый скрол, для того чтобы при клике на пустую дорогу можно было туда выгрузить скрипт 
+    
+    initLeftScroll(saveItems);
 }
 
 game.startLoop('Labyrinth');

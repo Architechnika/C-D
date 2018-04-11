@@ -39,6 +39,7 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.backToStartButton = new PushButton();
     this.menuButton = new PushButton();
     this.deleteButton = new PushButton();
+    this.saveButton = new PushButton();
     //
     //создание и заполнение массива для хранения кнопок, нужен для того чтобы в дальнейшем рисовать эти кнопки или обходить их для вылавливание событий
     this.buttonsArr = [];
@@ -48,8 +49,9 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.buttonsArr.push(this.backToStartButton);
     this.buttonsArr.push(this.menuButton);
     this.buttonsArr.push(this.deleteButton);
+    this.buttonsArr.push(this.saveButton);
     //
-    var n = 1 // число кнопок, которые расположаны в отдельным местах экрана, а не рядом с кнопками снизу лабиринта
+    var n = 2 // число кнопок, которые расположаны в отдельным местах экрана, а не рядом с кнопками снизу лабиринта
     //получаем количество кнопок в массиве для того чтобы автоматический определить ширину кнопок на экране
     var buttonsCount = this.buttonsArr.length - n; //!!!если кнопка будет создана для того чтобы разместить в другом места, а не снизу, то обратите внимание на эту строку
     //выполняем настройки позиции, размеров картинки для кнопок
@@ -80,6 +82,18 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.deleteButton.setButtonImgSrc(buttonDeleteImgSrc);
     this.deleteButton.setVisible(false);
     //
+    //кнопка сохранения скрипта в профиль
+    var savButtY = 0;
+    if(isVerticalScreen)
+        delButtY = gameSpaceW / 100 * 4;
+    if (height < 450 || width<450) {
+        this.saveButton.setSetting(width - (gameSpaceW / 100 * 10)-this.deleteButton.w, delButtY, gameSpaceW / 100 * 10, gameSpaceW / 100 * 10)
+    } else {
+        this.saveButton.setSetting(width - (gameSpaceW / 100 * 5)-this.deleteButton.w, delButtY, gameSpaceW / 100 * 5, gameSpaceW / 100 * 5)
+    }
+    this.saveButton.setButtonImgSrc(buttonSaveImgSrc);
+    this.saveButton.setVisible(false);
+    //
     //
     //описывает обработчик onClick для кнопок
     this.mainButton.setUserData({
@@ -103,6 +117,17 @@ function Buttons() { //класс для работы совсеми кнопк�
             audio_GUI_click.play();
             if (lastClickedElement.commands && lastClickedElement.commands.length > 0)
                 dialog.setShowDialog(true);
+        }
+    });
+    this.saveButton.setUserData({
+        onClick: function (el) {
+            audio_GUI_click.play();
+            if (lastClickedElement.commands && lastClickedElement.commands.length > 0)
+                {
+                   // myScripts.push( lastClickedElement.commands);
+                    //showMessage("Скрипт успешно сохранен");
+                    saveInput.setHidden(false);
+                }
         }
     });
     this.stepUpButton.setUserData({

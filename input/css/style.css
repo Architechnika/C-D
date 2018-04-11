@@ -1,0 +1,9 @@
+@font-face {
+    font-family: comic;
+    src: url('../../font/NeSkidComica.ttf');
+}
+
+
+.mainBG{
+    background: firebrick;
+}

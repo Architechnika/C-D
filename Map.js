@@ -19,6 +19,8 @@ var oneTileHeight = 100;
 var binMap = null;
 //Массив хранящий игровые объекты(монетки)
 var gameObjects = new Array();
+var myScripts = new Array(); //массив сохраненных пользователем скриптов
+var saveItems = [] //сохраненные скрипты как итемы
 var optimalRoute = [];
 
 var entrySide = "NONE" //Хранит местоположение входа в лабиринте - необходимо для инициализации робота

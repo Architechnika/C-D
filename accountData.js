@@ -11,6 +11,7 @@ function UserAccaunt(login, pass, summ) {
     this.isSaved = false;
     this.gameSpasePos = "";
     this.gameObjsPos = "";
+    this.myScriptsArray = ""; // массив для скриптов сохраненных пользователем
     this.playerOptimalRoute = "" // что то связанное с опытом игрока
     this.playerLocalEXP = 0 // локальный опыт игрока
     this.playerGlobalEXP = 0 // глобальный опыт игркоа
@@ -34,6 +35,7 @@ function UserAccaunt(login, pass, summ) {
         this.playerGlobalEXP = obj.playerGlobalEXP;
         this.playerNextLvlEXP = obj.playerNextLvlEXP;
         this.playerCurrentLevel = obj.playerCurrentLevel;
+        this.myScriptsArray = obj.myScriptsArray;
     }
     this.save = function (isGameSpaseUp, totalSeconds, field, playerInventory, gameObjects, entrySide) {
         this.labyrinth = JSON.stringify(field, function (key, value) {
@@ -41,6 +43,7 @@ function UserAccaunt(login, pass, summ) {
         }, 4);
 
         this.playerOptimalRoute = JSON.stringify(optimalRoute);
+        this.myScriptsArray = JSON.stringify(myScripts);
         this.playerLocalEXP = localEXP;
         this.playerGlobalEXP = globalEXP;
         this.playerNextLvlEXP = nextLevelEXP;
@@ -80,6 +83,8 @@ function UserAccaunt(login, pass, summ) {
                 tmpGameObjects = JSON.parse(userData.coinsArray);
             if (userData.gameCoin != undefined)
                 tmpPlayerInventary = JSON.parse(userData.gameCoin);
+            if (userData.myScriptsArray != undefined)
+                myScripts = JSON.parse(userData.myScriptsArray);
             var roadEl = Array();
             for (var i = 0; i < tmpField.length; i++) {
                 var img = tmpField[i].parent.file;
@@ -106,6 +111,7 @@ function UserAccaunt(login, pass, summ) {
             totalSeconds = this.gameTime;
             oneTileWidth = field[0].W;
             oneTileHeight = field[0].H;
+            sortSaveScripts();
         } else {
             totalSeconds = 0;
         }
@@ -113,4 +119,19 @@ function UserAccaunt(login, pass, summ) {
         return field;
 
     }
+    
+function sortSaveScripts() { //сортируем сохраненные пользователем скрипты в правый скрол, для того чтобы при клике на пустую дорогу можно было туда выгрузить скрипт 
+    var onlyScripts = [] //массив для харнение скриптов без названия, для того чтобы влить в правый скрол
+    var item = undefined;
+    for (var i = 0; i < myScripts.length; i++) {
+        if (i % 2 == 0) 
+        {//заходим сюда когда работает с именем сохраненных данных
+            item = new SaveItem(myScripts[i]);
+        } else 
+        {//заходим сюда когда работаем с массивом скрипта сохраненных данных
+            item.setScriptArray(myScripts[i]);
+            saveItems.push(item);
+        }
+    }
+}
 }

@@ -62,6 +62,7 @@ var nextStepButtonImgSrc = "img/interface/interface_button_nextstep.png";
 var prevStepButtonImgSrc = "img/interface/interface_button_prevstep.png";
 var buttonDeleteImgSrc = "img/interface/interface_button_delete.png";
 var buttonDialogImgSrc = "img/interface/interface_button_dialog_ok.png"
+var buttonSaveImgSrc = "img/interface/interface_button_save.png"
 var medal1ImgSrc = "img/interface/medal1.png"
 //Пути для файлов для карты кода------------------------------------------------
 var itemDeleteSrc = "img/interface/interface_codeview_delete.png";
