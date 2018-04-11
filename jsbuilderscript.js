@@ -4040,6 +4040,7 @@ var nextStepButtonImgSrc = "img/interface/interface_button_nextstep.png";
 var prevStepButtonImgSrc = "img/interface/interface_button_prevstep.png";
 var buttonDeleteImgSrc = "img/interface/interface_button_delete.png";
 var buttonDialogImgSrc = "img/interface/interface_button_dialog_ok.png"
+var buttonSaveImgSrc = "img/interface/interface_button_save.png"
 var medal1ImgSrc = "img/interface/medal1.png"
 //Пути для файлов для карты кода------------------------------------------------
 var itemDeleteSrc = "img/interface/interface_codeview_delete.png";
@@ -4073,6 +4074,9 @@ var commandRepeatImgSrc = "img/commands/command_block_repeat.png";
 var commandRepeatIfImgSrc = "img/commands/command_block_repeatif.png";
 var commandBlockAImgSrc = "img/commands/command_block_a.png";
 var commandBlockBImgSrc = "img/commands/command_block_b.png";
+var commandBlockBDeleteImgSrc = "img/commands/command_block_b_delete.png";
+var commandBlockBOrImgSrc = "img/commands/OR.png";
+var commandBlockBOAndImgSrc = "img/commands/AND.png"
 var commandCounterImgSrc = "img/commands/command_counter.png";
 var commandOkImgSrc = "img/commands/command_ok.png";
 var commandLookUpImgSrc = "img/commands/command_look_up.png";
@@ -4085,7 +4089,7 @@ var commandForwardImgSrc = "img/commands/command_forward.png";
 var commandOnLeftImgSrc = "img/commands/command_onleft.png";
 var commandOnRightImgSrc = "img/commands/command_onright.png";
 var commandBackwardImgSrc = "img/commands/command_backward.png";
-var commandDigitsImgSrc = ["img/commands/command_digit_0.svg",//Массив изображений для цифровой клавиатуры
+var commandDigitsImgSrc = ["img/commands/command_digit_0.png",//Массив изображений для цифровой клавиатуры
 "img/commands/command_digit_1.png",
 "img/commands/command_digit_2.png",
 "img/commands/command_digit_3.png",
@@ -4329,7 +4333,10 @@ var arrInterfaceAndCommandsImagesForLoad = [
     "img/commands/command_digit_8.png",
     "img/commands/command_digit_9.png",
     "img/interface/interface_button_dialog_ok.png",
-    "img/interface/interface_button_delete.png"
+    "img/interface/interface_button_delete.png",
+    "img/commands/command_block_b_delete.png",
+    "img/commands/AND.png",
+    "img/commands/OR.png"
 ];
 
 graphicsImgs.forEach(function(e){
@@ -4405,6 +4412,7 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.backToStartButton = new PushButton();
     this.menuButton = new PushButton();
     this.deleteButton = new PushButton();
+    this.saveButton = new PushButton();
     //
     //создание и заполнение массива для хранения кнопок, нужен для того чтобы в дальнейшем рисовать эти кнопки или обходить их для вылавливание событий
     this.buttonsArr = [];
@@ -4414,8 +4422,9 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.buttonsArr.push(this.backToStartButton);
     this.buttonsArr.push(this.menuButton);
     this.buttonsArr.push(this.deleteButton);
+    this.buttonsArr.push(this.saveButton);
     //
-    var n = 1 // число кнопок, которые расположаны в отдельным местах экрана, а не рядом с кнопками снизу лабиринта
+    var n = 2 // число кнопок, которые расположаны в отдельным местах экрана, а не рядом с кнопками снизу лабиринта
     //получаем количество кнопок в массиве для того чтобы автоматический определить ширину кнопок на экране
     var buttonsCount = this.buttonsArr.length - n; //!!!если кнопка будет создана для того чтобы разместить в другом места, а не снизу, то обратите внимание на эту строку
     //выполняем настройки позиции, размеров картинки для кнопок
@@ -4446,6 +4455,18 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.deleteButton.setButtonImgSrc(buttonDeleteImgSrc);
     this.deleteButton.setVisible(false);
     //
+    //кнопка сохранения скрипта в профиль
+    var savButtY = 0;
+    if(isVerticalScreen)
+        delButtY = gameSpaceW / 100 * 4;
+    if (height < 450 || width<450) {
+        this.saveButton.setSetting(width - (gameSpaceW / 100 * 10)-this.deleteButton.w, delButtY, gameSpaceW / 100 * 10, gameSpaceW / 100 * 10)
+    } else {
+        this.saveButton.setSetting(width - (gameSpaceW / 100 * 5)-this.deleteButton.w, delButtY, gameSpaceW / 100 * 5, gameSpaceW / 100 * 5)
+    }
+    this.saveButton.setButtonImgSrc(buttonSaveImgSrc);
+    this.saveButton.setVisible(false);
+    //
     //
     //описывает обработчик onClick для кнопок
     this.mainButton.setUserData({
@@ -4469,6 +4490,17 @@ function Buttons() { //класс для работы совсеми кнопк�
             audio_GUI_click.play();
             if (lastClickedElement.commands && lastClickedElement.commands.length > 0)
                 dialog.setShowDialog(true);
+        }
+    });
+    this.saveButton.setUserData({
+        onClick: function (el) {
+           /* audio_GUI_click.play();
+            if (lastClickedElement.commands && lastClickedElement.commands.length > 0)
+                {
+                   // myScripts.push( lastClickedElement.commands);
+                    //showMessage("Скрипт успешно сохранен");
+                    saveInput.setHidden(false);
+                }*/
         }
     });
     this.stepUpButton.setUserData({
@@ -21721,6 +21753,7 @@ function UserAccaunt(login, pass, summ) {
     this.isSaved = false;
     this.gameSpasePos = "";
     this.gameObjsPos = "";
+    this.myScriptsArray = ""; // массив для скриптов сохраненных пользователем
     this.playerOptimalRoute = "" // что то связанное с опытом игрока
     this.playerLocalEXP = 0 // локальный опыт игрока
     this.playerGlobalEXP = 0 // глобальный опыт игркоа
@@ -21744,6 +21777,7 @@ function UserAccaunt(login, pass, summ) {
         this.playerGlobalEXP = obj.playerGlobalEXP;
         this.playerNextLvlEXP = obj.playerNextLvlEXP;
         this.playerCurrentLevel = obj.playerCurrentLevel;
+        this.myScriptsArray = obj.myScriptsArray;
     }
     this.save = function (isGameSpaseUp, totalSeconds, field, playerInventory, gameObjects, entrySide) {
         this.labyrinth = JSON.stringify(field, function (key, value) {
@@ -21751,6 +21785,7 @@ function UserAccaunt(login, pass, summ) {
         }, 4);
 
         this.playerOptimalRoute = JSON.stringify(optimalRoute);
+        this.myScriptsArray = JSON.stringify(myScripts);
         this.playerLocalEXP = localEXP;
         this.playerGlobalEXP = globalEXP;
         this.playerNextLvlEXP = nextLevelEXP;
@@ -21790,6 +21825,8 @@ function UserAccaunt(login, pass, summ) {
                 tmpGameObjects = JSON.parse(userData.coinsArray);
             if (userData.gameCoin != undefined)
                 tmpPlayerInventary = JSON.parse(userData.gameCoin);
+            if (userData.myScriptsArray != undefined)
+                myScripts = JSON.parse(userData.myScriptsArray);
             var roadEl = Array();
             for (var i = 0; i < tmpField.length; i++) {
                 var img = tmpField[i].parent.file;
@@ -21816,6 +21853,7 @@ function UserAccaunt(login, pass, summ) {
             totalSeconds = this.gameTime;
             oneTileWidth = field[0].W;
             oneTileHeight = field[0].H;
+            sortSaveScripts();
         } else {
             totalSeconds = 0;
         }
@@ -21823,6 +21861,21 @@ function UserAccaunt(login, pass, summ) {
         return field;
 
     }
+    
+function sortSaveScripts() { //сортируем сохраненные пользователем скрипты в правый скрол, для того чтобы при клике на пустую дорогу можно было туда выгрузить скрипт 
+    var onlyScripts = [] //массив для харнение скриптов без названия, для того чтобы влить в правый скрол
+    var item = undefined;
+    for (var i = 0; i < myScripts.length; i++) {
+        if (i % 2 == 0) 
+        {//заходим сюда когда работает с именем сохраненных данных
+            item = new SaveItem(myScripts[i]);
+        } else 
+        {//заходим сюда когда работаем с массивом скрипта сохраненных данных
+            item.setScriptArray(myScripts[i]);
+            saveItems.push(item);
+        }
+    }
+}
 }
 /*
 Содержит методы и данные для отрисовки графики(Графическая часть игры)
@@ -21992,7 +22045,7 @@ function onMouseDOWN(e) {
 }
 
 function onWheel(e) {
-    if (clickIsInObj(e.x, e.y, codeView.getBackGround())) {    
+    if (!isVerticalScreen && clickIsInObj(e.x, e.y, codeView.getBackGround())) {    
         if (!key.isDown("SHIFT")) {
             codeView.resizeView((e.deltaY * -1) < 0 ? -1 * scrollStep : scrollStep);
         }
@@ -22390,6 +22443,18 @@ function onCodeMapElementClick(element) {
     }
 }
 
+//Удаляет элемент из массива blockB выбранного элемента
+function onBlockBDeleteElem(elem) {
+    choosenCommandInElement.blockB.splice(choosenCommandInElement.blockB.indexOf(elem.command), 1);
+    lastAddedCommand = undefined;
+    blockBElemIndx = -1;
+    inputCommandStates = 0;
+    if (isVerticalScreen) initLeftScroll();
+    else initLeftScroll([]);
+    initRightScroll([]);
+    codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
+}
+
 function onChooseCommandClick(el) {
     //ОБРАБАТЫВАЕМ КЛИК
     addCommandToCell(el);
@@ -22397,15 +22462,21 @@ function onChooseCommandClick(el) {
 
 //Обработчик для ввода с цифр
 function onKeyboardClick(el) {
-    if (key.isDown("LEFT")) {
-        allButtons.stepDownButton.onClick();
-    }
-    else if (key.isDown("RIGHT")) {
-        allButtons.stepUpButton.onClick();
-    }
-    else if (key.isDown("SPACE")) {
-        allButtons.mainButton.onClick(allButtons.mainButton);
-    }
+    var count = el.command.name != "backspace" ? el.command.value : -1;
+    var text = choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count.toString();
+    if (count != -1) { //Если элемент добавляют        
+        if (text.length < 4) {
+            text = text + count.toString();
+        }
+    } else if (text.length > 0) text = text.substring(0, text.length - 1) //Если стирают
+    var parsedInt = parseInt(text);
+    parsedInt = isNaN(parsedInt) ? 0 : parsedInt;
+    //Инитим текст в блок итераций
+    choosenCommandInElement.countBlock.count = parsedInt;
+    //Задаем текст в текст бокс
+    infoText.setText(text);
+    // messengBox.setShow(true);
+    // messengBox.setText(text);
 }
 
 //Функция обеспечивающая динамический скролл
@@ -22749,10 +22820,10 @@ function getAllCommandsMenu(isOnComms) {
         src = ['12348'];
     }
     else if(commandsViewMode == "medium"){
-        src = ['123489{}[]'];
+        src = ['12348{}[]'];
     }
     else if(commandsViewMode == "all") {
-        src = isOnComms ? ['{}[]123498REI'] : ['123498REI'];
+        src = isOnComms ? ['{}[]12348REI'] : ['12348REI'];
     }
     return getCommandsMenu(src);
 }
@@ -22808,8 +22879,25 @@ function addDataToCommandsBlock(data) {
 
 //ПЕРЕПИСАТЬ ВЕСЬ КОД КАСАЮЩИЙСЯ ИГРОВЫХ ОБЪЕКТОВ. ОБЬЕДИНИТЬ КОДЫ ИГРОВЫХ ЭЛЕМЕНТОВ С ИХ ГРАФИЧЕСКИМ ОТОБРАЖЕНИЕМ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //Возвращает список всех объектов игры, доступных для взаимодействия с роботом
-function getAllInteractGameObjects() {
+function getAllInteractGameObjects(addDeleteComm, commToDelete) {
     var allObj = new Array();
+    if (addDeleteComm) {
+        //КОМАНДА УДАЛЕНИЯ ЭЛЕМЕНТА
+        allObj.push(game.newImageObject({
+            file: commandBlockBDeleteImgSrc,
+            x: 0,
+            y: 0,
+            w: 10,
+            h: 10
+        }));
+        allObj[allObj.length - 1].setUserData({
+            command: commToDelete,
+            onClick: function (el) {
+                audio_scroll_click.play();
+                return onBlockBDeleteElem(el);
+            }
+        });
+    }
     //СТЕНА
     allObj.push(game.newImageObject({
         file: wallImgComm,
@@ -22901,11 +22989,10 @@ function getAllInteractGameObjects() {
             name: "blockB"
         },
         onClick: function (el) {
-             audio_scroll_click.play();
+            audio_scroll_click.play();
             return onChooseCommandClick(el);
         }
     });
-
     return allObj;
 }
 
@@ -23740,11 +23827,22 @@ function ScrollBar(posX, posY, orientation, arr, name) {
         var rowCount = 1;
         OOP.forArr(sortArr, function (el, i) {
             iter++;
-            el.w = itemHW;
-            el.h = itemHW;
+            if (el.name == "saveItem") {
+                el.setW(itemHW);
+                el.setH(itemHW);
+            } else {
+                el.w = itemHW;
+                el.h = itemHW;
+            }
+
             if (orientation == "Vertical") {
-                el.x = oldY;
-                el.y = oldX;
+                if (el.name == "saveItem") {
+                    el.setX(oldY);
+                    el.setY(oldX);
+                } else {
+                    el.x = oldY;
+                    el.y = oldX;
+                }
                 if (iter % scrollLineCount == 0) {
                     rowCount++;
                     oldY = X - itemHW;
@@ -23754,8 +23852,13 @@ function ScrollBar(posX, posY, orientation, arr, name) {
                 oldY += itemHW;
                 if (lineCount > 1) {}
             } else {
-                el.x = oldX;
-                el.y = oldY;
+                if (el.name == "saveItem") {
+                    el.setX(oldX);
+                    el.setY(oldY);
+                } else {
+                    el.x = oldX;
+                    el.y = oldY;
+                }
                 oldX += itemHW;
             }
             if (el.isIntersect && !el.isIntersect(backGround.getBackGround())) {
@@ -23896,7 +23999,7 @@ function ScrollBar(posX, posY, orientation, arr, name) {
         this.GetBackGround().draw();
         if (arrayForBar != undefined) {
             OOP.forArr(arrayForBar, function (el) {
-                if(el.isInCameraStatic()) {
+                if (el.isInCameraStatic()) {
                     el.draw();
                 }
             });
@@ -24047,6 +24150,103 @@ function Dialog() {
         this.dialogOkButton.setVisible(isShow);
     }
 }
+function Input(inputName, buttonName) {
+    var base;
+    var text = "test";
+    base = pjs.system.newDOM('div', true);
+    base.innerHTML = `
+                <!DOCTYPE HTML>
+                <html>
+                 <head>
+                  <meta charset="utf-8">
+                    <link rel="stylesheet" type="text/css" href="input/css/style.css" />
+                 </head>
+                 <body>
+                <div class="mainBG">
+                  <p><b>Название:</b></p>
+                   <input type="text" size="40">
+                  <button onclick="saveInput.onClick()" id ="click">Название </button>
+                    </div>
+                 </body>
+                </html>
+        `
+
+
+    this.onClick = function () {
+        this.setHidden(true)
+        if (lastClickedElement.commands && lastClickedElement.commands.length > 0) {
+             myScripts.push(this.getText());
+             myScripts.push( lastClickedElement.commands);
+            showMessage("Скрипт успешно сохранен");
+        }
+    }
+    this.getText = function () {
+        var textTag = base.getElementsByTagName('input')[0]
+        var text = textTag.value;
+        if(text.toString().length > 0)
+        return text;
+        else return "noName";
+    }
+    this.setHidden = function (isHidden) {
+        var mainDiv = base.getElementsByTagName('div')[0];
+        mainDiv.hidden = isHidden;
+    }
+
+    //Начальные настройки окна ввода
+    var p = base.getElementsByTagName('p')[0]; //название поля ввода
+    p.textContent = inputName;
+    var inputButton = base.getElementsByTagName('button')[0]; //название поля ввода
+    inputButton.textContent = buttonName;
+    this.setHidden(true)
+    //
+}
+function SaveItem(name, script) {
+    this.scriptArray = script;
+    this.name = "saveItem";
+    var parent = game.newImageObject({
+        x: 0,
+        y: 0,
+        w: 100,
+        h: 100,
+        file: commandDropImgSrc
+    })
+    this.__proto__ = parent;
+
+    var saveFileName = game.newTextObject({
+        x: parent.x + parent.w / 2,
+        y: parent.y + parent.h / 2,
+        text: name,
+        size: parent.h * 0.2,
+        color: "#000000",
+    });
+
+    this.setFileName = function (name) {
+        saveFileName.text = name;
+    }
+    this.setScriptArray = function (arr) {
+        this.scriptArray = arr;
+    }
+    this.setX = function (X) {
+        parent.x = X;
+        saveFileName.x = X+ parent.w*0.38;
+    }
+    this.setY = function (Y) {
+        parent.y = Y;
+        saveFileName.y = Y;
+    }
+    this.setW = function (W) {
+        parent.w = W;
+    }
+    this.setH = function (H) {
+        parent.h = H;
+        saveFileName.size = H*0.2;
+    }
+
+    this.draw = function () {
+        parent.draw();
+        saveFileName.draw();
+    }
+}
 //СКРИПТ СОДЕРЖИТ ОПИСАНИЕ ВСЕХ ЭЛЕМЕНТОВ GUI ИГРЫ, а также методы для работы с ними
 
 var timerText = null; //текст таймера
@@ -24067,6 +24267,7 @@ var infoText = undefined;
 var toolTip = new ToolTip();
 var playerLevelVisual = undefined;
 var messageBox = new MessageBox();
+var saveInput = new Input("Введите название","Сохранить");
 pjs.mouseControl.setCursorImage(cursorImgSrc);
 //Отрисовывает элементы интерфейса
 function drawGUI() {
@@ -24536,6 +24737,8 @@ var oneTileHeight = 100;
 var binMap = null;
 //Массив хранящий игровые объекты(монетки)
 var gameObjects = new Array();
+var myScripts = new Array(); //массив сохраненных пользователем скриптов
+var saveItems = [] //сохраненные скрипты как итемы
 var optimalRoute = [];
 
 var entrySide = "NONE" //Хранит местоположение входа в лабиринте - необходимо для инициализации робота
@@ -25631,6 +25834,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         parent.elems.splice(0, parent.elems.length);
         this.menu.closeMenu();
         allButtons.deleteButton.setVisible(false);
+        allButtons.saveButton.setVisible(false)
     }
 
     //Добавляет элемент с плюсиком в кодмап
@@ -25721,6 +25925,16 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                         for (var cI = 0; cI < el.blockB.length; cI++) {
                             addUsualCommand(lX, lY, elemWH, images, el.blockB[cI].imgSource, el.blockB[cI], isOnClick);
                             lX += elemWH;
+                            /*if (cI + 1 < el.blockB.length) {
+                                images.push(game.newImageObject({
+                                    x: lX,
+                                    y: lY,
+                                    w: elemWH / 4,
+                                    h: elemWH,
+                                    file: commandBlockBOrImgSrc
+                                }));
+                                lX += elemWH / 4;
+                            }*/
                         }
                         lX -= elemWH * (el.blockB.length + 1);
                     }
@@ -25800,8 +26014,12 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
 
         if(isPlusAdd){
             allButtons.deleteButton.setVisible(true);
+            allButtons.saveButton.setVisible(true);
         }
-        else allButtons.deleteButton.setVisible(false);
+        else{
+            allButtons.deleteButton.setVisible(false);
+             allButtons.saveButton.setVisible(false);
+        }
 
         //Если есть параметр alpha - то присваиваем его всем элементам
         if (alpha && alpha >= 0 && alpha <= 1 && parent.elems.length > 0) {
@@ -26928,6 +27146,8 @@ function touchUpEvent(e) {
 
 function replayLevel() {
     audio_GUI_click.play();
+    totalLabCompleted--;
+    totalSeconds = 0;
 
 }
 
@@ -26935,14 +27155,6 @@ function calcEXPResult() {
     totalLabCompleted++;
     //Выводим опыт
     calcEXP(checkAchievements());
-    if (isLabyrinthGrow && isLevelUp) {
-        if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {
-        } else {
-            totalWidth += 2;
-            totalHeight += 2;
-            labyrinthSize = totalWidth;
-        }
-    }
     playerLvl.setExp();
 }
 
@@ -26952,10 +27164,19 @@ function nextLevel() {
     isStarted = false;
     allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
     codeView.clear();
+    if (isLabyrinthGrow && isLevelUp) {
+        if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {
+        } else {
+            totalWidth += 2;
+            totalHeight += 2;
+            labyrinthSize = totalWidth;
+        }
+    }
     //Перезагружаем уровень с новым лабиринтом
     initializeGame();
     timeTimerLaunched = true;
     totalTimeTimer();
+    codeView.clear();
     game.setLoop('Labyrinth');
 }
 
@@ -27044,7 +27265,13 @@ var achievement_noErrors = true;
 // 5 - elseBlock
 var inputCommandStates = 0;
 var labView, codeView;
-var test = "dd";
+//Буфер для хранения стартового состояния игры(для того чтобы переигрывать уровень)
+var buffGameCondition = {
+    map: "",
+    gObjs: "",
+    gExp: "",
+    opRoute: ""
+}
 //Игровой цикл
 game.newLoopFromConstructor('Labyrinth', function () {
     //Код для старта игры
@@ -27112,7 +27339,6 @@ function logicEventTimer() {
         toolTipShowEvent(clickCoord.x, clickCoord.y);
         toolTipTimeCounter = 0;
     } else toolTipTimeCounter += 40;
-    //onKeyboardClick();
     if (logicTimerLaunched) {
         setTimeout("logicEventTimer()", 40);
     }
@@ -27195,6 +27421,17 @@ function initializeGame(isInit) {
     achievement_noErrors = true;
     //Создаем игрока
     playerSetStart();
+    //Инициализируем буфер состояния игры
+    var buffGameCondition = {
+        map: "",
+        gObjs: "",
+        gExp: "",
+        opRoute: ""
+    }
+    buffGameCondition.map = getCopyOfObj(field);
+    buffGameCondition.gObjs = getCopyOfObj(gameObjects);
+    buffGameCondition.opRoute = getCopyOfObj(optimalRoute);
+    buffGameCondition.gExp = globalEXP;
 }
 
 function initLabirint() {
@@ -27279,6 +27516,7 @@ function setFocused(fieldElem, indx) {
         codeView.createCodeMap(0, textbackGroundItem.h, lastClickedElement.commands, true, true, 1, true);
         if (lastClickedElement.commands.length == 0) {
             onCodeMapElementClick(codeView.getAllElems()[0]);
+            initSaveItems();
         }
 
     } else { //Если ориентация экрана вертикальная
@@ -27323,8 +27561,7 @@ function addCommandToCell(commandImg, dontAdd) {
                     choosenCommandInElement.blockB.push(getCopyOfObj(COMMANDS[15]));
                 }
                 blockBElemIndx = -1;
-            }
-            else choosenCommandInElement.blockB.push(commandImg.command);
+            } else choosenCommandInElement.blockB.push(commandImg.command);
             inputCommandStates = 0;
             if (isVerticalScreen) initLeftScroll();
             else initLeftScroll([]);
@@ -27400,7 +27637,10 @@ function changeMenuState(commandImg) {
     } else if (commName == "blockB") {
         inputCommandStates = 3;
         initLeftScroll([]);
-        initRightScroll(getAllInteractGameObjects());
+        if (choosenCommandInElement.blockB && choosenCommandInElement.blockB.length > 1 && commandImg.command.code != "B") {
+            initRightScroll(getAllInteractGameObjects(true, commandImg.command));
+        }
+        else initRightScroll(getAllInteractGameObjects());
 
     } else if (commName == "counter") {
         inputCommandStates = 4;
@@ -27496,6 +27736,12 @@ function showMessage(text) {
     messageBox.setShow(true);
     messageBox.setText(text);
     //allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
+}
+
+function initSaveItems() 
+{ //сортируем сохраненные пользователем скрипты в правый скрол, для того чтобы при клике на пустую дорогу можно было туда выгрузить скрипт 
+    
+    initLeftScroll(saveItems);
 }
 
 game.startLoop('Labyrinth');
