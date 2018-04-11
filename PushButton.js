@@ -121,13 +121,13 @@ function Buttons() { //класс для работы совсеми кнопк�
     });
     this.saveButton.setUserData({
         onClick: function (el) {
-            audio_GUI_click.play();
+           /* audio_GUI_click.play();
             if (lastClickedElement.commands && lastClickedElement.commands.length > 0)
                 {
                    // myScripts.push( lastClickedElement.commands);
                     //showMessage("Скрипт успешно сохранен");
                     saveInput.setHidden(false);
-                }
+                }*/
         }
     });
     this.stepUpButton.setUserData({
