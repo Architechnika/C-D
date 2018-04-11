@@ -303,10 +303,10 @@ function getAllCommandsMenu(isOnComms) {
         src = ['12348'];
     }
     else if(commandsViewMode == "medium"){
-        src = ['123489{}[]'];
+        src = ['12348{}[]'];
     }
     else if(commandsViewMode == "all") {
-        src = isOnComms ? ['{}[]123498REI'] : ['123498REI'];
+        src = isOnComms ? ['{}[]12348REI'] : ['12348REI'];
     }
     return getCommandsMenu(src);
 }

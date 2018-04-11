@@ -480,15 +480,21 @@ function onChooseCommandClick(el) {
 
 //Обработчик для ввода с цифр
 function onKeyboardClick(el) {
-    if (key.isDown("LEFT")) {
-        allButtons.stepDownButton.onClick();
-    }
-    else if (key.isDown("RIGHT")) {
-        allButtons.stepUpButton.onClick();
-    }
-    else if (key.isDown("SPACE")) {
-        allButtons.mainButton.onClick(allButtons.mainButton);
-    }
+    var count = el.command.name != "backspace" ? el.command.value : -1;
+    var text = choosenCommandInElement.countBlock.count == 0 ? "" : choosenCommandInElement.countBlock.count.toString();
+    if (count != -1) { //Если элемент добавляют        
+        if (text.length < 4) {
+            text = text + count.toString();
+        }
+    } else if (text.length > 0) text = text.substring(0, text.length - 1) //Если стирают
+    var parsedInt = parseInt(text);
+    parsedInt = isNaN(parsedInt) ? 0 : parsedInt;
+    //Инитим текст в блок итераций
+    choosenCommandInElement.countBlock.count = parsedInt;
+    //Задаем текст в текст бокс
+    infoText.setText(text);
+    // messengBox.setShow(true);
+    // messengBox.setText(text);
 }
 
 //Функция обеспечивающая динамический скролл

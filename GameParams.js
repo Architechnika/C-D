@@ -107,7 +107,7 @@ var commandForwardImgSrc = "img/commands/command_forward.png";
 var commandOnLeftImgSrc = "img/commands/command_onleft.png";
 var commandOnRightImgSrc = "img/commands/command_onright.png";
 var commandBackwardImgSrc = "img/commands/command_backward.png";
-var commandDigitsImgSrc = ["img/commands/command_digit_0.svg",//Массив изображений для цифровой клавиатуры
+var commandDigitsImgSrc = ["img/commands/command_digit_0.png",//Массив изображений для цифровой клавиатуры
 "img/commands/command_digit_1.png",
 "img/commands/command_digit_2.png",
 "img/commands/command_digit_3.png",
