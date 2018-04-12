@@ -17,24 +17,26 @@ function UserAccaunt(login, pass, summ) {
     this.playerGlobalEXP = 0 // глобальный опыт игркоа
     this.playerNextLvlEXP = 0 //количество опыта необходимое для перехода на следующий уровень
     this.playerCurrentLevel = 0 // текущий уровень игрока
-    this.copy = function (obj) {
-        this.userLogin = obj.userLogin;
-        this.userPass = obj.userPass;
-        this.checkSumm = obj.checkSumm;
-        this.labyrinth = obj.labyrinth; //текущий лаберинт
-        this.gameTime = obj.gameTime; //игровое время
-        this.gameCoin = obj.gameCoin; // очки
-        this.coinsArray = obj.coinsArray; //массив призовых объектов
-        this.entrySide = obj.entrySide;
-        this.totalWH = obj.totalWH;
-        this.gameSpasePos = obj.gameSpasePos;
-        this.isSaved = obj.isSaved;
-        this.gameObjsPos = obj.gameObjsPos;
-        this.playerOptimalRoute = obj.playerOptimalRoute;
-        this.playerLocalEXP = obj.playerLocalEXP;
-        this.playerGlobalEXP = obj.playerGlobalEXP;
-        this.playerNextLvlEXP = obj.playerNextLvlEXP;
-        this.playerCurrentLevel = obj.playerCurrentLevel;
+    this.copy = function (obj, isNewGame) {
+        if (obj && isNewGame != "NewGame") {
+            this.userLogin = obj.userLogin;
+            this.userPass = obj.userPass;
+            this.checkSumm = obj.checkSumm;
+            this.labyrinth = obj.labyrinth; //текущий лаберинт
+            this.gameTime = obj.gameTime; //игровое время
+            this.gameCoin = obj.gameCoin; // очки
+            this.coinsArray = obj.coinsArray; //массив призовых объектов
+            this.entrySide = obj.entrySide;
+            this.totalWH = obj.totalWH;
+            this.gameSpasePos = obj.gameSpasePos;
+            this.isSaved = obj.isSaved;
+            this.gameObjsPos = obj.gameObjsPos;
+            this.playerOptimalRoute = obj.playerOptimalRoute;
+            this.playerLocalEXP = obj.playerLocalEXP;
+            this.playerGlobalEXP = obj.playerGlobalEXP;
+            this.playerNextLvlEXP = obj.playerNextLvlEXP;
+            this.playerCurrentLevel = obj.playerCurrentLevel;
+        }
         this.myScriptsArray = obj.myScriptsArray;
     }
     this.save = function (isGameSpaseUp, totalSeconds, field, playerInventory, gameObjects, entrySide) {
@@ -119,19 +121,17 @@ function UserAccaunt(login, pass, summ) {
         return field;
 
     }
-    
-function sortSaveScripts() { //сортируем сохраненные пользователем скрипты в правый скрол, для того чтобы при клике на пустую дорогу можно было туда выгрузить скрипт 
-    var onlyScripts = [] //массив для харнение скриптов без названия, для того чтобы влить в правый скрол
-    var item = undefined;
-    for (var i = 0; i < myScripts.length; i++) {
-        if (i % 2 == 0) 
-        {//заходим сюда когда работает с именем сохраненных данных
-            item = new SaveItem(myScripts[i]);
-        } else 
-        {//заходим сюда когда работаем с массивом скрипта сохраненных данных
-            item.setScriptArray(myScripts[i]);
-            saveItems.push(item);
+
+    function sortSaveScripts() { //сортируем сохраненные пользователем скрипты в правый скрол, для того чтобы при клике на пустую дорогу можно было туда выгрузить скрипт 
+        var onlyScripts = [] //массив для харнение скриптов без названия, для того чтобы влить в правый скрол
+        var item = undefined;
+        for (var i = 0; i < myScripts.length; i++) {
+            if (i % 2 == 0) { //заходим сюда когда работает с именем сохраненных данных
+                item = new SaveItem(myScripts[i]);
+            } else { //заходим сюда когда работаем с массивом скрипта сохраненных данных
+                item.setScriptArray(myScripts[i]);
+                saveItems.push(item);
+            }
         }
     }
-}
 }

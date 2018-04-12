@@ -39,9 +39,13 @@ function SaveItem(name, script) {
         parent.h = H;
         saveFileName.size = H*0.2;
     }
+    this.onClick = function (el) 
+    {
+            audio_GUI_click.play();
+    }
 
     this.draw = function () {
         parent.draw();
         saveFileName.draw();
     }
-}
+}//

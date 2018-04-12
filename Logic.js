@@ -52,10 +52,10 @@ game.newLoopFromConstructor('Labyrinth', function () {
         sessionStorage.removeItem("typeGame") //удаляем из сессии информацию о том загрузка это или новая игра
         var buf = localMemory.loadAsObject(userID);
         userData = new UserAccaunt();
-        if (buf && isNewGame != "NewGame") {
+        //if (buf && isNewGame != "NewGame") {
             //userData = new UserAccaunt();
-            userData.copy(buf);
-        }
+            userData.copy(buf,isNewGame);
+      //  }
         //Инициализируем события для перехвата ввода
         initInputEvents();
         if (isEntried) return;
