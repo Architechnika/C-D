@@ -124,7 +124,7 @@ function mouseUpEvent(e) {
         nextLevel();
     }
     else if (clickIsInObj(e.x, e.y, buttonReload)){
-        replaylevel();
+        replayLevel();
     }
 }
 
@@ -143,7 +143,27 @@ function replayLevel() {
     audio_GUI_click.play();
     totalLabCompleted--;
     totalSeconds = 0;
+  
+    field = getCopyOfObj(buffGameCondition.map);
+    gameObjects = getCopyOfObj(buffGameCondition.gObjs);
+    OOP.forArr(gameObjects, function (el) {
+        el.setNewPosition(el.position);
+        el.startRotation();
+    });
+    buffGameCondition.opRoute = getCopyOfObj(optimalRoute);
+    OOP.forArr(optimalRoute, function (el) {
+        el.isActive = true;
+    });
+    globalEXP = getCopyOfObj(buffGameCondition.gExp);
+    currentPlayerLevel = buffGameCondition.cLvl;
+    nextLevelEXP = buffGameCondition.nLvl;
 
+    playerSetStart();
+    timeTimerLaunched = true;
+    totalTimeTimer();
+    codeView.clear();
+    allButtons.mainButton.onClick(allButtons.mainButton);
+    game.setLoop('Labyrinth');
 }
 
 function calcEXPResult() {
@@ -180,6 +200,9 @@ function calcEXP(bonus) {
     if (totalSeconds != 0)
         globalEXP += (localEXP / (totalSeconds * 0.5)) + bonus;
     //Очищаем значения которые надо очистить
+    for (var i = 0; i < playerInventory.length; i++) {
+        gameObjects.push(playerInventory[i]);''
+    }
     playerInventory.splice(0, playerInventory.length);
     localEXP = 0;
     if (globalEXP > nextLevelEXP) {
