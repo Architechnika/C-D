@@ -37,6 +37,17 @@ var cLvl = 0;
 var achievements = [];
 var achIndx = 0;
 var lvlDiscr = 0;//Дискрет на который ковышается уровень при каждой сброшенной секунде
+var animCount = 0;
+
+function initParams() {
+    tSec = 0;
+    gEx = 0;
+    cLvl = 0;
+    achievements = [];
+    achIndx = 0;
+    lvlDiscr = 0;//Дискрет на который ковышается уровень при каждой сброшенной секунде
+    animCount = 0;
+}
 
 function initLastWindow() {
     //основной задний фон, позицанируем все элементы относительно него
@@ -112,6 +123,7 @@ game.newLoopFromConstructor('LastLevelWindow', function () {
     {
         addEventListener("mouseup", mouseUpEvent);
         addEventListener("touchend", touchUpEvent);
+        initParams();
         initLastWindow();
         calcEXPResult();
         totalLabCompletedText.setText("Всего лабиринтов пройдено: " + totalLabCompleted);
@@ -154,8 +166,7 @@ function touchUpEvent(e) {
     }
 }
 
-function replayLevel() {
-    audio_GUI_click.play();
+function replayLevel() {    
     totalLabCompleted--;
     totalSeconds = 0;
   
@@ -175,11 +186,7 @@ function replayLevel() {
     prevLevelEXP = buffGameCondition.pLvl;
 
     playerSetStart();
-    timeTimerLaunched = true;
-    totalTimeTimer();
-    codeView.clear();
-    allButtons.mainButton.onClick(allButtons.mainButton);
-    game.setLoop('Labyrinth');
+    goToLab();
 }
 
 function calcEXPResult() {
@@ -195,7 +202,7 @@ function animLvl() {
     if (tSec > 0) {
         var k = tSec > 10 ? tSec / 2 : 1;
         tSec -= Math.floor(k);//= k;
-        globalEXP += (lvlDiscr * k);// * k);
+        globalEXP += lvlDiscr;// * k);
         if (globalEXP > nextLevelEXP) {
             isLevelUp = true;
             currentPlayerLevel++;
@@ -226,14 +233,15 @@ function animAchiv() {
         setTimeout("animAchiv()", animAchivTimeout);
     }
     else {
+        var wM = mainBG.w * 0.2;
         if (achievements.length == 0) {
-            medalItem = game.newImageObject({ file: medalBronzeImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: mainBG.w * 0.1, h: mainBG.w * 0.1, });
+            medalItem = game.newImageObject({ file: medalBronzeImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: wM, h: wM });
         }
         else if (achievements.length == 1){
-            medalItem = game.newImageObject({ file: medalSilverImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: mainBG.w * 0.1, h: mainBG.w * 0.1, });
+            medalItem = game.newImageObject({ file: medalSilverImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: wM, h: wM });
         }
         else if (achievements.length == 2){
-            medalItem = game.newImageObject({ file: medalGoldImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: mainBG.w * 0.1, h: mainBG.w * 0.1, });
+            medalItem = game.newImageObject({ file: medalGoldImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: wM, h: wM });
         }
         buttonNext.setAlpha(1);
         buttonReload.setAlpha(1);
@@ -245,10 +253,6 @@ function animAchiv() {
 }*/
 
 function nextLevel() {
-    audio_GUI_click.play();
-    robotOn = false;
-    isStarted = false;
-    allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
     codeView.clear();
     if (isLabyrinthGrow && isLevelUp) {
         if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {
@@ -260,14 +264,33 @@ function nextLevel() {
     }
     //Перезагружаем уровень с новым лабиринтом
     initializeGame();
+    goToLab();
+}
+
+//Переходит в игровой цикл лабиринта
+function goToLab() {
+    audio_GUI_click.play();
+    robotOn = false;
+    isStarted = false;
+    allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
     timeTimerLaunched = true;
     totalTimeTimer();
     codeView.clear();
+    achivTextCont = undefined;
+    achievements = [];
+    achIndx = 0;
     game.setLoop('Labyrinth');
 }
 
 //Производит расчет очков опыта набранных игроком в процессе прохождения лабиринта
 function calcEXP(bonus) {
+    var s = totalSeconds;
+    animCount = 0;
+    while (s > 0) {
+        var k = s > 10 ? s / 2 : 1;
+        s -= Math.floor(k);//= k;
+        animCount++;
+    }
     if (totalSeconds != 0)
         gEx += (localEXP / (totalSeconds * 0.5)) + bonus;
     //Очищаем значения которые надо очистить
@@ -278,7 +301,7 @@ function calcEXP(bonus) {
     localEXP = 0;
     cLvl = currentPlayerLevel;
     tSec = totalSeconds;
-    lvlDiscr = (gEx - globalEXP) / totalSeconds;
+    lvlDiscr = (gEx - globalEXP) / animCount;
     return false;
 }
 
@@ -286,7 +309,11 @@ function calcEXP(bonus) {
 //"opt" - прохождение лабиринта оптимальным маршрутом
 //"noerrors" - прохождение без единой ошибки
 function checkAchievements() {
-    if (totalWidth < 5) return 0;
+    if (totalWidth < 5) {
+        achievements.push("ОПТИМАЛЬНЫЙ МАРШРУТ");
+        achievements.push("ПРОХОЖДЕНИЕ БЕЗ ОШИБОК");
+        return 0;
+    }
     //Проверка на ачивки
     playerMovesHistory.push(playerPozition);
     var bonus = 0;
@@ -301,12 +328,12 @@ function checkAchievements() {
         }
         if (isOpt) {//АЧИВКА ОПТИМАЛЬНЫЙ МАРШРУТ
             bonus += nextLevelEXP * 0.1;
-            achievements.push("ОПТИМАЛЬНЫЙ МАРШРУТ");
+            achievements.push(lang[selectLang]['achievement_optimal_route']);
         }
     }
     if (achievement_noErrors) {//АЧИВКА - ПРОХОЖДЕНИЕ БЕЗ ОШИБОК
         bonus += nextLevelEXP * 0.1;
-        achievements.push("ПРОХОЖДЕНИЕ БЕЗ ОШИБОК");
+        achievements.push(lang[selectLang]['achievement_no_errors']);
     }
     return bonus;
 }

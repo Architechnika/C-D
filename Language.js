@@ -12,7 +12,9 @@ var lang = {
         'robot_is_waiting' : 'Робот остановился и ждет дальнейших команд',
         'robot_enter_infinity_cycle' : 'Робот зашёл в бесконечный цикл. Дальнейшее выполнение невозможно',
         'dialog_delete' : 'Удалить?',
-        'tooltip_robot' : 'Это робот',
+        'tooltip_robot': 'Это робот',
+        'achievement_optimal_route': 'КРАТЧАЙШИЙ ПУТЬ',
+        'achievement_no_errors': 'ПРОХОЖДЕНИЕ БЕЗ ОШИБОК',
     },
     en : {
     
