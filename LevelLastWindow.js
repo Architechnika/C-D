@@ -39,6 +39,12 @@ var achIndx = 0;
 var lvlDiscr = 0;//Дискрет на который ковышается уровень при каждой сброшенной секунде
 var animCount = 0;
 
+var allAchievements = [
+    lang[selectLang]['achievement_all_boxes'],
+    lang[selectLang]['achievement_optimal_route'],
+    lang[selectLang]['achievement_no_errors']
+];
+
 function initParams() {
     tSec = 0;
     gEx = 0;
@@ -75,7 +81,7 @@ function initLastWindow() {
     //
     //Часть окна для достижений за уровень
     achivBG = game.newRoundRectObject({ x: xPos, y: yPos + mainBG.h * 0.24, w: mainBG.w * 0.5, h: mainBG.h * 0.25, radius: 20, fillColor: "#e076fe", alpha: 0.6, });
-    achivText = new Label(mainBG.w * 0.37, yPos + mainBG.h * 0.24, "Достижения");
+    achivText = new Label(mainBG.w * 0.37, yPos + mainBG.h * 0.24, "Достижения:");
     achivText.setTextSize(mainBG.w * 0.04)
     achivText.setTextColor(textColor)
     //
@@ -240,7 +246,7 @@ function animAchiv() {
         else if (achievements.length == 1){
             medalItem = game.newImageObject({ file: medalSilverImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: wM, h: wM });
         }
-        else if (achievements.length == 2){
+        else if (achievements.length > 1) {
             medalItem = game.newImageObject({ file: medalGoldImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: wM, h: wM });
         }
         buttonNext.setAlpha(1);
@@ -285,12 +291,7 @@ function goToLab() {
 //Производит расчет очков опыта набранных игроком в процессе прохождения лабиринта
 function calcEXP(bonus) {
     var s = totalSeconds;
-    animCount = 0;
-    while (s > 0) {
-        var k = s > 10 ? s / 2 : 1;
-        s -= Math.floor(k);//= k;
-        animCount++;
-    }
+    gEx = globalEXP
     if (totalSeconds != 0)
         gEx += (localEXP / (totalSeconds * 0.5)) + bonus;
     //Очищаем значения которые надо очистить
@@ -301,6 +302,12 @@ function calcEXP(bonus) {
     localEXP = 0;
     cLvl = currentPlayerLevel;
     tSec = totalSeconds;
+    animCount = 0;
+    while (s > 0) {
+        var k = s > 10 ? s / 2 : 1;
+        s -= Math.floor(k);//= k;
+        animCount++;
+    }
     lvlDiscr = (gEx - globalEXP) / animCount;
     return false;
 }
@@ -309,9 +316,15 @@ function calcEXP(bonus) {
 //"opt" - прохождение лабиринта оптимальным маршрутом
 //"noerrors" - прохождение без единой ошибки
 function checkAchievements() {
+    if (gameObjects.length == 0) {
+        bonus += nextLevelEXP * 0.1;
+        achievements.push(lang[selectLang]['achievement_all_boxes']);
+    }
     if (totalWidth < 5) {
-        achievements.push("ОПТИМАЛЬНЫЙ МАРШРУТ");
-        achievements.push("ПРОХОЖДЕНИЕ БЕЗ ОШИБОК");
+        achievements.push(lang[selectLang]['achievement_optimal_route']);
+        bonus += nextLevelEXP * 0.1;
+        achievements.push(lang[selectLang]['achievement_no_errors']);
+        bonus += nextLevelEXP * 0.1;
         return 0;
     }
     //Проверка на ачивки

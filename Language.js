@@ -15,6 +15,7 @@ var lang = {
         'tooltip_robot': 'Это робот',
         'achievement_optimal_route': 'КРАТЧАЙШИЙ ПУТЬ',
         'achievement_no_errors': 'ПРОХОЖДЕНИЕ БЕЗ ОШИБОК',
+        'achievement_all_boxes': 'СОБРАНЫ ВСЕ ЯЩИКИ',
     },
     en : {
     
