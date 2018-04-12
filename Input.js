@@ -211,8 +211,8 @@ function onUp(e) {
                 var elems = scroll.getArrayItems();
                 if (clickIsInObj(e.x, e.y, scroll.GetBackGround()))
                     clicked = true;
-                if (elems && elems.length > 0 && selectedItem) {
-                    if (touchTapTimeFlag) { //Если перемещаем итем
+                if (elems && elems.length > 0) {
+                    if (touchTapTimeFlag && selectedItem) { //Если перемещаем итем
                         scroll.swapItemPosition(false, selectedItem, undefined, selItemPos)
                         if (swapedItem !== undefined) {
 
@@ -234,6 +234,17 @@ function onUp(e) {
                             scroll.swapItems(selectedItem, swapedItem);
                             swapedItem = undefined;
                         }
+                    }
+                    else {
+                        OOP.forArr(scroll.getArrayItems(), function (el) {
+                            if (clickIsInObj(e.x, e.y, el)) {
+                                if (el.onClick) {
+                                    el.onClick(el);
+                                    clicked = true;
+                                    return;
+                                }
+                            }
+                        });
                     }
                 }
             }

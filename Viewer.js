@@ -13,7 +13,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         h: backH,
         fillColor: fillCol
     });
-    this.minItemSize = this.backGround.h / 18;
+    this.minItemSize = this.backGround.h / 14;
     this.maxItemSize = this.backGround.h / 6;
     //Центр бэкргаунда
     this.backC = new point(this.backGround.x + this.backGround.w / 2, this.backGround.y + this.backGround.h / 2);
@@ -312,7 +312,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
 function CodeMapView(backX, backY, backW, backH, fillCol) {
     var parent = new GraphicView([], backX, backY, backW, backH, fillCol);
     this.__proto__ = parent;
-    this.elemWH = backW * 0.1;
+    this.elemWH = backW * 0.2;
     var lX = backX;
     var lY = backY;
     this.menu = new ItemMenu();
