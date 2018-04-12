@@ -36,8 +36,8 @@ function UserAccaunt(login, pass, summ) {
             this.playerGlobalEXP = obj.playerGlobalEXP;
             this.playerNextLvlEXP = obj.playerNextLvlEXP;
             this.playerCurrentLevel = obj.playerCurrentLevel;
+            this.myScriptsArray = obj.myScriptsArray;
         }
-        this.myScriptsArray = obj.myScriptsArray;
     }
     this.save = function (isGameSpaseUp, totalSeconds, field, playerInventory, gameObjects, entrySide) {
         this.labyrinth = JSON.stringify(field, function (key, value) {
@@ -125,12 +125,14 @@ function UserAccaunt(login, pass, summ) {
     function sortSaveScripts() { //сортируем сохраненные пользователем скрипты в правый скрол, для того чтобы при клике на пустую дорогу можно было туда выгрузить скрипт 
         var onlyScripts = [] //массив для харнение скриптов без названия, для того чтобы влить в правый скрол
         var item = undefined;
-        for (var i = 0; i < myScripts.length; i++) {
-            if (i % 2 == 0) { //заходим сюда когда работает с именем сохраненных данных
-                item = new SaveItem(myScripts[i]);
-            } else { //заходим сюда когда работаем с массивом скрипта сохраненных данных
-                item.setScriptArray(myScripts[i]);
-                saveItems.push(item);
+        if (myScripts && myScripts.length > 0) {
+            for (var i = 0; i < myScripts.length; i++) {
+                if (i % 2 == 0) { //заходим сюда когда работает с именем сохраненных данных
+                    item = new SaveItem(myScripts[i]);
+                } else { //заходим сюда когда работаем с массивом скрипта сохраненных данных
+                    item.setScriptArray(myScripts[i]);
+                    saveItems.push(item);
+                }
             }
         }
     }

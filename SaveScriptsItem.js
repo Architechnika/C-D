@@ -1,4 +1,5 @@
 function SaveItem(name, script) {
+
     this.scriptArray = script;
     this.name = "saveItem";
     var parent = game.newImageObject({
@@ -26,7 +27,7 @@ function SaveItem(name, script) {
     }
     this.setX = function (X) {
         parent.x = X;
-        saveFileName.x = X+ parent.w*0.38;
+        saveFileName.x = X + parent.w * 0.38;
     }
     this.setY = function (Y) {
         parent.y = Y;
@@ -37,15 +38,14 @@ function SaveItem(name, script) {
     }
     this.setH = function (H) {
         parent.h = H;
-        saveFileName.size = H*0.2;
+        saveFileName.size = H * 0.2;
     }
-    this.onClick = function (el) 
-    {
-            audio_GUI_click.play();
+    this.onClick = function (el) {
+        audio_GUI_click.play();
     }
 
     this.draw = function () {
         parent.draw();
-        saveFileName.draw();
+        saveFileName.draw();  
     }
-}//
+} //

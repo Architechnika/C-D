@@ -23,16 +23,18 @@ function Input(inputName, buttonName) {
     this.onClick = function () {
         this.setHidden(true)
         if (lastClickedElement.commands && lastClickedElement.commands.length > 0) {
-             myScripts.push(this.getText());
-             myScripts.push( lastClickedElement.commands);
+            myScripts.push(this.getText());
+            myScripts.push(getCopyOfObj(lastClickedElement.commands));
+            var item = new SaveItem(this.getText(), getCopyOfObj(lastClickedElement.commands));
+            saveItems.push(item);
             showMessage("Скрипт успешно сохранен");
         }
     }
     this.getText = function () {
         var textTag = base.getElementsByTagName('input')[0]
         var text = textTag.value;
-        if(text.toString().length > 0)
-        return text;
+        if (text.toString().length > 0)
+            return text;
         else return "noName";
     }
     this.setHidden = function (isHidden) {

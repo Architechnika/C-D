@@ -25,6 +25,7 @@ var isSecondScreen = false;
 var isVerticalScreen = undefined;
 var widthBuff = width;
 var dialog = undefined;
+var loadDialog = undefined;
 var lastAddedCommand = undefined;
 var achievement_noErrors = true;
 //Переменная для хранения состояний меню ввода команд:
@@ -511,7 +512,6 @@ function showMessage(text) {
 
 function initSaveItems() 
 { //сортируем сохраненные пользователем скрипты в правый скрол, для того чтобы при клике на пустую дорогу можно было туда выгрузить скрипт 
-    
     initLeftScroll(saveItems);
 }
 

@@ -63,7 +63,10 @@ function Dialog() {
         }
     });
 
-
+    this.setText = function(textD)
+    {
+        dialogText.text = textD;
+    }
 
     this.dialogDraw = function () {
         bg.draw();
