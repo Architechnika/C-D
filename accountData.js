@@ -36,8 +36,8 @@ function UserAccaunt(login, pass, summ) {
             this.playerGlobalEXP = obj.playerGlobalEXP;
             this.playerNextLvlEXP = obj.playerNextLvlEXP;
             this.playerCurrentLevel = obj.playerCurrentLevel;
-            this.myScriptsArray = obj.myScriptsArray;
         }
+        this.myScriptsArray = obj.myScriptsArray;
     }
     this.save = function (isGameSpaseUp, totalSeconds, field, playerInventory, gameObjects, entrySide) {
         this.labyrinth = JSON.stringify(field, function (key, value) {
@@ -113,10 +113,12 @@ function UserAccaunt(login, pass, summ) {
             totalSeconds = this.gameTime;
             oneTileWidth = field[0].W;
             oneTileHeight = field[0].H;
-            sortSaveScripts();
         } else {
             totalSeconds = 0;
+            if (userData.myScriptsArray != undefined)
+                myScripts = JSON.parse(userData.myScriptsArray);
         }
+        sortSaveScripts();
         initGUI();
         return field;
 

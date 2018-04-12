@@ -41,6 +41,7 @@ function SaveItem(name, script) {
         saveFileName.size = H * 0.2;
     }
     this.onClick = function (el) {
+        //обработчик загрузки на поле
         audio_GUI_click.play();
     }
 
