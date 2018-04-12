@@ -24530,11 +24530,10 @@ function TextWithBG(X, Y, W, H) { //класс для рисования тек�
     }
     this.setText = function (t) {
         text.text = t;
-        var sz = height / 100 * 23;
+        var sz = height * 0.23;
         text.size = sz
-        if (!isVerticalScreen)
-            text.x = (this.BG.x + this.BG.w / 2) - text.w + textSize - text.x / 2;
-        else text.x = this.BG.x;
+        var tXC = this.BG.x + (this.BG.w / 2);
+        text.x = tXC - (t.length * (sz / 3.5));
         text.y = (this.BG.y + this.BG.h / 2) - text.h / 2;
         this.BG.setVisible(true)
         text.setVisible(true)
@@ -25522,7 +25521,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         h: backH,
         fillColor: fillCol
     });
-    this.minItemSize = this.backGround.h / 18;
+    this.minItemSize = this.backGround.h / 14;
     this.maxItemSize = this.backGround.h / 6;
     //Центр бэкргаунда
     this.backC = new point(this.backGround.x + this.backGround.w / 2, this.backGround.y + this.backGround.h / 2);
@@ -25821,7 +25820,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
 function CodeMapView(backX, backY, backW, backH, fillCol) {
     var parent = new GraphicView([], backX, backY, backW, backH, fillCol);
     this.__proto__ = parent;
-    this.elemWH = backW * 0.1;
+    this.elemWH = backW * 0.2;
     var lX = backX;
     var lY = backY;
     this.menu = new ItemMenu();
