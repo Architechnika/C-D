@@ -16,7 +16,8 @@ function SaveItem(name, script) {
         y: parent.y + parent.h / 2,
         text: name,
         size: parent.h * 0.2,
-        color: "#000000",
+        color: guiTextColor,
+        font: textFont,
     });
 
     this.setFileName = function (name) {

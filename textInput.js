@@ -11,7 +11,7 @@ function Input(inputName, buttonName, cancelButtName) {
                  </head>
                  <body>
                 <div class="mainBG" >
-                   <input class="line" type="text" placeholder="Какой то текст">
+                   <input class="line" type="text" placeholder="Какой то текст" maxlength="5">
                     </br>
                   <button class="send" onclick="saveInput.onClick()" id ="click">Название </button>
                   <button class="cancel" onclick="saveInput.onClickCancel()" id ="clickCancel">Название </button>
