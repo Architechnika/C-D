@@ -375,13 +375,15 @@ function PlayerLevelVisualisation(X,Y,W,H,LastWindow) {
         expText.setText(lvl);
     }
     this.setExp = function () {
-        var expPerc = (globalEXP / nextLevelEXP) * 100;
-        var lvlLinePerc = (bg.w / 100) * expPerc;
-        lvlLine.w = lvlLinePerc;
-        lvlLineMembrane.w = lvlLinePerc
         if (globalEXP > nextLevelEXP) {
             lvlLine.w = 0;
             lvlLineMembrane.w = 0;
+        }
+        else {
+            var expPerc = ((globalEXP - prevLevelEXP) * 100 / (nextLevelEXP - prevLevelEXP));
+            var lvlLinePerc = (bg.w / 100) * expPerc;
+            lvlLine.w = lvlLinePerc;
+            lvlLineMembrane.w = lvlLinePerc
         }
         this.setLevel("Уровень: " + currentPlayerLevel)
     }

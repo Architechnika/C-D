@@ -3,7 +3,7 @@ var mainBG = undefined;
 //прочие переменные
 var xPos = undefined; //позиция отрисовки элементов по X
 var yPos = undefined; ////позиция отрисовки элементов по Y
-var textColor = undefined;
+var textColor = "#e6a700";
 var isLevelUp = undefined;
 //
 //время прохождение лаберинта
@@ -15,6 +15,7 @@ var totalLabCompletedText = undefined;
 //Часть окна для достижений за уровень
 var achivBG = undefined;
 var achivText = undefined;
+var achivTextCont = undefined;
 //элементы опыта
 var playerLvl = undefined;
 //
@@ -27,13 +28,22 @@ var medalItem = undefined;
 var buttonNext = undefined;
 var buttonReload = undefined;
 
+var animAchivTimeout = 2000;
+var animTimeout = 60;
+
+var tSec = 0;
+var gEx = 0;
+var cLvl = 0;
+var achievements = [];
+var achIndx = 0;
+var lvlDiscr = 0;//Дискрет на который ковышается уровень при каждой сброшенной секунде
+
 function initLastWindow() {
     //основной задний фон, позицанируем все элементы относительно него
     mainBG = game.newRoundRectObject({ x: width * 0.01, y: height * 0.01, w: width * 0.98, h: height * 0.98, radius: 50, fillColor: "#01afc8", alpha: 1, });
     //прочие переменные
     xPos = mainBG.w * 0.25 //позиция отрисовки элементов по X
     yPos = mainBG.h * 0.1 ////позиция отрисовки элементов по Y
-    textColor = "#e6a700";
     isLevelUp = false;
     //
     //время прохождение лаберинта
@@ -54,7 +64,7 @@ function initLastWindow() {
     //
     //Часть окна для достижений за уровень
     achivBG = game.newRoundRectObject({ x: xPos, y: yPos + mainBG.h * 0.24, w: mainBG.w * 0.5, h: mainBG.h * 0.25, radius: 20, fillColor: "#e076fe", alpha: 0.6, });
-    achivText = new Label(mainBG.w * 0.37, yPos + mainBG.h * 0.24, "Достижение");
+    achivText = new Label(mainBG.w * 0.37, yPos + mainBG.h * 0.24, "Достижения");
     achivText.setTextSize(mainBG.w * 0.04)
     achivText.setTextColor(textColor)
     //
@@ -69,7 +79,7 @@ function initLastWindow() {
     medalText.setTextSize(mainBG.w * 0.06)
     medalText.setTextColor(textColor)
     medalStartPosX = xPos + mainBG.w * 0.25;
-    medalItem = game.newImageObject({ file: medal1ImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: mainBG.w * 0.04, h: mainBG.h * 0.08, });
+    medalItem = //game.newImageObject({ file: medal1ImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: mainBG.w * 0.04, h: mainBG.h * 0.08, });
     //
     //кнопки
     buttonNext = new PushButton();
@@ -85,11 +95,12 @@ function initLastWindow() {
 function drawWindow()
 {
     mainBG.draw();
-        timeText.textDraw();
-        totalLabCompletedText.textDraw();
-        achivBG.draw();
-        achivText.textDraw();
-        playerLvl.drawPlayerLevel();
+    timeText.textDraw();
+    totalLabCompletedText.textDraw();
+    achivBG.draw();
+    achivText.textDraw();
+    if(achivTextCont) achivTextCont.textDraw();
+    playerLvl.drawPlayerLevel();
     buttonNext.draw();
     buttonReload.draw();
     medalText.textDraw();
@@ -121,9 +132,11 @@ game.newLoopFromConstructor('LastLevelWindow', function () {
 
 function mouseUpEvent(e) {
     if (clickIsInObj(e.x, e.y, buttonNext)) {
+        if (buttonNext && buttonNext.getAlpha() != 1) return;
         nextLevel();
     }
-    else if (clickIsInObj(e.x, e.y, buttonReload)){
+    else if (clickIsInObj(e.x, e.y, buttonReload)) {
+        if (buttonReload && buttonReload.getAlpha() != 1) return;
         replayLevel();
     }
 }
@@ -132,9 +145,11 @@ function touchUpEvent(e) {
     e.x = e.changedTouches[0].clientX;
     e.y = e.changedTouches[0].clientY;
     if (clickIsInObj(e.x, e.y, buttonNext)) {
+        if (buttonNext && buttonNext.getAlpha() != 1) return;
         nextLevel();
     }
     else if (clickIsInObj(e.x, e.y, buttonReload)) {
+        if (buttonReload && buttonReload.getAlpha() != 1) return;
         replayLevel();
     }
 }
@@ -157,6 +172,7 @@ function replayLevel() {
     globalEXP = getCopyOfObj(buffGameCondition.gExp);
     currentPlayerLevel = buffGameCondition.cLvl;
     nextLevelEXP = buffGameCondition.nLvl;
+    prevLevelEXP = buffGameCondition.pLvl;
 
     playerSetStart();
     timeTimerLaunched = true;
@@ -167,11 +183,66 @@ function replayLevel() {
 }
 
 function calcEXPResult() {
-    totalLabCompleted++;
-    //Выводим опыт
+    //Рассчитываем опыт
     calcEXP(checkAchievements());
-    playerLvl.setExp();
+    animLvl();
 }
+
+//Функция обеспечивающая анимацю прироста уровня
+function animLvl() {
+    buttonNext.setAlpha(0.1);
+    buttonReload.setAlpha(0.1);
+    if (tSec > 0) {
+        var k = tSec > 10 ? tSec / 2 : 1;
+        tSec -= Math.floor(k);//= k;
+        globalEXP += (lvlDiscr * k);// * k);
+        if (globalEXP > nextLevelEXP) {
+            isLevelUp = true;
+            currentPlayerLevel++;
+            prevLevelEXP = nextLevelEXP;
+            nextLevelEXP = nextLevelEXP + (currentPlayerLevel * currentPlayerLevel);
+        }
+        playerLvl.setExp();
+        //Отображаем на экран изменения
+        {
+            setTextTime(tSec);
+            //Обновляем опыт
+            playerLvl.setExp();
+        }
+        setTimeout("animLvl()", animTimeout);
+    }
+    else {
+        setTextTime(totalSeconds);
+        totalLabCompleted++;
+        totalLabCompletedText.setText("Всего лабиринтов пройдено: " + totalLabCompleted);
+        animAchiv()
+    }
+}
+
+function animAchiv() {
+    if (achIndx < achievements.length) {
+        setAchivText(achievements[achIndx]);
+        achIndx++;
+        setTimeout("animAchiv()", animAchivTimeout);
+    }
+    else {
+        if (achievements.length == 0) {
+            medalItem = game.newImageObject({ file: medalBronzeImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: mainBG.w * 0.1, h: mainBG.w * 0.1, });
+        }
+        else if (achievements.length == 1){
+            medalItem = game.newImageObject({ file: medalSilverImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: mainBG.w * 0.1, h: mainBG.w * 0.1, });
+        }
+        else if (achievements.length == 2){
+            medalItem = game.newImageObject({ file: medalGoldImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: mainBG.w * 0.1, h: mainBG.w * 0.1, });
+        }
+        buttonNext.setAlpha(1);
+        buttonReload.setAlpha(1);
+    }
+}
+
+/*function floatingAchivAnim() {
+    achivTextCont.y -= achivBG.y * 0.05;
+}*/
 
 function nextLevel() {
     audio_GUI_click.play();
@@ -198,19 +269,16 @@ function nextLevel() {
 //Производит расчет очков опыта набранных игроком в процессе прохождения лабиринта
 function calcEXP(bonus) {
     if (totalSeconds != 0)
-        globalEXP += (localEXP / (totalSeconds * 0.5)) + bonus;
+        gEx += (localEXP / (totalSeconds * 0.5)) + bonus;
     //Очищаем значения которые надо очистить
     for (var i = 0; i < playerInventory.length; i++) {
         gameObjects.push(playerInventory[i]);''
     }
     playerInventory.splice(0, playerInventory.length);
     localEXP = 0;
-    if (globalEXP > nextLevelEXP) {
-        isLevelUp = true;
-        currentPlayerLevel++;
-        nextLevelEXP = nextLevelEXP + (currentPlayerLevel * currentPlayerLevel);
-        return true;
-    }
+    cLvl = currentPlayerLevel;
+    tSec = totalSeconds;
+    lvlDiscr = (gEx - globalEXP) / totalSeconds;
     return false;
 }
 
@@ -221,7 +289,6 @@ function checkAchievements() {
     if (totalWidth < 5) return 0;
     //Проверка на ачивки
     playerMovesHistory.push(playerPozition);
-    var text = "ПОЛУЧЕНЫ ДОСТИЖЕНИЯ:   ";
     var bonus = 0;
     //Проверяем ачивку на оптимальный маршрут
     if (playerMovesHistory.length == optimalRoute.length) {
@@ -234,15 +301,31 @@ function checkAchievements() {
         }
         if (isOpt) {//АЧИВКА ОПТИМАЛЬНЫЙ МАРШРУТ
             bonus += nextLevelEXP * 0.1;
-            text += "ОПИТМАЛЬНЫЙ МАРШРУТ";
+            achievements.push("ОПТИМАЛЬНЫЙ МАРШРУТ");
         }
     }
     if (achievement_noErrors) {//АЧИВКА - ПРОХОЖДЕНИЕ БЕЗ ОШИБОК
         bonus += nextLevelEXP * 0.1;
-        text += ", ПРОХОЖДЕНИЕ БЕЗ ОШИБОК";
+        achievements.push("ПРОХОЖДЕНИЕ БЕЗ ОШИБОК");
     }
-    //showMessage(text);
-    return bonus;//result;
+    return bonus;
+}
+
+function setAchivText(text, indx) {
+    var size = (mainBG.w * 0.8) / text.length;
+    var x = achivBG.x + (achivBG.w / 2) - ((size * text.length) / 3.5);
+    var y = achivBG.y + (achivBG.h / 2) - (size / 1.8) ;
+    achivTextCont = new Label(x, y, text);
+    achivTextCont.setTextSize(size)
+    achivTextCont.setTextColor("#FFF8DC");
+}
+
+function setTextTime(secs) {
+    //Обновляем инфу о времени
+    var min = Math.floor(secs / 60);
+    var sec = secs - (min * 60); //Math.floor(totalMiliSeconds / 200 - min * 60);
+    //Обновляем инфу о времени
+    timeText.setText("Время прохождения: " + (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec));
 }
 
 initLastWindow();

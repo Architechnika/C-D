@@ -16,6 +16,7 @@ function UserAccaunt(login, pass, summ) {
     this.playerLocalEXP = 0 // локальный опыт игрока
     this.playerGlobalEXP = 0 // глобальный опыт игркоа
     this.playerNextLvlEXP = 0 //количество опыта необходимое для перехода на следующий уровень
+    this.playerPrevLvlEXP = 0
     this.playerCurrentLevel = 0 // текущий уровень игрока
     this.copy = function (obj, isNewGame) {
         if (obj && isNewGame != "NewGame") {
@@ -35,6 +36,7 @@ function UserAccaunt(login, pass, summ) {
             this.playerLocalEXP = obj.playerLocalEXP;
             this.playerGlobalEXP = obj.playerGlobalEXP;
             this.playerNextLvlEXP = obj.playerNextLvlEXP;
+            this.playerPrevLvlEXP = obj.playerPrevLvlEXP;
             this.playerCurrentLevel = obj.playerCurrentLevel;
             this.myScriptsArray = obj.myScriptsArray;
         }
@@ -49,6 +51,7 @@ function UserAccaunt(login, pass, summ) {
         this.playerLocalEXP = localEXP;
         this.playerGlobalEXP = globalEXP;
         this.playerNextLvlEXP = nextLevelEXP;
+        this.playerNextLvlEXP = prevLevelEXP;
         this.playerCurrentLevel = currentPlayerLevel;
         this.gameTime = totalSeconds;
         this.gameCoin = JSON.stringify(playerInventory);
@@ -75,6 +78,8 @@ function UserAccaunt(login, pass, summ) {
                 globalEXP = userData.playerGlobalEXP;
             if (userData.playerNextLvlEXP != undefined)
                 nextLevelEXP = userData.playerNextLvlEXP;
+            if (userData.playerPrevLvlEXP != undefined)
+                prevLevelEXP = userData.playerPrevLvlEXP;
             if (userData.playerCurrentLevel != undefined)
                 currentPlayerLevel = userData.playerCurrentLevel;
             if (userData.labyrinth != undefined)

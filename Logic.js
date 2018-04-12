@@ -44,7 +44,8 @@ var buffGameCondition = {
     gExp: "",
     opRoute: "",
     cLvl: "",
-    nLvl: ""
+    nLvl: "",
+    pLvl: ""
 }
 //Игровой цикл
 game.newLoopFromConstructor('Labyrinth', function () {
