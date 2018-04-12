@@ -18,7 +18,7 @@ var infoText = undefined;
 var toolTip = new ToolTip();
 var playerLevelVisual = undefined;
 var messageBox = new MessageBox();
-var saveInput = new Input("Введите название","Сохранить");
+var saveInput = new Input("Введите название","Сохранить","Отменить");
 pjs.mouseControl.setCursorImage(cursorImgSrc);
 //Отрисовывает элементы интерфейса
 function drawGUI() {

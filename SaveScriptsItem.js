@@ -16,7 +16,8 @@ function SaveItem(name, script) {
         y: parent.y + parent.h / 2,
         text: name,
         size: parent.h * 0.2,
-        color: "#000000",
+        color: guiTextColor,
+        font: textFont,
     });
 
     this.setFileName = function (name) {
@@ -41,6 +42,7 @@ function SaveItem(name, script) {
         saveFileName.size = H * 0.2;
     }
     this.onClick = function (el) {
+        //обработчик загрузки на поле
         audio_GUI_click.play();
         lastClickedElement.commands = getCopyOfObj(el.scriptArray);
         onOkBClick();
