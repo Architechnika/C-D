@@ -1,4 +1,4 @@
-function Input(inputName, buttonName) {
+function Input(inputName, buttonName, cancelButtName) {
     var base;
     var text = "test";
     base = pjs.system.newDOM('div', true);
@@ -10,10 +10,11 @@ function Input(inputName, buttonName) {
                     <link rel="stylesheet" type="text/css" href="input/css/style.css" />
                  </head>
                  <body>
-                <div class="mainBG">
-                  <p><b>Название:</b></p>
-                   <input type="text" size="40">
-                  <button onclick="saveInput.onClick()" id ="click">Название </button>
+                <div class="mainBG" >
+                   <input class="line" type="text" placeholder="Какой то текст">
+                    </br>
+                  <button class="send" onclick="saveInput.onClick()" id ="click">Название </button>
+                  <button class="cancel" onclick="saveInput.onClickCancel()" id ="clickCancel">Название </button>
                     </div>
                  </body>
                 </html>
@@ -30,6 +31,10 @@ function Input(inputName, buttonName) {
             showMessage("Скрипт успешно сохранен");
         }
     }
+    this.onClickCancel = function () {
+        audio_GUI_click.play();
+        this.setHidden(true);
+    }
     this.getText = function () {
         var textTag = base.getElementsByTagName('input')[0]
         var text = textTag.value;
@@ -43,10 +48,12 @@ function Input(inputName, buttonName) {
     }
 
     //Начальные настройки окна ввода
-    var p = base.getElementsByTagName('p')[0]; //название поля ввода
-    p.textContent = inputName;
+    var p = base.getElementsByTagName('input')[0]; //название поля ввода
+    p.placeholder = inputName;
     var inputButton = base.getElementsByTagName('button')[0]; //название поля ввода
     inputButton.textContent = buttonName;
+    var cancelButtom = base.getElementsByTagName('button')[1]; //название поля ввода
+    cancelButtom.textContent = cancelButtName;
     this.setHidden(true)
     //
 }
