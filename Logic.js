@@ -41,7 +41,9 @@ var buffGameCondition = {
     map: "",
     gObjs: "",
     gExp: "",
-    opRoute: ""
+    opRoute: "",
+    cLvl: "",
+    nLvl: ""
 }
 //Игровой цикл
 game.newLoopFromConstructor('Labyrinth', function () {
@@ -193,16 +195,12 @@ function initializeGame(isInit) {
     //Создаем игрока
     playerSetStart();
     //Инициализируем буфер состояния игры
-    var buffGameCondition = {
-        map: "",
-        gObjs: "",
-        gExp: "",
-        opRoute: ""
-    }
     buffGameCondition.map = getCopyOfObj(field);
     buffGameCondition.gObjs = getCopyOfObj(gameObjects);
     buffGameCondition.opRoute = getCopyOfObj(optimalRoute);
     buffGameCondition.gExp = globalEXP;
+    buffGameCondition.cLvl = currentPlayerLevel;
+    buffGameCondition.nLvl = nextLevelEXP;
 }
 
 function initLabirint() {
