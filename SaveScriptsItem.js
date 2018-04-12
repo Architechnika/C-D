@@ -42,6 +42,8 @@ function SaveItem(name, script) {
     }
     this.onClick = function (el) {
         audio_GUI_click.play();
+        lastClickedElement.commands = getCopyOfObj(el.scriptArray);
+        onOkBClick();
     }
 
     this.draw = function () {
