@@ -472,7 +472,8 @@ function removeCommandFromCell(indexArray, indexElem) {
         }
     }
 }
-
+//Рассчитываем точки по которым должен пройти робот в процессе анимации
+var animSteps = [];
 //Обработчик поведения робота
 function processRobotMove() {
     var res = playerMove();
@@ -500,7 +501,53 @@ function processRobotMove() {
         //Очищаем карту кода
         codeView.clear();
         showMessage(res);
-    } else if (isStarted) setTimeout("processRobotMove()", robotMoveDelay);
+    } else if (isStarted) {
+        if (robotAnimMovePoint) {
+            robotAnimMove();
+        }
+        else setTimeout("processRobotMove()", robotMoveDelay);
+    }
+}
+
+var robotAnimSteps = 10;
+var robotAnimMoveDelay = robotMoveDelay / robotAnimSteps;
+function robotAnimMove() {
+    if (robotAnimMovePoint) {
+        //Рассчитываем точки по которым должен пройти робот в процессе анимации
+        animSteps = [];
+        if (playerImageObj.x == robotAnimMovePoint.x) {
+            var step = (robotAnimMovePoint.y - playerImageObj.y) / robotAnimSteps;
+            for (var i = 1; i < robotAnimSteps + 1; i++) {
+                animSteps.push(new point(playerImageObj.x, (playerImageObj.y + (i * step))));
+            }
+        }
+        else if (playerImageObj.y == robotAnimMovePoint.y) {
+            var step = (robotAnimMovePoint.x - playerImageObj.x) / robotAnimSteps;
+            for (var i = 1; i < robotAnimSteps + 1; i++) {
+                animSteps.push(new point((playerImageObj.x + (i * step)), playerImageObj.y));
+            }
+        }
+        else {
+            alert("Ошибка в анимации робота");
+            return;
+        }
+        rAnim(animSteps, playerImageObj);
+    }
+}
+
+function rAnim(arr,p) {
+    if (arr && arr.length > 0) {
+        p.x = arr[0].x;
+        p.y = arr[0].y;
+        arr.splice(0, 1);
+        setTimeout(rAnim, robotAnimMoveDelay, arr, p);
+    }
+    else {
+        robotAnimMovePoint = undefined;
+        if (isStarted) {
+            processRobotMove();
+        }
+    }
 }
 
 function showMessage(text) {

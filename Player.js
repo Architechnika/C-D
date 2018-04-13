@@ -18,6 +18,7 @@ var currentPlayerLevel = 0;//Переменная для хранения тек
 var nextLevelEXP = 0.001;//Переменная для хранения необходимого количества опыта для перехода на следующий уровень персонажа
 var prevLevelEXP = 0;
 var playerMovesHistory = [];
+var robotAnimMovePoint = undefined;
 //Инициализация игрока
 function playerSetStart() {
     //Ищем местоположение двери
@@ -275,7 +276,7 @@ function playerMove(canRead) {
         }
     } else if (pozBuff !== pPoz) return lang[selectLang]['crashed_the_wall'];
     //Передвигаем игрока в нужную клетку
-    movePlayerToFieldElement(field[playerPozition], undefined, playerPozition);
+    movePlayerToFieldElement(field[playerPozition], undefined, playerPozition, true);
     getLocalEXP();
     if(pPoz !== pozBuff) freezCounter = 0;//Если робот дошёл до этой строчки кода, значит он ствинулся следовательно сбрасываем счетчик
     drawCommState();
@@ -417,26 +418,31 @@ function playerSetDirection(direction) {
 }
 
 //Перемещает игрока на заданный элемент поля
-function movePlayerToFieldElement(fEl, dontFocus, indx) {
+function movePlayerToFieldElement(fEl, dontFocus, indx, isAnim) {
     //Если объект игрока ещё не создан
     if (playerImageObj === null) {
-        playerImageObj  = game.newAnimationObject(   { 
-     animation : pjs.tiles.newImage("animations/carExhaust.png").getAnimation(0, 0, 128, 128, 8), 
-    x: fEl.x,
-    y: fEl.y,
-    w: fEl.w,
-    h: fEl.h,
-     angle : 0, 
-     alpha : 1, 
-     visible : true 
-   });
-    playerImageObj.setDelay(1);
+        playerImageObj = game.newAnimationObject({
+            animation: pjs.tiles.newImage("animations/carExhaust.png").getAnimation(0, 0, 128, 128, 8),
+            x: fEl.x,
+            y: fEl.y,
+            w: fEl.w,
+            h: fEl.h,
+            angle: 0,
+            alpha: 1,
+            visible: true
+        });
+        playerImageObj.setDelay(1);
     } else //Если он уже есть, то просто смещаем его в нужную позицию
     {
-        playerImageObj.x = fEl.x;
-        playerImageObj.y = fEl.y;
-        playerImageObj.w = fEl.w;
-        playerImageObj.h = fEl.h;
+        if (isAnim) {
+            robotAnimMovePoint = new point(fEl.x, fEl.y);
+        }
+        else {
+            playerImageObj.x = fEl.x;
+            playerImageObj.y = fEl.y;
+            playerImageObj.w = fEl.w;
+            playerImageObj.h = fEl.h;
+        }
     }
     if (labView && !dontFocus) labView.setFocusOnElement(field[playerPozition], false);
     if (indx && playerMovesHistory[playerMovesHistory.length - 1] != indx)

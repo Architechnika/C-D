@@ -1,5 +1,6 @@
 var iEL;
 var iEF;
+playerImgShift = undefined;
 
 //Базовый класс в иерархии классов View
 function GraphicView(elements, backX, backY, backW, backH, fillCol) {
@@ -64,7 +65,6 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
                 var bgC = this.backGround.getPositionC();
                 var elC = this.elems[i].getPositionC();
                 this.elementsMove(bgC.x - elC.x, bgC.y - elC.y, undefined, undefined, isCodeView);
-                //this.currentShift = new point(bgC.x - elC.x, bgC.y - elC.y);
                 break;
             }
         }
@@ -137,7 +137,12 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
                 shiftY = ((bY + bH) - (iEF.y + iEF.h));
 
             //Cмещаем все элементы
-            OOP.forArr(this.elems, function (el) {
+            OOP.forArr(this.elems, function (el, i) {
+                if (!isCodeView) {
+                    if (i == playerPozition) {
+                        playerImgShift = new point(shiftX, shiftY);
+                    }
+                }
                 //el.move(new point(shiftX, shiftY));
                 if (el.setNewSize)
                     el.setNewSize(el.x + shiftX, el.y + shiftY, el.w, el.h);
@@ -223,6 +228,11 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
             //Сдвигаем элемент на нужное число
             xl = el.x + (counterX * delta);
             yl = el.y + (counterY * delta);
+            if (!isCodeView) {
+                if (i == playerPozition) {
+                    playerImgShift = new point(xl - el.x, yl - el.y);
+                }
+            }
             //Изменяем размер элемента
             if (el.setNewSize) {
                 el.setNewSize(xl, yl, wl, hl);
@@ -687,22 +697,34 @@ function LabyrinthView(elements, backX, backY, backW, backH, fillCol) {
     var parent = new GraphicView(elements, backX, backY, backW, backH, fillCol);
     this.__proto__ = parent;
 
-    this.checkGameObjects = function () {
+    this.checkGameObjects = function (shiftX, shiftY) {
         OOP.forArr(gameObjects, function (coin) {
             if (parent.elems[coin.position].visible) {
                 coin.setNewPosition(coin.position);
             } else coin.setVisible(false);
         });
-        if (playerImageObj && parent.elems[playerPozition].visible) {
-            movePlayerToFieldElement(parent.elems[playerPozition],true);
-            playerImageObj.setVisible(true);
-        } else if(playerImageObj) playerImageObj.setVisible(false);
+        /*if (animSteps && animSteps.length > 0) {
+            playerImgSrc.x += playerImgShift.x;
+            playerImgSrc.y += playerImgShift.y;
+            playerImgSrc.w = parent.elems[playerPozition].w;
+            playerImgSrc.h = parent.elems[playerPozition].h;
+            OOP.forArr(animSteps, function (el) {
+                el.x += playerImgShift.x;
+                el.y += playerImgShift.y;
+            })
+        }
+        else {
+            if (playerImageObj && parent.elems[playerPozition].visible) {
+                movePlayerToFieldElement(parent.elems[playerPozition],true);
+                playerImageObj.setVisible(true);
+            } else if (playerImageObj) playerImageObj.setVisible(false);
+        }*/
     }
 
     this.resizeView = function (delta) {
         //иницилизируем объекты и плеера в игровом поле
         parent.resizeView(delta);
-        this.checkGameObjects();
+        this.checkGameObjects(delta);
     }
 
     this.elementsMove = function (shiftX, shiftY) {
