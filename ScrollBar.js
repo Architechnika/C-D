@@ -79,16 +79,16 @@ function ScrollBar(posX, posY, orientation, arr, name) {
             } //else  log("второй элемент андефайн")
 
         } else {
-            log("отпустили тап")
+           // log("отпустили тап")
             if (item1Pos.y < 0) {
-                log("item1Pos < 0")
+               // log("item1Pos < 0")
                 item1.setPositionC(selItemPos);
             } else {
                 if (isSwaped) {
                     item1.setPositionC(item1Pos);
                     isSwaped = false;
                 } else item1.setPositionC(selItemPos);
-                log("item1Pos > 0 " + item1Pos.x + " selectItemPos " + selItemPos.x)
+                //log("item1Pos > 0 " + item1Pos.x + " selectItemPos " + selItemPos.x)
             }
             isOne = true;
             item1.setAlpha(1);
@@ -156,22 +156,22 @@ function ScrollBar(posX, posY, orientation, arr, name) {
             arrayForBar.push(item);
             items = this.sortElements(arrayForBar, backGround.getBackGround());
             this.setArrayItems(items);
-        } else
-            log("Тип передоваемого объекта не  ImageObject()");
+        } //else
+            //log("Тип передоваемого объекта не  ImageObject()");
     }
     this.getItem = function (i) {
         if (arrayForBar.length > 0 && (arrayForBar.length - 1) >= i)
             return arrayForBar[i];
-        else
-            log("Всего элементов в массиве: " + arrayForBar.length + " Вы хотете получить из массива: " + i + " Элемент, правильно?");
+        //else
+            //log("Всего элементов в массиве: " + arrayForBar.length + " Вы хотете получить из массива: " + i + " Элемент, правильно?");
     }
     this.removeItem = function (i) {
         if (arrayForBar.length > 0 && (arrayForBar.length - 1) >= i) {
             arrayForBar.splice(i, 1);
             items = this.sortElements(arrayForBar, backGround.getBackGround());
             this.setArrayItems(items);
-        } else
-            log("Всего элементов в массиве: " + arrayForBar.length + " Вы хотете удалить из массива: " + i + " Элемент, правильно?");
+        }// else
+            //log("Всего элементов в массиве: " + arrayForBar.length + " Вы хотете удалить из массива: " + i + " Элемент, правильно?");
     }
     this.isEmptyBarArray = function () {
         if (arrayForBar === undefined || arrayForBar.length <= 0)

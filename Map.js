@@ -241,9 +241,9 @@ function generateMap(w, h, x, y, elemsInLine, elemsInColumn, isNewGraphic) {
     binMap = genBin(elemsInColumn, elemsInLine, [], [], [0, 0]);
     var newGraphicMap = undefined;
     if(isNewGraphic){
-        log(binMap);
+        //log(binMap);
         newGraphicMap = graphicsMapSort(binMap);
-        log(newGraphicMap);
+        //log(newGraphicMap);
     }
     var codes = new Array();
     var indx = 0;
@@ -325,7 +325,7 @@ function genBin(hate, width, maze, walls, currentPosition) {
 
     function amaze(y, x, addBlockWalls) {
         maze[y][x] = roadCode;
-        log(y + " " + x);
+        //log(y + " " + x);
         if (addBlockWalls && valid(y + 1, x) && (maze[y + 1][x] == borderCode)) walls.push([y + 1, x, [y, x]]);
         if (addBlockWalls && valid(y - 1, x) && (maze[y - 1][x] == borderCode)) walls.push([y - 1, x, [y, x]]);
         if (addBlockWalls && valid(y, x + 1) && (maze[y][x + 1] == borderCode)) walls.push([y, x + 1, [y, x]]);

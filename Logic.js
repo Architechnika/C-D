@@ -108,6 +108,7 @@ function saveTimer() {
 function logicEventTimer() {
     //Проверяем смену ориентации экрана
     if (game.getWH().w != width) {
+        isOkClose = true;
         recalcScreen();
     }
     if (toolTip && !toolTip.isVisible() && toolTipTimeCounter >= toolTipDelay) {
@@ -502,10 +503,15 @@ function processRobotMove() {
         codeView.clear();
         showMessage(res);
     } else if (isStarted) {
+        movePlayerToFieldElement(field[playerPozition], true, playerPozition, true);
         if (robotAnimMovePoint) {
             robotAnimMove();
         }
-        else setTimeout("processRobotMove()", robotMoveDelay);
+        else setTimeout("processRobotMove()", visualizeCommandsDelay);
+    }
+    else {//Это когда отладка по шагам
+        movePlayerToFieldElement(field[playerPozition], true, playerPozition);
+        labView.setFocusOnElement(playerImageObj, false);
     }
 }
 
@@ -528,14 +534,20 @@ function robotAnimMove() {
             }
         }
         else {
-            alert("Ошибка в анимации робота");
+            log("Ошибка в анимации робота");
+            movePlayerToFieldElement(field[playerPozition], true);
+            robotAnimMovePoint = undefined;
+            if (isStarted) {
+                processRobotMove();
+            }
             return;
         }
         rAnim(animSteps, playerImageObj);
     }
 }
 
-function rAnim(arr,p) {
+function rAnim(arr, p) {
+    labView.setFocusOnElement(playerImageObj, false);
     if (arr && arr.length > 0) {
         p.x = arr[0].x;
         p.y = arr[0].y;

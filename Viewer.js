@@ -60,14 +60,17 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
             this.resizeView((this.maxItemSize) - this.elems[0].h, true, undefined, true);
         }
         //Ищем элемент который должен быть в центре и сдвигаем его в центр
-        for(var i = 0 ; i < this.elems.length; i++){
+        /*for(var i = 0 ; i < this.elems.length; i++){
             if(this.elems[i] == elem){
                 var bgC = this.backGround.getPositionC();
                 var elC = this.elems[i].getPositionC();
                 this.elementsMove(bgC.x - elC.x, bgC.y - elC.y, undefined, undefined, isCodeView);
                 break;
             }
-        }
+        }*/
+        var bgC = this.backGround.getPositionC();
+        var elC = elem.getPositionC();
+        this.elementsMove(bgC.x - elC.x, bgC.y - elC.y, undefined, undefined, isCodeView);
     }
 
     //Смещает все объекты objects на shiftX и shiftY
@@ -703,22 +706,24 @@ function LabyrinthView(elements, backX, backY, backW, backH, fillCol) {
                 coin.setNewPosition(coin.position);
             } else coin.setVisible(false);
         });
-        /*if (animSteps && animSteps.length > 0) {
-            playerImgSrc.x += playerImgShift.x;
-            playerImgSrc.y += playerImgShift.y;
-            playerImgSrc.w = parent.elems[playerPozition].w;
-            playerImgSrc.h = parent.elems[playerPozition].h;
+        if (animSteps && animSteps.length > 0) {
+            playerImageObj.x += playerImgShift.x;
+            playerImageObj.y += playerImgShift.y;
+            playerImageObj.w = parent.elems[playerPozition].w;
+            playerImageObj.h = parent.elems[playerPozition].h;
             OOP.forArr(animSteps, function (el) {
                 el.x += playerImgShift.x;
                 el.y += playerImgShift.y;
             })
+            playerImgShift.x = 0;
+            playerImgShift.y = 0;
         }
         else {
             if (playerImageObj && parent.elems[playerPozition].visible) {
                 movePlayerToFieldElement(parent.elems[playerPozition],true);
                 playerImageObj.setVisible(true);
             } else if (playerImageObj) playerImageObj.setVisible(false);
-        }*/
+        }
     }
 
     this.resizeView = function (delta) {

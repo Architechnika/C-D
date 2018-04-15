@@ -276,7 +276,7 @@ function playerMove(canRead) {
         }
     } else if (pozBuff !== pPoz) return lang[selectLang]['crashed_the_wall'];
     //Передвигаем игрока в нужную клетку
-    movePlayerToFieldElement(field[playerPozition], undefined, playerPozition, true);
+//    movePlayerToFieldElement(field[playerPozition], undefined, playerPozition, true);
     getLocalEXP();
     if(pPoz !== pozBuff) freezCounter = 0;//Если робот дошёл до этой строчки кода, значит он ствинулся следовательно сбрасываем счетчик
     drawCommState();
@@ -434,6 +434,8 @@ function movePlayerToFieldElement(fEl, dontFocus, indx, isAnim) {
         playerImageObj.setDelay(1);
     } else //Если он уже есть, то просто смещаем его в нужную позицию
     {
+        if (fEl.x == playerImageObj.x && fEl.y == playerImageObj.y)
+            return;
         if (isAnim) {
             robotAnimMovePoint = new point(fEl.x, fEl.y);
         }
