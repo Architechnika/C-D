@@ -51,7 +51,7 @@ function UserAccaunt(login, pass, summ) {
         this.playerLocalEXP = localEXP;
         this.playerGlobalEXP = globalEXP;
         this.playerNextLvlEXP = nextLevelEXP;
-        this.playerNextLvlEXP = prevLevelEXP;
+        this.playerPrevLvlEXP = prevLevelEXP;
         this.playerCurrentLevel = currentPlayerLevel;
         this.gameTime = totalSeconds;
         this.gameCoin = JSON.stringify(playerInventory);
