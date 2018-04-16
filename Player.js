@@ -131,11 +131,11 @@ function playerMove(canRead) {
             break;
         case "clockwise": //Повернуться по часовой стрелке
             //Задаем направление того, куда смотрит робот
-            playerSetDirection(playerFrontSide + 1, true);
+            playerSetDirection(playerFrontSide + 1, isStarted);
             break;
         case "unclockwise": //Повернуться против часовой стрелк
             //Задаем направление того, куда смотрит робот
-            playerSetDirection(playerFrontSide - 1, true);
+            playerSetDirection(playerFrontSide - 1, isStarted);
             break;
         case "stop": //Остановиться на текущей клетке
             playerCommands = new Array();
@@ -413,17 +413,29 @@ function playerSetDirection(direction, isAnim) {
     else if (direction > 3) direction = 0;
     //Обрабатываем сторону
     if (isAnim) {
-        if (direction === 0) robotAnimTurn = 0;
+        if (direction === 0) robotAnimTurn = 360;
         else if (direction == 2) robotAnimTurn = 180;
-        else if (direction == 3) robotAnimTurn = -90;
-        else if (direction == 1) robotAnimTurn = 90;
-        robotAnimTurnStep = (robotAnimTurn - playerImageObj.angle) / robotAnimSteps;
+        else if (direction == 3) robotAnimTurn = 270;
+        else if (direction == 1) robotAnimTurn = 450;
+        var diff = (robotAnimTurn - playerImageObj.angle);
+        if (Math.abs(diff) > 90) {
+            if (diff < 0) {
+                robotAnimTurn = 540;
+                diff = 90;
+            }
+            else {
+                playerImageObj.angle = 540;
+                robotAnimTurn = 450;
+                diff = -90;
+            }
+        }
+        robotAnimTurnStep = diff / robotAnimSteps;
     }
     else {
-        if (direction === 0) playerImageObj.angle = 0;
+        if (direction === 0) playerImageObj.angle = 360;
         else if (direction == 2) playerImageObj.angle = 180;
-        else if (direction == 3) playerImageObj.angle = -90;
-        else if (direction == 1) playerImageObj.angle = 90;
+        else if (direction == 3) playerImageObj.angle = 270;
+        else if (direction == 1) playerImageObj.angle = 450;
     }
     playerFrontSide = direction;
 }
