@@ -46,6 +46,26 @@ function Input(inputName, buttonName, cancelButtName) {
         var mainDiv = base.getElementsByTagName('div')[0];
         mainDiv.hidden = isHidden;
     }
+    this.setPosture = function () { //установка положение в зависимости от положение экрана
+        var mainDiv = base.getElementsByTagName('div')[0];
+        if (isVerticalScreen) {
+            mainDiv.style.width = '90%';
+            mainDiv.style.height = '15%';
+            mainDiv.style.left = '5%';
+            mainDiv.style.bottom = '45%';
+            if (width > 420)
+                mainDiv.style.fontSize = '200%'
+            else mainDiv.style.fontSize = '100%'
+        } else {
+            mainDiv.style.width = '45%';
+            mainDiv.style.height = '20%';
+            mainDiv.style.left = '30%';
+            mainDiv.style.bottom = '45%';
+            if (height > 420)
+                mainDiv.style.fontSize = '200%'
+        }
+
+    }
 
     //Начальные настройки окна ввода
     var p = base.getElementsByTagName('input')[0]; //название поля ввода

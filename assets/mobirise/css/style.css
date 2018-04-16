@@ -1,3 +1,8 @@
+@font-face {
+    font-family: comic;
+    src: url('../../font/NeSkidComica.ttf');
+}
+*{font-family: 'comic'}
 .is-builder .animated {
   -webkit-animation-name: none !important;
   animation-name: none !important;
@@ -894,7 +899,7 @@ html {
 }
 .mbr-figure__map [data-state-details] {
   color: #6b6763;
-  font-family: "Roboto", Helvetica, Arial, sans-serif;
+  font-family: 'comic',"Roboto", Helvetica, Arial, sans-serif;
   height: 1.5em;
   margin-top: -0.75em;
   padding-left: 20px;

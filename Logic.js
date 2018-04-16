@@ -250,6 +250,7 @@ function initGameSpace() {
         gameSpaceW = gameSpaceH
         isVerticalScreen = false;
     }
+    saveInput.setPosture();
 }
 
 //Возвращает число команд на поле всего

@@ -6,17 +6,19 @@
 * {
     font-family: 'comic';
     color: red;
-    ;
+    font-size: 100%;
 }
 
 .mainBG {
     background: #01afc8;
     position: fixed;
     border-radius: 0.3em;
+/*
     width: auto;
     height: auto;
     margin-left: 30%;
     margin-top: 20%;
+*/
 
 
 
@@ -25,25 +27,22 @@
 .send {
     width: 46%;
     height: 45%;
-    font-size: 90%;
     border-radius: 3%;
-    margin: 2px;
+    margin: 1%;
 }
 
 .cancel {
     width: 46%;
     height: 45%;
     border-radius: 3%;
-
-    margin: 2px;
+    margin: 1%;
 }
 
 .line {
     width: 96%;
     height: 40%;
-
     border-radius: 3%;
-    margin: 2px;
+    margin: 1%;
 }
 
 .p {
