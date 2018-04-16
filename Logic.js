@@ -505,11 +505,11 @@ function processRobotMove() {
         showMessage(res);
     } else if (isStarted) {
         movePlayerToFieldElement(field[playerPozition], true, playerPozition, true);
-        if (robotAnimMovePoint) {
-            robotAnimMove();
-        }
-        else if (robotAnimTurn !== undefined) {
+        if (robotAnimTurn !== undefined) {
             robotAnimTurnThr();
+        }
+        else if (robotAnimMovePoint) {
+            robotAnimMove();
         }
         else setTimeout("processRobotMove()", visualizeCommandsDelay);
     }
@@ -527,7 +527,9 @@ function robotAnimTurnThr() {//Запускает анимацию поворо�
         setTimeout(robotAnimTurnThr, robotAnimMoveDelay);
     }
     else {
-        robotAnimTurn == undefined;
+        if (playerImageObj.angle == 540)
+            playerImageObj.angle = 180;
+        robotAnimTurn = undefined;
         if (isStarted) {
             processRobotMove();
         }
@@ -574,10 +576,10 @@ function rAnim(arr, p) {
         setTimeout(rAnim, robotAnimMoveDelay, arr, p);
     }
     else {
-        robotAnimMovePoint = undefined;
         if (isStarted) {
-            if (animIterCounter == robotAnimSteps) {
+            if (animIterCounter >= robotAnimSteps) {
                 animIterCounter = 0;
+                robotAnimMovePoint = undefined;
                 processRobotMove();
             }
             else {
