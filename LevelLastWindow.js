@@ -30,7 +30,10 @@ var buttonReload = undefined;
 
 var animAchivTimeout = 2000;
 var animTimeout = 60;
+var animTickCount = Math.floor(animAchivTimeout / animTimeout);
+var animTickCounter = 0;
 
+var tSecs = 0;
 var tSec = 0;
 var gEx = 0;
 var cLvl = 0;
@@ -38,6 +41,8 @@ var achievements = [];
 var achIndx = 0;
 var lvlDiscr = 0; //Дискрет на который ковышается уровень при каждой сброшенной секунде
 var animCount = 0;
+var animTimeoutBuff = animTimeout;
+var isAnimNow = false;
 
 var allAchievements = [
     lang[selectLang]['achievement_all_boxes'],
@@ -46,6 +51,8 @@ var allAchievements = [
 ];
 
 function initParams() {
+    animTickCounter = animTickCount;
+    tSecs = totalSeconds;
     tSec = 0;
     gEx = 0;
     cLvl = 0;
@@ -53,6 +60,7 @@ function initParams() {
     achIndx = 0;
     lvlDiscr = 0; //Дискрет на который ковышается уровень при каждой сброшенной секунде
     animCount = 0;
+    animTimeoutBuff = animTimeout;
 }
 
 function initLastWindow() {
@@ -161,6 +169,10 @@ game.newLoopFromConstructor('LastLevelWindow', function () {
 });
 
 function mouseUpEvent(e) {
+    if (isAnimNow) {
+        animTimeoutBuff = 1;
+        return;
+    }
     if (clickIsInObj(e.x, e.y, buttonNext)) {
         if (buttonNext && buttonNext.getAlpha() != 1) return;
         nextLevel();
@@ -171,6 +183,10 @@ function mouseUpEvent(e) {
 }
 
 function touchUpEvent(e) {
+    if (isAnimNow) {
+        animTimeoutBuff = 1;
+        return;
+    }
     e.x = e.changedTouches[0].clientX;
     e.y = e.changedTouches[0].clientY;
     if (clickIsInObj(e.x, e.y, buttonNext)) {
@@ -208,6 +224,7 @@ function replayLevel() {
 function calcEXPResult() {
     //Рассчитываем опыт
     calcEXP(checkAchievements());
+    isAnimNow = true;
     animLvl();
 }
 
@@ -232,9 +249,9 @@ function animLvl() {
             //Обновляем опыт
             playerLvl.setExp();
         }
-        setTimeout("animLvl()", animTimeout);
+        setTimeout("animLvl()", animTimeoutBuff);
     } else {
-        setTextTime(totalSeconds);
+        setTextTime(tSecs);
         totalLabCompleted++;
         totalLabCompletedText.setText("Всего лабиринтов пройдено: " + totalLabCompleted);
         animAchiv()
@@ -243,9 +260,12 @@ function animLvl() {
 
 function animAchiv() {
     if (achIndx < achievements.length) {
-        setAchivText(achievements[achIndx]);
-        achIndx++;
-        setTimeout("animAchiv()", animAchivTimeout);
+        if (animTickCounter % animTickCount == 0) {
+            setAchivText(achievements[achIndx]);
+            achIndx++;
+        }
+        animTickCounter++;
+        setTimeout("animAchiv()", animTimeoutBuff);
     } else {
         var wM = mainBG.w * 0.2;
         if (achievements.length == 0) {
@@ -273,19 +293,18 @@ function animAchiv() {
                 h: wM
             });
         }
+        animTickCounter = 0;
+        isAnimNow = false;
+        setTextTime(tSecs);
         buttonNext.setAlpha(1);
         buttonReload.setAlpha(1);
     }
 }
 
-/*function floatingAchivAnim() {
-    achivTextCont.y -= achivBG.y * 0.05;
-}*/
-
-function nextLevel() {
+function initNextLvl() {
     codeView.clear();
     if (isLabyrinthGrow && isLevelUp) {
-        if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {} else {
+        if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) { } else {
             totalWidth += 2;
             totalHeight += 2;
             labyrinthSize = totalWidth;
@@ -293,6 +312,10 @@ function nextLevel() {
     }
     //Перезагружаем уровень с новым лабиринтом
     initializeGame();
+}
+
+function nextLevel() {
+    initNextLvl();
     goToLab();
 }
 
@@ -320,7 +343,6 @@ function calcEXP(bonus) {
     //Очищаем значения которые надо очистить
     for (var i = 0; i < playerInventory.length; i++) {
         gameObjects.push(playerInventory[i]);
-        ''
     }
     playerInventory.splice(0, playerInventory.length);
     localEXP = 0;

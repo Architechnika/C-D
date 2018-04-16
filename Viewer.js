@@ -49,7 +49,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
     //Ресайзит все элементы в максимальный размер
     this.resizeToMax = function () {
         if (this.elems && this.elems.length > 0) {
-            this.resizeView((this.maxItemSize / 2) - this.elems[0].h, true, undefined, true);
+            this.resizeView((this.maxItemSize) - this.elems[0].h, true, undefined, true);
         }
     }
 

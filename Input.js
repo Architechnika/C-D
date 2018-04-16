@@ -465,7 +465,6 @@ function toolTipShowEvent(x, y) {
 }
 
 function onCodeMapElementClick(element) {
-    log(element)
     if (element.name && element.name == "plus") {
         choosenCommandInElement = element.command;
         codeView.resetZoomer();

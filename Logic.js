@@ -163,7 +163,7 @@ function recalcScreen() {
 }
 
 //Инициализация лабиринта
-function initializeGame(isInit) {
+function initializeGame(isInit, dontSaveState) {
     game.clear();
     initGameSpace();
     menuStatesArr = null;
@@ -197,6 +197,11 @@ function initializeGame(isInit) {
     achievement_noErrors = true;
     //Создаем игрока
     playerSetStart();
+    if (!dontSaveState)
+        saveGameState();
+}
+
+function saveGameState() {
     //Инициализируем буфер состояния игры
     buffGameCondition.map = getCopyOfObj(field);
     buffGameCondition.gObjs = getCopyOfObj(gameObjects);
@@ -399,8 +404,10 @@ function changeMenuState(commandImg) {
 
     if (commName == "plus") {
         inputCommandStates = 1;
-        //initLeftScroll([]);
-        initLeftScroll(getCommandsImgArr(choosenCommandInElement))
+        if (choosenCommandInElement && choosenCommandInElement.length == 0) {
+            initLeftScroll(saveItems);
+        }
+        else initLeftScroll(getCommandsImgArr(choosenCommandInElement));
         initRightScroll(getAllCommandsMenu(commandImg.commandName && commandImg.commandName != "empty"));
     } else if (commName == "blockA" || commName == "whatisit") {
         inputCommandStates = 2;
@@ -474,6 +481,7 @@ function removeCommandFromCell(indexArray, indexElem) {
         }
     }
 }
+
 //Рассчитываем точки по которым должен пройти робот в процессе анимации
 var animSteps = [];
 //Обработчик поведения робота
@@ -598,7 +606,7 @@ function showMessage(text) {
 
 function initSaveItems() 
 { //сортируем сохраненные пользователем скрипты в правый скрол, для того чтобы при клике на пустую дорогу можно было туда выгрузить скрипт 
-    initLeftScroll(saveItems);
+    //initLeftScroll(saveItems);
 }
 
 game.startLoop('Labyrinth');
