@@ -575,3 +575,4 @@ function initSaveItems()
 }
 
 game.startLoop('Labyrinth');
+//game.startLoop('LastLevelWindow');

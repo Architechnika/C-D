@@ -391,7 +391,7 @@ function PlayerLevelVisualisation(X,Y,W,H,LastWindow) {
     this.drawPlayerLevel = function () {
         bg.draw();
         bgMembrane.draw();
-        if (lvlLine.w > 3) {
+        if (lvlLine.w > bg.w*0.05) {
             lvlLine.draw();
              lvlLineMembrane.draw();
         }
