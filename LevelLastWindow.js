@@ -36,7 +36,7 @@ var gEx = 0;
 var cLvl = 0;
 var achievements = [];
 var achIndx = 0;
-var lvlDiscr = 0;//Дискрет на который ковышается уровень при каждой сброшенной секунде
+var lvlDiscr = 0; //Дискрет на который ковышается уровень при каждой сброшенной секунде
 var animCount = 0;
 
 var allAchievements = [
@@ -51,13 +51,21 @@ function initParams() {
     cLvl = 0;
     achievements = [];
     achIndx = 0;
-    lvlDiscr = 0;//Дискрет на который ковышается уровень при каждой сброшенной секунде
+    lvlDiscr = 0; //Дискрет на который ковышается уровень при каждой сброшенной секунде
     animCount = 0;
 }
 
 function initLastWindow() {
     //основной задний фон, позицанируем все элементы относительно него
-    mainBG = game.newRoundRectObject({ x: width * 0.01, y: height * 0.01, w: width * 0.98, h: height * 0.98, radius: 50, fillColor: "#01afc8", alpha: 1, });
+    mainBG = game.newRoundRectObject({
+        x: width * 0.01,
+        y: height * 0.01,
+        w: width * 0.98,
+        h: height * 0.98,
+        radius: 50,
+        fillColor: "#01afc8",
+        alpha: 1,
+    });
     //прочие переменные
     xPos = mainBG.w * 0.25 //позиция отрисовки элементов по X
     yPos = mainBG.h * 0.1 ////позиция отрисовки элементов по Y
@@ -80,7 +88,15 @@ function initLastWindow() {
     totalLabCompletedText.setTextColor(textColor)
     //
     //Часть окна для достижений за уровень
-    achivBG = game.newRoundRectObject({ x: xPos, y: yPos + mainBG.h * 0.24, w: mainBG.w * 0.5, h: mainBG.h * 0.25, radius: 20, fillColor: "#e076fe", alpha: 0.6, });
+    achivBG = game.newRoundRectObject({
+        x: xPos,
+        y: yPos + mainBG.h * 0.24,
+        w: mainBG.w * 0.5,
+        h: mainBG.h * 0.25,
+        radius: 20,
+        fillColor: "#e076fe",
+        alpha: 0.6,
+    });
     achivText = new Label(mainBG.w * 0.37, yPos + mainBG.h * 0.24, "Достижения:");
     achivText.setTextSize(mainBG.w * 0.04)
     achivText.setTextColor(textColor)
@@ -97,26 +113,25 @@ function initLastWindow() {
     medalText.setTextColor(textColor)
     medalStartPosX = xPos + mainBG.w * 0.25;
     medalItem = //game.newImageObject({ file: medal1ImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: mainBG.w * 0.04, h: mainBG.h * 0.08, });
-    //
-    //кнопки
-    buttonNext = new PushButton();
-    buttonNext.setSetting(mainBG.w * 0.8, mainBG.h * 0.8, mainBG.w * 0.2, mainBG.w * 0.1)
+        //
+        //кнопки
+        buttonNext = new PushButton();
+    buttonNext.setSetting(mainBG.w * 0.685, mainBG.y + mainBG.h - (mainBG.w * 0.11), mainBG.w * 0.2, mainBG.w * 0.1)
     buttonNext.setButtonImgSrc(nextStepButtonImgSrc)
 
     buttonReload = new PushButton();
-    buttonReload.setSetting(mainBG.w * 0.02, mainBG.h * 0.8, mainBG.w * 0.2, mainBG.w * 0.1)
+    buttonReload.setSetting(mainBG.w * 0.15, mainBG.y + mainBG.h - (mainBG.w * 0.11), mainBG.w * 0.2, mainBG.w * 0.1)
     buttonReload.setButtonImgSrc(reloadButtonImgSrc)
 }
 
 //
-function drawWindow()
-{
+function drawWindow() {
     mainBG.draw();
     timeText.textDraw();
     totalLabCompletedText.textDraw();
     achivBG.draw();
     achivText.textDraw();
-    if(achivTextCont) achivTextCont.textDraw();
+    if (achivTextCont) achivTextCont.textDraw();
     playerLvl.drawPlayerLevel();
     buttonNext.draw();
     buttonReload.draw();
@@ -125,8 +140,7 @@ function drawWindow()
 }
 game.newLoopFromConstructor('LastLevelWindow', function () {
     //Код для старта игры
-    this.entry = function () 
-    {
+    this.entry = function () {
         addEventListener("mouseup", mouseUpEvent);
         addEventListener("touchend", touchUpEvent);
         initParams();
@@ -135,15 +149,13 @@ game.newLoopFromConstructor('LastLevelWindow', function () {
         totalLabCompletedText.setText("Всего лабиринтов пройдено: " + totalLabCompleted);
     }
     //Код для завершения цикла
-    this.exit = function () 
-    {
+    this.exit = function () {
         removeEventListener("mouseup", mouseUpEvent);
         removeEventListener("touchend", touchUpEvent);
     };
 
     //Код для апдейта игры
-    this.update = function () 
-    {
+    this.update = function () {
         drawWindow();
     };
 });
@@ -152,8 +164,7 @@ function mouseUpEvent(e) {
     if (clickIsInObj(e.x, e.y, buttonNext)) {
         if (buttonNext && buttonNext.getAlpha() != 1) return;
         nextLevel();
-    }
-    else if (clickIsInObj(e.x, e.y, buttonReload)) {
+    } else if (clickIsInObj(e.x, e.y, buttonReload)) {
         if (buttonReload && buttonReload.getAlpha() != 1) return;
         replayLevel();
     }
@@ -165,17 +176,16 @@ function touchUpEvent(e) {
     if (clickIsInObj(e.x, e.y, buttonNext)) {
         if (buttonNext && buttonNext.getAlpha() != 1) return;
         nextLevel();
-    }
-    else if (clickIsInObj(e.x, e.y, buttonReload)) {
+    } else if (clickIsInObj(e.x, e.y, buttonReload)) {
         if (buttonReload && buttonReload.getAlpha() != 1) return;
         replayLevel();
     }
 }
 
-function replayLevel() {    
+function replayLevel() {
     totalLabCompleted--;
     totalSeconds = 0;
-  
+
     field = getCopyOfObj(buffGameCondition.map);
     gameObjects = getCopyOfObj(buffGameCondition.gObjs);
     OOP.forArr(gameObjects, function (el) {
@@ -207,8 +217,8 @@ function animLvl() {
     buttonReload.setAlpha(0.1);
     if (tSec > 0) {
         var k = tSec > 10 ? tSec / 2 : 1;
-        tSec -= Math.floor(k);//= k;
-        globalEXP += lvlDiscr;// * k);
+        tSec -= Math.floor(k); //= k;
+        globalEXP += lvlDiscr; // * k);
         if (globalEXP > nextLevelEXP) {
             isLevelUp = true;
             currentPlayerLevel++;
@@ -223,8 +233,7 @@ function animLvl() {
             playerLvl.setExp();
         }
         setTimeout("animLvl()", animTimeout);
-    }
-    else {
+    } else {
         setTextTime(totalSeconds);
         totalLabCompleted++;
         totalLabCompletedText.setText("Всего лабиринтов пройдено: " + totalLabCompleted);
@@ -237,17 +246,32 @@ function animAchiv() {
         setAchivText(achievements[achIndx]);
         achIndx++;
         setTimeout("animAchiv()", animAchivTimeout);
-    }
-    else {
+    } else {
         var wM = mainBG.w * 0.2;
         if (achievements.length == 0) {
-            medalItem = game.newImageObject({ file: medalBronzeImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: wM, h: wM });
-        }
-        else if (achievements.length == 1){
-            medalItem = game.newImageObject({ file: medalSilverImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: wM, h: wM });
-        }
-        else if (achievements.length > 1) {
-            medalItem = game.newImageObject({ file: medalGoldImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: wM, h: wM });
+            medalItem = game.newImageObject({
+                file: medalBronzeImgSrc,
+                x: medalStartPosX,
+                y: yPos + mainBG.h * 0.5,
+                w: wM,
+                h: wM
+            });
+        } else if (achievements.length == 1) {
+            medalItem = game.newImageObject({
+                file: medalSilverImgSrc,
+                x: medalStartPosX,
+                y: yPos + mainBG.h * 0.5,
+                w: wM,
+                h: wM
+            });
+        } else if (achievements.length > 1) {
+            medalItem = game.newImageObject({
+                file: medalGoldImgSrc,
+                x: medalStartPosX,
+                y: yPos + mainBG.h * 0.5,
+                w: wM,
+                h: wM
+            });
         }
         buttonNext.setAlpha(1);
         buttonReload.setAlpha(1);
@@ -261,8 +285,7 @@ function animAchiv() {
 function nextLevel() {
     codeView.clear();
     if (isLabyrinthGrow && isLevelUp) {
-        if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {
-        } else {
+        if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {} else {
             totalWidth += 2;
             totalHeight += 2;
             labyrinthSize = totalWidth;
@@ -296,7 +319,8 @@ function calcEXP(bonus) {
         gEx += (localEXP / (totalSeconds * 0.5)) + bonus;
     //Очищаем значения которые надо очистить
     for (var i = 0; i < playerInventory.length; i++) {
-        gameObjects.push(playerInventory[i]);''
+        gameObjects.push(playerInventory[i]);
+        ''
     }
     playerInventory.splice(0, playerInventory.length);
     localEXP = 0;
@@ -305,7 +329,7 @@ function calcEXP(bonus) {
     animCount = 0;
     while (s > 0) {
         var k = s > 10 ? s / 2 : 1;
-        s -= Math.floor(k);//= k;
+        s -= Math.floor(k); //= k;
         animCount++;
     }
     lvlDiscr = (gEx - globalEXP) / animCount;
@@ -339,12 +363,12 @@ function checkAchievements() {
                 break;
             }
         }
-        if (isOpt) {//АЧИВКА ОПТИМАЛЬНЫЙ МАРШРУТ
+        if (isOpt) { //АЧИВКА ОПТИМАЛЬНЫЙ МАРШРУТ
             bonus += nextLevelEXP * 0.1;
             achievements.push(lang[selectLang]['achievement_optimal_route']);
         }
     }
-    if (achievement_noErrors) {//АЧИВКА - ПРОХОЖДЕНИЕ БЕЗ ОШИБОК
+    if (achievement_noErrors) { //АЧИВКА - ПРОХОЖДЕНИЕ БЕЗ ОШИБОК
         bonus += nextLevelEXP * 0.1;
         achievements.push(lang[selectLang]['achievement_no_errors']);
     }
@@ -354,7 +378,7 @@ function checkAchievements() {
 function setAchivText(text, indx) {
     var size = (mainBG.w * 0.8) / text.length;
     var x = achivBG.x + (achivBG.w / 2) - ((size * text.length) / 3.5);
-    var y = achivBG.y + (achivBG.h / 2) - (size / 1.8) ;
+    var y = achivBG.y + (achivBG.h / 2) - (size / 1.8);
     achivTextCont = new Label(x, y, text);
     achivTextCont.setTextSize(size)
     achivTextCont.setTextColor("#FFF8DC");

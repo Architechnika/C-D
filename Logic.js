@@ -250,6 +250,7 @@ function initGameSpace() {
         gameSpaceW = gameSpaceH
         isVerticalScreen = false;
     }
+    saveInput.setPosture();
 }
 
 //Возвращает число команд на поле всего
@@ -599,3 +600,4 @@ function initSaveItems()
 }
 
 game.startLoop('Labyrinth');
+//game.startLoop('LastLevelWindow');
