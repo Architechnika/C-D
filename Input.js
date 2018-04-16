@@ -18,6 +18,7 @@ var multiTouchDelta = -1; //Буфер для хранения элемента 
 var touchTimespan = undefined;
 var toolTipTimeCounter = undefined;
 var blockBElemIndx = -1;
+var pressedItem = undefined;
 //Отменяем вывод контестного меню на страничке
 document.oncontextmenu = function () {
     return false
@@ -62,6 +63,7 @@ function onMouseUP(e) {
 }
 
 function onMouseDOWN(e) {
+    //findPressed(e);
     clickCoord.x = e.x;
     clickCoord.y = e.y;
     if (allButtons.checkButtonsClicked(clickCoord, true))
@@ -102,6 +104,7 @@ function onTouchStart(e) {
     //isMobile = true;
     clickCoord.x = e.changedTouches[0].clientX;
     clickCoord.y = e.changedTouches[0].clientY;
+    //findPressed(clickCoord);
     scrolled = false;
     if (allButtons.checkButtonsClicked(clickCoord, true))
         return;
@@ -189,6 +192,11 @@ function onRecize(e, delta, step) {
 }
 
 function onUp(e) {
+    if (pressedItem) {
+        var spl = pressedItem.file.split("_pressed");
+        pressedItem.file = spl[0] + spl[1];
+        pressedItem = undefined;
+    }
     if (messageBox.isShow()) {
         messageBox.setShow(false);
         return true;
@@ -544,6 +552,55 @@ function processFieldClick(e) {
     }
     return false;
 }
+
+/*function findPressed(e) {
+    var el;
+    if (allButtons && allButtons.buttonsArr.length > 0) {
+        var scrlitems = allButtons.buttonsArr;
+        for (var i = 0; i < scrlitems.length; i++) {
+            el = scrlitems[i];
+            if (clickIsInObj(e.x, e.y, el)) {
+                if (el.file) {
+                    el.file = el.file.split(".png")[0] + "_pressed.png";
+                    pressedItem = el;
+                    return;
+                }
+            }
+        }
+    }
+    if (Scrolls && Scrolls.length > 0) {
+        for (var j = 0; j < Scrolls.length; j++) {
+            var scrlitems = Scrolls[j].getArrayItems();
+            if (scrlitems) {
+                for (var i = 0; i < scrlitems.length; i++) {
+                    el = scrlitems[i];
+                    if (clickIsInObj(e.x, e.y, el)) {
+                        if (el.file) {
+                            el.file = el.file.split(".png")[0] + "_pressed.png";
+                            pressedItem = el;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (codeView && codeView.elems.length > 0) {
+        var scrlitems = codeView.elems;        
+        for (var i = 0; i < scrlitems.length; i++) {
+            el = scrlitems[i];
+            if (clickIsInObj(e.x, e.y, el)) {
+                if (el.file) {
+                    var prSpl = el.file.split("_pressed.png");
+                    var spl = prSpl.length > 1 ? prSpl : el.file.split(".png");
+                    el.file = spl[0] + "_pressed.png";
+                    pressedItem = el;
+                    return;
+                }
+            }
+        }
+    }
+}*/
 
 
 //Вернет true если клик был внутри координат прямоугольника obj
