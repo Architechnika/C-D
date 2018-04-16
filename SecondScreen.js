@@ -11,7 +11,6 @@ game.newLoopFromConstructor('SecondScreen', function () {
         codeView.createCodeMap(0, textbackGroundItem.h, lastClickedElement.commands, true, true, 1, true);
         if(lastClickedElement.commands.length == 0){
             onCodeMapElementClick(codeView.getAllElems()[0]);
-            initLeftScroll(saveItems);
         }
     }
     //Код для завершения цикла
