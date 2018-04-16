@@ -1,6 +1,6 @@
 var iEL;
 var iEF;
-playerImgShift = undefined;
+var playerImgShift = new point(0,0);
 
 //Базовый класс в иерархии классов View
 function GraphicView(elements, backX, backY, backW, backH, fillCol) {
@@ -15,7 +15,7 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         fillColor: fillCol
     });
     this.minItemSize = this.backGround.h / 14;
-    this.maxItemSize = this.backGround.h / 6;
+    this.maxItemSize = this.backGround.h / 7;
     //Центр бэкргаунда
     this.backC = new point(this.backGround.x + this.backGround.w / 2, this.backGround.y + this.backGround.h / 2);
     //Текущее смещение на скроле
@@ -139,13 +139,12 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
             else if (iEF.y + iEF.h + shiftY < bY + bH)
                 shiftY = ((bY + bH) - (iEF.y + iEF.h));
 
+            if (!isCodeView) {
+                playerImgShift = new point(shiftX, shiftY);
+            }
             //Cмещаем все элементы
             OOP.forArr(this.elems, function (el, i) {
-                if (!isCodeView) {
-                    if (i == playerPozition) {
-                        playerImgShift = new point(shiftX, shiftY);
-                    }
-                }
+                
                 //el.move(new point(shiftX, shiftY));
                 if (el.setNewSize)
                     el.setNewSize(el.x + shiftX, el.y + shiftY, el.w, el.h);
@@ -159,9 +158,6 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
                 }
             });
             if (!dontSave) {
-                if (isCodeView) {
-                    log(" 1123");
-                }
                 this.currentShift.x = this.elems[0].x;
                 this.currentShift.y = this.elems[0].y;
             }
@@ -700,7 +696,7 @@ function LabyrinthView(elements, backX, backY, backW, backH, fillCol) {
     var parent = new GraphicView(elements, backX, backY, backW, backH, fillCol);
     this.__proto__ = parent;
 
-    this.checkGameObjects = function (shiftX, shiftY) {
+    this.checkGameObjects = function () {
         OOP.forArr(gameObjects, function (coin) {
             if (parent.elems[coin.position].visible) {
                 coin.setNewPosition(coin.position);
@@ -727,9 +723,13 @@ function LabyrinthView(elements, backX, backY, backW, backH, fillCol) {
     }
 
     this.resizeView = function (delta) {
+        pPozBuff = new point(parent.elems[playerPozition].x, parent.elems[playerPozition].y);
         //иницилизируем объекты и плеера в игровом поле
         parent.resizeView(delta);
-        this.checkGameObjects(delta);
+        if (animSteps && animSteps.length > 0) animSteps.splice(0, animSteps.length - 1);
+        playerImgShift.x = 0;
+        playerImgShift.y = 0;
+        this.checkGameObjects();
     }
 
     this.elementsMove = function (shiftX, shiftY) {

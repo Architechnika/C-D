@@ -19,6 +19,8 @@ var nextLevelEXP = 0.001;//Переменная для хранения необ
 var prevLevelEXP = 0;
 var playerMovesHistory = [];
 var robotAnimMovePoint = undefined;
+var robotAnimTurn = undefined;
+var robotAnimTurnStep = 0;
 //Инициализация игрока
 function playerSetStart() {
     //Ищем местоположение двери
@@ -33,7 +35,7 @@ function playerSetStart() {
             if(labView)
                 labView.setFocusOnElement(field[playerPozition],false, true);
             //Задаем направление, куда смотрит персонаж
-            playerSetDirection(getPlayerDirFromSide());
+            playerSetDirection(getPlayerDirFromSide(), false);
             //Обнуляем счетчик времени
             startPlayerMoveTime = 0;
             freezCounter = 0;
@@ -129,11 +131,11 @@ function playerMove(canRead) {
             break;
         case "clockwise": //Повернуться по часовой стрелке
             //Задаем направление того, куда смотрит робот
-            playerSetDirection(playerFrontSide + 1);
+            playerSetDirection(playerFrontSide + 1, true);
             break;
         case "unclockwise": //Повернуться против часовой стрелк
             //Задаем направление того, куда смотрит робот
-            playerSetDirection(playerFrontSide - 1);
+            playerSetDirection(playerFrontSide - 1, true);
             break;
         case "stop": //Остановиться на текущей клетке
             playerCommands = new Array();
@@ -405,15 +407,24 @@ function tryToPickUp() {
 }
 
 //Устанавливает текущее направление обзора робота
-function playerSetDirection(direction) {
+function playerSetDirection(direction, isAnim) {
     //Контролируем идентификаторы поворота робота
     if (direction < 0) direction = 3;
     else if (direction > 3) direction = 0;
     //Обрабатываем сторону
-    if (direction === 0) playerImageObj.angle = 0;
-    else if (direction == 2) playerImageObj.angle = 180;
-    else if (direction == 3) playerImageObj.angle = -90;
-    else if (direction == 1) playerImageObj.angle = 90;
+    if (isAnim) {
+        if (direction === 0) robotAnimTurn = 0;
+        else if (direction == 2) robotAnimTurn = 180;
+        else if (direction == 3) robotAnimTurn = -90;
+        else if (direction == 1) robotAnimTurn = 90;
+        robotAnimTurnStep = (robotAnimTurn - playerImageObj.angle) / robotAnimSteps;
+    }
+    else {
+        if (direction === 0) playerImageObj.angle = 0;
+        else if (direction == 2) playerImageObj.angle = 180;
+        else if (direction == 3) playerImageObj.angle = -90;
+        else if (direction == 1) playerImageObj.angle = 90;
+    }
     playerFrontSide = direction;
 }
 

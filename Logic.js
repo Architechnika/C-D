@@ -507,6 +507,9 @@ function processRobotMove() {
         if (robotAnimMovePoint) {
             robotAnimMove();
         }
+        else if (robotAnimTurn !== undefined) {
+            robotAnimTurnThr();
+        }
         else setTimeout("processRobotMove()", visualizeCommandsDelay);
     }
     else {//Это когда отладка по шагам
@@ -517,6 +520,19 @@ function processRobotMove() {
 
 var robotAnimSteps = 10;
 var robotAnimMoveDelay = robotMoveDelay / robotAnimSteps;
+function robotAnimTurnThr() {//Запускает анимацию поворота робота
+    if (playerImageObj.angle != robotAnimTurn) {
+        playerImageObj.angle += robotAnimTurnStep;
+        setTimeout(robotAnimTurnThr, robotAnimMoveDelay);
+    }
+    else {
+        robotAnimTurn == undefined;
+        if (isStarted) {
+            processRobotMove();
+        }
+    }
+}
+//Запускает анимацию движения робота по карте
 function robotAnimMove() {
     if (robotAnimMovePoint) {
         //Рассчитываем точки по которым должен пройти робот в процессе анимации
@@ -546,18 +562,27 @@ function robotAnimMove() {
     }
 }
 
+var animIterCounter = 0;
 function rAnim(arr, p) {
     labView.setFocusOnElement(playerImageObj, false);
     if (arr && arr.length > 0) {
         p.x = arr[0].x;
         p.y = arr[0].y;
         arr.splice(0, 1);
+        animIterCounter++;
         setTimeout(rAnim, robotAnimMoveDelay, arr, p);
     }
     else {
         robotAnimMovePoint = undefined;
         if (isStarted) {
-            processRobotMove();
+            if (animIterCounter == robotAnimSteps) {
+                animIterCounter = 0;
+                processRobotMove();
+            }
+            else {
+                animIterCounter++;
+                setTimeout(rAnim, robotAnimMoveDelay, arr, p);
+            }
         }
     }
 }
