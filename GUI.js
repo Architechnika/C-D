@@ -31,7 +31,7 @@ function drawGUI() {
     coinItem.draw();
     clockItem.draw();
     infoText.draw();
-    dialog.dialogDraw();
+    //dialog.dialogDraw();
     playerLevelVisual.drawPlayerLevel();
     if (toolTip.isVisible()) toolTip.draw();
     if (inputCounterText !== null) inputCounterText.draw();
@@ -45,8 +45,9 @@ function initGUI() { //поочередность иницилизаии ОБЯ�
     menuItemH = (height / 100) * 8;
     menuItemW = (width / 100) * 8;
     allButtons = new Buttons();
-    dialog = new Dialog();
+    dialog = new Dialog("Удалить?","Да","Нет","delete");
     infoText = new TextWithBG(gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH);
+     dialog.setPosture();
     timerTextInit();
     progressTextInit();
     textbackGroundInit("#000000", 0);

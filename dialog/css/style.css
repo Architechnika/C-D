@@ -1,0 +1,30 @@
+@font-face {
+    font-family: comic;
+    src: url('../../font/NeSkidComica.ttf');
+}
+
+* {
+    font-family: 'comic';
+    color: red;
+    font-size: 100%;
+}
+
+.mainBG {
+    background: #01afc8;
+    position: fixed;
+    border-radius: 0.3em;
+}
+
+.send {
+    width: 46%;
+    height: 45%;
+    border-radius: 3%;
+    margin: 1%;
+}
+
+.cancel {
+    width: 46%;
+    height: 45%;
+    border-radius: 3%;
+    margin: 1%;
+}

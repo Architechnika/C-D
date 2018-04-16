@@ -116,7 +116,7 @@ function Buttons() { //класс для работы совсеми кнопк�
         onClick: function (el) {
             audio_GUI_click.play();
             if (lastClickedElement.commands && lastClickedElement.commands.length > 0)
-                dialog.setShowDialog(true);
+                dialog.setHidden(false);
         }
     });
     this.saveButton.setUserData({

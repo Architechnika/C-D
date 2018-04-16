@@ -277,7 +277,7 @@ function setFocused(fieldElem, indx) {
     //Запоминаем последний кликнутый пользователь элемент
     lastClickedElement = field[lastClickedIndx];
     inputCommandStates = 0;
-    dialog.setShowDialog(false);
+    dialog.setHidden(true);
     //Выделяем в рамку объект по которому нажали
     field[indx].setStroke(true);
     //Если ориентация экрана горизонтальная, то
