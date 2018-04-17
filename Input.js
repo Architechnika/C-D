@@ -63,7 +63,7 @@ function onMouseUP(e) {
 }
 
 function onMouseDOWN(e) {
-    //findPressed(e);
+    findPressed(e);
     clickCoord.x = e.x;
     clickCoord.y = e.y;
     if (allButtons.checkButtonsClicked(clickCoord, true))
@@ -104,7 +104,7 @@ function onTouchStart(e) {
     //isMobile = true;
     clickCoord.x = e.changedTouches[0].clientX;
     clickCoord.y = e.changedTouches[0].clientY;
-    //findPressed(clickCoord);
+    findPressed(clickCoord);
     scrolled = false;
     if (allButtons.checkButtonsClicked(clickCoord, true))
         return;
@@ -552,8 +552,7 @@ function processFieldClick(e) {
     }
     return false;
 }
-
-/*function findPressed(e) {
+function findPressed(e) { 
     var el;
     if (allButtons && allButtons.buttonsArr.length > 0) {
         var scrlitems = allButtons.buttonsArr;
@@ -561,7 +560,7 @@ function processFieldClick(e) {
             el = scrlitems[i];
             if (clickIsInObj(e.x, e.y, el)) {
                 if (el.file) {
-                    el.file = el.file.split(".png")[0] + "_pressed.png";
+                    el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
                     pressedItem = el;
                     return;
                 }
@@ -576,7 +575,7 @@ function processFieldClick(e) {
                     el = scrlitems[i];
                     if (clickIsInObj(e.x, e.y, el)) {
                         if (el.file) {
-                            el.file = el.file.split(".png")[0] + "_pressed.png";
+                            el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
                             pressedItem = el;
                             return;
                         }
@@ -591,16 +590,14 @@ function processFieldClick(e) {
             el = scrlitems[i];
             if (clickIsInObj(e.x, e.y, el)) {
                 if (el.file) {
-                    var prSpl = el.file.split("_pressed.png");
-                    var spl = prSpl.length > 1 ? prSpl : el.file.split(".png");
-                    el.file = spl[0] + "_pressed.png";
+                    el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
                     pressedItem = el;
                     return;
                 }
             }
         }
     }
-}*/
+}
 
 
 //Вернет true если клик был внутри координат прямоугольника obj
