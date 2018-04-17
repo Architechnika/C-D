@@ -395,8 +395,8 @@ function ScrollBar(posX, posY, orientation, arr, name) {
             y: Y,
             h: H,
             w: W,
-            radius: 8,
-            fillColor: "red"
+            radius: 3,
+            fillColor: guiTextColor
         });
 
         bar.h = tmpH;
@@ -413,16 +413,16 @@ function ScrollBar(posX, posY, orientation, arr, name) {
                 y: bar.y,
                 h: tmpH,
                 w: tmpW,
-                radius: 8,
-                fillColor: "#ffba42"
+                radius: 3,
+                fillColor: "#01afc8"
             });
         else barBackGroud = game.newRoundRectObject({
             x: bar.x,
             y: Y,
             h: tmpH,
             w: tmpW,
-            radius: 8,
-            fillColor: "#ffba42"
+            radius: 3,
+            fillColor: "#01afc8"
         });
 
         this.DrawIndicator = function () {

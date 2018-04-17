@@ -554,19 +554,19 @@ function processFieldClick(e) {
 }
 function findPressed(e) { 
     var el;
-    if (allButtons && allButtons.buttonsArr.length > 0) {
-        var scrlitems = allButtons.buttonsArr;
-        for (var i = 0; i < scrlitems.length; i++) {
-            el = scrlitems[i];
-            if (clickIsInObj(e.x, e.y, el)) {
-                if (el.file) {
-                    el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
-                    pressedItem = el;
-                    return;
-                }
-            }
-        }
-    }
+//    if (allButtons && allButtons.buttonsArr.length > 0) {
+//        var scrlitems = allButtons.buttonsArr;
+//        for (var i = 0; i < scrlitems.length; i++) {
+//            el = scrlitems[i];
+//            if (clickIsInObj(e.x, e.y, el)) {
+//                if (el.file) {
+//                    el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
+//                    pressedItem = el;
+//                    return;
+//                }
+//            }
+//        }
+//    }
     if (Scrolls && Scrolls.length > 0) {
         for (var j = 0; j < Scrolls.length; j++) {
             var scrlitems = Scrolls[j].getArrayItems();
