@@ -476,6 +476,32 @@ function toolTipShowEvent(x, y) {
 }
 
 function onCodeMapElementClick(element) {
+
+    if (codeView.isElementMove) {
+        var el = codeView.menu.getElement();
+        var stor1 = findObjStorage(lastClickedElement.commands, el.command);//Ищем места хранения меняемых команд
+        var ind1 = stor1.indexOf(el.command);
+        if (element.command.name == "blockA" || element.command.name == "whatisit" || element.command.name == "blockB" || element.command.name == "counter") {
+
+        }
+        else {
+            if (element.name && element.name == "plus") {
+                element.command.push(getCopyOfObj(stor1[ind1]));
+            }
+            else {
+                var stor2 = findObjStorage(lastClickedElement.commands, element.command);
+                var ind2 = stor2.indexOf(element.command);
+                //Ставим выбранный элемент на место после указанного, а из прошлого хранилища удаляем
+                stor2.splice(ind2 + 1, 0, getCopyOfObj(stor1[ind1]));
+            }
+            stor1.splice(stor1.indexOf(el.command), 1);
+            codeView.isElementMove = false;
+            initLeftScroll(getCommandsImgArr(stor2 ? stor2 : stor1));
+            //Перегенерим код мап
+            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
+        }
+        return;
+    }
     if (element.name && element.name == "plus") {
         choosenCommandInElement = element.command;
         codeView.resetZoomer();

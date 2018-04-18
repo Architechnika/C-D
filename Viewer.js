@@ -59,15 +59,6 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
         if(isRecize) {
             this.resizeView((this.maxItemSize) - this.elems[0].h, true, undefined, true);
         }
-        //Ищем элемент который должен быть в центре и сдвигаем его в центр
-        /*for(var i = 0 ; i < this.elems.length; i++){
-            if(this.elems[i] == elem){
-                var bgC = this.backGround.getPositionC();
-                var elC = this.elems[i].getPositionC();
-                this.elementsMove(bgC.x - elC.x, bgC.y - elC.y, undefined, undefined, isCodeView);
-                break;
-            }
-        }*/
         var bgC = this.backGround.getPositionC();
         var elC = elem.getPositionC();
         this.elementsMove(bgC.x - elC.x, bgC.y - elC.y, undefined, undefined, isCodeView);
@@ -304,14 +295,15 @@ function GraphicView(elements, backX, backY, backW, backH, fillCol) {
     this.isClicked = function (e) {
         var result = false;
         if (this.elems && this.elems.length > 0) {
-            OOP.forArr(this.elems, function (el) {
+            for (var i = 0; i < this.elems.length; i++){
+                var el = this.elems[i];
                 if (clickIsInObj(e.x, e.y, el)) {
                     if (el.onClick)
                         el.onClick(el);
                     result = true;
-                    return;
+                    return true;
                 }
-            });
+            }
         }
         return result;
     }
@@ -325,9 +317,14 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
     var lX = backX;
     var lY = backY;
     this.menu = new ItemMenu();
+    this.isElementMove = false;
 
     this.setElements = function (elements) {
         parent.elems = elements;
+    }
+
+    this.getElements = function () {
+        return parent.elems;
     }
 
     this.clear = function () {
@@ -437,6 +434,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                             }*/
                         }
                         lX -= elemWH * (el.blockB.length + 1);
+                        lX += 0.01;//костылёк потому что где то просчет на 1 сотую
                     }
                 } else if (el.name == "repeat") {
                     lX += elemWH;
@@ -656,8 +654,12 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
 
     this.isClicked = function (e) {
         if (!this.menu.isClicked(e)) {
-            if (!parent.isClicked(e)){
-                this.menu.closeMenu();
+            if (!parent.isClicked(e)) {
+                if (this.isElementMove) {
+                    this.menu.resetElement();
+                    this.isElementMove = false;
+                }
+                else this.menu.closeMenu();
             }
             else return true;
         } else return true;
@@ -846,6 +848,7 @@ function ItemMenu() {
     this.itemsArray = [];
     //переменная для хранения ссылки на объект по которому кликнули
     var element = undefined;
+    var elementBuff = undefined;
     this.itemsArray.push(itemDelete);
     this.itemsArray.push(itemMove);
     this.itemsArray.push(itemReplace);
@@ -857,6 +860,9 @@ function ItemMenu() {
     //Возвращает элемент к которому привязаны кнопки меню
     this.getElement = function () {
         return element;
+    }
+    this.resetElement = function () {
+        element = elementBuff;
     }
     this.setMenuVisible = function (visible) {
         if (this.itemsArray !== undefined) {
@@ -899,6 +905,12 @@ function ItemMenu() {
     itemMove.setUserData({
         onClick: function () {
             //описать клик перемещение
+            audio_GUI_click.play();
+            codeView.isElementMove = true;
+            element.x -= element.w / 2
+            element.y -= element.w / 2
+            element.w = element.h = element.w * 2;
+            codeView.menu.closeMenu(true);
         }
     });
     itemReplace.setUserData({
@@ -978,8 +990,9 @@ function ItemMenu() {
         this.setSettings(parent);
         this.setMenuVisible(true)
     }
-    this.closeMenu = function () { //удаляем ссылку на элемент, отключаем видимость меню
-        element = undefined;
+    this.closeMenu = function (dontForget) { //удаляем ссылку на элемент, отключаем видимость меню
+        if (!dontForget)
+            element = undefined;
         this.setMenuVisible(false);
     }
 }
