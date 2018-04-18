@@ -207,7 +207,7 @@ function onUp(e) {
             if (scroll.name == "RIGHT") { //ОБРАБОТКА КЛИКОВ ПО СКРОЛ БАРУ СО СПИСКОМ КОММАНД
                 //Определяем на какой элемент он КЛИКНУЛ
                 OOP.forArr(scroll.getArrayItems(), function (el) {
-                    if (clickIsInObj(e.x, e.y, el)) {
+                    if (clickIsInObj(e.x, e.y, el) && selectedItem== undefined) {
                         //alert("touchOn: " + touchedOnClick.toString() + " touch: " + touched.toString())
                         el.onClick(el);
                         clicked = true;
