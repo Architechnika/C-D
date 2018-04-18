@@ -207,7 +207,7 @@ function onUp(e) {
             if (scroll.name == "RIGHT") { //ОБРАБОТКА КЛИКОВ ПО СКРОЛ БАРУ СО СПИСКОМ КОММАНД
                 //Определяем на какой элемент он КЛИКНУЛ
                 OOP.forArr(scroll.getArrayItems(), function (el) {
-                    if (clickIsInObj(e.x, e.y, el) && selectedItem== undefined) {
+                    if (clickIsInObj(e.x, e.y, el) && selectedItem == undefined) {
                         //alert("touchOn: " + touchedOnClick.toString() + " touch: " + touched.toString())
                         el.onClick(el);
                         clicked = true;
@@ -244,18 +244,18 @@ function onUp(e) {
                             swapedItem = undefined;
                         } else {
                             if (selitemCX > scroll.GetBackGround().x + scroll.GetBackGround().w) {
-                                if (selectedItem.command) {//если выделенный элемент команда
+                                if (selectedItem.command) { //если выделенный элемент команда
                                     var i = stor.indexOf(selectedItem.command);
                                     var scrolItemsi = scroll.getArrayItems().indexOf(selectedItem);
                                     scroll.getArrayItems().splice(scrolItemsi, 1);
                                     scroll.initArrayItems(scroll.getArrayItems())
                                     stor.splice(i, 1);
                                     codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
-                                } else {// в противном случаи если выделенный элемент сохраненка
+                                } else { // в противном случаи если выделенный элемент сохраненка
                                     var scrolItemsi = scroll.getArrayItems().indexOf(selectedItem);
                                     scroll.getArrayItems().splice(scrolItemsi, 1);
                                     scroll.initArrayItems(scroll.getArrayItems())
-                                    var i = myScripts.indexOf(selectedItem.scriptArray)-1;
+                                    var i = myScripts.indexOf(selectedItem.scriptArray) - 1;
                                     myScripts.splice(i, 2);
                                 }
                             }
@@ -324,8 +324,8 @@ function onMove(e) {
                 swapedItem = item;
             //Определяем в какую сторону тащить элемент(Вверх/вниз или вправо/влево)
             if (Math.abs(scrollSpeed.y) > Math.abs(scrollSpeed.x) && selectedItem.getPositionC().x == selItemPos.x) {
-                if(selectedItem.command)
-                selectedItem.y += (scrollSpeed.y);
+                if (selectedItem.command)
+                    selectedItem.y += (scrollSpeed.y);
             } else if (Math.abs(scrollSpeed.x) > Math.abs(scrollSpeed.y) && selectedItem.getPositionC().y == selItemPos.y) {
                 selectedItem.x += (scrollSpeed.x);
             }
@@ -597,7 +597,12 @@ function findPressed(e) {
                     el = scrlitems[i];
                     if (clickIsInObj(e.x, e.y, el)) {
                         if (el.file) {
-                            el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
+                            if (el.name != "saveItem") {
+                                el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
+                            }else{ 
+                                log(el.getImg())
+                                el.setImg(el.getImg().split(".png")[0] + "_pressed.png");
+                            }
                             pressedItem = el;
                             return;
                         }
