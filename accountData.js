@@ -17,6 +17,7 @@ function UserAccaunt(login, pass, summ) {
     this.playerGlobalEXP = 0 // глобальный опыт игркоа
     this.playerNextLvlEXP = 0 //количество опыта необходимое для перехода на следующий уровень
     this.playerPrevLvlEXP = 0
+    this.mazePassedCount = 0; // количество пройденных лабиринтов
     this.playerCurrentLevel = 0 // текущий уровень игрока
     this.copy = function (obj, isNewGame) {
         if (obj && isNewGame != "NewGame") {
@@ -38,6 +39,7 @@ function UserAccaunt(login, pass, summ) {
             this.playerNextLvlEXP = obj.playerNextLvlEXP;
             this.playerPrevLvlEXP = obj.playerPrevLvlEXP;
             this.playerCurrentLevel = obj.playerCurrentLevel;
+            this.mazePassedCount = obj.mazePassedCount;
         }
         this.myScriptsArray = obj.myScriptsArray;
     }
@@ -53,6 +55,7 @@ function UserAccaunt(login, pass, summ) {
         this.playerNextLvlEXP = nextLevelEXP;
         this.playerPrevLvlEXP = prevLevelEXP;
         this.playerCurrentLevel = currentPlayerLevel;
+        this.mazePassedCount = totalLabCompleted;
         this.gameTime = totalSeconds;
         this.gameCoin = JSON.stringify(playerInventory);
         this.coinsArray = JSON.stringify(gameObjects);
@@ -92,6 +95,8 @@ function UserAccaunt(login, pass, summ) {
                 tmpPlayerInventary = JSON.parse(userData.gameCoin);
             if (userData.myScriptsArray != undefined)
                 myScripts = JSON.parse(userData.myScriptsArray);
+            if(userData.mazePassedCount != undefined)
+                totalLabCompleted = userData.mazePassedCount;
             var roadEl = Array();
             for (var i = 0; i < tmpField.length; i++) {
                 var img = tmpField[i].parent.file;
