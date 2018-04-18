@@ -26,21 +26,46 @@ function SaveItem(name, script) {
     this.setScriptArray = function (arr) {
         this.scriptArray = arr;
     }
-    this.setX = function (X) {
-        parent.x = X;
-        saveFileName.x = X + parent.w * 0.38;
-    }
-    this.setY = function (Y) {
-        parent.y = Y;
-        saveFileName.y = Y;
-    }
-    this.setW = function (W) {
-        parent.w = W;
-    }
-    this.setH = function (H) {
-        parent.h = H;
-        saveFileName.size = H * 0.2;
-    }
+        this.setX = function (X) {
+            parent.x = X;
+            saveFileName.x = X + parent.w * 0.38;
+        }
+        this.setY = function (Y) {
+            parent.y = Y;
+            saveFileName.y = Y;
+        }
+        this.setW = function (W) {
+            parent.w = W;
+        }
+        this.setH = function (H) {
+            parent.h = H;
+            saveFileName.size = H * 0.2;
+        }
+
+    Object.defineProperty(this, "x", {
+
+        get: function () {
+            return this.__proto__.x;
+        },
+
+        set: function (value) {
+            this.__proto__.x = value;
+            saveFileName.x = value + this.__proto__.w * 0.38;
+        }
+    });
+    
+        Object.defineProperty(this, "y", {
+
+        get: function () {
+            return this.__proto__.y;
+        },
+
+        set: function (value) {
+            this.__proto__.y = value;
+            saveFileName.y = value;
+        }
+    });
+
     this.onClick = function (el) {
         //обработчик загрузки на поле
         audio_GUI_click.play();
@@ -50,6 +75,6 @@ function SaveItem(name, script) {
 
     this.draw = function () {
         parent.draw();
-        saveFileName.draw();  
+        saveFileName.draw();
     }
 } //
