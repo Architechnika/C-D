@@ -50,7 +50,7 @@ function removeInputEvents() {
 function onMouseUP(e) {
     clickCoord.x = 0;
     clickCoord.y = 0;
-     onUp(e);
+    onUp(e);
     selectedItem = undefined;
     touchedScroll = undefined;
     touchPoint = undefined;
@@ -77,11 +77,10 @@ function onMouseDOWN(e) {
 }
 
 function onWheel(e) {
-    if (!isVerticalScreen && clickIsInObj(e.x, e.y, codeView.getBackGround())) {    
+    if (!isVerticalScreen && clickIsInObj(e.x, e.y, codeView.getBackGround())) {
         if (!key.isDown("SHIFT")) {
             codeView.resizeView((e.deltaY * -1) < 0 ? -1 * scrollStep : scrollStep);
-        }
-        else codeView.elementsMove(0, e.deltaY * 0.5 * -1);
+        } else codeView.elementsMove(0, e.deltaY * 0.5 * -1);
         return;
     }
     onRecize(e, e.deltaY * -1, scrollStep);
@@ -184,8 +183,8 @@ function onRecize(e, delta, step) {
     } else if (clickIsInObj(e.x, e.y, codeView.getBackGround())) {
         //Ресайз поля работает только когда игрок не двигается
         //if (!isStarted) {
-            //Инициализируем карту кода
-            codeView.resizeView(delta < 0 ? -1 * step : step);
+        //Инициализируем карту кода
+        codeView.resizeView(delta < 0 ? -1 * step : step);
         //}
         return;
     }
@@ -208,7 +207,7 @@ function onUp(e) {
             if (scroll.name == "RIGHT") { //ОБРАБОТКА КЛИКОВ ПО СКРОЛ БАРУ СО СПИСКОМ КОММАНД
                 //Определяем на какой элемент он КЛИКНУЛ
                 OOP.forArr(scroll.getArrayItems(), function (el) {
-                    if (clickIsInObj(e.x, e.y, el)) {
+                    if (clickIsInObj(e.x, e.y, el) && selectedItem== undefined) {
                         //alert("touchOn: " + touchedOnClick.toString() + " touch: " + touched.toString())
                         el.onClick(el);
                         clicked = true;
@@ -221,10 +220,12 @@ function onUp(e) {
                     clicked = true;
                 if (elems && elems.length > 0) {
                     if (touchTapTimeFlag && selectedItem) { //Если перемещаем итем
+                        var selitemCX = selectedItem.getPositionC().x;
                         scroll.swapItemPosition(false, selectedItem, undefined, selItemPos)
+                        var stor = findObjStorage(lastClickedElement.commands, selectedItem.command);
                         if (swapedItem !== undefined) {
 
-                            var stor = findObjStorage(lastClickedElement.commands, selectedItem.command);
+                            //var stor = findObjStorage(lastClickedElement.commands, selectedItem.command);
                             var indx1 = -1,
                                 indx2 = -1;
                             OOP.forArr(stor, function (el, i) {
@@ -241,9 +242,25 @@ function onUp(e) {
 
                             scroll.swapItems(selectedItem, swapedItem);
                             swapedItem = undefined;
+                        } else {
+                            if (selitemCX > scroll.GetBackGround().x + scroll.GetBackGround().w) {
+                                if (selectedItem.command) {//если выделенный элемент команда
+                                    var i = stor.indexOf(selectedItem.command);
+                                    var scrolItemsi = scroll.getArrayItems().indexOf(selectedItem);
+                                    scroll.getArrayItems().splice(scrolItemsi, 1);
+                                    scroll.initArrayItems(scroll.getArrayItems())
+                                    stor.splice(i, 1);
+                                    codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
+                                } else {// в противном случаи если выделенный элемент сохраненка
+                                    var scrolItemsi = scroll.getArrayItems().indexOf(selectedItem);
+                                    scroll.getArrayItems().splice(scrolItemsi, 1);
+                                    scroll.initArrayItems(scroll.getArrayItems())
+                                    var i = myScripts.indexOf(selectedItem.scriptArray)-1;
+                                    myScripts.splice(i, 2);
+                                }
+                            }
                         }
-                    }
-                    else {
+                    } else {
                         OOP.forArr(scroll.getArrayItems(), function (el) {
                             if (clickIsInObj(e.x, e.y, el)) {
                                 if (el.onClick) {
@@ -265,12 +282,11 @@ function onUp(e) {
                         processFieldClick(e);
                     else codeView.isClicked(e);
                 }
-            else if (!codeView.isClicked(e))
-                {
-                    tupAnimation.setVisible(true);
-                    tupAnimation.setPositionC(pjs.vector.point(e.x,e.y))
-                    processFieldClick(e);
-                }
+            else if (!codeView.isClicked(e)) {
+                tupAnimation.setVisible(true);
+                tupAnimation.setPositionC(pjs.vector.point(e.x, e.y))
+                processFieldClick(e);
+            }
         }
     }
 }
@@ -279,15 +295,14 @@ function onUp(e) {
 function onMove(e) {
     //Если точка куда пользователь кликнул отсутствует, то событие сработало ошибочно(ну вдруг)
     if (!touchPoint) return;
-
     var scrollSpeed = new point((e.x - clickCoord.x), (e.y - clickCoord.y));
     var scrSpMax = Math.abs(scrollSpeed.x) > Math.abs(scrollSpeed.y) ? Math.abs(scrollSpeed.x) : Math.abs(scrollSpeed.y);
     //Рассчитываем удаленность текущей точки тапа от точки старта нажатия
-    var diff = Math.abs(touchPoint.x) > Math.abs(touchPoint.y) ? Math.abs(e.x - touchPoint.x) : Math.abs(e.y - touchPoint.y);
-    if (diff < distanceOfScroll) return;
+    var diffY = Math.abs(touchPoint.x) > Math.abs(touchPoint.y) ? Math.abs(e.x - touchPoint.x) : Math.abs(e.y - touchPoint.y);
+    var diffX = Math.abs(touchPoint.x) > Math.abs(touchPoint.y) ? Math.abs(e.y - touchPoint.y) : Math.abs(e.x - touchPoint.x);
+    if ((diffY < distanceOfScroll) && (diffX < distanceOfScroll)) return;
     //Если область в которой пользователь двигает ещё не была определено, то определеяем ее
     if (!touchTapTimeFlag) onTouchCheckMove();
-
     //Если пользователь двигает игровое поле
     if (labIsMove) {
         labView.elementsMove(scrollSpeed.x, scrollSpeed.y);
@@ -308,9 +323,12 @@ function onMove(e) {
             if (item !== undefined)
                 swapedItem = item;
             //Определяем в какую сторону тащить элемент(Вверх/вниз или вправо/влево)
-            //if(Math.abs(scrollSpeed.y) > Math.abs(scrollSpeed.x) && selectedItem.getPositionC().x == selItemPos.x)
-            selectedItem.y += (scrollSpeed.y);
-            //else if(Math.abs(scrollSpeed.x) >= Math.abs(scrollSpeed.y) && selectedItem.getPositionC().y == selItemPos.y) selectedItem.x += (scrollSpeed.x);
+            if (Math.abs(scrollSpeed.y) > Math.abs(scrollSpeed.x) && selectedItem.getPositionC().x == selItemPos.x) {
+                if(selectedItem.command)
+                selectedItem.y += (scrollSpeed.y);
+            } else if (Math.abs(scrollSpeed.x) > Math.abs(scrollSpeed.y) && selectedItem.getPositionC().y == selItemPos.y) {
+                selectedItem.x += (scrollSpeed.x);
+            }
         }
     }
 }
@@ -341,7 +359,7 @@ function onTouchCheckMove() {
         } else if (scroll.name == "RIGHT" && clickIsInObj(clickCoord.x, clickCoord.y, scroll.GetBackGround())) {
             if (Date.now() - touchTimespan < touchTapTimeOut) { //Если время не вышло то вопринимаем сдвиг как прокрутку скрола
                 scrolled = true;
-            } 
+            }
             touchedScroll = scroll;
             touchTapTimeFlag = true;
             return;
@@ -419,7 +437,7 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
 function startBClick() {
     isStarted = !isStarted;
     if (isStarted) {
-        if (!isVisualizeCodeMap && codeView){
+        if (!isVisualizeCodeMap && codeView) {
             codeView.clear();
         }
         //Запоминаем время начала движения робота
@@ -581,21 +599,22 @@ function processFieldClick(e) {
     }
     return false;
 }
-function findPressed(e) { 
+
+function findPressed(e) {
     var el;
-//    if (allButtons && allButtons.buttonsArr.length > 0) {
-//        var scrlitems = allButtons.buttonsArr;
-//        for (var i = 0; i < scrlitems.length; i++) {
-//            el = scrlitems[i];
-//            if (clickIsInObj(e.x, e.y, el)) {
-//                if (el.file) {
-//                    el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
-//                    pressedItem = el;
-//                    return;
-//                }
-//            }
-//        }
-//    }
+    //    if (allButtons && allButtons.buttonsArr.length > 0) {
+    //        var scrlitems = allButtons.buttonsArr;
+    //        for (var i = 0; i < scrlitems.length; i++) {
+    //            el = scrlitems[i];
+    //            if (clickIsInObj(e.x, e.y, el)) {
+    //                if (el.file) {
+    //                    el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
+    //                    pressedItem = el;
+    //                    return;
+    //                }
+    //            }
+    //        }
+    //    }
     if (Scrolls && Scrolls.length > 0) {
         for (var j = 0; j < Scrolls.length; j++) {
             var scrlitems = Scrolls[j].getArrayItems();
@@ -614,7 +633,7 @@ function findPressed(e) {
         }
     }
     if (codeView && codeView.elems.length > 0) {
-        var scrlitems = codeView.elems;        
+        var scrlitems = codeView.elems;
         for (var i = 0; i < scrlitems.length; i++) {
             el = scrlitems[i];
             if (clickIsInObj(e.x, e.y, el)) {
