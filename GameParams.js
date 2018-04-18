@@ -67,6 +67,7 @@ var buttonSaveImgSrc = "img/interface/interface_button_save.png"
 var medalBronzeImgSrc = "img/interface/medal_bronze.png"
 var medalSilverImgSrc = "img/interface/medal_silver.png"
 var medalGoldImgSrc = "img/interface/medal_gold.png"
+var saveCommandsSrc = "img/interface/save_commands.png"
 //Пути для файлов для карты кода------------------------------------------------
 var itemDeleteSrc = "img/interface/interface_codeview_delete.png";
 var itemReplaceSrc = "img/interface/interface_codeview_replace.png";

@@ -7,16 +7,16 @@ function SaveItem(name, script) {
         y: 0,
         w: 100,
         h: 100,
-        file: commandDropImgSrc
+        file: saveCommandsSrc
     })
     this.__proto__ = parent;
 
     var saveFileName = game.newTextObject({
-        x: parent.x + parent.w / 2,
+        x: parent.x + parent.w*0.5,
         y: parent.y + parent.h / 2,
         text: name,
-        size: parent.h * 0.2,
-        color: guiTextColor,
+        size: parent.h * 0.18,
+        color: "#05ae21",
         font: textFont,
     });
 
@@ -28,11 +28,11 @@ function SaveItem(name, script) {
     }
         this.setX = function (X) {
             parent.x = X;
-            saveFileName.x = X + parent.w * 0.38;
+            saveFileName.x = X + parent.w * 0.25;
         }
         this.setY = function (Y) {
             parent.y = Y;
-            saveFileName.y = Y;
+            saveFileName.y = Y + parent.h * 0.18;
         }
         this.setW = function (W) {
             parent.w = W;
@@ -40,6 +40,15 @@ function SaveItem(name, script) {
         this.setH = function (H) {
             parent.h = H;
             saveFileName.size = H * 0.2;
+        }
+        
+        this.setImg = function(val)
+        {
+            this.__proto__.setImage(val);
+        }
+        this.getImg = function()
+        {
+            return this.getImage();
         }
 
     Object.defineProperty(this, "x", {
@@ -65,6 +74,17 @@ function SaveItem(name, script) {
             saveFileName.y = value;
         }
     });
+    Object.defineProperty(this, "file", {
+
+        get: function () {
+            return this.__proto__.file;
+        },
+
+        set: function (value) {
+            this.__proto__.file = value;
+        }
+    });
+    
 
     this.onClick = function (el) {
         //обработчик загрузки на поле
