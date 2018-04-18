@@ -220,8 +220,20 @@ function initLabirint() {
     var comms = undefined;
     if (field) {
         OOP.forArr(field, function (el) {
-            if (el.code == entryCode && el.commands.length > 1) {
-                comms = el.commands;
+            if (el.code == entryCode) {//Проверяем есть ли в начальной клетке лабиринта команды, если есть, то они переносятся в следующий лабиринт
+                if (el.commands && el.commands.length > 0) {//Если команды вообще есть
+                    if (el.commands[0].commandsBlock) {//Если в стеке команд на первом месте сложная команда
+                        if (el.commands[0].commandsBlock.actions.length > 0) {//Если в блоке команд этой команды есть блоки команд
+                            comms = el.commands;
+                        }
+                        else if (el.commands.elseBlock && el.commands.elseBlock.actions.length > 0) {//Иначе проверяем блок else если он есть аналогично
+                            comms = el.commands;
+                        }
+                    }
+                    else if (el.commands.length > 1) {//Иначе если в стеке команд простые команды, то если их больше 1 то переносим
+                        comms = el.commands;
+                    }
+                }
                 return;
             }
         });
@@ -354,13 +366,8 @@ function addCommandToCell(commandImg, dontAdd) {
                 lastAddedCommand = undefined;
                 //Находим массив в котором хранится команда для замены
                 var elemStor = findObjStorage(lastClickedElement.commands, itemToReplaceInCodeMap.command);
-                //Находим ее в массиве и заменяем
-                OOP.forArr(elemStor, function (el, i) {
-                    if (el == itemToReplaceInCodeMap.command) {
-                        elemStor[i] = commandImg.command;
-                        return;
-                    }
-                });
+                //Заменяем команду в этом массиве
+                elemStor[elemStor.indexOf(itemToReplaceInCodeMap.command)] = commandImg.command;
                 //Очищаем буфер для хранения обьекта для замены и скролл
                 itemToReplaceInCodeMap = undefined;
                 initLeftScroll(getCommandsImgArr(elemStor));

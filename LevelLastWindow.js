@@ -224,11 +224,6 @@ function replayLevel() {
 
     playerImageObj = null;
     playerSetStart();
-   /* //Это костыль, разобраться почему при перезапуске лабиринта картинка робота ставится в точку следующего лабиринта а не предыдущего
-    playerImageObj.x = field[playerPozition].x;
-    playerImageObj.y = field[playerPozition].y;
-    playerImageObj.w = field[playerPozition].w;
-    playerImageObj.h = field[playerPozition].h;*/
     goToLab();
 }
 
