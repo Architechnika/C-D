@@ -366,6 +366,20 @@ function addCommandToCell(commandImg, dontAdd) {
                 lastAddedCommand = undefined;
                 //Находим массив в котором хранится команда для замены
                 var elemStor = findObjStorage(lastClickedElement.commands, itemToReplaceInCodeMap.command);
+                var elem = elemStor[elemStor.indexOf(itemToReplaceInCodeMap.command)];
+                //Копируем содержимое команды
+                if (commandImg.command.commandsBlock && elem.commandsBlock) {
+                    if (elem.commandsBlock.actions && elem.commandsBlock.actions.length > 0)
+                        commandImg.command.commandsBlock.actions = elem.commandsBlock.actions;
+                }
+                if (commandImg.command.elseBlock && elem.elseBlock) {
+                    if (elem.elseBlock.actions && elem.elseBlock.actions.length > 0)
+                        commandImg.command.elseBlock.actions = elem.elseBlock.actions;s
+                }
+                if (commandImg.command.blockA && elem.blockA)
+                    commandImg.command.blockA = elem.blockA;
+                if (commandImg.command.blockB && elem.blockB)
+                    commandImg.command.blockB = elem.blockB;
                 //Заменяем команду в этом массиве
                 elemStor[elemStor.indexOf(itemToReplaceInCodeMap.command)] = commandImg.command;
                 //Очищаем буфер для хранения обьекта для замены и скролл
