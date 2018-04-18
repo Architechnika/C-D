@@ -23,7 +23,7 @@ var pressedItem = undefined;
 document.oncontextmenu = function () {
     return false
 };
-
+//
 //Функция инициализации обработчиков ввода пользователя
 function initInputEvents() {
     addEventListener("mouseup", onMouseUP);
