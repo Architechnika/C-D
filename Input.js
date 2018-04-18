@@ -419,6 +419,9 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
 function startBClick() {
     isStarted = !isStarted;
     if (isStarted) {
+        if (!isVisualizeCodeMap && codeView){
+            codeView.clear();
+        }
         //Запоминаем время начала движения робота
         startPlayerMoveTime = totalSeconds;
         if (!isVerticalScreen)

@@ -32,8 +32,8 @@ function playerSetStart() {
             startPoz = indx;
             //Генерим графическое представление игрока для отображение
             movePlayerToFieldElement(field[playerPozition], undefined, playerPozition);
-            if(labView)
-                labView.setFocusOnElement(field[playerPozition],false, true);
+            /*if(labView)
+                labView.setFocusOnElement(field[playerPozition],false, true);*/
             //Задаем направление, куда смотрит персонаж
             playerSetDirection(getPlayerDirFromSide(), false);
             //Обнуляем счетчик времени
@@ -457,9 +457,9 @@ function movePlayerToFieldElement(fEl, dontFocus, indx, isAnim) {
         playerImageObj.setDelay(1);
     } else //Если он уже есть, то просто смещаем его в нужную позицию
     {
-        if (fEl.x == playerImageObj.x && fEl.y == playerImageObj.y)
-            return;
         if (isAnim) {
+            if (fEl.x == playerImageObj.x && fEl.y == playerImageObj.y)
+                return;
             robotAnimMovePoint = new point(fEl.x, fEl.y);
         }
         else {
@@ -469,7 +469,7 @@ function movePlayerToFieldElement(fEl, dontFocus, indx, isAnim) {
             playerImageObj.h = fEl.h;
         }
     }
-    if (labView && !dontFocus) labView.setFocusOnElement(field[playerPozition], false);
+    if (labView && !dontFocus) labView.setFocusOnElement(playerImageObj, false);
     if (indx && playerMovesHistory[playerMovesHistory.length - 1] != indx)
         playerMovesHistory.push(indx);
 }

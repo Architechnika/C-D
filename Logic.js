@@ -45,7 +45,9 @@ var buffGameCondition = {
     opRoute: "",
     cLvl: "",
     nLvl: "",
-    pLvl: ""
+    pLvl: "",
+    labSize: "",
+    entrySide: ""
 }
 //Игровой цикл
 game.newLoopFromConstructor('Labyrinth', function () {
@@ -209,6 +211,8 @@ function saveGameState() {
     buffGameCondition.gExp = globalEXP;
     buffGameCondition.cLvl = currentPlayerLevel;
     buffGameCondition.nLvl = nextLevelEXP;
+    buffGameCondition.labSize = labyrinthSize;
+    buffGameCondition.entrySide = entrySide;
 }
 
 function initLabirint() {

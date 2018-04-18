@@ -36,7 +36,8 @@ var animTickCounter = 0;
 var tSecs = 0;
 var tSec = 0;
 var gEx = 0;
-var cLvl = 0;
+var gExMax = 0;
+var cLvl = 0, pLvl = 0, nLvl = 0;
 var achievements = [];
 var achIndx = 0;
 var lvlDiscr = 0; //Дискрет на который ковышается уровень при каждой сброшенной секунде
@@ -55,11 +56,12 @@ function initParams() {
     tSecs = totalSeconds;
     tSec = 0;
     gEx = 0;
-    cLvl = 0;
+    pLvl = nLvl = cLvl = 0;
     achievements = [];
     achIndx = 0;
     lvlDiscr = 0; //Дискрет на который ковышается уровень при каждой сброшенной секунде
     animCount = 0;
+    gExMax = 0;
     animTimeoutBuff = animTimeout;
 }
 
@@ -203,12 +205,13 @@ function replayLevel() {
     totalSeconds = 0;
 
     field = getCopyOfObj(buffGameCondition.map);
+    labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
     gameObjects = getCopyOfObj(buffGameCondition.gObjs);
     OOP.forArr(gameObjects, function (el) {
         el.setNewPosition(el.position);
         el.startRotation();
     });
-    buffGameCondition.opRoute = getCopyOfObj(optimalRoute);
+    optimalRoute = getCopyOfObj(buffGameCondition.opRoute);
     OOP.forArr(optimalRoute, function (el) {
         el.isActive = true;
     });
@@ -216,14 +219,23 @@ function replayLevel() {
     currentPlayerLevel = buffGameCondition.cLvl;
     nextLevelEXP = buffGameCondition.nLvl;
     prevLevelEXP = buffGameCondition.pLvl;
+    labyrinthSize = totalWidth = totalHeight = buffGameCondition.labSize;
+    entrySide = buffGameCondition.entrySide;
 
+    playerImageObj = null;
     playerSetStart();
+   /* //Это костыль, разобраться почему при перезапуске лабиринта картинка робота ставится в точку следующего лабиринта а не предыдущего
+    playerImageObj.x = field[playerPozition].x;
+    playerImageObj.y = field[playerPozition].y;
+    playerImageObj.w = field[playerPozition].w;
+    playerImageObj.h = field[playerPozition].h;*/
     goToLab();
 }
 
 function calcEXPResult() {
     //Рассчитываем опыт
     calcEXP(checkAchievements());
+    initNextLvl();
     isAnimNow = true;
     animLvl();
 }
@@ -235,19 +247,18 @@ function animLvl() {
     if (tSec > 0) {
         var k = tSec > 10 ? tSec / 2 : 1;
         tSec -= Math.floor(k); //= k;
-        globalEXP += lvlDiscr; // * k);
-        if (globalEXP > nextLevelEXP) {
+        gEx += lvlDiscr; // * k);
+        if (gEx > nLvl) {
             isLevelUp = true;
-            currentPlayerLevel++;
-            prevLevelEXP = nextLevelEXP;
-            nextLevelEXP = nextLevelEXP + (currentPlayerLevel * currentPlayerLevel);
+            cLvl++;
+            pLvl = nLvl;
+            nLvl += cLvl * cLvl;
         }
-        playerLvl.setExp();
         //Отображаем на экран изменения
         {
             setTextTime(tSec);
             //Обновляем опыт
-            playerLvl.setExp();
+            playerLvl.setExp(gEx,pLvl,nLvl,cLvl);
         }
         setTimeout("animLvl()", animTimeoutBuff);
     } else {
@@ -305,17 +316,15 @@ function initNextLvl() {
     codeView.clear();
     if (isLabyrinthGrow && isLevelUp) {
         if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) { } else {
-            totalWidth += 2;
-            totalHeight += 2;
-            labyrinthSize = totalWidth;
+            labyrinthSize = totalWidth = totalHeight += 2;
         }
     }
-    //Перезагружаем уровень с новым лабиринтом
-    initializeGame();
+    initializeGame(undefined, true);
 }
 
 function nextLevel() {
-    initNextLvl();
+    //initNextLvl();
+    saveGameState();
     goToLab();
 }
 
@@ -337,24 +346,35 @@ function goToLab() {
 //Производит расчет очков опыта набранных игроком в процессе прохождения лабиринта
 function calcEXP(bonus) {
     var s = totalSeconds;
-    gEx = globalEXP
+    gExMax = gEx = globalEXP;
     if (totalSeconds != 0)
-        gEx += (localEXP / (totalSeconds * 0.5)) + bonus;
+        gExMax += (localEXP / (totalSeconds * 0.5)) + bonus;
+    //Инитим переменные буферы для отработки анимации на окошке
+    cLvl = currentPlayerLevel;
+    tSec = totalSeconds;
+    pLvl = prevLevelEXP;
+    nLvl = nextLevelEXP;
+    //Инитим рассчитанный опыт
+    globalEXP = gExMax;
     //Очищаем значения которые надо очистить
     for (var i = 0; i < playerInventory.length; i++) {
         gameObjects.push(playerInventory[i]);
     }
+    if (globalEXP > nextLevelEXP) {
+        isLevelUp = true;
+        currentPlayerLevel++;
+        prevLevelEXP = nextLevelEXP;
+        nextLevelEXP = nextLevelEXP + (currentPlayerLevel * currentPlayerLevel);
+    }
     playerInventory.splice(0, playerInventory.length);
     localEXP = 0;
-    cLvl = currentPlayerLevel;
-    tSec = totalSeconds;
     animCount = 0;
     while (s > 0) {
         var k = s > 10 ? s / 2 : 1;
         s -= Math.floor(k); //= k;
         animCount++;
     }
-    lvlDiscr = (gEx - globalEXP) / animCount;
+    lvlDiscr = (gExMax - gEx) / animCount;
     return false;
 }
 

@@ -75,8 +75,8 @@ function updateTextOnGui() {
     timerText.setText((min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec))
     var expG = (globalEXP * 100).toFixed();
     var nexp = (nextLevelEXP * 100).toFixed();
-    //Обновляем инфу об опыте
-    playerLevelVisual.setExp();
+    //Обновляем инфу об опыте(gExp, prvLvl,nxtLvl,cLvl)
+    playerLevelVisual.setExp(globalEXP, prevLevelEXP, nextLevelEXP, currentPlayerLevel);
 }
 
 
@@ -375,18 +375,18 @@ function PlayerLevelVisualisation(X,Y,W,H,LastWindow) {
     this.setLevel = function (lvl) {
         expText.setText(lvl);
     }
-    this.setExp = function () {
+    this.setExp = function (gExp, prvLvl,nxtLvl,cLvl) {
         if (globalEXP > nextLevelEXP) {
             lvlLine.w = 0;
             lvlLineMembrane.w = 0;
         }
         else {
-            var expPerc = ((globalEXP - prevLevelEXP) * 100 / (nextLevelEXP - prevLevelEXP));
+            var expPerc = ((gExp - prvLvl) * 100 / (nxtLvl - prvLvl));
             var lvlLinePerc = (bg.w / 100) * expPerc;
             lvlLine.w = lvlLinePerc;
             lvlLineMembrane.w = lvlLinePerc
         }
-        this.setLevel("Уровень: " + currentPlayerLevel)
+        this.setLevel("Уровень: " + cLvl);
     }
 
     this.drawPlayerLevel = function () {
