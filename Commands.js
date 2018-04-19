@@ -250,6 +250,7 @@ function checkWhatIsIt(lookCommand, poz, field, fieldW, gameObj, orient) { //gam
             break;
     }
     var element = field[indx];
+    var code = element ? element.code : -1;
     var item = undefined;
     for (var i = 0; i < gameObj.length; i++)
         if (gameObj[i].position == indx) {
@@ -257,7 +258,7 @@ function checkWhatIsIt(lookCommand, poz, field, fieldW, gameObj, orient) { //gam
             break;
         }
 
-    return new gameFieldElement(element.code, item === undefined ? undefined : item.code); //ВОЗВРЩАЕМ ЭКЗЕМПЛЯР КЛАССА КОТОРЫЙ ПРЕДСТАВЛЯЕТ ЭЛЕМЕНТ
+    return new gameFieldElement(code, item === undefined ? undefined : item.code); //ВОЗВРЩАЕМ ЭКЗЕМПЛЯР КЛАССА КОТОРЫЙ ПРЕДСТАВЛЯЕТ ЭЛЕМЕНТ
 }
 
 //Возвращает массив действий если count > 0 иначе - пустой массив

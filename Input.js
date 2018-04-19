@@ -181,11 +181,7 @@ function onRecize(e, delta, step) {
         labView.resizeView(delta < 0 ? -1 * step : step);
         return;
     } else if (clickIsInObj(e.x, e.y, codeView.getBackGround())) {
-        //Ресайз поля работает только когда игрок не двигается
-        //if (!isStarted) {
-        //Инициализируем карту кода
         codeView.resizeView(delta < 0 ? -1 * step : step);
-        //}
         return;
     }
 }
@@ -193,7 +189,7 @@ function onRecize(e, delta, step) {
 function onUp(e) {
     if (pressedItem) {
         var spl = pressedItem.file.split("_pressed");
-        pressedItem.file = spl[0] + spl[1];
+        pressedItem.setImage(spl[0] + spl[1]);
         pressedItem = undefined;
     }
     if (messageBox.isShow()) {
@@ -499,25 +495,38 @@ function onCodeMapElementClick(element) {
         var el = codeView.menu.getElement();
         var stor1 = findObjStorage(lastClickedElement.commands, el.command);//Ищем места хранения меняемых команд
         var ind1 = stor1.indexOf(el.command);
-        if (element.command.name == "blockA" || element.command.name == "whatisit" || element.command.name == "blockB" || element.command.name == "counter") {
-
+        //Если нажали на один из элементов на которых ничего не должно происходить
+        if (element.command.name == "blockA" || element.command.name == "whatisit" || element.command.name == "blockB" || element.command.name == "counter") 
+            return;
+        if (el.command.commandsBlock && el.command.commandsBlock.actions) {
+            var check = findObjStorage(el.command.commandsBlock.actions, element.command);
+            if (check)
+                return;
         }
-        else {
-            if (element.name && element.name == "plus") {
-                element.command.push(getCopyOfObj(stor1[ind1]));
-            }
-            else {
-                var stor2 = findObjStorage(lastClickedElement.commands, element.command);
-                var ind2 = stor2.indexOf(element.command);
-                //Ставим выбранный элемент на место после указанного, а из прошлого хранилища удаляем
-                stor2.splice(ind2 + 1, 0, getCopyOfObj(stor1[ind1]));
-            }
-            stor1.splice(stor1.indexOf(el.command), 1);
-            codeView.isElementMove = false;
-            initLeftScroll(getCommandsImgArr(stor2 ? stor2 : stor1));
-            //Перегенерим код мап
-            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
+        if (el.command.elseBlock && el.command.elseBlock.actions) {
+            var check = findObjStorage(el.command.elseBlock.actions, element.command);
+            if (check)
+                return;
         }
+        //Если нажали на какой то из плюсиков
+        if (element.name && element.name == "plus") {
+            element.command.push(getCopyOfObj(stor1[ind1]));
+        }
+        else {//Если на любую из команд
+            var stor2 = findObjStorage(lastClickedElement.commands, element.command);
+            
+            if (el.command.commandsBlock && el.command.commandsBlock.actions == stor2)
+                return;
+            var ind2 = stor2.indexOf(element.command);
+            //Ставим выбранный элемент на место после указанного, а из прошлого хранилища удаляем
+            stor2.splice(ind2 + 1, 0, getCopyOfObj(stor1[ind1]));
+        }
+        //Убираем элемент из старого хранилища
+        stor1.splice(stor1.indexOf(el.command), 1);
+        codeView.isElementMove = false;
+        initLeftScroll(getCommandsImgArr(stor2 ? stor2 : stor1));
+        //Перегенерим код мап
+        codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         return;
     }
     if (element.name && element.name == "plus") {
@@ -602,19 +611,19 @@ function processFieldClick(e) {
 
 function findPressed(e) {
     var el;
-    //    if (allButtons && allButtons.buttonsArr.length > 0) {
-    //        var scrlitems = allButtons.buttonsArr;
-    //        for (var i = 0; i < scrlitems.length; i++) {
-    //            el = scrlitems[i];
-    //            if (clickIsInObj(e.x, e.y, el)) {
-    //                if (el.file) {
-    //                    el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
-    //                    pressedItem = el;
-    //                    return;
-    //                }
-    //            }
-    //        }
-    //    }
+    if (allButtons && allButtons.buttonsArr.length > 0) {
+        var scrlitems = allButtons.buttonsArr;
+        for (var i = 0; i < scrlitems.length; i++) {
+            el = scrlitems[i];
+            if (clickIsInObj(e.x, e.y, el)) {
+                if (el.file) {
+                    el.setImage(getPressedImg(el));
+                    pressedItem = el;
+                    return;
+                }
+            }
+        }
+    }
     if (Scrolls && Scrolls.length > 0) {
         for (var j = 0; j < Scrolls.length; j++) {
             var scrlitems = Scrolls[j].getArrayItems();
@@ -624,10 +633,10 @@ function findPressed(e) {
                     if (clickIsInObj(e.x, e.y, el)) {
                         if (el.file) {
                             if (el.name != "saveItem") {
-                                el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
+                                el.setImage(getPressedImg(el));
                             }else{ 
-                                log(el.getImg())
-                                el.setImg(el.getImg().split(".png")[0] + "_pressed.png");
+                                /*log(el.getImg())
+                                el.setImg(el.getImg().split(".png")[0] + "_pressed.png");*/
                             }
                             pressedItem = el;
                             return;
@@ -643,13 +652,20 @@ function findPressed(e) {
             el = scrlitems[i];
             if (clickIsInObj(e.x, e.y, el)) {
                 if (el.file) {
-                    el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
+                    el.setImage(getPressedImg(el));
                     pressedItem = el;
                     return;
                 }
             }
         }
     }
+}
+
+function getPressedImg(el) {
+    var img = el.getImage();
+    if (img.split("pressed").length > 1) return img;
+    var pr_img = img.split(".png")[0] + "_pressed.png";
+    return pr_img;
 }
 
 

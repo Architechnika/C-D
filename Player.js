@@ -78,25 +78,25 @@ function playerMove(canRead) {
     //Обрабатываем команды
     switch (comm.name) { //Обрабатываем верхнюю команду
         case "up": //Вверх
-            code = field[playerPozition + totalWidth].code;
+            code = playerPozition + totalWidth >= 0 ? field[playerPozition + totalWidth].code : -1;
             pPoz += totalWidth;
             isTrueDir = playerFrontSide == 0;
             dir = 0;
             break;
         case "down": //Вниз
-            code = field[playerPozition - totalWidth].code;
+            code = playerPozition - totalWidth >= 0 ? field[playerPozition - totalWidth].code : -1;
             pPoz -= totalWidth;
             isTrueDir = playerFrontSide == 2;
             dir = 2;
             break;
         case "left": //Влево
-            code = field[playerPozition + 1].code;
+            code = playerPozition + 1 >= 0 ? field[playerPozition + 1].code : -1;
             pPoz++;
             isTrueDir = playerFrontSide == 3;
             dir = 3;
             break;
         case "right": //Вправо
-            code = field[playerPozition - 1].code;
+            code = playerPozition - 1 >= 0 ? field[playerPozition - 1].code : -1;
             pPoz--;
             isTrueDir = playerFrontSide == 1;
             dir = 1;
@@ -292,13 +292,12 @@ function getLocalEXP(){
             optimalRoute[i].isActive = false;
         }
     }
-    log("LOCAL: " + localEXP);
 }
 
 //Вызывает отрисовку текущей выполняемой команды на карте кода
-function drawCommState(isRegenCodeMap){
-    if (!isVerticalScreen && isVisualizeCodeMap) {
-        if(isRegenCodeMap)
+function drawCommState(isRegenCodeMap) {
+    if ((!isVerticalScreen && isVisualizeCodeMap) || !isStarted) {
+        if (isRegenCodeMap || !isStarted)
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0], true);
         codeView.setAlphaToElement(passiveItemsAlpha,playerCommands[0]);
     }

@@ -201,6 +201,7 @@ function initRightScroll(initArray) {
     if (codeView && codeView.elems.length > 0) codeView.clear();
     //Показываем кнопку ok
     allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
+    allButtons.mainButton.value = "ok";
     allButtons.deleteButton.setVisible(false);
     return Scrolls[found];
 }

@@ -9,6 +9,10 @@ function PushButton() { //Класс наследуеться от newImageObjec
         file: nonePath
     })
     this.__proto__ = parent;
+
+    this.setImage = function (img) {
+        this.__proto__.setImage(img);
+    }
     //функция вызываеться извне и позволяеть установить  настройки позиции и размеров кнопки
     this.setSetting = function (x, y, w, h) {
         this.x = x;
@@ -56,7 +60,8 @@ function Buttons() { //класс для работы совсеми кнопк�
     var buttonsCount = this.buttonsArr.length - n; //!!!если кнопка будет создана для того чтобы разместить в другом места, а не снизу, то обратите внимание на эту строку
     //выполняем настройки позиции, размеров картинки для кнопок
     this.mainButton.setSetting(gameSpaceX, height - (gameSpaceW / 100 * 14), (gameSpaceW) / buttonsCount, gameSpaceW / 100 * 14)
-    this.mainButton.setButtonImgSrc(buttonStartImgSrc)
+    this.mainButton.setButtonImgSrc(buttonStartImgSrc);
+    this.mainButton.setUserData({value : "start"});
 
     this.stepDownButton.setSetting(this.mainButton.x + this.mainButton.w, height - (gameSpaceW / 100 * 14), (gameSpaceW) / buttonsCount, gameSpaceW / 100 * 14)
     this.stepDownButton.setButtonImgSrc(prevStepButtonImgSrc);
@@ -99,10 +104,29 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.mainButton.setUserData({
         onClick: function (el) {
             audio_GUI_click.play();
-            if (el.file == okButtonImgSrc) isOkClose = onOkBClick(); //Обрабатываем на нажатие по ОК
+            if (el.value == "ok") {
+                if (onOkBClick()) {
+                    el.value = isStarted ? "stop" : "start";
+                    el.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
+                }
+            }
+            else if (el.value == "start") {
+                startBClick();
+                el.value = "stop";
+                el.setButtonImgSrc(buttonStopImgSrc);
+            }
+            else if (el.value == "stop") {
+                startBClick();
+                el.value = "start";
+                el.setButtonImgSrc(buttonStartImgSrc);
+            }
+            /*if (el.value && el.value == "ok") isOkClose = onOkBClick(); //Обрабатываем на нажатие по ОК
             else startBClick(); //Обрабатываем клик по СТАРТ/СТОП
             //Задаем картинку кнопке в соответствии с ее состоянием
-            if (isOkClose) el.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
+            if (isOkClose) {
+                el.value = isStarted ? "stop" : "start";
+                el.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
+            }*/
         }
     });
     this.stepDownButton.setUserData({

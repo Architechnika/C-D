@@ -365,6 +365,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                 h: WH,
                 file: lineImg
             }));
+            images[images.length - 1].name = "line";
         }
     }
 
@@ -656,7 +657,8 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         if (!this.menu.isClicked(e)) {
             if (!parent.isClicked(e)) {
                 if (this.isElementMove) {
-                    this.menu.resetElement();
+                    //Перегенерим код мап
+                    codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
                     this.isElementMove = false;
                 }
                 else this.menu.closeMenu();
@@ -767,6 +769,7 @@ var getTextObject = function (el, elemWH) {
 
 //Функция возвращает массив команд в котором находится obj. Из иерархии массивов container
 var findObjStorage = function (container, obj) {
+    if (container == obj) return container;
     for (var i = 0; i < container.length; i++) {
         var el = container[i];
         //Проверяем на поиск вложения(ситуации когда искомый обьект - blockA,blockB или countBlock)
@@ -791,6 +794,8 @@ var findObjStorage = function (container, obj) {
         }
         //Если в команде есть массив команд то рекурсивно вызваем функцию для этого массива
         if (el.commandsBlock) {
+            if (el.commandsBlock.actions == obj)
+                return el.commandsBlock.actions;
             if (el.commandsBlock.actions.length > 0) {
                 //Рекурсивно вызываем функцию поиска
                 var res = findObjStorage(el.commandsBlock.actions, obj);
@@ -798,6 +803,8 @@ var findObjStorage = function (container, obj) {
                 if (res) return res;
             }
             if (el.elseBlock && el.elseBlock.actions.length > 0) {
+                if (el.elseBlock.action == obj)
+                    return el.elseBlock.action;
                 //Рекурсивно вызываем функцию поиска
                 var res = findObjStorage(el.elseBlock.actions, obj);
                 //Если функция вернет результат, то возвращаем его
@@ -907,9 +914,9 @@ function ItemMenu() {
             //описать клик перемещение
             audio_GUI_click.play();
             codeView.isElementMove = true;
-            element.x -= element.w / 2
-            element.y -= element.w / 2
-            element.w = element.h = element.w * 2;
+            //Скрываем команду и всю иерархию команд для перемещения
+            setMovableFromElement(element);
+            //Закрываем меню команд
             codeView.menu.closeMenu(true);
         }
     });
@@ -984,6 +991,31 @@ function ItemMenu() {
             if (shiftY != 0 || shiftX != 0) parent.elementsMove(shiftX, shiftY, true, true);
         }
     }
+
+    //Скрывает команды которые перемещаются сейчас
+    var setMovableFromElement = function (element) {
+        if (element.name == "line") return;
+        if (element.name != "repeat" && element.name != "repeatif" && element.name != "if") {
+            element.setImage(commandMovableImgSrc);
+            return;
+        }
+        /*var comm = element.command;
+        var elems = codeView.getElements();
+        OOP.forArr(elems, function (el) {
+            if (el.name && el.name == "line") continue;
+            if (el.name && el.name == "plus") {
+                if (comm.commandsBlock && comm.commandsBlock.actions.length > 0)
+                    if (comm.commandsBlock.actions == el.command)
+                        el.setImage(commandMovableImgSrc);
+                continue;
+            }
+            if (el.command.name == "blockA") {
+
+            }
+
+        })*/
+    }
+
     this.openMenu = function (item, parent) { //функция испотльзуеться извне, получает ссылку на элемент по которому кликнули, устанавливает позиции в соответствующих местах и включает видимость элементов
         element = item;
         //var con = findObjStorage(lastClickedElement.commands, item.command);

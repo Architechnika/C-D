@@ -320,7 +320,7 @@ function setFocused(fieldElem, indx) {
         allButtons.stepUpButton.setAlpha(inactiveItemsAlpha);
         //Показываем кнопку ok
         allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
-
+        allButtons.mainButton.value = "ok"
         game.setLoop("SecondScreen")
     }
 }
