@@ -99,9 +99,9 @@ function initLastWindow() {
     //
     //Часть окна для достижений за уровень
     achivBG = game.newRoundRectObject({
-        x: xPos,
+        x: mainBG.x,
         y: yPos + mainBG.h * 0.24,
-        w: mainBG.w * 0.5,
+        w: mainBG.w,
         h: mainBG.h * 0.25,
         radius: 20,
         fillColor: "#e076fe",

@@ -687,14 +687,7 @@ function ScrollBar(posX, posY, orientation, arr, name) {
                     if (el.isIntersect(backGround.getBackGround())) {
                         el.setVisible(true);
                     } else el.setVisible(false)
-                    //            if(el.y < backGround.getBackGround().y)
-                    //                {
-                    //                    el.transparent(-0.1)
-                    //                }
-                    //            if((el.y+el.h) > backGround.getBackGround().y + backGround.getBackGround().h)
-                    //                {
-                    //                    el.transparent(-0.1)
-                    //                }
+
                 }
             });
 
