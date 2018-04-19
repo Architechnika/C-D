@@ -28,11 +28,11 @@ function SaveItem(name, script) {
     }
         this.setX = function (X) {
             parent.x = X;
-            saveFileName.x = X + parent.w * 0.25;
+            saveFileName.x = X + parent.w * 0.20;
         }
         this.setY = function (Y) {
             parent.y = Y;
-            saveFileName.y = Y + parent.h * 0.18;
+            saveFileName.y = Y + parent.h * 0.20;
         }
         this.setW = function (W) {
             parent.w = W;
@@ -59,7 +59,7 @@ function SaveItem(name, script) {
 
         set: function (value) {
             this.__proto__.x = value;
-            saveFileName.x = value + this.__proto__.w * 0.38;
+            saveFileName.x = value + this.__proto__.w * 0.20;
         }
     });
     
@@ -71,7 +71,7 @@ function SaveItem(name, script) {
 
         set: function (value) {
             this.__proto__.y = value;
-            saveFileName.y = value;
+            saveFileName.y = value + this.__proto__.h * 0.20;
         }
     });
     Object.defineProperty(this, "file", {
