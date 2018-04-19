@@ -118,10 +118,10 @@ function initLastWindow() {
     playerLvl.setTextPos(xPos, yPos + mainBG.h * 0.16)
     //
     //медаль
-    medalText = new Label(xPos, yPos + mainBG.h * 0.5, "Медаль: ");
-    medalText.setTextSize(mainBG.w * 0.06)
-    medalText.setTextColor(textColor)
-    medalStartPosX = xPos + mainBG.w * 0.25;
+    //medalText = new Label(xPos, yPos + mainBG.h * 0.5, "Медаль: ");
+    //medalText.setTextSize(mainBG.w * 0.06)
+    //medalText.setTextColor(textColor)
+    medalStartPosX = xPos;
     medalItem = //game.newImageObject({ file: medal1ImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: mainBG.w * 0.04, h: mainBG.h * 0.08, });
         //
         //кнопки
@@ -145,7 +145,7 @@ function drawWindow() {
     playerLvl.drawPlayerLevel();
     buttonNext.draw();
     buttonReload.draw();
-    medalText.textDraw();
+   // medalText.textDraw();
     medalItem.draw();
 }
 game.newLoopFromConstructor('LastLevelWindow', function () {
@@ -273,30 +273,31 @@ function animAchiv() {
         animTickCounter++;
         setTimeout("animAchiv()", animTimeoutBuff);
     } else {
-        var wM = mainBG.w * 0.2;
+        var wM = mainBG.w * 0.7;
+        var hM = mainBG.w * 0.15;
         if (achievements.length == 0) {
             medalItem = game.newImageObject({
                 file: medalBronzeImgSrc,
                 x: medalStartPosX,
-                y: yPos + mainBG.h * 0.5,
+                y: yPos + mainBG.h * 0.46,
                 w: wM,
-                h: wM
+                h: hM
             });
         } else if (achievements.length == 1) {
             medalItem = game.newImageObject({
                 file: medalSilverImgSrc,
                 x: medalStartPosX,
-                y: yPos + mainBG.h * 0.5,
+                y: yPos + mainBG.h * 0.46,
                 w: wM,
-                h: wM
+                h: hM
             });
         } else if (achievements.length > 1) {
             medalItem = game.newImageObject({
                 file: medalGoldImgSrc,
                 x: medalStartPosX,
-                y: yPos + mainBG.h * 0.5,
+                y: yPos + mainBG.h * 0.46,
                 w: wM,
-                h: wM
+                h: hM
             });
         }
         animTickCounter = 0;
