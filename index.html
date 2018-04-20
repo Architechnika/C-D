@@ -15,8 +15,9 @@
     <link rel="stylesheet" href="assets/animate.css/animate.min.css">
     <link rel="stylesheet" href="assets/mobirise/css/style.css">
     <link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css" type="text/css">
-<!--    <script type="text/javascript" src="userRegistration/prefixfree.min.js"></script>-->
+    <!--    <script type="text/javascript" src="userRegistration/prefixfree.min.js"></script>-->
     <link rel="stylesheet" href="userRegistration/css/style.css" type="text/css">
+<!--    <link rel="stylesheet" type="text/css" href="dialog/css/style.css" />-->
 
     <script>
         var currentVersion = "1.0.20180418";
@@ -25,8 +26,7 @@
 
         function readOptions() { //
 
-            if (localStorage.getItem("tmpUserData")) 
-            {
+            if (localStorage.getItem("tmpUserData")) {
                 var tud = JSON.parse(localStorage.getItem("tmpUserData"));
                 userID = tud.userId;
                 userdata.user = tud.userName;
@@ -74,11 +74,10 @@
         })(document, window, "yandex_metrika_callbacks");
 
     </script>
-       
+
     <noscript><div><img src="https://mc.yandex.ru/watch/47636011" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
     <!-- /Google Analytics -->
-  
 
     <section class="mbr-box mbr-section mbr-section--relative mbr-section--fixed-size mbr-section--full-height mbr-section--bg-adapted mbr-parallax-background" id="header2-0" data-rv-view="21" style="background: url(assets/images/image01-1200x800.jpg);">
         <div class="mbr-box__magnet mbr-box__magnet--sm-padding mbr-box__magnet--center-left">
@@ -107,28 +106,37 @@
 
                     </div>
                 </div>
-                 </div>
-                  </div>
+            </div>
+        </div>
     </section>
 
-   <div class="content" id="log">
-  <div class="form-wrapper">
-    <div class="linker"> 
-      <span class="ring"></span>
-      <span class="ring"></span>
-      <span class="ring"></span>
-      <span class="ring"></span>
-      <span class="ring"></span>
+    <div class="content" id="log">
+        <div class="form-wrapper">
+            <div class="linker">
+                <span class="ring"></span>
+                <span class="ring"></span>
+                <span class="ring"></span>
+                <span class="ring"></span>
+                <span class="ring"></span>
+            </div>
+            <form class="login-form" action="#" method="post">
+                <input id="userName" type="text" name="username" placeholder="Введите логин" />
+                <input id="userPswd" type="password" name="password" placeholder="Введите пароль" />
+                <button onclick="userEnter()" type="submit">Войти/Регистрация</button>
+            </form>
+        </div>
     </div>
-    <form class="login-form" action="#" method="post">
-      <input id="userName" type="text" name="username" placeholder="Введите логин" />
-      <input id="userPswd" type="password" name="password" placeholder="Введите пароль" />
-      <button onclick="userEnter()" type="submit">Войти/Регистрация</button>
-    </form>
-  </div>
-</div>
+    
+        
+<!--
+        <div class="mainBG" id="dialog">
+        <center>Вы Уверены?</center>
+        <button class="send" onclick="" id="click">Да </button>
+        <button class="cancel" onclick="" id="clickCancel">Нет </button>
+        </div>
+-->
 
-   
+
     <script src="assets/web/assets/jquery/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/smooth-scroll/smooth-scroll.js"></script>

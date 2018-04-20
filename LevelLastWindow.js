@@ -121,7 +121,7 @@ function initLastWindow() {
     //medalText = new Label(xPos, yPos + mainBG.h * 0.5, "Медаль: ");
     //medalText.setTextSize(mainBG.w * 0.06)
     //medalText.setTextColor(textColor)
-    medalStartPosX = xPos;
+    medalStartPosX = mainBG.w * 0.15;
     medalItem = //game.newImageObject({ file: medal1ImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: mainBG.w * 0.04, h: mainBG.h * 0.08, });
         //
         //кнопки
@@ -275,11 +275,12 @@ function animAchiv() {
     } else {
         var wM = mainBG.w * 0.7;
         var hM = mainBG.w * 0.15;
+        var yM = buttonNext.y - (((yPos + mainBG.h * 0.22)+mainBG.h * 0.24)/2)
         if (achievements.length == 0) {
             medalItem = game.newImageObject({
                 file: medalBronzeImgSrc,
                 x: medalStartPosX,
-                y: yPos + mainBG.h * 0.46,
+                y: yM,
                 w: wM,
                 h: hM
             });
@@ -287,7 +288,7 @@ function animAchiv() {
             medalItem = game.newImageObject({
                 file: medalSilverImgSrc,
                 x: medalStartPosX,
-                y: yPos + mainBG.h * 0.46,
+                y:yM,
                 w: wM,
                 h: hM
             });
@@ -295,7 +296,7 @@ function animAchiv() {
             medalItem = game.newImageObject({
                 file: medalGoldImgSrc,
                 x: medalStartPosX,
-                y: yPos + mainBG.h * 0.46,
+                y: yM,
                 w: wM,
                 h: hM
             });
