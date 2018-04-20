@@ -33,6 +33,7 @@ var isDrawFPS = false;
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------ЗВУКОВЫЕ ФАЙЛЫ-----------------------------------------------------------------
 var audio_GUI_click = pjs.audio.newAudio(["audio/clickGUI.ogg","audio/clickGUI.aac"]);
+var audio_lastWindow = pjs.audio.newAudio(["audio/lastWindow.ogg","audio/lastWindow.aac"]);
 var audio_field_click = pjs.audio.newAudio(["audio/clickField.ogg","audio/clickField.aac"]);
 var audio_object_up = pjs.audio.newAudio(["audio/gameObjectUp.ogg","audio/gameObjectUp.aac"]);
 var audio_object_down = pjs.audio.newAudio(["audio/gameObjectDown.ogg","audio/gameObjectDown.aac"]);
