@@ -3983,7 +3983,7 @@ function sleep(milliseconds) {
 //Переменные для системы ВВОДА----------------------------------------------------------------------------------
 var touchTapTimeOut = 100;//Параметр указывающий сколько миллисекунд надо держать пользователю на элементе в скроле чтобы его переместить(НУЖНО ЧТОБЫ ОТДЕЛЯТЬ ПРОКРУТКУ СКРОЛА ОТ ПЕРЕМЕЩЕНИЙ ЭЛЕМЕНТОВ В СКРОЛЕ)
 var distanceOfScroll = 5; //Параметр указывающий на каком расстоянии от точки тапа при движении по экрану начинать отрабатывать события скрола
-var scrollStep = 20; //Шаг скрола в пикселях(Когда крутишь колесиком мыши)
+var scrollStep = 5; //Шаг скрола в пикселях(Когда крутишь колесиком мыши)
 var touchScrollVal = 2;//Шаг скрола когда пальцами ресайзишь
 var toolTipDelay = 1000000000;//Задержка в миллисекундах после которой всплывают тултипы если держать мышку на элементе
 //Игровые параметры---------------------------------------------------------------------------------------------
@@ -4014,6 +4014,7 @@ var isDrawFPS = false;
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------ЗВУКОВЫЕ ФАЙЛЫ-----------------------------------------------------------------
 var audio_GUI_click = pjs.audio.newAudio(["audio/clickGUI.ogg","audio/clickGUI.aac"]);
+var audio_lastWindow = pjs.audio.newAudio(["audio/lastWindow.ogg","audio/lastWindow.aac"]);
 var audio_field_click = pjs.audio.newAudio(["audio/clickField.ogg","audio/clickField.aac"]);
 var audio_object_up = pjs.audio.newAudio(["audio/gameObjectUp.ogg","audio/gameObjectUp.aac"]);
 var audio_object_down = pjs.audio.newAudio(["audio/gameObjectDown.ogg","audio/gameObjectDown.aac"]);
@@ -4065,6 +4066,7 @@ var lineImg = "img/commands/command_line.png";
 //Пути до файлов с изображением робота--------------------------------------------
 var playerImgSrc = "img/assets/"+currentAsset+"/field/object_player.png";
 //Пути до файлов с изображением команд--------------------------------------------
+var commandMovableImgSrc = nonePath;//"img/commands/command_movable.png";
 var commandNoneImgSrc = "img/commands/command_none.png";
 var commandUpImgSrc = "img/commands/command_up.png";
 var commandDownImgSrc = "img/commands/command_down.png";
@@ -4278,82 +4280,93 @@ var graphicsImgs = [
 ];
 //Массив картинок команд и интерфейса
 var arrInterfaceAndCommandsImagesForLoad = [
-    'img/commands/command_none.png',
-    'img/assets/'+currentAsset+'/object_battery.png',
-    'img/interface/interface_font.png',
-    'img/interface/interface_clock.png',
-    'img/interface/interface_button_start.png',
-    'img/interface/interface_button_pause.png',
-    'img/interface/interface_button_menu.png',
-    'img/interface/interface_button_reload.png',
-    'img/interface/interface_button_ok.png',
-    'img/interface/interface_button_nextstep.png',
-    'img/interface/interface_button_prevstep.png',
-    'img/interface/interface_codeview_delete.png',
-    'img/interface/interface_codeview_replace.png',
-    'img/interface/interface_codeview_add.png',
-    'img/interface/interface_codeview_move.png',
-    'img/interface/interface_codeview_plus.png',
-    'img/commands/command_interact_wall.png',
-    'img/commands/command_interact_coin.png',
-    'img/commands/command_interact_exit.png',
-    'img/commands/command_interact_entry.png',
-    'img/commands/command_interact_road.png',
-    'img/commands/command_line.png',
-    'img/assets/'+currentAsset+'/object_player.png',
-    'img/commands/command_none.png',
-    'img/commands/command_up.png',
-    'img/commands/command_down.png',
-    'img/commands/command_left.png',
-    'img/commands/command_right.png',
-    'img/commands/command_clockwise.png',
-    'img/commands/command_unclockwise.png',
-    'img/commands/command_pickup.png',
-    'img/commands/command_drop.png',
-    'img/commands/command_block_commands.png',
-    'img/commands/command_whatisit.png',
-    'img/commands/command_block_if.png',
-    'img/commands/command_block_repeat.png',
-    'img/commands/command_block_repeatif.png',
-    'img/commands/command_block_a.png',
-    'img/commands/command_block_b.png',
-    'img/commands/command_counter.png',
-    'img/commands/command_ok.png',
-    'img/commands/command_look_up.png',
-    'img/commands/command_look_down.png',
-    'img/commands/command_look_left.png',
-    'img/commands/command_look_right.png',
-    'img/commands/command_look_center.png',
-    'img/commands/command_block_else.png',
-    'img/commands/command_forward.png',
-    'img/commands/command_onleft.png',
-    'img/commands/command_onright.png',
-    'img/commands/command_backward.png',
-    'img/commands/command_digit_0.png',
-    "img/commands/command_digit_1.png",
-    "img/commands/command_digit_2.png",
-    "img/commands/command_digit_3.png",
-    "img/commands/command_digit_4.png",
-    "img/commands/command_digit_5.png",
-    "img/commands/command_digit_6.png",
-    "img/commands/command_digit_7.png",
-    "img/commands/command_digit_8.png",
-    "img/commands/command_digit_9.png",
-    "img/interface/interface_button_dialog_ok.png",
-    "img/interface/interface_button_delete.png",
-    "img/commands/command_block_b_delete.png",
-    "img/commands/AND.png",
-    "img/commands/OR.png"
+    nonePath, 
+    coinPath, 
+    cursorImgSrc, 
+    clockPath, 
+    buttonStartImgSrc, 
+    buttonStopImgSrc, 
+    menuButtonImgSrc, 
+    reloadButtonImgSrc, 
+    okButtonImgSrc, 
+    nextStepButtonImgSrc, 
+    prevStepButtonImgSrc, 
+    buttonDeleteImgSrc, 
+    buttonDialogImgSrc, 
+    buttonSaveImgSrc, 
+    medalBronzeImgSrc, 
+    medalSilverImgSrc, 
+    medalGoldImgSrc, 
+    saveCommandsSrc, 
+    itemDeleteSrc, 
+    itemReplaceSrc, 
+    itemAddSrc, 
+    itemMoveSrc, 
+    itemPlusSrc, 
+    wallImgComm, 
+    coinImgComm, 
+    exitImgComm, 
+    entryImgComm, 
+    groundImgComm, 
+    lineImg, 
+    playerImgSrc, 
+    commandMovableImgSrc,
+    commandNoneImgSrc, 
+    commandUpImgSrc, 
+    commandDownImgSrc, 
+    commandLeftImgSrc, 
+    commandRightImgSrc, 
+    commandClockwiseImgSrc, 
+    commandUnClockwiseImgSrc, 
+    commandPickUpImgSrc, 
+    commandDropImgSrc, 
+    commandCommandsBlockImgSrc, 
+    commandWhatIsItImgSrc, 
+    commandIfImgSrc, 
+    commandRepeatImgSrc, 
+    commandRepeatIfImgSrc, 
+    commandBlockAImgSrc, 
+    commandBlockBImgSrc, 
+    commandBlockBDeleteImgSrc, 
+    commandBlockBOrImgSrc, 
+    commandBlockBOAndImgSrc, 
+    commandCounterImgSrc, 
+    commandOkImgSrc, 
+    commandLookUpImgSrc, 
+    commandLookDownImgSrc, 
+    commandLookLeftImgSrc, 
+    commandLookRightImgSrc, 
+    commandLookCenterImgSrc, 
+    commandElseBlockImgSrc, 
+    commandForwardImgSrc,
+    commandOnLeftImgSrc, 
+    commandOnRightImgSrc, 
+    commandBackwardImgSrc, 
+    commandDigitsImgSrc[0],
+    commandDigitsImgSrc[1],
+    commandDigitsImgSrc[2],
+    commandDigitsImgSrc[3],
+    commandDigitsImgSrc[4],
+    commandDigitsImgSrc[5],
+    commandDigitsImgSrc[6],
+    commandDigitsImgSrc[7],
+    commandDigitsImgSrc[8],
+    commandDigitsImgSrc[9],
+    commandBackspaceImgSrc 
 ];
-
+//Загружаем картинки для графического сета лабиринта
 graphicsImgs.forEach(function(e){
     new Image().src = e.value;
 });
-
+//Загружаем картинки интерфеса и команд
 arrInterfaceAndCommandsImagesForLoad.forEach(function(e){
     new Image().src = e;
 });
-
+//Загружаем картинки нажатого интерфейса и команд
+arrInterfaceAndCommandsImagesForLoad.forEach(function (e) {
+    var path = e.split(".png")[0] + "_pressed.png";
+    new Image().src = path;
+});
 //анимация клика по полю
 var tupAnimation = game.newAnimationObject(   { 
      animation : pjs.tiles.newImage("animations/tup.png").getAnimation(0, 0, 128, 128, 10), 
@@ -4389,6 +4402,10 @@ function PushButton() { //Класс наследуеться от newImageObjec
         file: nonePath
     })
     this.__proto__ = parent;
+
+    this.setImage = function (img) {
+        this.__proto__.setImage(img);
+    }
     //функция вызываеться извне и позволяеть установить  настройки позиции и размеров кнопки
     this.setSetting = function (x, y, w, h) {
         this.x = x;
@@ -4436,7 +4453,8 @@ function Buttons() { //класс для работы совсеми кнопк�
     var buttonsCount = this.buttonsArr.length - n; //!!!если кнопка будет создана для того чтобы разместить в другом места, а не снизу, то обратите внимание на эту строку
     //выполняем настройки позиции, размеров картинки для кнопок
     this.mainButton.setSetting(gameSpaceX, height - (gameSpaceW / 100 * 14), (gameSpaceW) / buttonsCount, gameSpaceW / 100 * 14)
-    this.mainButton.setButtonImgSrc(buttonStartImgSrc)
+    this.mainButton.setButtonImgSrc(buttonStartImgSrc);
+    this.mainButton.setUserData({value : "start"});
 
     this.stepDownButton.setSetting(this.mainButton.x + this.mainButton.w, height - (gameSpaceW / 100 * 14), (gameSpaceW) / buttonsCount, gameSpaceW / 100 * 14)
     this.stepDownButton.setButtonImgSrc(prevStepButtonImgSrc);
@@ -4479,10 +4497,26 @@ function Buttons() { //класс для работы совсеми кнопк�
     this.mainButton.setUserData({
         onClick: function (el) {
             audio_GUI_click.play();
-            if (el.file == okButtonImgSrc) isOkClose = onOkBClick(); //Обрабатываем на нажатие по ОК
-            else startBClick(); //Обрабатываем клик по СТАРТ/СТОП
-            //Задаем картинку кнопке в соответствии с ее состоянием
-            if (isOkClose) el.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
+            if (el.value == "ok") {
+                if (onOkBClick()) {
+                    el.value = isStarted ? "stop" : "start";
+                    el.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
+                }
+            }
+            else if (el.value == "start") {
+                startBClick();
+                el.value = "stop";
+                el.setButtonImgSrc(buttonStopImgSrc);
+            }
+            else if (el.value == "stop") {
+                startBClick();
+                el.value = "start";
+                el.setButtonImgSrc(buttonStartImgSrc);
+            }
+        },
+        reset: function (el) {
+            el.value = isStarted ? "stop" : "start";
+            el.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
         }
     });
     this.stepDownButton.setUserData({
@@ -4610,7 +4644,7 @@ function ToolTip()
             <head>
                 <meta charset="UTF-8" />
                 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
-
+                
                 <link rel="stylesheet" type="text/css" href="MessageBox/css/style.css" />
 
 
@@ -22159,24 +22193,21 @@ function onRecize(e, delta, step) {
     OOP.forArr(Scrolls, function (scroll) {
         if ((scroll.name == "LEFT" || scroll.name == "RIGHT") && clickIsInObj(e.x, e.y, scroll.GetBackGround())) {
             var itms = scroll.getArrayItems();
-            OOP.forArr(itms, function (el, i) {
+            for (var i = 0; i < itms.length; i++) {
+                var el = itms[i];
                 if (clickIsInObj(e.x, e.y, el)) {
                     touchedScroll = scroll;
                     scrollDynamic(new point(delta * -1, delta * -1), touchedScroll);
                     return;
                 }
-            });
+            }
         }
     });
     if (!isSecondScreen && clickIsInObj(e.x, e.y, labView.getBackGround())) {
         labView.resizeView(delta < 0 ? -1 * step : step);
         return;
     } else if (clickIsInObj(e.x, e.y, codeView.getBackGround())) {
-        //Ресайз поля работает только когда игрок не двигается
-        //if (!isStarted) {
-        //Инициализируем карту кода
         codeView.resizeView(delta < 0 ? -1 * step : step);
-        //}
         return;
     }
 }
@@ -22184,7 +22215,7 @@ function onRecize(e, delta, step) {
 function onUp(e) {
     if (pressedItem) {
         var spl = pressedItem.file.split("_pressed");
-        pressedItem.file = spl[0] + spl[1];
+        pressedItem.setImage(spl[0] + spl[1]);
         pressedItem = undefined;
     }
     if (messageBox.isShow()) {
@@ -22490,25 +22521,39 @@ function onCodeMapElementClick(element) {
         var el = codeView.menu.getElement();
         var stor1 = findObjStorage(lastClickedElement.commands, el.command);//Ищем места хранения меняемых команд
         var ind1 = stor1.indexOf(el.command);
-        if (element.command.name == "blockA" || element.command.name == "whatisit" || element.command.name == "blockB" || element.command.name == "counter") {
-
+        //Если нажали на один из элементов на которых ничего не должно происходить
+        if (element.command.name == "blockA" || element.command.name == "whatisit" || element.command.name == "blockB" || element.command.name == "counter") 
+            return;
+        if (el.command.commandsBlock && el.command.commandsBlock.actions) {
+            var check = findObjStorage(el.command.commandsBlock.actions, element.command);
+            if (check)
+                return;
         }
-        else {
-            if (element.name && element.name == "plus") {
-                element.command.push(getCopyOfObj(stor1[ind1]));
-            }
-            else {
-                var stor2 = findObjStorage(lastClickedElement.commands, element.command);
-                var ind2 = stor2.indexOf(element.command);
-                //Ставим выбранный элемент на место после указанного, а из прошлого хранилища удаляем
-                stor2.splice(ind2 + 1, 0, getCopyOfObj(stor1[ind1]));
-            }
-            stor1.splice(stor1.indexOf(el.command), 1);
-            codeView.isElementMove = false;
+        if (el.command.elseBlock && el.command.elseBlock.actions) {
+            var check = findObjStorage(el.command.elseBlock.actions, element.command);
+            if (check)
+                return;
+        }
+        //Если нажали на какой то из плюсиков
+        if (element.name && element.name == "plus") {
+            element.command.push(getCopyOfObj(stor1[ind1]));
+        }
+        else {//Если на любую из команд
+            var stor2 = findObjStorage(lastClickedElement.commands, element.command);
+            
+            if (el.command.commandsBlock && el.command.commandsBlock.actions == stor2)
+                return;
+            var ind2 = stor2.indexOf(element.command);
+            //Ставим выбранный элемент на место после указанного, а из прошлого хранилища удаляем
+            stor2.splice(ind2 + 1, 0, getCopyOfObj(stor1[ind1]));
+        }
+        //Убираем элемент из старого хранилища
+        stor1.splice(stor1.indexOf(el.command), 1);
+        codeView.isElementMove = false;
+        if (!isVerticalScreen)
             initLeftScroll(getCommandsImgArr(stor2 ? stor2 : stor1));
-            //Перегенерим код мап
-            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
-        }
+        //Перегенерим код мап
+        codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         return;
     }
     if (element.name && element.name == "plus") {
@@ -22567,15 +22612,13 @@ function onKeyboardClick(el) {
 
 //Функция обеспечивающая динамический скролл
 function scrollDynamic(speed, scrollElement) {
-    if (Math.abs(speed.x) > 5 || Math.abs(speed.y) > 5) {
-        if (isMobile) {
-            speed.x *= 3;
-            speed.y *= 3;
-        }
-        //ИНИЦИАЛИЗИРУЕМ ФЛАГ СКРОЛА
-        isScrollMove = true;
-        scrollElement.scrollUpdate(speed);
+    if (isMobile) {
+        speed.x *= 3;
+        speed.y *= 3;
     }
+    //ИНИЦИАЛИЗИРУЕМ ФЛАГ СКРОЛА
+    isScrollMove = true;
+    scrollElement.scrollUpdate(speed);
 }
 
 //Обработка кликов на элемент поля
@@ -22593,19 +22636,19 @@ function processFieldClick(e) {
 
 function findPressed(e) {
     var el;
-    //    if (allButtons && allButtons.buttonsArr.length > 0) {
-    //        var scrlitems = allButtons.buttonsArr;
-    //        for (var i = 0; i < scrlitems.length; i++) {
-    //            el = scrlitems[i];
-    //            if (clickIsInObj(e.x, e.y, el)) {
-    //                if (el.file) {
-    //                    el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
-    //                    pressedItem = el;
-    //                    return;
-    //                }
-    //            }
-    //        }
-    //    }
+    if (allButtons && allButtons.buttonsArr.length > 0) {
+        var scrlitems = allButtons.buttonsArr;
+        for (var i = 0; i < scrlitems.length; i++) {
+            el = scrlitems[i];
+            if (clickIsInObj(e.x, e.y, el)) {
+                if (el.file) {
+                    el.setImage(getPressedImg(el));
+                    pressedItem = el;
+                    return;
+                }
+            }
+        }
+    }
     if (Scrolls && Scrolls.length > 0) {
         for (var j = 0; j < Scrolls.length; j++) {
             var scrlitems = Scrolls[j].getArrayItems();
@@ -22615,9 +22658,8 @@ function findPressed(e) {
                     if (clickIsInObj(e.x, e.y, el)) {
                         if (el.file) {
                             if (el.name != "saveItem") {
-                                el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
+                                el.setImage(getPressedImg(el));
                             }else{ 
-                                log(el.getImg())
                                 el.setImg(el.getImg().split(".png")[0] + "_pressed.png");
                             }
                             pressedItem = el;
@@ -22634,13 +22676,20 @@ function findPressed(e) {
             el = scrlitems[i];
             if (clickIsInObj(e.x, e.y, el)) {
                 if (el.file) {
-                    el.setImage(el.getImage().split(".png")[0] + "_pressed.png");
+                    el.setImage(getPressedImg(el));
                     pressedItem = el;
                     return;
                 }
             }
         }
     }
+}
+
+function getPressedImg(el) {
+    var img = el.getImage();
+    if (img.split("pressed").length > 1) return img;
+    var pr_img = img.split(".png")[0] + "_pressed.png";
+    return pr_img;
 }
 
 
@@ -22905,6 +22954,7 @@ function checkWhatIsIt(lookCommand, poz, field, fieldW, gameObj, orient) { //gam
             break;
     }
     var element = field[indx];
+    var code = element ? element.code : -1;
     var item = undefined;
     for (var i = 0; i < gameObj.length; i++)
         if (gameObj[i].position == indx) {
@@ -22912,7 +22962,7 @@ function checkWhatIsIt(lookCommand, poz, field, fieldW, gameObj, orient) { //gam
             break;
         }
 
-    return new gameFieldElement(element.code, item === undefined ? undefined : item.code); //ВОЗВРЩАЕМ ЭКЗЕМПЛЯР КЛАССА КОТОРЫЙ ПРЕДСТАВЛЯЕТ ЭЛЕМЕНТ
+    return new gameFieldElement(code, item === undefined ? undefined : item.code); //ВОЗВРЩАЕМ ЭКЗЕМПЛЯР КЛАССА КОТОРЫЙ ПРЕДСТАВЛЯЕТ ЭЛЕМЕНТ
 }
 
 //Возвращает массив действий если count > 0 иначе - пустой массив
@@ -24098,15 +24148,14 @@ function ScrollBar(posX, posY, orientation, arr, name) {
                         if (FrsElemY < backGround.getBackGround().y) {
                             dy = scrollVal.y * scrollSpeed;
                             if (FrsElemY + dy > backGround.getBackGround().y) {
-                                dy = 0;
+                                dy = backGround.getBackGround().y - FrsElemY;
                             }
                         }
                     } else if (scrollVal.y < 0) {
                         if (rYElLast >= rYBG) {
                             dy = scrollVal.y * scrollSpeed;
                             if (rYElLast + dy < rYBG) {
-                                var dSpeed = rYBG - (rYElLast + dy);
-                                dy = 0;
+                                dy = rYBG - rYElLast;
                             }
                         }
                     }
@@ -24115,14 +24164,7 @@ function ScrollBar(posX, posY, orientation, arr, name) {
                     if (el.isIntersect(backGround.getBackGround())) {
                         el.setVisible(true);
                     } else el.setVisible(false)
-                    //            if(el.y < backGround.getBackGround().y)
-                    //                {
-                    //                    el.transparent(-0.1)
-                    //                }
-                    //            if((el.y+el.h) > backGround.getBackGround().y + backGround.getBackGround().h)
-                    //                {
-                    //                    el.transparent(-0.1)
-                    //                }
+
                 }
             });
 
@@ -24549,7 +24591,7 @@ function initRightScroll(initArray) {
         //inputCommandStates = 0;
         //Показываем кнопку старт или стоп
         if (!isVerticalScreen)
-            allButtons.mainButton.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
+            allButtons.mainButton.reset(allButtons.mainButton);
         return;
     }
     if (found == -1) {
@@ -24573,6 +24615,7 @@ function initRightScroll(initArray) {
     if (codeView && codeView.elems.length > 0) codeView.clear();
     //Показываем кнопку ok
     allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
+    allButtons.mainButton.value = "ok";
     allButtons.deleteButton.setVisible(false);
     return Scrolls[found];
 }
@@ -24608,8 +24651,10 @@ function initLeftScroll(initMass) {
             Scrolls[found].setHeightScroll(allButtons.getPosition().y - textbackGroundItem.h);
         } else {
             Scrolls.push(new ScrollBar(0, 0, "Vertical", initMass, "LEFT"));
+            found = Scrolls.length - 1;
         }
     }
+    Scrolls[found].scrollToEnd();
 }
 
 function TextWithBG(X, Y, W, H) { //класс для рисования текста с задним фоном, первоначально была разработана для того чтобы над лаберинтом выводить цифры введенные в блоки цикла по количеству
@@ -24792,6 +24837,11 @@ function SaveItem(name, script) {
         color: "#05ae21",
         font: textFont,
     });
+    
+    this.parent = function()
+    {
+        return this.__proto__;
+    }
 
     this.setFileName = function (name) {
         saveFileName.text = name;
@@ -24801,11 +24851,11 @@ function SaveItem(name, script) {
     }
         this.setX = function (X) {
             parent.x = X;
-            saveFileName.x = X + parent.w * 0.25;
+            saveFileName.x = X + parent.w * 0.20;
         }
         this.setY = function (Y) {
             parent.y = Y;
-            saveFileName.y = Y + parent.h * 0.18;
+            saveFileName.y = Y + parent.h * 0.20;
         }
         this.setW = function (W) {
             parent.w = W;
@@ -24832,7 +24882,7 @@ function SaveItem(name, script) {
 
         set: function (value) {
             this.__proto__.x = value;
-            saveFileName.x = value + this.__proto__.w * 0.38;
+            saveFileName.x = value + this.__proto__.w * 0.20;
         }
     });
     
@@ -24844,7 +24894,7 @@ function SaveItem(name, script) {
 
         set: function (value) {
             this.__proto__.y = value;
-            saveFileName.y = value;
+            saveFileName.y = value + this.__proto__.h * 0.20;
         }
     });
     Object.defineProperty(this, "file", {
@@ -24863,7 +24913,7 @@ function SaveItem(name, script) {
         //обработчик загрузки на поле
         audio_GUI_click.play();
         lastClickedElement.commands = getCopyOfObj(el.scriptArray);
-        onOkBClick();
+        allButtons.mainButton.onClick(allButtons.mainButton);
     }
 
     this.draw = function () {
@@ -26099,6 +26149,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
                 h: WH,
                 file: lineImg
             }));
+            images[images.length - 1].name = "line";
         }
     }
 
@@ -26390,7 +26441,8 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         if (!this.menu.isClicked(e)) {
             if (!parent.isClicked(e)) {
                 if (this.isElementMove) {
-                    this.menu.resetElement();
+                    //Перегенерим код мап
+                    codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
                     this.isElementMove = false;
                 }
                 else this.menu.closeMenu();
@@ -26501,6 +26553,7 @@ var getTextObject = function (el, elemWH) {
 
 //Функция возвращает массив команд в котором находится obj. Из иерархии массивов container
 var findObjStorage = function (container, obj) {
+    if (container == obj) return container;
     for (var i = 0; i < container.length; i++) {
         var el = container[i];
         //Проверяем на поиск вложения(ситуации когда искомый обьект - blockA,blockB или countBlock)
@@ -26525,6 +26578,8 @@ var findObjStorage = function (container, obj) {
         }
         //Если в команде есть массив команд то рекурсивно вызваем функцию для этого массива
         if (el.commandsBlock) {
+            if (el.commandsBlock.actions == obj)
+                return el.commandsBlock.actions;
             if (el.commandsBlock.actions.length > 0) {
                 //Рекурсивно вызываем функцию поиска
                 var res = findObjStorage(el.commandsBlock.actions, obj);
@@ -26532,6 +26587,8 @@ var findObjStorage = function (container, obj) {
                 if (res) return res;
             }
             if (el.elseBlock && el.elseBlock.actions.length > 0) {
+                if (el.elseBlock.action == obj)
+                    return el.elseBlock.action;
                 //Рекурсивно вызываем функцию поиска
                 var res = findObjStorage(el.elseBlock.actions, obj);
                 //Если функция вернет результат, то возвращаем его
@@ -26641,9 +26698,9 @@ function ItemMenu() {
             //описать клик перемещение
             audio_GUI_click.play();
             codeView.isElementMove = true;
-            element.x -= element.w / 2
-            element.y -= element.w / 2
-            element.w = element.h = element.w * 2;
+            //Скрываем команду и всю иерархию команд для перемещения
+            setMovableFromElement(element);
+            //Закрываем меню команд
             codeView.menu.closeMenu(true);
         }
     });
@@ -26718,6 +26775,44 @@ function ItemMenu() {
             if (shiftY != 0 || shiftX != 0) parent.elementsMove(shiftX, shiftY, true, true);
         }
     }
+
+    //Скрывает команды которые перемещаются сейчас
+    var setMovableFromElement = function (element) {
+        if (!element || element.name == "line") return;
+        element.setImage(commandMovableImgSrc);
+        if (element.command.name != "repeat" && element.command.name != "repeatif" && element.command.name != "if") {
+            return;
+        }
+        if (element.command.blockA)//Перерисовываем блок А
+            searchItemByCommand(element.command.blockA).setImage(commandMovableImgSrc);
+        if (element.command.blockB) {//Перерисовываем блок Б
+            for (var i = 0; i < element.command.blockB.length; i++) {
+                searchItemByCommand(element.command.blockB[i]).setImage(commandMovableImgSrc);
+            }
+        }
+        if (element.command.commandsBlock && element.command.commandsBlock.actions) {
+            searchItemByCommand(element.command.commandsBlock.actions).setImage(commandMovableImgSrc);//Перерисовываем плюсик этой команды
+            for (var i = 0; i < element.command.commandsBlock.actions.length; i++) {//Перерисовываем все команды этого блока
+                setMovableFromElement(searchItemByCommand(element.command.commandsBlock.actions[i]));
+            }
+        }
+        if (element.command.elseBlock && element.command.elseBlock.actions) {
+            searchItemByCommand(element.command.elseBlock).setImage(commandMovableImgSrc);//Перерисовываем иконку команды иначе
+            searchItemByCommand(element.command.elseBlock.actions).setImage(commandMovableImgSrc);//Перерисовываем плюсик от блока иначе
+            for (var i = 0; i < element.command.elseBlock.actions.length; i++) {//Перерисовываем все команды этого блока
+                setMovableFromElement(searchItemByCommand(element.command.elseBlock.actions[i]));
+            }
+        }
+    }
+
+    var searchItemByCommand = function(comm){
+        var allElems = codeView.getElements();
+        for (var i = 0; i < allElems.length; i++) {
+            if (allElems[i].command && allElems[i].command == comm)
+                return allElems[i];
+        }
+    }
+
     this.openMenu = function (item, parent) { //функция испотльзуеться извне, получает ссылку на элемент по которому кликнули, устанавливает позиции в соответствующих местах и включает видимость элементов
         element = item;
         //var con = findObjStorage(lastClickedElement.commands, item.command);
@@ -26810,25 +26905,25 @@ function playerMove(canRead) {
     //Обрабатываем команды
     switch (comm.name) { //Обрабатываем верхнюю команду
         case "up": //Вверх
-            code = field[playerPozition + totalWidth].code;
+            code = playerPozition + totalWidth >= 0 ? field[playerPozition + totalWidth].code : -1;
             pPoz += totalWidth;
             isTrueDir = playerFrontSide == 0;
             dir = 0;
             break;
         case "down": //Вниз
-            code = field[playerPozition - totalWidth].code;
+            code = playerPozition - totalWidth >= 0 ? field[playerPozition - totalWidth].code : -1;
             pPoz -= totalWidth;
             isTrueDir = playerFrontSide == 2;
             dir = 2;
             break;
         case "left": //Влево
-            code = field[playerPozition + 1].code;
+            code = playerPozition + 1 >= 0 ? field[playerPozition + 1].code : -1;
             pPoz++;
             isTrueDir = playerFrontSide == 3;
             dir = 3;
             break;
         case "right": //Вправо
-            code = field[playerPozition - 1].code;
+            code = playerPozition - 1 >= 0 ? field[playerPozition - 1].code : -1;
             pPoz--;
             isTrueDir = playerFrontSide == 1;
             dir = 1;
@@ -27024,13 +27119,12 @@ function getLocalEXP(){
             optimalRoute[i].isActive = false;
         }
     }
-    log("LOCAL: " + localEXP);
 }
 
 //Вызывает отрисовку текущей выполняемой команды на карте кода
-function drawCommState(isRegenCodeMap){
-    if (!isVerticalScreen && isVisualizeCodeMap) {
-        if(isRegenCodeMap)
+function drawCommState(isRegenCodeMap) {
+    if ((!isVerticalScreen && isVisualizeCodeMap) || !isStarted) {
+        if (isRegenCodeMap || !isStarted)
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0], true);
         codeView.setAlphaToElement(passiveItemsAlpha,playerCommands[0]);
     }
@@ -27401,9 +27495,9 @@ function initLastWindow() {
     //
     //Часть окна для достижений за уровень
     achivBG = game.newRoundRectObject({
-        x: xPos,
+        x: mainBG.x,
         y: yPos + mainBG.h * 0.24,
-        w: mainBG.w * 0.5,
+        w: mainBG.w,
         h: mainBG.h * 0.25,
         radius: 20,
         fillColor: "#e076fe",
@@ -27420,10 +27514,10 @@ function initLastWindow() {
     playerLvl.setTextPos(xPos, yPos + mainBG.h * 0.16)
     //
     //медаль
-    medalText = new Label(xPos, yPos + mainBG.h * 0.5, "Медаль: ");
-    medalText.setTextSize(mainBG.w * 0.06)
-    medalText.setTextColor(textColor)
-    medalStartPosX = xPos + mainBG.w * 0.25;
+    //medalText = new Label(xPos, yPos + mainBG.h * 0.5, "Медаль: ");
+    //medalText.setTextSize(mainBG.w * 0.06)
+    //medalText.setTextColor(textColor)
+    medalStartPosX = mainBG.w * 0.15;
     medalItem = //game.newImageObject({ file: medal1ImgSrc, x: medalStartPosX, y: yPos + mainBG.h * 0.5, w: mainBG.w * 0.04, h: mainBG.h * 0.08, });
         //
         //кнопки
@@ -27447,12 +27541,13 @@ function drawWindow() {
     playerLvl.drawPlayerLevel();
     buttonNext.draw();
     buttonReload.draw();
-    medalText.textDraw();
+   // medalText.textDraw();
     medalItem.draw();
-}
+}//
 game.newLoopFromConstructor('LastLevelWindow', function () {
     //Код для старта игры
     this.entry = function () {
+        audio_lastWindow.play();
         addEventListener("mouseup", mouseUpEvent);
         addEventListener("touchend", touchUpEvent);
         initParams();
@@ -27575,30 +27670,32 @@ function animAchiv() {
         animTickCounter++;
         setTimeout("animAchiv()", animTimeoutBuff);
     } else {
-        var wM = mainBG.w * 0.2;
+        var wM = mainBG.w * 0.7;
+        var hM = mainBG.w * 0.15;
+        var yM = buttonNext.y - (((yPos + mainBG.h * 0.22)+mainBG.h * 0.24)/2)
         if (achievements.length == 0) {
             medalItem = game.newImageObject({
                 file: medalBronzeImgSrc,
                 x: medalStartPosX,
-                y: yPos + mainBG.h * 0.5,
+                y: yM,
                 w: wM,
-                h: wM
+                h: hM
             });
         } else if (achievements.length == 1) {
             medalItem = game.newImageObject({
                 file: medalSilverImgSrc,
                 x: medalStartPosX,
-                y: yPos + mainBG.h * 0.5,
+                y:yM,
                 w: wM,
-                h: wM
+                h: hM
             });
         } else if (achievements.length > 1) {
             medalItem = game.newImageObject({
                 file: medalGoldImgSrc,
                 x: medalStartPosX,
-                y: yPos + mainBG.h * 0.5,
+                y: yM,
                 w: wM,
-                h: wM
+                h: hM
             });
         }
         animTickCounter = 0;
@@ -27732,6 +27829,31 @@ function setTextTime(secs) {
 }
 
 initLastWindow();
+
+
+function testLastWindow()
+{
+    
+            var base;
+        base = pjs.system.newDOM('div',true);
+        base.innerHTML = `<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" type="text/css" href="lastWindow/css/style.css" />
+</head>
+
+<body>
+    <p>dfjgfgjdf</p>
+</body>
+
+</html>`
+    
+}
+
+
 !function(t){if("object"==typeof exports)module.exports=t();else if("function"==typeof define&&define.amd)define(t);else{var e;"undefined"!=typeof window?e=window:"undefined"!=typeof global?e=global:"undefined"!=typeof self&&(e=self),e.PF=t()}}(function(){return function t(e,i,n){function o(a,s){if(!i[a]){if(!e[a]){var l="function"==typeof require&&require;if(!s&&l)return l(a,!0);if(r)return r(a,!0);throw new Error("Cannot find module '"+a+"'")}var h=i[a]={exports:{}};e[a][0].call(h.exports,function(t){var i=e[a][1][t];return o(i?i:t)},h,h.exports,t,e,i,n)}return i[a].exports}for(var r="function"==typeof require&&require,a=0;a<n.length;a++)o(n[a]);return o}({1:[function(t,e,i){e.exports=t("./lib/heap")},{"./lib/heap":2}],2:[function(t,e,i){(function(){var t,i,n,o,r,a,s,l,h,u,p,c,f,d,g;n=Math.floor,u=Math.min,i=function(t,e){return e>t?-1:t>e?1:0},h=function(t,e,o,r,a){var s;if(null==o&&(o=0),null==a&&(a=i),0>o)throw new Error("lo must be non-negative");for(null==r&&(r=t.length);r>o;)s=n((o+r)/2),a(e,t[s])<0?r=s:o=s+1;return[].splice.apply(t,[o,o-o].concat(e)),e},a=function(t,e,n){return null==n&&(n=i),t.push(e),d(t,0,t.length-1,n)},r=function(t,e){var n,o;return null==e&&(e=i),n=t.pop(),t.length?(o=t[0],t[0]=n,g(t,0,e)):o=n,o},l=function(t,e,n){var o;return null==n&&(n=i),o=t[0],t[0]=e,g(t,0,n),o},s=function(t,e,n){var o;return null==n&&(n=i),t.length&&n(t[0],e)<0&&(o=[t[0],e],e=o[0],t[0]=o[1],g(t,0,n)),e},o=function(t,e){var o,r,a,s,l,h;for(null==e&&(e=i),s=function(){h=[];for(var e=0,i=n(t.length/2);i>=0?i>e:e>i;i>=0?e++:e--)h.push(e);return h}.apply(this).reverse(),l=[],r=0,a=s.length;a>r;r++)o=s[r],l.push(g(t,o,e));return l},f=function(t,e,n){var o;return null==n&&(n=i),o=t.indexOf(e),-1!==o?(d(t,0,o,n),g(t,o,n)):void 0},p=function(t,e,n){var r,a,l,h,u;if(null==n&&(n=i),a=t.slice(0,e),!a.length)return a;for(o(a,n),u=t.slice(e),l=0,h=u.length;h>l;l++)r=u[l],s(a,r,n);return a.sort(n).reverse()},c=function(t,e,n){var a,s,l,p,c,f,d,g,b,v;if(null==n&&(n=i),10*e<=t.length){if(p=t.slice(0,e).sort(n),!p.length)return p;for(l=p[p.length-1],g=t.slice(e),c=0,d=g.length;d>c;c++)a=g[c],n(a,l)<0&&(h(p,a,0,null,n),p.pop(),l=p[p.length-1]);return p}for(o(t,n),v=[],s=f=0,b=u(e,t.length);b>=0?b>f:f>b;s=b>=0?++f:--f)v.push(r(t,n));return v},d=function(t,e,n,o){var r,a,s;for(null==o&&(o=i),r=t[n];n>e&&(s=n-1>>1,a=t[s],o(r,a)<0);)t[n]=a,n=s;return t[n]=r},g=function(t,e,n){var o,r,a,s,l;for(null==n&&(n=i),r=t.length,l=e,a=t[e],o=2*e+1;r>o;)s=o+1,r>s&&!(n(t[o],t[s])<0)&&(o=s),t[e]=t[o],e=o,o=2*e+1;return t[e]=a,d(t,l,e,n)},t=function(){function t(t){this.cmp=null!=t?t:i,this.nodes=[]}return t.push=a,t.pop=r,t.replace=l,t.pushpop=s,t.heapify=o,t.updateItem=f,t.nlargest=p,t.nsmallest=c,t.prototype.push=function(t){return a(this.nodes,t,this.cmp)},t.prototype.pop=function(){return r(this.nodes,this.cmp)},t.prototype.peek=function(){return this.nodes[0]},t.prototype.contains=function(t){return-1!==this.nodes.indexOf(t)},t.prototype.replace=function(t){return l(this.nodes,t,this.cmp)},t.prototype.pushpop=function(t){return s(this.nodes,t,this.cmp)},t.prototype.heapify=function(){return o(this.nodes,this.cmp)},t.prototype.updateItem=function(t){return f(this.nodes,t,this.cmp)},t.prototype.clear=function(){return this.nodes=[]},t.prototype.empty=function(){return 0===this.nodes.length},t.prototype.size=function(){return this.nodes.length},t.prototype.clone=function(){var e;return e=new t,e.nodes=this.nodes.slice(0),e},t.prototype.toArray=function(){return this.nodes.slice(0)},t.prototype.insert=t.prototype.push,t.prototype.top=t.prototype.peek,t.prototype.front=t.prototype.peek,t.prototype.has=t.prototype.contains,t.prototype.copy=t.prototype.clone,t}(),("undefined"!=typeof e&&null!==e?e.exports:void 0)?e.exports=t:window.Heap=t}).call(this)},{}],3:[function(t,e,i){var n={Always:1,Never:2,IfAtMostOneObstacle:3,OnlyWhenNoObstacles:4};e.exports=n},{}],4:[function(t,e,i){function n(t,e,i){var n;"object"!=typeof t?n=t:(e=t.length,n=t[0].length,i=t),this.width=n,this.height=e,this.nodes=this._buildNodes(n,e,i)}var o=t("./Node"),r=t("./DiagonalMovement");n.prototype._buildNodes=function(t,e,i){var n,r,a=new Array(e);for(n=0;e>n;++n)for(a[n]=new Array(t),r=0;t>r;++r)a[n][r]=new o(r,n);if(void 0===i)return a;if(i.length!==e||i[0].length!==t)throw new Error("Matrix size does not fit");for(n=0;e>n;++n)for(r=0;t>r;++r)i[n][r]&&(a[n][r].walkable=!1);return a},n.prototype.getNodeAt=function(t,e){return this.nodes[e][t]},n.prototype.isWalkableAt=function(t,e){return this.isInside(t,e)&&this.nodes[e][t].walkable},n.prototype.isInside=function(t,e){return t>=0&&t<this.width&&e>=0&&e<this.height},n.prototype.setWalkableAt=function(t,e,i){this.nodes[e][t].walkable=i},n.prototype.getNeighbors=function(t,e){var i=t.x,n=t.y,o=[],a=!1,s=!1,l=!1,h=!1,u=!1,p=!1,c=!1,f=!1,d=this.nodes;if(this.isWalkableAt(i,n-1)&&(o.push(d[n-1][i]),a=!0),this.isWalkableAt(i+1,n)&&(o.push(d[n][i+1]),l=!0),this.isWalkableAt(i,n+1)&&(o.push(d[n+1][i]),u=!0),this.isWalkableAt(i-1,n)&&(o.push(d[n][i-1]),c=!0),e===r.Never)return o;if(e===r.OnlyWhenNoObstacles)s=c&&a,h=a&&l,p=l&&u,f=u&&c;else if(e===r.IfAtMostOneObstacle)s=c||a,h=a||l,p=l||u,f=u||c;else{if(e!==r.Always)throw new Error("Incorrect value of diagonalMovement");s=!0,h=!0,p=!0,f=!0}return s&&this.isWalkableAt(i-1,n-1)&&o.push(d[n-1][i-1]),h&&this.isWalkableAt(i+1,n-1)&&o.push(d[n-1][i+1]),p&&this.isWalkableAt(i+1,n+1)&&o.push(d[n+1][i+1]),f&&this.isWalkableAt(i-1,n+1)&&o.push(d[n+1][i-1]),o},n.prototype.clone=function(){var t,e,i=this.width,r=this.height,a=this.nodes,s=new n(i,r),l=new Array(r);for(t=0;r>t;++t)for(l[t]=new Array(i),e=0;i>e;++e)l[t][e]=new o(e,t,a[t][e].walkable);return s.nodes=l,s},e.exports=n},{"./DiagonalMovement":3,"./Node":6}],5:[function(t,e,i){e.exports={manhattan:function(t,e){return t+e},euclidean:function(t,e){return Math.sqrt(t*t+e*e)},octile:function(t,e){var i=Math.SQRT2-1;return e>t?i*t+e:i*e+t},chebyshev:function(t,e){return Math.max(t,e)}}},{}],6:[function(t,e,i){function n(t,e,i){this.x=t,this.y=e,this.walkable=void 0===i?!0:i}e.exports=n},{}],7:[function(t,e,i){function n(t){for(var e=[[t.x,t.y]];t.parent;)t=t.parent,e.push([t.x,t.y]);return e.reverse()}function o(t,e){var i=n(t),o=n(e);return i.concat(o.reverse())}function r(t){var e,i,n,o,r,a=0;for(e=1;e<t.length;++e)i=t[e-1],n=t[e],o=i[0]-n[0],r=i[1]-n[1],a+=Math.sqrt(o*o+r*r);return a}function a(t,e,i,n){var o,r,a,s,l,h,u=Math.abs,p=[];for(a=u(i-t),s=u(n-e),o=i>t?1:-1,r=n>e?1:-1,l=a-s;;){if(p.push([t,e]),t===i&&e===n)break;h=2*l,h>-s&&(l-=s,t+=o),a>h&&(l+=a,e+=r)}return p}function s(t){var e,i,n,o,r,s,l=[],h=t.length;if(2>h)return l;for(r=0;h-1>r;++r)for(e=t[r],i=t[r+1],n=a(e[0],e[1],i[0],i[1]),o=n.length,s=0;o-1>s;++s)l.push(n[s]);return l.push(t[h-1]),l}function l(t,e){var i,n,o,r,s,l,h,u,p,c,f,d=e.length,g=e[0][0],b=e[0][1],v=e[d-1][0],A=e[d-1][1];for(i=g,n=b,s=[[i,n]],l=2;d>l;++l){for(u=e[l],o=u[0],r=u[1],p=a(i,n,o,r),f=!1,h=1;h<p.length;++h)if(c=p[h],!t.isWalkableAt(c[0],c[1])){f=!0;break}f&&(lastValidCoord=e[l-1],s.push(lastValidCoord),i=lastValidCoord[0],n=lastValidCoord[1])}return s.push([v,A]),s}function h(t){if(t.length<3)return t;var e,i,n,o,r,a,s=[],l=t[0][0],h=t[0][1],u=t[1][0],p=t[1][1],c=u-l,f=p-h;for(r=Math.sqrt(c*c+f*f),c/=r,f/=r,s.push([l,h]),a=2;a<t.length;a++)e=u,i=p,n=c,o=f,u=t[a][0],p=t[a][1],c=u-e,f=p-i,r=Math.sqrt(c*c+f*f),c/=r,f/=r,c===n&&f===o||s.push([e,i]);return s.push([u,p]),s}i.backtrace=n,i.biBacktrace=o,i.pathLength=r,i.interpolate=a,i.expandPath=s,i.smoothenPath=l,i.compressPath=h},{}],8:[function(t,e,i){e.exports={Heap:t("heap"),Node:t("./core/Node"),Grid:t("./core/Grid"),Util:t("./core/Util"),DiagonalMovement:t("./core/DiagonalMovement"),Heuristic:t("./core/Heuristic"),AStarFinder:t("./finders/AStarFinder"),BestFirstFinder:t("./finders/BestFirstFinder"),BreadthFirstFinder:t("./finders/BreadthFirstFinder"),DijkstraFinder:t("./finders/DijkstraFinder"),BiAStarFinder:t("./finders/BiAStarFinder"),BiBestFirstFinder:t("./finders/BiBestFirstFinder"),BiBreadthFirstFinder:t("./finders/BiBreadthFirstFinder"),BiDijkstraFinder:t("./finders/BiDijkstraFinder"),IDAStarFinder:t("./finders/IDAStarFinder"),JumpPointFinder:t("./finders/JumpPointFinder")}},{"./core/DiagonalMovement":3,"./core/Grid":4,"./core/Heuristic":5,"./core/Node":6,"./core/Util":7,"./finders/AStarFinder":9,"./finders/BestFirstFinder":10,"./finders/BiAStarFinder":11,"./finders/BiBestFirstFinder":12,"./finders/BiBreadthFirstFinder":13,"./finders/BiDijkstraFinder":14,"./finders/BreadthFirstFinder":15,"./finders/DijkstraFinder":16,"./finders/IDAStarFinder":17,"./finders/JumpPointFinder":22,heap:1}],9:[function(t,e,i){function n(t){t=t||{},this.allowDiagonal=t.allowDiagonal,this.dontCrossCorners=t.dontCrossCorners,this.heuristic=t.heuristic||a.manhattan,this.weight=t.weight||1,this.diagonalMovement=t.diagonalMovement,this.diagonalMovement||(this.allowDiagonal?this.dontCrossCorners?this.diagonalMovement=s.OnlyWhenNoObstacles:this.diagonalMovement=s.IfAtMostOneObstacle:this.diagonalMovement=s.Never),this.diagonalMovement===s.Never?this.heuristic=t.heuristic||a.manhattan:this.heuristic=t.heuristic||a.octile}var o=t("heap"),r=t("../core/Util"),a=t("../core/Heuristic"),s=t("../core/DiagonalMovement");n.prototype.findPath=function(t,e,i,n,a){var s,l,h,u,p,c,f,d,g=new o(function(t,e){return t.f-e.f}),b=a.getNodeAt(t,e),v=a.getNodeAt(i,n),A=this.heuristic,m=this.diagonalMovement,y=this.weight,k=Math.abs,M=Math.SQRT2;for(b.g=0,b.f=0,g.push(b),b.opened=!0;!g.empty();){if(s=g.pop(),s.closed=!0,s===v)return r.backtrace(v);for(l=a.getNeighbors(s,m),u=0,p=l.length;p>u;++u)h=l[u],h.closed||(c=h.x,f=h.y,d=s.g+(c-s.x===0||f-s.y===0?1:M),(!h.opened||d<h.g)&&(h.g=d,h.h=h.h||y*A(k(c-i),k(f-n)),h.f=h.g+h.h,h.parent=s,h.opened?g.updateItem(h):(g.push(h),h.opened=!0)))}return[]},e.exports=n},{"../core/DiagonalMovement":3,"../core/Heuristic":5,"../core/Util":7,heap:1}],10:[function(t,e,i){function n(t){o.call(this,t);var e=this.heuristic;this.heuristic=function(t,i){return 1e6*e(t,i)}}var o=t("./AStarFinder");n.prototype=new o,n.prototype.constructor=n,e.exports=n},{"./AStarFinder":9}],11:[function(t,e,i){function n(t){t=t||{},this.allowDiagonal=t.allowDiagonal,this.dontCrossCorners=t.dontCrossCorners,this.diagonalMovement=t.diagonalMovement,this.heuristic=t.heuristic||a.manhattan,this.weight=t.weight||1,this.diagonalMovement||(this.allowDiagonal?this.dontCrossCorners?this.diagonalMovement=s.OnlyWhenNoObstacles:this.diagonalMovement=s.IfAtMostOneObstacle:this.diagonalMovement=s.Never),this.diagonalMovement===s.Never?this.heuristic=t.heuristic||a.manhattan:this.heuristic=t.heuristic||a.octile}var o=t("heap"),r=t("../core/Util"),a=t("../core/Heuristic"),s=t("../core/DiagonalMovement");n.prototype.findPath=function(t,e,i,n,a){var s,l,h,u,p,c,f,d,g=function(t,e){return t.f-e.f},b=new o(g),v=new o(g),A=a.getNodeAt(t,e),m=a.getNodeAt(i,n),y=this.heuristic,k=this.diagonalMovement,M=this.weight,W=Math.abs,w=Math.SQRT2,N=1,x=2;for(A.g=0,A.f=0,b.push(A),A.opened=N,m.g=0,m.f=0,v.push(m),m.opened=x;!b.empty()&&!v.empty();){for(s=b.pop(),s.closed=!0,l=a.getNeighbors(s,k),u=0,p=l.length;p>u;++u)if(h=l[u],!h.closed){if(h.opened===x)return r.biBacktrace(s,h);c=h.x,f=h.y,d=s.g+(c-s.x===0||f-s.y===0?1:w),(!h.opened||d<h.g)&&(h.g=d,h.h=h.h||M*y(W(c-i),W(f-n)),h.f=h.g+h.h,h.parent=s,h.opened?b.updateItem(h):(b.push(h),h.opened=N))}for(s=v.pop(),s.closed=!0,l=a.getNeighbors(s,k),u=0,p=l.length;p>u;++u)if(h=l[u],!h.closed){if(h.opened===N)return r.biBacktrace(h,s);c=h.x,f=h.y,d=s.g+(c-s.x===0||f-s.y===0?1:w),(!h.opened||d<h.g)&&(h.g=d,h.h=h.h||M*y(W(c-t),W(f-e)),h.f=h.g+h.h,h.parent=s,h.opened?v.updateItem(h):(v.push(h),h.opened=x))}}return[]},e.exports=n},{"../core/DiagonalMovement":3,"../core/Heuristic":5,"../core/Util":7,heap:1}],12:[function(t,e,i){function n(t){o.call(this,t);var e=this.heuristic;this.heuristic=function(t,i){return 1e6*e(t,i)}}var o=t("./BiAStarFinder");n.prototype=new o,n.prototype.constructor=n,e.exports=n},{"./BiAStarFinder":11}],13:[function(t,e,i){function n(t){t=t||{},this.allowDiagonal=t.allowDiagonal,this.dontCrossCorners=t.dontCrossCorners,this.diagonalMovement=t.diagonalMovement,this.diagonalMovement||(this.allowDiagonal?this.dontCrossCorners?this.diagonalMovement=r.OnlyWhenNoObstacles:this.diagonalMovement=r.IfAtMostOneObstacle:this.diagonalMovement=r.Never)}var o=t("../core/Util"),r=t("../core/DiagonalMovement");n.prototype.findPath=function(t,e,i,n,r){var a,s,l,h,u,p=r.getNodeAt(t,e),c=r.getNodeAt(i,n),f=[],d=[],g=this.diagonalMovement,b=0,v=1;for(f.push(p),p.opened=!0,p.by=b,d.push(c),c.opened=!0,c.by=v;f.length&&d.length;){for(l=f.shift(),l.closed=!0,a=r.getNeighbors(l,g),h=0,u=a.length;u>h;++h)if(s=a[h],!s.closed)if(s.opened){if(s.by===v)return o.biBacktrace(l,s)}else f.push(s),s.parent=l,s.opened=!0,s.by=b;for(l=d.shift(),l.closed=!0,a=r.getNeighbors(l,g),h=0,u=a.length;u>h;++h)if(s=a[h],!s.closed)if(s.opened){if(s.by===b)return o.biBacktrace(s,l)}else d.push(s),s.parent=l,s.opened=!0,s.by=v}return[]},e.exports=n},{"../core/DiagonalMovement":3,"../core/Util":7}],14:[function(t,e,i){function n(t){o.call(this,t),this.heuristic=function(t,e){return 0}}var o=t("./BiAStarFinder");n.prototype=new o,n.prototype.constructor=n,e.exports=n},{"./BiAStarFinder":11}],15:[function(t,e,i){function n(t){t=t||{},this.allowDiagonal=t.allowDiagonal,this.dontCrossCorners=t.dontCrossCorners,this.diagonalMovement=t.diagonalMovement,this.diagonalMovement||(this.allowDiagonal?this.dontCrossCorners?this.diagonalMovement=r.OnlyWhenNoObstacles:this.diagonalMovement=r.IfAtMostOneObstacle:this.diagonalMovement=r.Never)}var o=t("../core/Util"),r=t("../core/DiagonalMovement");n.prototype.findPath=function(t,e,i,n,r){var a,s,l,h,u,p=[],c=this.diagonalMovement,f=r.getNodeAt(t,e),d=r.getNodeAt(i,n);for(p.push(f),f.opened=!0;p.length;){if(l=p.shift(),l.closed=!0,l===d)return o.backtrace(d);for(a=r.getNeighbors(l,c),h=0,u=a.length;u>h;++h)s=a[h],s.closed||s.opened||(p.push(s),s.opened=!0,s.parent=l)}return[]},e.exports=n},{"../core/DiagonalMovement":3,"../core/Util":7}],16:[function(t,e,i){function n(t){o.call(this,t),this.heuristic=function(t,e){return 0}}var o=t("./AStarFinder");n.prototype=new o,n.prototype.constructor=n,e.exports=n},{"./AStarFinder":9}],17:[function(t,e,i){function n(t){t=t||{},this.allowDiagonal=t.allowDiagonal,this.dontCrossCorners=t.dontCrossCorners,this.diagonalMovement=t.diagonalMovement,this.heuristic=t.heuristic||o.manhattan,this.weight=t.weight||1,this.trackRecursion=t.trackRecursion||!1,this.timeLimit=t.timeLimit||1/0,this.diagonalMovement||(this.allowDiagonal?this.dontCrossCorners?this.diagonalMovement=a.OnlyWhenNoObstacles:this.diagonalMovement=a.IfAtMostOneObstacle:this.diagonalMovement=a.Never),this.diagonalMovement===a.Never?this.heuristic=t.heuristic||o.manhattan:this.heuristic=t.heuristic||o.octile}var o=(t("../core/Util"),t("../core/Heuristic")),r=t("../core/Node"),a=t("../core/DiagonalMovement");n.prototype.findPath=function(t,e,i,n,o){var a,s,l,h=0,u=(new Date).getTime(),p=function(t,e){return this.heuristic(Math.abs(e.x-t.x),Math.abs(e.y-t.y))}.bind(this),c=function(t,e){return t.x===e.x||t.y===e.y?1:Math.SQRT2},f=function(t,e,i,n,a){if(h++,this.timeLimit>0&&(new Date).getTime()-u>1e3*this.timeLimit)return 1/0;var s=e+p(t,g)*this.weight;if(s>i)return s;if(t==g)return n[a]=[t.x,t.y],t;var l,d,b,v,A=o.getNeighbors(t,this.diagonalMovement);for(b=0,l=1/0;v=A[b];++b){if(this.trackRecursion&&(v.retainCount=v.retainCount+1||1,v.tested!==!0&&(v.tested=!0)),d=f(v,e+c(t,v),i,n,a+1),d instanceof r)return n[a]=[t.x,t.y],d;this.trackRecursion&&0===--v.retainCount&&(v.tested=!1),l>d&&(l=d)}return l}.bind(this),d=o.getNodeAt(t,e),g=o.getNodeAt(i,n),b=p(d,g);for(a=0;!0;++a){if(s=[],l=f(d,0,b,s,0),l===1/0)return[];if(l instanceof r)return s;b=l}return[]},e.exports=n},{"../core/DiagonalMovement":3,"../core/Heuristic":5,"../core/Node":6,"../core/Util":7}],18:[function(t,e,i){function n(t){o.call(this,t)}var o=t("./JumpPointFinderBase"),r=t("../core/DiagonalMovement");n.prototype=new o,n.prototype.constructor=n,n.prototype._jump=function(t,e,i,n){var o=this.grid,r=t-i,a=e-n;if(!o.isWalkableAt(t,e))return null;if(this.trackJumpRecursion===!0&&(o.getNodeAt(t,e).tested=!0),o.getNodeAt(t,e)===this.endNode)return[t,e];if(0!==r&&0!==a){if(o.isWalkableAt(t-r,e+a)&&!o.isWalkableAt(t-r,e)||o.isWalkableAt(t+r,e-a)&&!o.isWalkableAt(t,e-a))return[t,e];if(this._jump(t+r,e,t,e)||this._jump(t,e+a,t,e))return[t,e]}else if(0!==r){if(o.isWalkableAt(t+r,e+1)&&!o.isWalkableAt(t,e+1)||o.isWalkableAt(t+r,e-1)&&!o.isWalkableAt(t,e-1))return[t,e]}else if(o.isWalkableAt(t+1,e+a)&&!o.isWalkableAt(t+1,e)||o.isWalkableAt(t-1,e+a)&&!o.isWalkableAt(t-1,e))return[t,e];return this._jump(t+r,e+a,t,e)},n.prototype._findNeighbors=function(t){var e,i,n,o,a,s,l,h,u=t.parent,p=t.x,c=t.y,f=this.grid,d=[];if(u)e=u.x,i=u.y,n=(p-e)/Math.max(Math.abs(p-e),1),o=(c-i)/Math.max(Math.abs(c-i),1),0!==n&&0!==o?(f.isWalkableAt(p,c+o)&&d.push([p,c+o]),f.isWalkableAt(p+n,c)&&d.push([p+n,c]),f.isWalkableAt(p+n,c+o)&&d.push([p+n,c+o]),f.isWalkableAt(p-n,c)||d.push([p-n,c+o]),f.isWalkableAt(p,c-o)||d.push([p+n,c-o])):0===n?(f.isWalkableAt(p,c+o)&&d.push([p,c+o]),f.isWalkableAt(p+1,c)||d.push([p+1,c+o]),f.isWalkableAt(p-1,c)||d.push([p-1,c+o])):(f.isWalkableAt(p+n,c)&&d.push([p+n,c]),f.isWalkableAt(p,c+1)||d.push([p+n,c+1]),f.isWalkableAt(p,c-1)||d.push([p+n,c-1]));else for(a=f.getNeighbors(t,r.Always),l=0,h=a.length;h>l;++l)s=a[l],d.push([s.x,s.y]);return d},e.exports=n},{"../core/DiagonalMovement":3,"./JumpPointFinderBase":23}],19:[function(t,e,i){function n(t){o.call(this,t)}var o=t("./JumpPointFinderBase"),r=t("../core/DiagonalMovement");n.prototype=new o,n.prototype.constructor=n,n.prototype._jump=function(t,e,i,n){var o=this.grid,r=t-i,a=e-n;if(!o.isWalkableAt(t,e))return null;if(this.trackJumpRecursion===!0&&(o.getNodeAt(t,e).tested=!0),o.getNodeAt(t,e)===this.endNode)return[t,e];if(0!==r&&0!==a){if(o.isWalkableAt(t-r,e+a)&&!o.isWalkableAt(t-r,e)||o.isWalkableAt(t+r,e-a)&&!o.isWalkableAt(t,e-a))return[t,e];if(this._jump(t+r,e,t,e)||this._jump(t,e+a,t,e))return[t,e]}else if(0!==r){if(o.isWalkableAt(t+r,e+1)&&!o.isWalkableAt(t,e+1)||o.isWalkableAt(t+r,e-1)&&!o.isWalkableAt(t,e-1))return[t,e]}else if(o.isWalkableAt(t+1,e+a)&&!o.isWalkableAt(t+1,e)||o.isWalkableAt(t-1,e+a)&&!o.isWalkableAt(t-1,e))return[t,e];return o.isWalkableAt(t+r,e)||o.isWalkableAt(t,e+a)?this._jump(t+r,e+a,t,e):null},n.prototype._findNeighbors=function(t){var e,i,n,o,a,s,l,h,u=t.parent,p=t.x,c=t.y,f=this.grid,d=[];if(u)e=u.x,i=u.y,n=(p-e)/Math.max(Math.abs(p-e),1),o=(c-i)/Math.max(Math.abs(c-i),1),0!==n&&0!==o?(f.isWalkableAt(p,c+o)&&d.push([p,c+o]),f.isWalkableAt(p+n,c)&&d.push([p+n,c]),(f.isWalkableAt(p,c+o)||f.isWalkableAt(p+n,c))&&d.push([p+n,c+o]),!f.isWalkableAt(p-n,c)&&f.isWalkableAt(p,c+o)&&d.push([p-n,c+o]),!f.isWalkableAt(p,c-o)&&f.isWalkableAt(p+n,c)&&d.push([p+n,c-o])):0===n?f.isWalkableAt(p,c+o)&&(d.push([p,c+o]),f.isWalkableAt(p+1,c)||d.push([p+1,c+o]),f.isWalkableAt(p-1,c)||d.push([p-1,c+o])):f.isWalkableAt(p+n,c)&&(d.push([p+n,c]),f.isWalkableAt(p,c+1)||d.push([p+n,c+1]),f.isWalkableAt(p,c-1)||d.push([p+n,c-1]));else for(a=f.getNeighbors(t,r.IfAtMostOneObstacle),l=0,h=a.length;h>l;++l)s=a[l],d.push([s.x,s.y]);return d},e.exports=n},{"../core/DiagonalMovement":3,"./JumpPointFinderBase":23}],20:[function(t,e,i){function n(t){o.call(this,t)}var o=t("./JumpPointFinderBase"),r=t("../core/DiagonalMovement");n.prototype=new o,n.prototype.constructor=n,n.prototype._jump=function(t,e,i,n){var o=this.grid,r=t-i,a=e-n;if(!o.isWalkableAt(t,e))return null;if(this.trackJumpRecursion===!0&&(o.getNodeAt(t,e).tested=!0),o.getNodeAt(t,e)===this.endNode)return[t,e];if(0!==r&&0!==a){if(this._jump(t+r,e,t,e)||this._jump(t,e+a,t,e))return[t,e]}else if(0!==r){if(o.isWalkableAt(t,e-1)&&!o.isWalkableAt(t-r,e-1)||o.isWalkableAt(t,e+1)&&!o.isWalkableAt(t-r,e+1))return[t,e]}else if(0!==a&&(o.isWalkableAt(t-1,e)&&!o.isWalkableAt(t-1,e-a)||o.isWalkableAt(t+1,e)&&!o.isWalkableAt(t+1,e-a)))return[t,e];return o.isWalkableAt(t+r,e)&&o.isWalkableAt(t,e+a)?this._jump(t+r,e+a,t,e):null},n.prototype._findNeighbors=function(t){var e,i,n,o,a,s,l,h,u=t.parent,p=t.x,c=t.y,f=this.grid,d=[];if(u)if(e=u.x,i=u.y,n=(p-e)/Math.max(Math.abs(p-e),1),o=(c-i)/Math.max(Math.abs(c-i),1),0!==n&&0!==o)f.isWalkableAt(p,c+o)&&d.push([p,c+o]),f.isWalkableAt(p+n,c)&&d.push([p+n,c]),f.isWalkableAt(p,c+o)&&f.isWalkableAt(p+n,c)&&d.push([p+n,c+o]);else{var g;if(0!==n){g=f.isWalkableAt(p+n,c);var b=f.isWalkableAt(p,c+1),v=f.isWalkableAt(p,c-1);g&&(d.push([p+n,c]),b&&d.push([p+n,c+1]),v&&d.push([p+n,c-1])),b&&d.push([p,c+1]),v&&d.push([p,c-1])}else if(0!==o){g=f.isWalkableAt(p,c+o);var A=f.isWalkableAt(p+1,c),m=f.isWalkableAt(p-1,c);g&&(d.push([p,c+o]),A&&d.push([p+1,c+o]),m&&d.push([p-1,c+o])),A&&d.push([p+1,c]),m&&d.push([p-1,c])}}else for(a=f.getNeighbors(t,r.OnlyWhenNoObstacles),l=0,h=a.length;h>l;++l)s=a[l],d.push([s.x,s.y]);return d},e.exports=n},{"../core/DiagonalMovement":3,"./JumpPointFinderBase":23}],21:[function(t,e,i){function n(t){o.call(this,t)}var o=t("./JumpPointFinderBase"),r=t("../core/DiagonalMovement");n.prototype=new o,n.prototype.constructor=n,n.prototype._jump=function(t,e,i,n){var o=this.grid,r=t-i,a=e-n;if(!o.isWalkableAt(t,e))return null;if(this.trackJumpRecursion===!0&&(o.getNodeAt(t,e).tested=!0),o.getNodeAt(t,e)===this.endNode)return[t,e];if(0!==r){if(o.isWalkableAt(t,e-1)&&!o.isWalkableAt(t-r,e-1)||o.isWalkableAt(t,e+1)&&!o.isWalkableAt(t-r,e+1))return[t,e]}else{if(0===a)throw new Error("Only horizontal and vertical movements are allowed");if(o.isWalkableAt(t-1,e)&&!o.isWalkableAt(t-1,e-a)||o.isWalkableAt(t+1,e)&&!o.isWalkableAt(t+1,e-a))return[t,e];if(this._jump(t+1,e,t,e)||this._jump(t-1,e,t,e))return[t,e]}return this._jump(t+r,e+a,t,e)},n.prototype._findNeighbors=function(t){var e,i,n,o,a,s,l,h,u=t.parent,p=t.x,c=t.y,f=this.grid,d=[];if(u)e=u.x,i=u.y,n=(p-e)/Math.max(Math.abs(p-e),1),o=(c-i)/Math.max(Math.abs(c-i),1),0!==n?(f.isWalkableAt(p,c-1)&&d.push([p,c-1]),f.isWalkableAt(p,c+1)&&d.push([p,c+1]),f.isWalkableAt(p+n,c)&&d.push([p+n,c])):0!==o&&(f.isWalkableAt(p-1,c)&&d.push([p-1,c]),f.isWalkableAt(p+1,c)&&d.push([p+1,c]),f.isWalkableAt(p,c+o)&&d.push([p,c+o]));else for(a=f.getNeighbors(t,r.Never),l=0,h=a.length;h>l;++l)s=a[l],d.push([s.x,s.y]);return d},e.exports=n},{"../core/DiagonalMovement":3,"./JumpPointFinderBase":23}],22:[function(t,e,i){function n(t){return t=t||{},t.diagonalMovement===o.Never?new r(t):t.diagonalMovement===o.Always?new a(t):t.diagonalMovement===o.OnlyWhenNoObstacles?new s(t):new l(t)}var o=t("../core/DiagonalMovement"),r=t("./JPFNeverMoveDiagonally"),a=t("./JPFAlwaysMoveDiagonally"),s=t("./JPFMoveDiagonallyIfNoObstacles"),l=t("./JPFMoveDiagonallyIfAtMostOneObstacle");e.exports=n},{"../core/DiagonalMovement":3,"./JPFAlwaysMoveDiagonally":18,"./JPFMoveDiagonallyIfAtMostOneObstacle":19,"./JPFMoveDiagonallyIfNoObstacles":20,"./JPFNeverMoveDiagonally":21}],23:[function(t,e,i){function n(t){t=t||{},this.heuristic=t.heuristic||a.manhattan,this.trackJumpRecursion=t.trackJumpRecursion||!1}var o=t("heap"),r=t("../core/Util"),a=t("../core/Heuristic");t("../core/DiagonalMovement");n.prototype.findPath=function(t,e,i,n,a){var s,l=this.openList=new o(function(t,e){return t.f-e.f}),h=this.startNode=a.getNodeAt(t,e),u=this.endNode=a.getNodeAt(i,n);for(this.grid=a,h.g=0,h.f=0,l.push(h),h.opened=!0;!l.empty();){if(s=l.pop(),s.closed=!0,s===u)return r.expandPath(r.backtrace(u));this._identifySuccessors(s)}return[]},n.prototype._identifySuccessors=function(t){var e,i,n,o,r,s,l,h,u,p,c=this.grid,f=this.heuristic,d=this.openList,g=this.endNode.x,b=this.endNode.y,v=t.x,A=t.y,m=Math.abs;Math.max;for(e=this._findNeighbors(t),o=0,r=e.length;r>o;++o)if(i=e[o],n=this._jump(i[0],i[1],v,A)){if(s=n[0],l=n[1],p=c.getNodeAt(s,l),p.closed)continue;h=a.octile(m(s-v),m(l-A)),u=t.g+h,(!p.opened||u<p.g)&&(p.g=u,p.h=p.h||f(m(s-g),m(l-b)),p.f=p.g+p.h,p.parent=t,p.opened?d.updateItem(p):(d.push(p),p.opened=!0))}},e.exports=n},{"../core/DiagonalMovement":3,"../core/Heuristic":5,"../core/Util":7,heap:1}]},{},[8])(8)});/*
 Главный скрипт игры. Содержит логику игрового процесса.
 Методы и данные для работы игровой логики
@@ -28054,7 +28176,7 @@ function setFocused(fieldElem, indx) {
         allButtons.stepUpButton.setAlpha(inactiveItemsAlpha);
         //Показываем кнопку ok
         allButtons.mainButton.setButtonImgSrc(okButtonImgSrc);
-
+        allButtons.mainButton.value = "ok"
         game.setLoop("SecondScreen")
     }
 }
