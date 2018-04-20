@@ -168,13 +168,14 @@ function onRecize(e, delta, step) {
     OOP.forArr(Scrolls, function (scroll) {
         if ((scroll.name == "LEFT" || scroll.name == "RIGHT") && clickIsInObj(e.x, e.y, scroll.GetBackGround())) {
             var itms = scroll.getArrayItems();
-            OOP.forArr(itms, function (el, i) {
+            for (var i = 0; i < itms.length; i++) {
+                var el = itms[i];
                 if (clickIsInObj(e.x, e.y, el)) {
                     touchedScroll = scroll;
                     scrollDynamic(new point(delta * -1, delta * -1), touchedScroll);
                     return;
                 }
-            });
+            }
         }
     });
     if (!isSecondScreen && clickIsInObj(e.x, e.y, labView.getBackGround())) {

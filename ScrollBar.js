@@ -670,7 +670,7 @@ function ScrollBar(posX, posY, orientation, arr, name) {
                         if (FrsElemY < backGround.getBackGround().y) {
                             dy = scrollVal.y * scrollSpeed;
                             if (FrsElemY + dy > backGround.getBackGround().y) {
-                                dy = 0;
+                                dy = backGround.getBackGround().y - FrsElemY;
                             }
                         }
                     } else if (scrollVal.y < 0) {
