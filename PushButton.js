@@ -120,13 +120,10 @@ function Buttons() { //класс для работы совсеми кнопк�
                 el.value = "start";
                 el.setButtonImgSrc(buttonStartImgSrc);
             }
-            /*if (el.value && el.value == "ok") isOkClose = onOkBClick(); //Обрабатываем на нажатие по ОК
-            else startBClick(); //Обрабатываем клик по СТАРТ/СТОП
-            //Задаем картинку кнопке в соответствии с ее состоянием
-            if (isOkClose) {
-                el.value = isStarted ? "stop" : "start";
-                el.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
-            }*/
+        },
+        reset: function (el) {
+            el.value = isStarted ? "stop" : "start";
+            el.setButtonImgSrc(isStarted ? buttonStopImgSrc : buttonStartImgSrc);
         }
     });
     this.stepDownButton.setUserData({
