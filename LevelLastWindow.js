@@ -147,7 +147,7 @@ function drawWindow() {
     buttonReload.draw();
    // medalText.textDraw();
     medalItem.draw();
-}
+}//
 game.newLoopFromConstructor('LastLevelWindow', function () {
     //Код для старта игры
     this.entry = function () {
