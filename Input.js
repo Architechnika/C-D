@@ -525,7 +525,8 @@ function onCodeMapElementClick(element) {
         //Убираем элемент из старого хранилища
         stor1.splice(stor1.indexOf(el.command), 1);
         codeView.isElementMove = false;
-        initLeftScroll(getCommandsImgArr(stor2 ? stor2 : stor1));
+        if (!isVerticalScreen)
+            initLeftScroll(getCommandsImgArr(stor2 ? stor2 : stor1));
         //Перегенерим код мап
         codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastClickedElement.commands, true, true);
         return;
@@ -586,15 +587,13 @@ function onKeyboardClick(el) {
 
 //Функция обеспечивающая динамический скролл
 function scrollDynamic(speed, scrollElement) {
-    if (Math.abs(speed.x) > 5 || Math.abs(speed.y) > 5) {
-        if (isMobile) {
-            speed.x *= 3;
-            speed.y *= 3;
-        }
-        //ИНИЦИАЛИЗИРУЕМ ФЛАГ СКРОЛА
-        isScrollMove = true;
-        scrollElement.scrollUpdate(speed);
+    if (isMobile) {
+        speed.x *= 3;
+        speed.y *= 3;
     }
+    //ИНИЦИАЛИЗИРУЕМ ФЛАГ СКРОЛА
+    isScrollMove = true;
+    scrollElement.scrollUpdate(speed);
 }
 
 //Обработка кликов на элемент поля

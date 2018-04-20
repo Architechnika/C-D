@@ -237,8 +237,10 @@ function initLeftScroll(initMass) {
             Scrolls[found].setHeightScroll(allButtons.getPosition().y - textbackGroundItem.h);
         } else {
             Scrolls.push(new ScrollBar(0, 0, "Vertical", initMass, "LEFT"));
+            found = Scrolls.length - 1;
         }
     }
+    Scrolls[found].scrollToEnd();
 }
 
 function TextWithBG(X, Y, W, H) { //класс для рисования текста с задним фоном, первоначально была разработана для того чтобы над лаберинтом выводить цифры введенные в блоки цикла по количеству
