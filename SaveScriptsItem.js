@@ -19,6 +19,11 @@ function SaveItem(name, script) {
         color: "#05ae21",
         font: textFont,
     });
+    
+    this.parent = function()
+    {
+        return this.__proto__;
+    }
 
     this.setFileName = function (name) {
         saveFileName.text = name;

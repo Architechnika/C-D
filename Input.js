@@ -636,8 +636,7 @@ function findPressed(e) {
                             if (el.name != "saveItem") {
                                 el.setImage(getPressedImg(el));
                             }else{ 
-                                /*log(el.getImg())
-                                el.setImg(el.getImg().split(".png")[0] + "_pressed.png");*/
+                                el.setImg(el.getImg().split(".png")[0] + "_pressed.png");
                             }
                             pressedItem = el;
                             return;
