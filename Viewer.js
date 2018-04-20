@@ -994,26 +994,39 @@ function ItemMenu() {
 
     //Скрывает команды которые перемещаются сейчас
     var setMovableFromElement = function (element) {
-        if (element.name == "line") return;
-        if (element.name != "repeat" && element.name != "repeatif" && element.name != "if") {
-            element.setImage(commandMovableImgSrc);
+        if (!element || element.name == "line") return;
+        element.setImage(commandMovableImgSrc);
+        if (element.command.name != "repeat" && element.command.name != "repeatif" && element.command.name != "if") {
             return;
         }
-        /*var comm = element.command;
-        var elems = codeView.getElements();
-        OOP.forArr(elems, function (el) {
-            if (el.name && el.name == "line") continue;
-            if (el.name && el.name == "plus") {
-                if (comm.commandsBlock && comm.commandsBlock.actions.length > 0)
-                    if (comm.commandsBlock.actions == el.command)
-                        el.setImage(commandMovableImgSrc);
-                continue;
+        if (element.command.blockA)//Перерисовываем блок А
+            searchItemByCommand(element.command.blockA).setImage(commandMovableImgSrc);
+        if (element.command.blockB) {//Перерисовываем блок Б
+            for (var i = 0; i < element.command.blockB.length; i++) {
+                searchItemByCommand(element.command.blockB[i]).setImage(commandMovableImgSrc);
             }
-            if (el.command.name == "blockA") {
-
+        }
+        if (element.command.commandsBlock && element.command.commandsBlock.actions) {
+            searchItemByCommand(element.command.commandsBlock.actions).setImage(commandMovableImgSrc);//Перерисовываем плюсик этой команды
+            for (var i = 0; i < element.command.commandsBlock.actions.length; i++) {//Перерисовываем все команды этого блока
+                setMovableFromElement(searchItemByCommand(element.command.commandsBlock.actions[i]));
             }
+        }
+        if (element.command.elseBlock && element.command.elseBlock.actions) {
+            searchItemByCommand(element.command.elseBlock).setImage(commandMovableImgSrc);//Перерисовываем иконку команды иначе
+            searchItemByCommand(element.command.elseBlock.actions).setImage(commandMovableImgSrc);//Перерисовываем плюсик от блока иначе
+            for (var i = 0; i < element.command.elseBlock.actions.length; i++) {//Перерисовываем все команды этого блока
+                setMovableFromElement(searchItemByCommand(element.command.elseBlock.actions[i]));
+            }
+        }
+    }
 
-        })*/
+    var searchItemByCommand = function(comm){
+        var allElems = codeView.getElements();
+        for (var i = 0; i < allElems.length; i++) {
+            if (allElems[i].command && allElems[i].command == comm)
+                return allElems[i];
+        }
     }
 
     this.openMenu = function (item, parent) { //функция испотльзуеться извне, получает ссылку на элемент по которому кликнули, устанавливает позиции в соответствующих местах и включает видимость элементов
