@@ -677,8 +677,7 @@ function ScrollBar(posX, posY, orientation, arr, name) {
                         if (rYElLast >= rYBG) {
                             dy = scrollVal.y * scrollSpeed;
                             if (rYElLast + dy < rYBG) {
-                                var dSpeed = rYBG - (rYElLast + dy);
-                                dy = 0;
+                                dy = rYBG - rYElLast;
                             }
                         }
                     }
