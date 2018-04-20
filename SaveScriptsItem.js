@@ -90,7 +90,7 @@ function SaveItem(name, script) {
         //обработчик загрузки на поле
         audio_GUI_click.play();
         lastClickedElement.commands = getCopyOfObj(el.scriptArray);
-        onOkBClick();
+        allButtons.mainButton.onClick(allButtons.mainButton);
     }
 
     this.draw = function () {
