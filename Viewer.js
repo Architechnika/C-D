@@ -1006,6 +1006,11 @@ function ItemMenu() {
                 searchItemByCommand(element.command.blockB[i]).setImage(commandMovableImgSrc);
             }
         }
+        if (element.command.countBlock) {
+            var cI = searchItemByCommand(element.command.countBlock);
+            delete cI.textObj;
+            cI.setImage(commandMovableImgSrc);
+        }
         if (element.command.commandsBlock && element.command.commandsBlock.actions) {
             searchItemByCommand(element.command.commandsBlock.actions).setImage(commandMovableImgSrc);//Перерисовываем плюсик этой команды
             for (var i = 0; i < element.command.commandsBlock.actions.length; i++) {//Перерисовываем все команды этого блока

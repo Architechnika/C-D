@@ -13,10 +13,15 @@ function UserAccaunt(login, pass, summ) {
     this.gameObjsPos = "";
     this.myScriptsArray = ""; // массив для скриптов сохраненных пользователем
     this.playerOptimalRoute = "" // что то связанное с опытом игрока
+    this.playerCommands = ""
+    this.playerMovesHistory = ""
+    this.playerStatesBuff = ""
+    this.lastReadedCommands = ""
     this.playerLocalEXP = 0 // локальный опыт игрока
     this.playerGlobalEXP = 0 // глобальный опыт игркоа
     this.playerNextLvlEXP = 0 //количество опыта необходимое для перехода на следующий уровень
     this.playerPrevLvlEXP = 0
+    this.playerPosition = 0
     this.mazePassedCount = 0; // количество пройденных лабиринтов
     this.playerCurrentLevel = 0 // текущий уровень игрока
     this.copy = function (obj, isNewGame) {
@@ -34,11 +39,16 @@ function UserAccaunt(login, pass, summ) {
             this.isSaved = obj.isSaved;
             this.gameObjsPos = obj.gameObjsPos;
             this.playerOptimalRoute = obj.playerOptimalRoute;
+            this.playerCommands = obj.playerCommands;
+            this.playerMovesHistory = obj.playerMovesHistory;
+            this.playerStatesBuff = obj.playerStatesBuff;
+            this.lastReadedCommands = obj.lastReadedCommands;
             this.playerLocalEXP = obj.playerLocalEXP;
             this.playerGlobalEXP = obj.playerGlobalEXP;
             this.playerNextLvlEXP = obj.playerNextLvlEXP;
             this.playerPrevLvlEXP = obj.playerPrevLvlEXP;
             this.playerCurrentLevel = obj.playerCurrentLevel;
+            this.playerPosition = obj.playerPosition;
             this.mazePassedCount = obj.mazePassedCount;
         }
         this.myScriptsArray = obj.myScriptsArray;
@@ -55,6 +65,7 @@ function UserAccaunt(login, pass, summ) {
         this.playerNextLvlEXP = nextLevelEXP;
         this.playerPrevLvlEXP = prevLevelEXP;
         this.playerCurrentLevel = currentPlayerLevel;
+        this.playerPosition = playerPozition;
         this.mazePassedCount = totalLabCompleted;
         this.gameTime = totalSeconds;
         this.gameCoin = JSON.stringify(playerInventory);
@@ -64,6 +75,10 @@ function UserAccaunt(login, pass, summ) {
             tmpArr.push(gameObjects[i].__proto__.position);
         }
         this.gameObjsPos = JSON.stringify(tmpArr);
+        this.playerCommands = JSON.stringify(playerCommands);
+        this.playerMovesHistory = JSON.stringify(playerMovesHistory);
+        this.playerStatesBuff = JSON.stringify(playerStatesBuff);
+        this.lastReadedCommands = JSON.stringify(lastReadedCommands);
         this.isSaved = true;
         this.entrySide = entrySide;
         this.totalWH = totalWidth;
@@ -81,6 +96,8 @@ function UserAccaunt(login, pass, summ) {
                 globalEXP = userData.playerGlobalEXP;
             if (userData.playerNextLvlEXP != undefined)
                 nextLevelEXP = userData.playerNextLvlEXP;
+            if (userData.playerPosition != undefined)
+                playerPozition = userData.playerPosition;
             if (userData.playerPrevLvlEXP != undefined)
                 prevLevelEXP = userData.playerPrevLvlEXP;
             if (userData.playerCurrentLevel != undefined)
@@ -89,6 +106,14 @@ function UserAccaunt(login, pass, summ) {
                 tmpField = JSON.parse(userData.labyrinth)
             if (userData.gameObjsPos != undefined)
                 tmpGameObjsPos = JSON.parse(userData.gameObjsPos);
+            if (userData.playerCommands != undefined)
+                playerCommands = JSON.parse(userData.playerCommands);
+            if (userData.playerMovesHistory != undefined)
+                playerMovesHistory = JSON.parse(userData.playerMovesHistory);
+            if (userData.playerStatesBuff != undefined)
+                playerStatesBuff = JSON.parse(userData.playerStatesBuff);
+            if (userData.lastReadedCommands != undefined)
+                lastReadedCommands = JSON.parse(userData.lastReadedCommands);
             if (userData.coinsArray != undefined)
                 tmpGameObjects = JSON.parse(userData.coinsArray);
             if (userData.gameCoin != undefined)

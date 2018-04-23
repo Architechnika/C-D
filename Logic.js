@@ -170,12 +170,19 @@ function initializeGame(isInit, dontSaveState) {
     initGameSpace();
     menuStatesArr = null;
     menuStatesArr = new Array();
+    var isLoaded = false;
     //Создаем новое поле
     if (isInit) {
         if (userData) {
             field = userData.load(true, gameObjects, playerInventory, initGUI)
-            if (field.length <= 0)
+            if (field.length <= 0) {
                 generateMap(gameSpaceW, gameSpaceH, gameSpaceX, gameSpaceY, totalWidth, totalHeight);
+            }
+            else {
+                isLoaded = true;
+                movePlayerToFieldElement(field[playerPozition], undefined, playerPozition);
+                playerSetDirection(getPlayerDirFromSide(), false);
+            }
         } else {
             initLabirint();
         }
@@ -198,7 +205,8 @@ function initializeGame(isInit, dontSaveState) {
     recalcScreen();
     achievement_noErrors = true;
     //Создаем игрока
-    playerSetStart();
+    if (!isLoaded)
+        playerSetStart();   
     if (!dontSaveState)
         saveGameState();
 }
