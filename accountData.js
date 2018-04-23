@@ -177,6 +177,7 @@ function UserAccaunt(login, pass, summ) {
 
     function loadSettings() {
         var sett = localStorage.getItem("settings");
+        log(sett + "!!!!!!!!!!!");
         if (sett) {
             var tmp = JSON.parse(sett);
             if (tmp.isAudio == "on") {

@@ -247,7 +247,10 @@ function onUp(e) {
                                     scroll.getArrayItems().splice(scrolItemsi, 1);
                                     scroll.initArrayItems(scroll.getArrayItems())
                                     stor.splice(i, 1);
-                                    codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
+                                    initLeftScroll(getCommandsImgArr(choosenCommandInElement));
+                                    if (!isVerticalScreen)
+                                        codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
+
                                 } else { // в противном случаи если выделенный элемент сохраненка
                                     var scrolItemsi = scroll.getArrayItems().indexOf(selectedItem);
                                     scroll.getArrayItems().splice(scrolItemsi, 1);

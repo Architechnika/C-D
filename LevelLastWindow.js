@@ -141,7 +141,12 @@ function drawWindow() {
     totalLabCompletedText.textDraw();
     achivBG.draw();
     achivText.textDraw();
-    if (achivTextCont) achivTextCont.textDraw();
+    if (achivTextCont) {
+        if (achivTextCont.length > 0)
+            for (var i = 0; i < achivTextCont.length; i++)
+                achivTextCont[i].textDraw();
+        //achivTextCont.textDraw();
+    }
     playerLvl.drawPlayerLevel();
     buttonNext.draw();
     buttonReload.draw();
@@ -294,7 +299,7 @@ function animLvl() {
 function animAchiv() {
     if (achIndx < achievements.length) {
         if (animTickCounter % animTickCount == 0) {
-            setAchivText(achievements[achIndx]);
+            setAchivText(achievements, achIndx);
             achIndx++;
         }
         animTickCounter++;
@@ -441,13 +446,14 @@ function checkAchievements() {
     return bonus;
 }
 
-function setAchivText(text, indx) {
+function setAchivText(achievements, indx) {
+    var text = achievements[indx];
     var size = (mainBG.w * 0.8) / text.length;
     var x = achivBG.x + (achivBG.w / 2) - ((size * text.length) / 3.5);
     var y = achivBG.y + (achivBG.h / 2) - (size / 1.8);
-    achivTextCont = new Label(x, y, text);
-    achivTextCont.setTextSize(size)
-    achivTextCont.setTextColor("#FFF8DC");
+    achivTextCont = [new Label(x, y, text)];
+    achivTextCont[0].setTextSize(size)
+    achivTextCont[0].setTextColor("#FFF8DC");
 }
 
 function setTextTime(secs) {
