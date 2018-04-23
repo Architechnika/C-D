@@ -347,7 +347,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
             command: comm,
             commandName : commName,
             onClick: function (el) {
-                audio_GUI_click.play();
+                if(soundIsOn) audio_GUI_click.play();
                 onCodeMapElementClick(el);
             }
         });
@@ -385,7 +385,7 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
         if (isOnClick)
             images[images.length - 1].setUserData({
                 onClick: function (el) {
-                     audio_GUI_click.play();
+                     if(soundIsOn) audio_GUI_click.play();
                     onCodeMapElementClick(el);
                 }
             });
@@ -899,7 +899,7 @@ function ItemMenu() {
 
     itemDelete.setUserData({
         onClick: function () {
-             audio_GUI_click.play();
+             if(soundIsOn) audio_GUI_click.play();
             //описать клик удаление
             var stor = findObjStorage(lastClickedElement.commands, element.command);
             OOP.delObject(stor, element.command);
@@ -912,7 +912,7 @@ function ItemMenu() {
     itemMove.setUserData({
         onClick: function () {
             //описать клик перемещение
-            audio_GUI_click.play();
+            if(soundIsOn) audio_GUI_click.play();
             codeView.isElementMove = true;
             //Скрываем команду и всю иерархию команд для перемещения
             setMovableFromElement(element);
@@ -922,7 +922,7 @@ function ItemMenu() {
     });
     itemReplace.setUserData({
         onClick: function () {
-             audio_GUI_click.play();
+             if(soundIsOn) audio_GUI_click.play();
             itemToReplaceInCodeMap = element;
             choosenCommandInElement = findObjStorage(lastClickedElement.commands,itemToReplaceInCodeMap.command);
             initLeftScroll(getCommandsImgArr(choosenCommandInElement));
@@ -934,7 +934,7 @@ function ItemMenu() {
     itemAdd.setUserData({
         onClick: function () {
             //описать клик добавление
-             audio_GUI_click.play();
+             if(soundIsOn) audio_GUI_click.play();
             itemToAddAfterInCodeMap = element;
             //описать клик замена
             initRightScroll(getAllCommandsMenu(true));

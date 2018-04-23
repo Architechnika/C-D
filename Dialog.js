@@ -24,7 +24,7 @@ this.onClick = function () {
     this.setHidden(true)
     if (pur == "delete") {
         // if (this.visible) {
-        audio_GUI_click.play();
+        if(soundIsOn) audio_GUI_click.play();
         lastClickedElement.commands.splice(0);
         setFocused(field[lastClickedIndx], lastClickedIndx);
         dialog.setHidden(true);
@@ -32,7 +32,7 @@ this.onClick = function () {
     }
 }
 this.onClickCancel = function () {
-    audio_GUI_click.play();
+    if(soundIsOn) audio_GUI_click.play();
     this.setHidden(true);
 }
 this.getText = function () {

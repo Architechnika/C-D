@@ -32,7 +32,7 @@ function Input(inputName, buttonName, cancelButtName) {
         }
     }
     this.onClickCancel = function () {
-        audio_GUI_click.play();
+        if(soundIsOn) audio_GUI_click.play();
         this.setHidden(true);
     }
     this.getText = function () {

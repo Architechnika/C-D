@@ -247,7 +247,7 @@ function onUp(e) {
                                     scroll.getArrayItems().splice(scrolItemsi, 1);
                                     scroll.initArrayItems(scroll.getArrayItems())
                                     stor.splice(i, 1);
-                                    initLeftScroll(getCommandsImgArr(choosenCommandInElement));
+                                    initLeftScroll(getCommandsImgArr(lastClickedElement.commands));
                                     if (!isVerticalScreen)
                                         codeView.createCodeMap(0, 0, lastClickedElement.commands, true, true);
 

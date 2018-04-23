@@ -103,7 +103,7 @@ function Buttons() { //класс для работы совсеми кнопк�
     //описывает обработчик onClick для кнопок
     this.mainButton.setUserData({
         onClick: function (el) {
-            audio_GUI_click.play();
+            if(soundIsOn) audio_GUI_click.play();
             if (el.value == "ok") {
                 if (onOkBClick()) {
                     el.value = isStarted ? "stop" : "start";
@@ -128,21 +128,21 @@ function Buttons() { //класс для работы совсеми кнопк�
     });
     this.stepDownButton.setUserData({
         onClick: function (el) {
-            audio_GUI_click.play();
+            if(soundIsOn) audio_GUI_click.play();
             if (!isOkClose || isStarted || isSecondScreen) return;
             setPreviousStateToPlayer();
         }
     });
     this.deleteButton.setUserData({
         onClick: function (el) {
-            audio_GUI_click.play();
+            if(soundIsOn) audio_GUI_click.play();
             if (lastClickedElement.commands && lastClickedElement.commands.length > 0)
                 dialog.setHidden(false);
         }
     });
     this.saveButton.setUserData({
         onClick: function (el) {
-            audio_GUI_click.play();
+            if(soundIsOn) audio_GUI_click.play();
             if (lastClickedElement.commands && lastClickedElement.commands.length > 0)
                 {
                    // myScripts.push( lastClickedElement.commands);
@@ -153,14 +153,14 @@ function Buttons() { //класс для работы совсеми кнопк�
     });
     this.stepUpButton.setUserData({
         onClick: function (el) {
-            audio_GUI_click.play();
+            if(soundIsOn) audio_GUI_click.play();
             if (!isOkClose || isStarted || isSecondScreen) return;
             processRobotMove();
         }
     });
     this.backToStartButton.setUserData({
         onClick: function (el) {
-            audio_GUI_click.play();
+            if(soundIsOn) audio_GUI_click.play();
             if (!isOkClose || isSecondScreen) return;
             if (!isStarted) {
                 //Останавливаем цикл движения игры
@@ -179,7 +179,7 @@ function Buttons() { //класс для работы совсеми кнопк�
     });
     this.menuButton.setUserData({
         onClick: function (el) {
-            audio_GUI_click.play();
+            if(soundIsOn) audio_GUI_click.play();
             sleep(80);
             menuBClick();
         }

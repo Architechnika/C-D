@@ -46,7 +46,7 @@ function fieldElement(imgSource, comm, elemcode, fx, fy, fw, fh) {
     if (this.code == roadCode || this.code == entryCode) {
         this.setUserData({
             onClick: function (index) { //index - индекс элемента в массиве где он хранится
-                audio_field_click.play();
+                if(soundIsOn) audio_field_click.play();
                 return labyrinthRoadClick(index)
             }
         });

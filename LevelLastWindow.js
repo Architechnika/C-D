@@ -156,7 +156,7 @@ function drawWindow() {
 game.newLoopFromConstructor('LastLevelWindow', function () {
     //Код для старта игры
     this.entry = function () {
-        audio_lastWindow.play();
+        if(soundIsOn) audio_lastWindow.play();
         addEventListener("mouseup", mouseUpEvent);
         addEventListener("mousedown", mouseDownEvent);
         addEventListener("touchend", touchUpEvent);
@@ -359,7 +359,7 @@ function nextLevel() {
 
 //Переходит в игровой цикл лабиринта
 function goToLab() {
-    audio_GUI_click.play();
+    if(soundIsOn) audio_GUI_click.play();
     robotOn = false;
     isStarted = false;
     allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);

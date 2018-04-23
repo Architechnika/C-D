@@ -176,13 +176,13 @@ function UserAccaunt(login, pass, summ) {
     }
 
     function loadSettings() {
-        var sett = localStorage.getItem("settings");
-        log(sett + "!!!!!!!!!!!");
+        var sett = localStorage.getItem("settings");        
         if (sett) {
             var tmp = JSON.parse(sett);
+            soundIsOn = tmp.isAudio;
             if (tmp.isAudio == "true") {
                 for (var i = 0; i < allAudioElements.length; i++)
-                    allAudioElements[i].vol=1;
+                    allAudioElements[i].vol = 1;
             } else {
                 for (var i = 0; i < allAudioElements.length; i++)
                     allAudioElements[i].vol = 0;
