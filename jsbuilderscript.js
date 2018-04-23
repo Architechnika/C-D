@@ -27549,7 +27549,9 @@ game.newLoopFromConstructor('LastLevelWindow', function () {
     this.entry = function () {
         audio_lastWindow.play();
         addEventListener("mouseup", mouseUpEvent);
+        addEventListener("mousedown", mouseDownEvent);
         addEventListener("touchend", touchUpEvent);
+        addEventListener("touchstart", touchDownEvent);
         initParams();
         initLastWindow();
         calcEXPResult();
@@ -27559,6 +27561,8 @@ game.newLoopFromConstructor('LastLevelWindow', function () {
     this.exit = function () {
         removeEventListener("mouseup", mouseUpEvent);
         removeEventListener("touchend", touchUpEvent);
+        removeEventListener("mousedown", onMouseDOWN);
+        removeEventListener("touchstart", onTouchStart);
     };
 
     //Код для апдейта игры
@@ -27567,7 +27571,27 @@ game.newLoopFromConstructor('LastLevelWindow', function () {
     };
 });
 
+function touchDownEvent(e) {
+    mouseDownEvent(new point(e.changedTouches[0].clientX, e.changedTouches[0].clientY));
+}
+
+function mouseDownEvent(e) {
+    if (clickIsInObj(e.x, e.y, buttonNext)) {
+        buttonNext.setImage(getPressedImg(buttonNext));
+    } else if (clickIsInObj(e.x, e.y, buttonReload)) {
+        buttonReload.setImage(getPressedImg(buttonReload));
+    }
+}
+
+function unpressImg(img) {
+    var spl = img.getImage().split("_pressed");
+    if (spl.length > 1)
+        img.setImage(spl[0] + spl[1]);
+}
+
 function mouseUpEvent(e) {
+    unpressImg(buttonNext);
+    unpressImg(buttonReload);
     if (isAnimNow) {
         animTimeoutBuff = 1;
         return;
@@ -27582,6 +27606,8 @@ function mouseUpEvent(e) {
 }
 
 function touchUpEvent(e) {
+    unpressImg(buttonNext);
+    unpressImg(buttonReload);
     if (isAnimNow) {
         animTimeoutBuff = 1;
         return;
