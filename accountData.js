@@ -180,12 +180,12 @@ function UserAccaunt(login, pass, summ) {
         log(sett + "!!!!!!!!!!!");
         if (sett) {
             var tmp = JSON.parse(sett);
-            if (tmp.isAudio == "on") {
+            if (tmp.isAudio == "true") {
                 for (var i = 0; i < allAudioElements.length; i++)
-                    allAudioElements[i].setVolume(1);
+                    allAudioElements[i].vol=1;
             } else {
                 for (var i = 0; i < allAudioElements.length; i++)
-                    allAudioElements[i].setVolume(0);
+                    allAudioElements[i].vol = 0;
             }
         }
     }
