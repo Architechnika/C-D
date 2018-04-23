@@ -39,6 +39,14 @@ var audio_object_up = pjs.audio.newAudio(["audio/gameObjectUp.ogg","audio/gameOb
 var audio_object_down = pjs.audio.newAudio(["audio/gameObjectDown.ogg","audio/gameObjectDown.aac"]);
 var audio_object_messeng = pjs.audio.newAudio(["audio/messeng.ogg","audio/messeng.aac"]);
 var audio_scroll_click = pjs.audio.newAudio(["audio/scrollClick.ogg","audio/scrollClick.aac"]);
+var allAudioElements = [];
+allAudioElements.push(audio_GUI_click);
+allAudioElements.push(audio_lastWindow);
+allAudioElements.push(audio_field_click);
+allAudioElements.push(audio_object_down);
+allAudioElements.push(audio_object_messeng);
+allAudioElements.push(audio_scroll_click);
+allAudioElements.push(audio_object_up);
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------ГРАФИЧЕСКИЕ ПАРАМЕТРЫ-----------------------------------------------------------------
 //ТЕКУЩИЙ ВЫБРАННЫЙ ГРАФИЧЕСКИЙ ПАК(ПО ИМЕНИ ПАПКИ В КОТОРОЙ НАХОДЯТСЯ РЕСУРСЫ В img/assets/...)

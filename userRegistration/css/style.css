@@ -3,7 +3,7 @@
     src: url('../../font/NeSkidComica.ttf');
 }
 body {
-  background-image:url(http://www.w3cplus.com/demo/css3/loginform_rbbrt/bg.jpg);
+  background-image:url(../../img/interface/bg.jpg);
 }
 .content {
   width:100%;
@@ -12,6 +12,13 @@ body {
   font-family: 'comic';
 }
 
+.us{
+    position:relative;
+/*    left: 35% auto;*/
+/*    margin:10px auto;*/
+/*    margin-left: 35%,auto;*/
+/*    font-size: 200%;*/
+}
 .form-wrapper {
   margin:32px auto;
   width:264px;
@@ -21,9 +28,20 @@ body {
   background-color:rgb(248,249,250);
   text-align:center;
   border-radius:5px;
-  box-shadow:0 1px 0 rgb(255,255,255), 0 2px 0 rgb(197,200,204), 0 3px 0 rgb(255,255,255), 0 4px 0 rgb(197,200,204);/*纸张层叠效果*/
+  box-shadow:0 1px 0 rgb(255,255,255), 0 2px 0 rgb(197,200,204), 0 3px 0 rgb(255,255,255), 0 4px 0 rgb(197,200,204);
 }
-.form-wrapper:before {
+.menu {
+  margin:32px auto;
+  width:264px;
+  height:400px;
+  position:relative;
+  border:1px solid rgb(197,200,204);
+  background-color:rgb(248,249,250);
+  text-align:center;
+  border-radius:5px;
+  box-shadow:0 1px 0 rgb(255,255,255), 0 2px 0 rgb(197,200,204), 0 3px 0 rgb(255,255,255), 0 4px 0 rgb(197,200,204);
+}
+.form-wrapper:before, .menu:before {
   content:"";
   display:block;
   height:37px;
@@ -32,8 +50,8 @@ body {
   box-shadow:inset 2px 2px 0 rgb(255,255,255);
 }
 
-.form-wrapper .login-form {
-  padding-top:40px;
+.form-wrapper .login-form, .menu .login-form {
+  padding-top:50px;
   box-shadow:inset 2px 0 0 rgb(255,255,255);
 }
 .form-wrapper input[name="username"],
@@ -56,8 +74,8 @@ body {
   border-radius:0 0 5px 5px;
   outline:none;
 }
-.form-wrapper button[type="submit"] {
-    margin-top:25px;
+.form-wrapper button[type="button"],.menu button[type="button"] {
+    margin-top:30px;
 	cursor:pointer;
     width:215px;
     height:44px;
@@ -73,11 +91,11 @@ body {
     text-shadow:1px 1px 0 rgb(138,100,50);
     transition:color 300ms linear;
 }
-.form-wrapper button[type="submit"]:hover {
+.form-wrapper button[type="button"]:hover,.menu button[type="button"]:hover {
 	opacity:0.9;
 	}
 
-.form-wrapper .linker {
+.form-wrapper .linker,.menu .linker {
   position:absolute;
   width:240px;
   height:40px;

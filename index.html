@@ -30,7 +30,7 @@
                 var tud = JSON.parse(localStorage.getItem("tmpUserData"));
                 userID = tud.userId;
                 userdata.user = tud.userName;
-                userName.innerHTML = tud.userName;
+                //userName.innerHTML += tud.userName;
 
             } else loginShow()
 
@@ -76,9 +76,8 @@
     </script>
 
     <noscript><div><img src="https://mc.yandex.ru/watch/47636011" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
-    <!-- /Google Analytics -->
 
+<!--
     <section class="mbr-box mbr-section mbr-section--relative mbr-section--fixed-size mbr-section--full-height mbr-section--bg-adapted mbr-parallax-background" id="header2-0" data-rv-view="21" style="background: url(assets/images/image01-1200x800.jpg);">
         <div class="mbr-box__magnet mbr-box__magnet--sm-padding mbr-box__magnet--center-left">
             <div class="mbr-overlay" style="opacity: 0.6; background-color: rgb(90, 176, 175);"></div>
@@ -94,7 +93,7 @@
                                 <div class="mbr-buttons btn-inverse mbr-buttons--left">
                                     <a class="mbr-buttons__btn btn btn-lg animated fadeInUp delay btn-danger" onclick="newGame()" href="game.html">Новая игра</a>
                                     <a class="mbr-buttons__btn btn btn-lg animated fadeInUp delay btn-info" onclick="continueGame()" href="game.html">Продолжить</a>
-                                    <!--                        <a class="mbr-buttons__btn btn btn-lg animated fadeInUp delay btn-success" onclick="loginShow()">Войти/Регистрация</a> -->
+                                                            <a class="mbr-buttons__btn btn btn-lg animated fadeInUp delay btn-success" onclick="loginShow()">Войти/Регистрация</a> 
                                     <a class="mbr-buttons__btn btn btn-lg animated fadeInUp delay btn-default" onclick="optionsShow()" href="SettingsPage/settings.html">Настройки</a>
                                     <a class="mbr-buttons__btn btn btn-lg animated fadeInUp delay btn-primary" href="instruction.html">Инструкция</a>
                                 </div>
@@ -109,7 +108,34 @@
             </div>
         </div>
     </section>
-
+-->
+<!--     <p id="user_name" class="us">Добро пожаловать: </p>-->
+       <div class="content" id="menu">
+       <div class ="menu">
+<!--        <p id="user_name" class="us">Добро пожаловать: </p>-->
+<!--        <p id="user_name" class="us">Добро пожаловать: </p>-->
+            <div class="linker">
+<!--             <p id="user_name" class="us">Добро пожаловать</p>-->
+                <span class="ring"></span>
+                <span class="ring"></span>
+                <span class="ring"></span>
+                <span class="ring"></span>
+                <span class="ring"></span>
+            </div>
+            <form class="login-form" action="#" method="post">
+                <button type="button" onclick="newGame()">Новая игра</button>
+                <button onclick="continueGame()" href="game.html" type="button">Продолжить</button>
+                <button onclick="optionsShow()" href="SettingsPage/settings.html" type="button">Настройки</button>
+<!--                <button onClick="instructionClick()" type="button">Инструкция</button>-->
+                <br><br>
+                <br><br>
+                
+                 <p id="programmVersion" class="version">Версия игры : </p>
+            </form>
+           </div>
+    </div>
+   
+   
     <div class="content" id="log">
         <div class="form-wrapper">
             <div class="linker">
@@ -122,7 +148,7 @@
             <form class="login-form" action="#" method="post">
                 <input id="userName" type="text" name="username" placeholder="Введите логин" />
                 <input id="userPswd" type="password" name="password" placeholder="Введите пароль" />
-                <button onclick="userEnter()" type="submit">Войти/Регистрация</button>
+                <button onclick="userEnter()" type="button">Войти/Регистрация</button>
             </form>
         </div>
     </div>
@@ -149,6 +175,8 @@
     <script>
         var programmVersion = document.getElementById("programmVersion");
         programmVersion.innerHTML += currentVersion;
+        document.getElementById("programmVersion").style.color = "#A9A9A9";
+       // document.getElementById("user_name").style.color = "#FF6347";
 
     </script>
 

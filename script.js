@@ -2,7 +2,7 @@
 
 // диалог выбора рабочей платформы
 // не вфбрав платформу - нельзя работать
-var menu = document.getElementById("header2-0");
+var menu = document.getElementById("menu");
 var log = document.getElementById("log");
 log.style.display = 'none';
 // имея сессионной переменной для передачи данных пользователя
@@ -41,15 +41,16 @@ log.addEventListener('close', function () {
 
     if (this.returnValue != 'cancel') {
         //userdata = JSON.parse(this.returnValue);
-        userName.innerHTML = userdata.user;
+       // userName.innerHTML = userdata.user;
     }
     //        userName.innerHTML = userdata.user;
 });
 
 // отображает диалоговое оккно входа нового пользователя
 function loginShow() {
-    menu.style.display = 'none';
-    log.style.display = '';
+  //  menu.style.display = 'none';
+   // log.style.display = '';
+    regImitation();
 }
 
 // определение пользователя в системе и вход его
@@ -67,6 +68,7 @@ function userEnter() {
             localStorage.setItem(userID, JSON.stringify(userdata));
             userCancel();
         }
+       // userName.innerHTML +=  userdata.user;
     }
 }
 
@@ -98,6 +100,7 @@ function newGame() {
     userdata.game = "";
     sessionStorage.setItem(typeGame, "NewGame");
     sessionStorage.setItem(userSession, userID);
+    window.location.href = 'game.html'
 }
 
 // если имеются схранённые днные - загружает их
@@ -113,11 +116,36 @@ function continueGame() {
         sessionStorage.setItem("tmpUserData", tud);
         localStorage.setItem("tmpUserData", tud);
     }
+     window.location.href = 'game.html'
 }
 
 // выводит диалог ностроек программы
 function optionsShow() {
+     window.location.href = 'SettingsPage/settings.html'
+}
 
+function instructionClick()
+{
+     window.location.href = 'instruction.html'   
+}
+
+function regImitation()
+{
+    userdata.user = "login"
+    userdata.password = "pass"
+    if (userdata.user.length > 0 && userdata.password.length > 0) {
+        userID = 'id_' + CRC32.str(userdata.user + userdata.password);
+        userdata.userID = userID;
+        var error = true;
+
+        if (localStorage.getItem(userID)) {
+            userCancel();
+        } else {
+            localStorage.setItem(userID, JSON.stringify(userdata));
+            userCancel();
+        }
+       // userName.innerHTML +=  userdata.user;
+    }
 }
 
 

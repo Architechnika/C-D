@@ -1,18 +1,19 @@
+@font-face {
+    font-family: comic;
+    src: url('../../font/NeSkidComica.ttf');
+}
 *{
-    background:  url(../../img/interface_font.png); 
+    background:  url(../../img/interface/bg.jpg); 
     background-size: auto;
-
+    font-family: 'comic';
 }
 
-.leftSettingList{
-    height: 100%;
-    width:  35%;
-    position: absolute;
+#buttons{
+    width: 100%;
 }
-.RightSettingList{
-    height: 100%;
-    width: 65%;
-    position: absolute;
-    left:  35%;
-    
+#butOK{
+    width: 50%;    
+}
+#butCanc{
+    width: 50%;    
 }

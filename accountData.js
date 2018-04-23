@@ -95,7 +95,7 @@ function UserAccaunt(login, pass, summ) {
                 tmpPlayerInventary = JSON.parse(userData.gameCoin);
             if (userData.myScriptsArray != undefined)
                 myScripts = JSON.parse(userData.myScriptsArray);
-            if(userData.mazePassedCount != undefined)
+            if (userData.mazePassedCount != undefined)
                 totalLabCompleted = userData.mazePassedCount;
             var roadEl = Array();
             for (var i = 0; i < tmpField.length; i++) {
@@ -129,6 +129,7 @@ function UserAccaunt(login, pass, summ) {
                 myScripts = JSON.parse(userData.myScriptsArray);
         }
         sortSaveScripts();
+        loadSettings();
         initGUI();
         return field;
 
@@ -145,6 +146,20 @@ function UserAccaunt(login, pass, summ) {
                     item.setScriptArray(myScripts[i]);
                     saveItems.push(item);
                 }
+            }
+        }
+    }
+
+    function loadSettings() {
+        var sett = localStorage.getItem("settings");
+        if (sett) {
+            var tmp = JSON.parse(sett);
+            if (tmp.isAudio == "on") {
+                for (var i = 0; i < allAudioElements.length; i++)
+                    allAudioElements[i].setVolume(1);
+            } else {
+                for (var i = 0; i < allAudioElements.length; i++)
+                    allAudioElements[i].setVolume(0);
             }
         }
     }
