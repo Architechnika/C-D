@@ -18,7 +18,7 @@ var infoText = undefined;
 var toolTip = new ToolTip();
 var playerLevelVisual = undefined;
 var messageBox = new MessageBox();
-var saveInput = new Input("Введите название","Сохранить","Отменить");
+var saveInput = new Input(lang[selectLang]['gui_inp_name'], lang[selectLang]['gui_save'], lang[selectLang]['gui_cancel']);
 pjs.mouseControl.setCursorImage(cursorImgSrc);
 //Отрисовывает элементы интерфейса
 function drawGUI() {
@@ -45,7 +45,7 @@ function initGUI() { //поочередность иницилизаии ОБЯ�
     menuItemH = (height / 100) * 8;
     menuItemW = (width / 100) * 8;
     allButtons = new Buttons();
-    dialog = new Dialog("Удалить?","Да","Нет","delete");
+    dialog = new Dialog(lang[selectLang]['dialog_delete'], lang[selectLang]['gui_yes'], lang[selectLang]['gui_no'],"delete");
     infoText = new TextWithBG(gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH);
      dialog.setPosture();
     timerTextInit();
@@ -354,7 +354,7 @@ function PlayerLevelVisualisation(X,Y,W,H,LastWindow) {
         fillColor: "red",
         alpha: 0.7,
     });
-    var expText = new Label(mainBG.x + mainBG.w + 2, mainBG.y, "Уровень: " + lvl);
+    var expText = new Label(mainBG.x + mainBG.w + 2, mainBG.y, lang[selectLang]['gui_level'] + lvl);
     expText.setTextSize(mainBG.h * 1.5);
     expText.setTextColor(guiTextColor);
     this.setTextColor = function(color)
@@ -389,7 +389,7 @@ function PlayerLevelVisualisation(X,Y,W,H,LastWindow) {
             lvlLine.w = lvlLinePerc;
             lvlLineMembrane.w = lvlLinePerc
         }
-        this.setLevel("Уровень: " + cLvl);
+        this.setLevel(lang[selectLang]['gui_level'] + cLvl);
     }
 
     this.drawPlayerLevel = function () {

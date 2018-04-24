@@ -475,7 +475,7 @@ function labyrinthRoadClick(index) {
 }
 
 //Обработчик события показать тултип 
-function toolTipShowEvent(x, y) {
+/*function toolTipShowEvent(x, y) {
     for (var i = 0; i < field.length; i++) {
         if (clickIsInObj(x, y, field[i])) {
             if (i == playerPozition) {
@@ -491,7 +491,7 @@ function toolTipShowEvent(x, y) {
             toolTip.setToolTip(x, y, codeViewImages[i].command.name);
         }
     }
-}
+}*/
 
 function onCodeMapElementClick(element) {
 

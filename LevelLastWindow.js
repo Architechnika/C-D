@@ -89,11 +89,11 @@ function initLastWindow() {
     var min = Math.floor(totalSeconds / 60);
     var sec = totalSeconds - (min * 60); //Math.floor(totalMiliSeconds / 200 - min * 60);
     //Обновляем инфу о времени
-    timeText.setText("Время прохождения: " + (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec));
+    timeText.setText(lang[selectLang]['gui_total_time'] + (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec));
     //
     //количество пройденных лабиринтов
     totalLabCompletedText = new Label(xPos, yPos + mainBG.h * 0.08, "");
-    totalLabCompletedText.setText("Всего лабиринтов пройдено: " + totalLabCompleted);
+    totalLabCompletedText.setText(lang[selectLang]['gui_total_lab_complete'] + totalLabCompleted);
     totalLabCompletedText.setTextSize(mainBG.w * 0.03)
     totalLabCompletedText.setTextColor(textColor)
     //
@@ -107,7 +107,7 @@ function initLastWindow() {
         fillColor: "#e076fe",
         alpha: 0.6,
     });
-    achivText = new Label(mainBG.w * 0.37, yPos + mainBG.h * 0.24, "Достижения:");
+    achivText = new Label(mainBG.w * 0.37, yPos + mainBG.h * 0.24, lang[selectLang]['gui_achiv']);
     achivText.setTextSize(mainBG.w * 0.03)
     achivText.setTextColor(textColor)
     //
@@ -164,7 +164,7 @@ game.newLoopFromConstructor('LastLevelWindow', function () {
         initParams();
         initLastWindow();
         calcEXPResult();
-        totalLabCompletedText.setText("Всего лабиринтов пройдено: " + totalLabCompleted);
+        totalLabCompletedText.setText(lang[selectLang]['gui_total_lab_complete'] + totalLabCompleted);
     }
     //Код для завершения цикла
     this.exit = function () {
@@ -291,7 +291,7 @@ function animLvl() {
     } else {
         setTextTime(tSecs);
         totalLabCompleted++;
-        totalLabCompletedText.setText("Всего лабиринтов пройдено: " + totalLabCompleted);
+        totalLabCompletedText.setText(lang[selectLang]['gui_total_lab_complete'] + totalLabCompleted);
         animAchiv()
     }
 }
@@ -461,7 +461,7 @@ function setTextTime(secs) {
     var min = Math.floor(secs / 60);
     var sec = secs - (min * 60); //Math.floor(totalMiliSeconds / 200 - min * 60);
     //Обновляем инфу о времени
-    timeText.setText("Время прохождения: " + (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec));
+    timeText.setText(lang[selectLang]['gui_total_time'] + (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec));
 }
 
 initLastWindow();
