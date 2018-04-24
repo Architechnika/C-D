@@ -712,13 +712,6 @@ function checkAchievements() {
         bonus += nextLevelEXP * 0.1;
         achievements.push(lang[selectLang]['achievement_all_boxes']);
     }
-    if (totalWidth < 5) {
-        achievements.push(lang[selectLang]['achievement_optimal_route']);
-        bonus += nextLevelEXP * 0.1;
-        achievements.push(lang[selectLang]['achievement_no_errors']);
-        bonus += nextLevelEXP * 0.1;
-        return 0;
-    }
     //Проверка на ачивки
     playerMovesHistory.push(playerPozition);
     var bonus = 0;

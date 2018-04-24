@@ -19,6 +19,10 @@ var animCount = 0;
 var animTimeoutBuff = animTimeout;
 var isAnimNow = false;
 var buff;
+var medalBronzeImgSrc = "../img/interface/medal_bronze.png"
+var medalSilverImgSrc = "../img/interface/medal_silver.png"
+var medalGoldImgSrc = "../img/interface/medal_gold.png"
+
 
 var allAchievements = [
     lang[selectLang]['achievement_all_boxes'],
@@ -59,6 +63,11 @@ function setBarProgress(val) {
     bar.style.width = val + "%";
 }
 
+function setImgSrc(val) {
+    var l = document.getElementById("pic");
+    l.src = val;
+}
+
 function nextClick() {
     sessionStorage.removeItem("prevState");
     window.location.href = '../game.html'
@@ -79,14 +88,14 @@ if (sessionStorage.getItem("dataForLastWindow")) {
 
     for (var i = 0; i < allAchievements.length; i++) {
         setAchivText(i, allAchievements[i]);
-         setAchivItemColor("#A9A9A9",i)
+        setAchivItemColor("#A9A9A9",i)
     }
     for (var i = 0; i < data.achievements.length; i++) {
 
         for (var j = 0; j < allAchievements.length; j++) {
-            if( data.achievements[i] != allAchievements[j])
+            if( data.achievements[i] == allAchievements[j])
                 {
-                    setAchivItemColor("red",i)
+                    setAchivItemColor("red",j)
                 }
           //  setAchivText(i, allAchievements[j]);
         }
@@ -96,4 +105,10 @@ if (sessionStorage.getItem("dataForLastWindow")) {
     setLevel(data.pLvl);
     setBarProgress(data.cExp / ((data.nExp - data.pExp) / 100));
     buff = data.buff;
+    if (data.achievements.length == 0)
+        setImgSrc(medalBronzeImgSrc);
+    if (data.achievements.length == 1) 
+        setImgSrc(medalSilverImgSrc);
+    if (data.achievements.length == 2)
+        setImgSrc(medalGoldImgSrc);
 }
