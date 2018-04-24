@@ -642,5 +642,62 @@ function initSaveItems()
     //initLeftScroll(saveItems);
 }
 
+function nextLevel() {
+    //initNextLvl();
+    saveGameState();
+    goToLab();
+}
+
+//Переходит в игровой цикл лабиринта
+function goToLab() {
+    if (soundIsOn) audio_GUI_click.play();
+    robotOn = false;
+    isStarted = false;
+    allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
+    timeTimerLaunched = true;
+    totalTimeTimer();
+    codeView.clear();
+    achivTextCont = undefined;
+    achievements = [];
+    achIndx = 0;
+}
+
+function initNextLvl() {
+    codeView.clear();
+    if (isLabyrinthGrow && isLevelUp) {
+        if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) { } else {
+            labyrinthSize = totalWidth = totalHeight += 2;
+        }
+    }
+    initializeGame(undefined, true);
+}
+
+function replayLevel() {
+    totalLabCompleted--;
+    totalSeconds = 0;
+
+    field = getCopyOfObj(buffGameCondition.map);
+    labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
+    gameObjects = getCopyOfObj(buffGameCondition.gObjs);
+    OOP.forArr(gameObjects, function (el) {
+        el.setNewPosition(el.position);
+        el.startRotation();
+    });
+    optimalRoute = getCopyOfObj(buffGameCondition.opRoute);
+    OOP.forArr(optimalRoute, function (el) {
+        el.isActive = true;
+    });
+    globalEXP = getCopyOfObj(buffGameCondition.gExp);
+    currentPlayerLevel = buffGameCondition.cLvl;
+    nextLevelEXP = buffGameCondition.nLvl;
+    prevLevelEXP = buffGameCondition.pLvl;
+    labyrinthSize = totalWidth = totalHeight = buffGameCondition.labSize;
+    entrySide = buffGameCondition.entrySide;
+
+    playerImageObj = null;
+    playerSetStart();
+    goToLab();
+}
+
 game.startLoop('Labyrinth');
 //game.startLoop('LastLevelWindow');

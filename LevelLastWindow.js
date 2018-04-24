@@ -234,33 +234,6 @@ function touchUpEvent(e) {
     }
 }
 
-function replayLevel() {
-    totalLabCompleted--;
-    totalSeconds = 0;
-
-    field = getCopyOfObj(buffGameCondition.map);
-    labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
-    gameObjects = getCopyOfObj(buffGameCondition.gObjs);
-    OOP.forArr(gameObjects, function (el) {
-        el.setNewPosition(el.position);
-        el.startRotation();
-    });
-    optimalRoute = getCopyOfObj(buffGameCondition.opRoute);
-    OOP.forArr(optimalRoute, function (el) {
-        el.isActive = true;
-    });
-    globalEXP = getCopyOfObj(buffGameCondition.gExp);
-    currentPlayerLevel = buffGameCondition.cLvl;
-    nextLevelEXP = buffGameCondition.nLvl;
-    prevLevelEXP = buffGameCondition.pLvl;
-    labyrinthSize = totalWidth = totalHeight = buffGameCondition.labSize;
-    entrySide = buffGameCondition.entrySide;
-
-    playerImageObj = null;
-    playerSetStart();
-    goToLab();
-}
-
 function calcEXPResult() {
     //Рассчитываем опыт
     calcEXP(checkAchievements());
@@ -341,37 +314,6 @@ function animAchiv() {
         buttonNext.setAlpha(1);
         buttonReload.setAlpha(1);
     }
-}
-
-function initNextLvl() {
-    codeView.clear();
-    if (isLabyrinthGrow && isLevelUp) {
-        if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {} else {
-            labyrinthSize = totalWidth = totalHeight += 2;
-        }
-    }
-    initializeGame(undefined, true);
-}
-
-function nextLevel() {
-    //initNextLvl();
-    saveGameState();
-    goToLab();
-}
-
-//Переходит в игровой цикл лабиринта
-function goToLab() {
-    if (soundIsOn) audio_GUI_click.play();
-    robotOn = false;
-    isStarted = false;
-    allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
-    timeTimerLaunched = true;
-    totalTimeTimer();
-    codeView.clear();
-    achivTextCont = undefined;
-    achievements = [];
-    achIndx = 0;
-    game.setLoop('Labyrinth');
 }
 
 //Производит расчет очков опыта набранных игроком в процессе прохождения лабиринта
@@ -479,6 +421,6 @@ function DataForLastWindow() {
     var d = new Data();
     var obj = JSON.stringify(d)
     sessionStorage.setItem("dataForLastWindow", obj);
-    window.location.href = 'new1/index.html'
+    window.location.href = 'new1/lastwindow.html'
 }
 //DataForLastWindow();

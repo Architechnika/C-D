@@ -1,3 +1,4 @@
+var selectLang = 'ru';
 var lang = {
     ru : {
        'robot_not_know'  : 'Робот не знает что ему делать',
@@ -25,6 +26,14 @@ var lang = {
         'gui_total_lab_complete': 'Всего лабиринтов пройдено: ',
         'gui_total_time': 'Время прохождения: ',
         'gui_achiv': 'Достижения:',
+        'mainmenu_newgame': 'Новая игра',
+        'mainmenu_continue': 'Продолжить',
+        'mainmenu_settings': 'Настройки',
+        'mainmenu_login': 'Введите логин',
+        'mainmenu_password': 'Введите пароль',
+        'mainmenu_logpass': 'Войти/Регистрация',
+        'mainmenu_version': 'Версия игры : ',
+        'mainmenu_sure': 'Вы Уверены? Весь несохраненный прогресс исчезнет',
     },
     en : {
         'robot_not_know': 'Robot doesn\'t now what to do',
@@ -35,7 +44,7 @@ var lang = {
         'robot_left_counter_countblock': 'Number of steps in a CYCLE command is not specified',
         'crashed_the_wall': 'Robot crashed the wall',
         'robot_not_find_object': 'There is no object that the robot could pick up',
-        'game_title': 'SkillCraft - learn by playing',
+        'game_title': 'SkillCraft - learn while playing',
         'robot_is_waiting': 'Robot stopped and waits for further commands',
         'robot_enter_infinity_cycle': 'The robot entered an endless loop. Further execution is not possible',
         'dialog_delete': 'Delete?',
@@ -52,5 +61,13 @@ var lang = {
         'gui_total_lab_complete': 'Total labyrinth completed: ',
         'gui_total_time': 'Total time: ',
         'gui_achiv': 'Achievements:',
+        'mainmenu_newgame': 'New game',
+        'mainmenu_continue': 'Continue',
+        'mainmenu_settings': 'Settings',
+        'mainmenu_login': 'Login',
+        'mainmenu_password': 'Password',
+        'mainmenu_logpass': 'Login/Register',
+        'mainmenu_version': 'Version : ',
+        'mainmenu_sure': 'Are you sure? All unsaved progress will disappear',
     },
 }
