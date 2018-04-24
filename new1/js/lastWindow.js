@@ -72,13 +72,13 @@ function reloadClick() {
 //------------------------------------------------------------------------------
 if (sessionStorage.getItem("dataForLastWindow")) {
     data = JSON.parse(sessionStorage.getItem("dataForLastWindow"));
-    //Инитим текст ачивок
+    
     for (var i = 0; i < data.achievements.length; i++) {
         setAchivText(i, data.achievements[i]);
     }
-    setTime(data.tSecs);//Инитим время
-    setLabCount(data.totalLabs);//Количество пройденных лабиринтов
-    setLevel(data.pLvl);//Текущий уровень игрока
-    setBarProgress(data.cExp / ((data.nExp - data.pExp) / 100));//Полоска опыта
+    setTime(data.tSecs);
+    setLabCount(data.totalLabs);
+    setLevel(data.pLvl);
+    setBarProgress(data.cExp / ((data.nExp - data.pExp) / 100));
     buff = data.buff;
 }
