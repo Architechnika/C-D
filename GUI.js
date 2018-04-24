@@ -384,10 +384,10 @@ function PlayerLevelVisualisation(X,Y,W,H,LastWindow) {
             lvlLineMembrane.w = 0;
         }
         else {
-            var expPerc = ((gExp - prvLvl) * 100 / (nxtLvl - prvLvl));
+            var expPerc = gExp / ((nxtLvl - prvLvl) / 100);
             var lvlLinePerc = (bg.w / 100) * expPerc;
             lvlLine.w = lvlLinePerc;
-            lvlLineMembrane.w = lvlLinePerc
+            lvlLineMembrane.w = lvlLinePerc;
         }
         this.setLevel(lang[selectLang]['gui_level'] + cLvl);
     }
