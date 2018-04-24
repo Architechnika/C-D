@@ -18,6 +18,7 @@ var lvlDiscr = 0; //Дискрет на который ковышается уровень при каждой сброшенной 
 var animCount = 0;
 var animTimeoutBuff = animTimeout;
 var isAnimNow = false;
+var buff;
 
 var allAchievements = [
     lang[selectLang]['achievement_all_boxes'],
@@ -52,11 +53,18 @@ function setBarProgress(val) {
 }
 
 function nextClick() {
-    window.location.href = '../../game.html'
+    sessionStorage.removeItem("prevState");
+    window.location.href = '../game.html'
 }
 
 function reloadClick() {
-    window.location.href = '../../game.html'
+    function Data() {
+        this.value = true;
+    }
+    var d = new Data();
+    var obj = JSON.stringify(d)
+    sessionStorage.setItem("fromLastWindow", obj);
+    window.location.href = '../game.html'
 }
 //------------------------------------------------------------------------------
 if (sessionStorage.getItem("dataForLastWindow")) {
@@ -69,4 +77,5 @@ if (sessionStorage.getItem("dataForLastWindow")) {
     setLabCount(data.totalLabs);//Количество пройденных лабиринтов
     setLevel(data.pLvl);//Текущий уровень игрока
     setBarProgress(data.cExp / ((data.nExp - data.pExp) / 100));//Полоска опыта
+    buff = data.buff;
 }

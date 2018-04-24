@@ -3,7 +3,7 @@
 */
 
 var playerImageObj = null;//Картинка характеризующая игрока в графике игры
-
+var isUpdateGraphics = true;
 var width = game.getWH().w; // Ширина всего экрана
 var height = game.getWH().h; // Высота всего экрана
 
@@ -12,6 +12,7 @@ pjs.system.setTitle(lang[selectLang]['game_title']); // Set Title for Tab or Win
 //Обновление графики на экране
 function updateScreen() {
     game.clear();
+    if (!isUpdateGraphics) return;
     //Отрисовываем игровое поле
     for (var i = 0; i < field.length; i++) {
         if(field[i].isInCameraStatic())

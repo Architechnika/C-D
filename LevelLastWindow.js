@@ -47,12 +47,6 @@ var animCount = 0;
 var animTimeoutBuff = animTimeout;
 var isAnimNow = false;
 
-var allAchievements = [
-    lang[selectLang]['achievement_all_boxes'],
-    lang[selectLang]['achievement_optimal_route'],
-    lang[selectLang]['achievement_no_errors']
-];
-
 function initParams() {
     animTickCounter = animTickCount;
     tSecs = totalSeconds;

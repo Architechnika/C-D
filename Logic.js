@@ -171,15 +171,20 @@ function initializeGame(isInit, dontSaveState) {
     menuStatesArr = null;
     menuStatesArr = new Array();
     var isLoaded = false;
+    var isPrevState = false;
     //Создаем новое поле
-    if (isInit) {
-        if (userData) {
+     if (isInit) {
+         if (userData) {
+             if (sessionStorage.getItem("prevState")) {
+                 userData.copy(JSON.parse(sessionStorage.getItem("prevState")));
+                 userData.gameTime = 0;
+                 sessionStorage.removeItem("prevState");
+             }
             field = userData.load(true, gameObjects, playerInventory, initGUI)
             if (field.length <= 0) {
                 generateMap(gameSpaceW, gameSpaceH, gameSpaceX, gameSpaceY, totalWidth, totalHeight);
             }
             else {
-                isLoaded = true;
                 movePlayerToFieldElement(field[playerPozition], undefined, playerPozition);
                 playerSetDirection(getPlayerDirFromSide(), false);
             }
@@ -189,6 +194,7 @@ function initializeGame(isInit, dontSaveState) {
     } else {
         initLabirint();
     }
+
     allButtons = new Buttons();
     dialog = new Dialog();
     //Рассчитываем сколько команд можно поставить на этом поле для прохождения
@@ -219,6 +225,7 @@ function saveGameState() {
     buffGameCondition.gExp = globalEXP;
     buffGameCondition.cLvl = currentPlayerLevel;
     buffGameCondition.nLvl = nextLevelEXP;
+    buffGameCondition.pLvl = prevLevelEXP;
     buffGameCondition.labSize = labyrinthSize;
     buffGameCondition.entrySide = entrySide;
 }
@@ -430,7 +437,6 @@ function addCommandToCell(commandImg, dontAdd) {
 // 4 - commandBlock или count
 // 5 - elseBlock
 function changeMenuState(commandImg) {
-
     var commName = commandImg.name ? commandImg.name : commandImg.command.name;
     //Скрываем текстовое поле ввода итераций в цикле, если оно не скрыто
     if (inputCounterText && inputCounterText.visible && choosenCommandInElement.name != "repeat") inputCounterText.visible = false;
@@ -644,31 +650,38 @@ function initSaveItems()
 }
 
 var achievements = [];
+var allAchievements = [
+    lang[selectLang]['achievement_all_boxes'],
+    lang[selectLang]['achievement_optimal_route'],
+    lang[selectLang]['achievement_no_errors']
+];
+var isLevelUp = false;
 function showLastWindow() {
+    isUpdateGraphics = false;
+    var userDataCopy = getCopyOfObj(userData);
+    sessionStorage.setItem("prevState", JSON.stringify(userDataCopy));
     //Рассчитываем параметры игры на следующий уровень
-    calcEXPResult(checkAchievements());
+    calcEXP(checkAchievements());
     //Передаем данные между страницами через session storage
     function Data() {
         this.achievements = achievements;
+        this.allAchievements = allAchievements;
         this.tSecs = totalSeconds;
         this.totalLabs = totalLabCompleted;
         this.cExp = globalEXP;
         this.pExp = prevLevelEXP;
         this.nExp = nextLevelEXP;
-        this.pLvl = pLvl;
-
+        this.pLvl = currentPlayerLevel;
+        this.buff = buffGameCondition;
     }
     var d = new Data();
     var obj = JSON.stringify(d)
     sessionStorage.setItem("dataForLastWindow", obj);
+    //Инитим следующий уровень
+    initNextLvl();
+    saveTimer();
     //Переходим на страничку вывода результата игры
     window.location.href = 'new1/lastwindow.html'
-}
-
-function calcEXPResult() {
-    //Рассчитываем опыт
-    calcEXP(checkAchievements());
-    initNextLvl();
 }
 
 //Производит расчет очков опыта набранных игроком в процессе прохождения лабиринта
@@ -680,12 +693,14 @@ function calcEXP(bonus) {
         gameObjects.push(playerInventory[i]);
     }
     if (globalEXP > nextLevelEXP) {
+        isLevelUp = true;
         currentPlayerLevel++;
         prevLevelEXP = nextLevelEXP;
         nextLevelEXP = nextLevelEXP + (currentPlayerLevel * currentPlayerLevel);
     }
     playerInventory.splice(0, playerInventory.length);
     localEXP = 0;
+    totalLabCompleted++;
     return false;
 }
 
@@ -763,10 +778,12 @@ function replayLevel() {
 
     field = getCopyOfObj(buffGameCondition.map);
     labView = new LabyrinthView(field, gameSpaceX, gameSpaceY, gameSpaceW, gameSpaceH, "white");
-    gameObjects = getCopyOfObj(buffGameCondition.gObjs);
-    OOP.forArr(gameObjects, function (el) {
-        el.setNewPosition(el.position);
-        el.startRotation();
+    gameObjects = [];
+    OOP.forArr(getCopyOfObj(buffGameCondition.gObjs), function (el) {
+        /*el.setNewPosition(el.position);
+        el.startRotation();*/
+        gameObjects.push(new CoinBattery("coin", coinCode, el.position, coinPath, true));
+        gameObjects[gameObjects.length - 1].startRotation();
     });
     optimalRoute = getCopyOfObj(buffGameCondition.opRoute);
     OOP.forArr(optimalRoute, function (el) {
@@ -781,7 +798,7 @@ function replayLevel() {
 
     playerImageObj = null;
     playerSetStart();
-    goToLab();
+    //goToLab();
 }
 
 game.startLoop('Labyrinth');
