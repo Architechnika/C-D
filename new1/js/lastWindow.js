@@ -1,3 +1,11 @@
+var data = undefined;
+if(sessionStorage.getItem("dataForLastWindow"))
+    {
+        var d =sessionStorage.getItem("dataForLastWindow");
+        data = JSON.parse(d);
+    }
+
+
 function setAchivText(i, text) {
     var achv = document.getElementsByTagName("label")[i];
     achv.textContent = text;
