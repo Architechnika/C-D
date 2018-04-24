@@ -1,6 +1,7 @@
 function Input(inputName, buttonName, cancelButtName) {
     var base;
     var text = "test";
+    //saveInput.onClick()
     base = pjs.system.newDOM('div', true);
     base.innerHTML = `
                 <!DOCTYPE HTML>
@@ -10,14 +11,25 @@ function Input(inputName, buttonName, cancelButtName) {
                     <link rel="stylesheet" type="text/css" href="input/css/style.css" />
                  </head>
                  <body>
-                <div class="mainBG" >
-                   <input class="line" type="text" placeholder="Какой то текст" maxlength="5">
-                    </br>
-                  <button class="send" onclick="saveInput.onClick()" id ="click">Название </button>
-                  <button class="cancel" onclick="saveInput.onClickCancel()" id ="clickCancel">Название </button>
-                    </div>
+    <div class="content1" id="log">
+        <div class="form-wrapper1">
+            <div class="linker">
+                <span class="ring"></span>
+                <span class="ring"></span>
+                <span class="ring"></span>
+                <span class="ring"></span>
+                <span class="ring"></span>
+            </div>
+            <form class="login-form1" action="#" method="post">
+                <input id="userName" type="text" name="username" placeholder="Введите логин" />
+                <button onclick="saveInput.onClick()" type="button">Название</button>
+                <button onclick="saveInput.onClickCancel()" type="button">Название</button>
+            </form>
+        </div>
+    </div>
                  </body>
                 </html>
+
         `
 
 
@@ -32,7 +44,7 @@ function Input(inputName, buttonName, cancelButtName) {
         }
     }
     this.onClickCancel = function () {
-        if(soundIsOn) audio_GUI_click.play();
+        if (soundIsOn) audio_GUI_click.play();
         this.setHidden(true);
     }
     this.getText = function () {
@@ -47,23 +59,14 @@ function Input(inputName, buttonName, cancelButtName) {
         mainDiv.hidden = isHidden;
     }
     this.setPosture = function () { //установка положение в зависимости от положение экрана
-        var mainDiv = base.getElementsByTagName('div')[0];
-        if (isVerticalScreen) {
-            mainDiv.style.width = '90%';
-            mainDiv.style.height = '15%';
-            mainDiv.style.left = '5%';
-            mainDiv.style.bottom = '45%';
-            if (width > 420)
-                mainDiv.style.fontSize = '200%'
-            else mainDiv.style.fontSize = '100%'
-        } else {
-            mainDiv.style.width = '45%';
-            mainDiv.style.height = '20%';
-            mainDiv.style.left = '30%';
-            mainDiv.style.bottom = '45%';
-            if (height > 420)
-                mainDiv.style.fontSize = '200%'
-        }
+        var mainDiv = base.getElementsByTagName('div')[1];
+
+        var elW = 264;
+        var elH = 253;
+        var x = width / 2 - (elW / 2);
+        var y = height / 2 - (elH / 2);
+        mainDiv.style.left = x + 'px';
+        mainDiv.style.top = y + 'px';
 
     }
 
