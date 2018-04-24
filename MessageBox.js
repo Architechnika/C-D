@@ -30,7 +30,7 @@ function MessageBox()
     this.setText = function(text)
     {
         var div = base.getElementsByTagName('p')[0];
-        audio_object_messeng.play();
+        if(soundIsOn) audio_object_messeng.play();
         div.textContent = text;
     }
     this.setShow = function(isShow)
