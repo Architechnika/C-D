@@ -1,11 +1,31 @@
 var data = undefined;
-if(sessionStorage.getItem("dataForLastWindow"))
-    {
-        var d =sessionStorage.getItem("dataForLastWindow");
-        data = JSON.parse(d);
-    }
 
+var animAchivTimeout = 2000;
+var animTimeout = 60;
+var animTickCount = Math.floor(animAchivTimeout / animTimeout);
+var animTickCounter = 0;
 
+var tSecs = 0;
+var tSec = 0;
+var gEx = 0;
+var gExMax = 0;
+var cLvl = 0,
+    pLvl = 0,
+    nLvl = 0;
+var achievements = [];
+var achIndx = 0;
+var lvlDiscr = 0; //Дискрет на который ковышается уровень при каждой сброшенной секунде
+var animCount = 0;
+var animTimeoutBuff = animTimeout;
+var isAnimNow = false;
+
+var allAchievements = [
+    lang[selectLang]['achievement_all_boxes'],
+    lang[selectLang]['achievement_optimal_route'],
+    lang[selectLang]['achievement_no_errors']
+];
+
+//Интерфейс доступа к элементам странички-----------------------------------
 function setAchivText(i, text) {
     var achv = document.getElementsByTagName("label")[i];
     achv.textContent = text;
@@ -31,11 +51,22 @@ function setBarProgress(val) {
     bar.style.width = val + "%";
 }
 
-function nextClock() {
+function nextClick() {
     window.location.href = '../../game.html'
-
 }
 
-function reLoad() {
+function reloadClick() {
     window.location.href = '../../game.html'
+}
+//------------------------------------------------------------------------------
+if (sessionStorage.getItem("dataForLastWindow")) {
+    data = JSON.parse(sessionStorage.getItem("dataForLastWindow"));
+    //Инитим текст ачивок
+    for (var i = 0; i < data.achievements.length; i++) {
+        setAchivText(i, data.achievements[i]);
+    }
+    setTime(data.tSecs);//Инитим время
+    setLabCount(data.totalLabs);//Количество пройденных лабиринтов
+    setLevel(data.pLvl);//Текущий уровень игрока
+    setBarProgress(data.cExp / ((data.nExp - data.pExp) / 100));//Полоска опыта
 }

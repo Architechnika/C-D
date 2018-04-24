@@ -523,7 +523,8 @@ function processRobotMove() {
 
     if (res == "end") { //Если мы прошли до конца карты
         timeTimerLaunched = false;
-        game.startLoop('LastLevelWindow');
+        //Переходим на страничку вывода результата игры
+        showLastWindow();
     } else if (res == "stop") {
         showMessage(lang[selectLang]['robot_is_waiting']);
         isStarted = false;
@@ -642,8 +643,92 @@ function initSaveItems()
     //initLeftScroll(saveItems);
 }
 
+var achievements = [];
+function showLastWindow() {
+    //Рассчитываем параметры игры на следующий уровень
+    calcEXPResult(checkAchievements());
+    //Передаем данные между страницами через session storage
+    function Data() {
+        this.achievements = achievements;
+        this.tSecs = totalSeconds;
+        this.totalLabs = totalLabCompleted;
+        this.cExp = globalEXP;
+        this.pExp = prevLevelEXP;
+        this.nExp = nextLevelEXP;
+        this.pLvl = pLvl;
+
+    }
+    var d = new Data();
+    var obj = JSON.stringify(d)
+    sessionStorage.setItem("dataForLastWindow", obj);
+    //Переходим на страничку вывода результата игры
+    window.location.href = 'new1/lastwindow.html'
+}
+
+function calcEXPResult() {
+    //Рассчитываем опыт
+    calcEXP(checkAchievements());
+    initNextLvl();
+}
+
+//Производит расчет очков опыта набранных игроком в процессе прохождения лабиринта
+function calcEXP(bonus) {
+    if (totalSeconds != 0)
+        globalEXP += (localEXP / (totalSeconds * 0.5)) + bonus;
+    //Очищаем значения которые надо очистить
+    for (var i = 0; i < playerInventory.length; i++) {
+        gameObjects.push(playerInventory[i]);
+    }
+    if (globalEXP > nextLevelEXP) {
+        currentPlayerLevel++;
+        prevLevelEXP = nextLevelEXP;
+        nextLevelEXP = nextLevelEXP + (currentPlayerLevel * currentPlayerLevel);
+    }
+    playerInventory.splice(0, playerInventory.length);
+    localEXP = 0;
+    return false;
+}
+
+//Возвращает бонусы очков опыта от ачивок:
+//"opt" - прохождение лабиринта оптимальным маршрутом
+//"noerrors" - прохождение без единой ошибки
+function checkAchievements() {
+    if (gameObjects.length == 0) {
+        bonus += nextLevelEXP * 0.1;
+        achievements.push(lang[selectLang]['achievement_all_boxes']);
+    }
+    if (totalWidth < 5) {
+        achievements.push(lang[selectLang]['achievement_optimal_route']);
+        bonus += nextLevelEXP * 0.1;
+        achievements.push(lang[selectLang]['achievement_no_errors']);
+        bonus += nextLevelEXP * 0.1;
+        return 0;
+    }
+    //Проверка на ачивки
+    playerMovesHistory.push(playerPozition);
+    var bonus = 0;
+    //Проверяем ачивку на оптимальный маршрут
+    if (playerMovesHistory.length == optimalRoute.length) {
+        var isOpt = true;
+        for (var i = 0; i < optimalRoute.length; i++) {
+            if (playerMovesHistory[i] != optimalRoute[i].id) {
+                isOpt = false;
+                break;
+            }
+        }
+        if (isOpt) { //АЧИВКА ОПТИМАЛЬНЫЙ МАРШРУТ
+            bonus += nextLevelEXP * 0.1;
+            achievements.push(lang[selectLang]['achievement_optimal_route']);
+        }
+    }
+    if (achievement_noErrors) { //АЧИВКА - ПРОХОЖДЕНИЕ БЕЗ ОШИБОК
+        bonus += nextLevelEXP * 0.1;
+        achievements.push(lang[selectLang]['achievement_no_errors']);
+    }
+    return bonus;
+}
+
 function nextLevel() {
-    //initNextLvl();
     saveGameState();
     goToLab();
 }
