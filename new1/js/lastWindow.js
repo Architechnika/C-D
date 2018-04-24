@@ -33,8 +33,11 @@ function setAchivText(i, text) {
 }
 
 function setTime(val) {
-    var time = document.getElementById("time");
-    time.innerHTML += val;
+    var min = Math.floor(val / 60);
+    var sec = val - (min * 60); //Math.floor(totalMiliSeconds / 200 - min * 60);
+    //Обновляем инфу о времени
+    var text = (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec);
+    time.innerHTML += text;
 }
 
 function setLabCount(val) {
