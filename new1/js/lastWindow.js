@@ -26,6 +26,12 @@ var allAchievements = [
     lang[selectLang]['achievement_no_errors']
 ];
 
+
+var cont = document.getElementById("log");
+if(screen.width < 600)
+    cont.style.fontSize = "120%";
+else cont.style.fontSize = "200%";
+
 //Интерфейс доступа к элементам странички-----------------------------------
 function setAchivText(i, text) {
     var achv = document.getElementsByTagName("label")[i];

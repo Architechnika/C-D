@@ -14,18 +14,18 @@ body {
     /*  margin: 10% auto ;*/
     margin-top: 2.5vh;
     font-family: 'comic';
+    font-size: 200%;
 }
 
 #level{
     text-align: center;
     color: red;
-    font-size: 120%;
      margin-left: 10%;
 }
 p {
     text-align: center;
     margin-left: 10%;
-    font-size: 120%;
+    
     color: red;
     
 }
@@ -38,7 +38,6 @@ h3 {
 #achivBlock {
     text-align: center;
     margin-left: 10%;
-    font-size: 120%;
     color: red
 }
 #pic{
