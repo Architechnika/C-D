@@ -4,6 +4,8 @@
 // не вфбрав платформу - нельзя работать
 var menu = document.getElementById("menu");
 var log = document.getElementById("log");
+var dialog = document.getElementById("dialog");
+setDialogVisible(false)
 log.style.display = 'none';
 // имея сессионной переменной для передачи данных пользователя
 const userSession = "userdata";
@@ -14,7 +16,6 @@ const gameOptions = "gameOptions";
 
 // указатель на место отображения имени пользователя на форме
 var userName = document.getElementById("user_name");
-
 // данные пользователя
 //           логин  user
 //          пароль  password
@@ -41,15 +42,15 @@ log.addEventListener('close', function () {
 
     if (this.returnValue != 'cancel') {
         //userdata = JSON.parse(this.returnValue);
-       // userName.innerHTML = userdata.user;
+        // userName.innerHTML = userdata.user;
     }
     //        userName.innerHTML = userdata.user;
 });
 
 // отображает диалоговое оккно входа нового пользователя
 function loginShow() {
-  //  menu.style.display = 'none';
-   // log.style.display = '';
+    //  menu.style.display = 'none';
+    // log.style.display = '';
     regImitation();
 }
 
@@ -68,7 +69,7 @@ function userEnter() {
             localStorage.setItem(userID, JSON.stringify(userdata));
             userCancel();
         }
-       // userName.innerHTML +=  userdata.user;
+        // userName.innerHTML +=  userdata.user;
     }
 }
 
@@ -96,11 +97,14 @@ function userExit() {
 // если пользователь не новый - стирает старые данные
 // (возможно) выводит запрос на действие
 function newGame() {
-    userdata.experiance = "0";
-    userdata.game = "";
-    sessionStorage.setItem(typeGame, "NewGame");
-    sessionStorage.setItem(userSession, userID);
-    window.location.href = 'game.html'
+    if (userID) {
+        var sd = localStorage.getItem(userID);
+        var tmp = JSON.parse(sd);
+        if (tmp.labyrinth) {//если можно продолжить игру
+            setMenuVisible(false);
+            setDialogVisible(true);
+        } else dialogOkClick();
+    }
 }
 
 // если имеются схранённые днные - загружает их
@@ -116,21 +120,19 @@ function continueGame() {
         sessionStorage.setItem("tmpUserData", tud);
         localStorage.setItem("tmpUserData", tud);
     }
-     window.location.href = 'game.html'
+    window.location.href = 'game.html'
 }
 
 // выводит диалог ностроек программы
 function optionsShow() {
-     window.location.href = 'SettingsPage/settings.html'
+    window.location.href = 'SettingsPage/settings.html'
 }
 
-function instructionClick()
-{
-     window.location.href = 'instruction.html'   
+function instructionClick() {
+    window.location.href = 'instruction.html'
 }
 
-function regImitation()
-{
+function regImitation() {
     userdata.user = "login"
     userdata.password = "pass"
     if (userdata.user.length > 0 && userdata.password.length > 0) {
@@ -144,8 +146,31 @@ function regImitation()
             localStorage.setItem(userID, JSON.stringify(userdata));
             userCancel();
         }
-       // userName.innerHTML +=  userdata.user;
+        // userName.innerHTML +=  userdata.user;
     }
 }
 
+function setMenuVisible(isVisible) {
+    if (isVisible) {
+        menu.style.display = '';
+    } else menu.style.display = 'none';
+}
 
+function setDialogVisible(isVisible) {
+    if (isVisible) {
+        dialog.style.display = '';
+    } else dialog.style.display = 'none';
+}
+
+function dialogOkClick() {
+    userdata.experiance = "0";
+    userdata.game = "";
+    sessionStorage.setItem(typeGame, "NewGame");
+    sessionStorage.setItem(userSession, userID);
+    window.location.href = 'game.html'
+}
+
+function dialogCancelClick() {
+    setMenuVisible(true)
+    setDialogVisible(false)
+}
