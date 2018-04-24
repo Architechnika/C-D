@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\new1",
+    "\\new1\\js",
+    "\\SettingsPage"
   ],
-  "SelectedNode": "\\Viewer.js",
+  "SelectedNode": "\\new1\\js\\lastWindow.js",
   "PreviewInSolutionExplorer": false
 }
