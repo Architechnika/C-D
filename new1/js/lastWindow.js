@@ -31,11 +31,11 @@ function setBarProgress(val) {
     bar.style.width = val + "%";
 }
 
-function nextClock() {
+function nextClick() {
     window.location.href = '../../game.html'
 
 }
 
-function reLoad() {
+function reloadClick() {
     window.location.href = '../../game.html'
 }
