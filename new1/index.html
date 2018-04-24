@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/progressBar.css" />
+</head>
+
+<body>
+
+    <div class="content" id="log">
+        <div class="form-wrapper">
+            <div class="linker">
+                <span class="ring"></span>
+                <span class="ring"></span>
+                <span class="ring"></span>
+                <span class="ring"></span>
+                <span class="ring"></span>
+                <span class="ring"></span>
+            </div>
+            <form class="login-form" action="#" method="post">
+                <br>
+                <p id="time">Время прохождения: </p>
+                <p id="labCount">Количество пройденных лабиринтов: </p>
+                <label for="subscribeNews" style="color: red; margin-left: -40%; font-size: 120%;">Уровень:</label>
+                <div class="meter orange nostripes">
+                    <span id="bar" style="width: 44%"></span>
+                </div>
+
+                <div id="achivBlock">
+                    <h3 id="achivText">Достижения</h3>
+                    <input type="checkbox" name="option1" value="a1"><label for="subscribeNews">Subscribe to newsletter?</label>
+                    <br>
+                    <input type="checkbox" name="option2" value="a2"><label for="subscribeNews">Subscribe to newsletter?</label>
+                    <br>
+                    <input type="checkbox" name="option3" value="a3"><label for="subscribeNews">Subscribe to newsletter?</label>
+                    <br>
+                    <input type="checkbox" name="option4" value="a4"><label for="subscribeNews">Subscribe to newsletter?</label>
+                    <br>
+                    <input type="checkbox" name="option5" value="a5"><label for="subscribeNews">Subscribe to newsletter?</label>
+                </div>
+                <img src="../img/interface/medal_gold.png" alt="lorem" id="pic">
+                <div id="buttonGruop">
+                    <button onclick="nextClock()" type="button">Повторить</button>
+                    <button onclick="reLoad()" type="button">Далее</button>
+                </div>
+
+                <br>
+            </form>
+        </div>
+    </div>
+    <script src="js/lastWindow.js"></script>
+</body>
+
+</html>

@@ -37,7 +37,9 @@ var tSecs = 0;
 var tSec = 0;
 var gEx = 0;
 var gExMax = 0;
-var cLvl = 0, pLvl = 0, nLvl = 0;
+var cLvl = 0,
+    pLvl = 0,
+    nLvl = 0;
 var achievements = [];
 var achIndx = 0;
 var lvlDiscr = 0; //Дискрет на который ковышается уровень при каждой сброшенной секунде
@@ -150,13 +152,13 @@ function drawWindow() {
     playerLvl.drawPlayerLevel();
     buttonNext.draw();
     buttonReload.draw();
-   // medalText.textDraw();
+    // medalText.textDraw();
     medalItem.draw();
-}//
+} //
 game.newLoopFromConstructor('LastLevelWindow', function () {
     //Код для старта игры
     this.entry = function () {
-        if(soundIsOn) audio_lastWindow.play();
+        if (soundIsOn) audio_lastWindow.play();
         addEventListener("mouseup", mouseUpEvent);
         addEventListener("mousedown", mouseDownEvent);
         addEventListener("touchend", touchUpEvent);
@@ -285,7 +287,7 @@ function animLvl() {
         {
             setTextTime(tSec);
             //Обновляем опыт
-            playerLvl.setExp(gEx,pLvl,nLvl,cLvl);
+            playerLvl.setExp(gEx, pLvl, nLvl, cLvl);
         }
         setTimeout("animLvl()", animTimeoutBuff);
     } else {
@@ -307,7 +309,7 @@ function animAchiv() {
     } else {
         var wM = mainBG.w * 0.7;
         var hM = mainBG.w * 0.14;
-        var yM = buttonNext.y - (((yPos + mainBG.h * 0.22)+mainBG.h * 0.24)/2)
+        var yM = buttonNext.y - (((yPos + mainBG.h * 0.22) + mainBG.h * 0.24) / 2)
         if (achievements.length == 0) {
             medalItem = game.newImageObject({
                 file: medalBronzeImgSrc,
@@ -320,7 +322,7 @@ function animAchiv() {
             medalItem = game.newImageObject({
                 file: medalSilverImgSrc,
                 x: medalStartPosX,
-                y:yM,
+                y: yM,
                 w: wM,
                 h: hM
             });
@@ -344,7 +346,7 @@ function animAchiv() {
 function initNextLvl() {
     codeView.clear();
     if (isLabyrinthGrow && isLevelUp) {
-        if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) { } else {
+        if (labyrinthMaxSize !== 0 && totalWidth + 2 > labyrinthMaxSize && totalHeight + 2 > labyrinthMaxSize) {} else {
             labyrinthSize = totalWidth = totalHeight += 2;
         }
     }
@@ -359,7 +361,7 @@ function nextLevel() {
 
 //Переходит в игровой цикл лабиринта
 function goToLab() {
-    if(soundIsOn) audio_GUI_click.play();
+    if (soundIsOn) audio_GUI_click.play();
     robotOn = false;
     isStarted = false;
     allButtons.mainButton.setButtonImgSrc(buttonStartImgSrc);
@@ -467,26 +469,16 @@ function setTextTime(secs) {
 initLastWindow();
 
 
-function testLastWindow()
-{
-    
-            var base;
-        base = pjs.system.newDOM('div',true);
-        base.innerHTML = `<!DOCTYPE html>
-<html lang="en">
+function DataForLastWindow() {
 
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="stylesheet" type="text/css" href="lastWindow/css/style.css" />
-</head>
-
-<body>
-    <p>dfjgfgjdf</p>
-</body>
-
-</html>`
-    
+    function Data() 
+    {
+        var test = "sss"
+        this.test = test;
+    }
+    var d = new Data();
+    var obj = JSON.stringify(d)
+    sessionStorage.setItem("dataForLastWindow", obj);
+    window.location.href = 'new1/index.html'
 }
-
-
+//DataForLastWindow();
