@@ -47,4 +47,41 @@ function setLevel(val) {
     l.innerHTML += val;
 }
 
+function setBarProgress(val) {
+    var bar = document.getElementById("bar");
+    bar.style.width = val + "%";
+}
 
+function nextClick() {
+    sessionStorage.removeItem("prevState");
+    window.location.href = '../game.html'
+}
+
+function reloadClick() {
+    function Data() {
+        this.value = true;
+    }
+    var d = new Data();
+    var obj = JSON.stringify(d)
+    sessionStorage.setItem("fromLastWindow", obj);
+    window.location.href = '../game.html'
+}
+//------------------------------------------------------------------------------
+if (sessionStorage.getItem("dataForLastWindow")) {
+    data = JSON.parse(sessionStorage.getItem("dataForLastWindow"));
+    //Инитим текст ачивок
+    for (var i = 0; i < data.achievements.length; i++) {
+        setAchivText(i, data.achievements[i]);
+    }
+    setTime(data.tSecs);//Инитим время
+    setLabCount(data.totalLabs);//Количество пройденных лабиринтов
+    setLevel(data.pLvl);//Текущий уровень игрока
+    setBarProgress(data.cExp / ((data.nExp - data.pExp) / 100));//Полоска опыта
+    buff = data.buff;
+    window.location.href = '../../game.html'
+
+}
+
+function reloadClick() {
+    window.location.href = '../../game.html'
+}
