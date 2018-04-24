@@ -78,12 +78,12 @@ function initLastWindow() {
     });
     //прочие переменные
     xPos = mainBG.w * 0.25 //позиция отрисовки элементов по X
-    yPos = mainBG.h * 0.1 ////позиция отрисовки элементов по Y
+    yPos = mainBG.h * 0.02 ////позиция отрисовки элементов по Y
     isLevelUp = false;
     //
     //время прохождение лаберинта
     timeText = new Label(xPos, yPos, "");
-    timeText.setTextSize(mainBG.w * 0.04)
+    timeText.setTextSize(mainBG.w * 0.03)
     timeText.setTextColor(textColor)
     //Обновляем инфу о времени
     var min = Math.floor(totalSeconds / 60);
@@ -94,7 +94,7 @@ function initLastWindow() {
     //количество пройденных лабиринтов
     totalLabCompletedText = new Label(xPos, yPos + mainBG.h * 0.08, "");
     totalLabCompletedText.setText("Всего лабиринтов пройдено: " + totalLabCompleted);
-    totalLabCompletedText.setTextSize(mainBG.w * 0.04)
+    totalLabCompletedText.setTextSize(mainBG.w * 0.03)
     totalLabCompletedText.setTextColor(textColor)
     //
     //Часть окна для достижений за уровень
@@ -102,18 +102,18 @@ function initLastWindow() {
         x: mainBG.x,
         y: yPos + mainBG.h * 0.24,
         w: mainBG.w,
-        h: mainBG.h * 0.25,
+        h: mainBG.h * 0.35,
         radius: 20,
         fillColor: "#e076fe",
         alpha: 0.6,
     });
     achivText = new Label(mainBG.w * 0.37, yPos + mainBG.h * 0.24, "Достижения:");
-    achivText.setTextSize(mainBG.w * 0.04)
+    achivText.setTextSize(mainBG.w * 0.03)
     achivText.setTextColor(textColor)
     //
     //элементы опыта
     playerLvl = new PlayerLevelVisualisation(xPos + mainBG.w * 0.22, yPos + mainBG.h * 0.16, mainBG.w * 0.4, mainBG.h * 0.04, true);
-    playerLvl.setTextSize(mainBG.w * 0.04)
+    playerLvl.setTextSize(mainBG.w * 0.03)
     playerLvl.setTextColor(textColor);
     playerLvl.setTextPos(xPos, yPos + mainBG.h * 0.16)
     //
@@ -306,7 +306,7 @@ function animAchiv() {
         setTimeout("animAchiv()", animTimeoutBuff);
     } else {
         var wM = mainBG.w * 0.7;
-        var hM = mainBG.w * 0.15;
+        var hM = mainBG.w * 0.14;
         var yM = buttonNext.y - (((yPos + mainBG.h * 0.22)+mainBG.h * 0.24)/2)
         if (achievements.length == 0) {
             medalItem = game.newImageObject({
