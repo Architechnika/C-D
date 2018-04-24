@@ -78,10 +78,4 @@ if (sessionStorage.getItem("dataForLastWindow")) {
     setLevel(data.pLvl);
     setBarProgress(data.cExp / ((data.nExp - data.pExp) / 100));
     buff = data.buff;
-    window.location.href = '../../game.html'
-
-}
-
-function reloadClick() {
-    window.location.href = '../../game.html'
 }
