@@ -31,7 +31,11 @@ function setAchivText(i, text) {
     var achv = document.getElementsByTagName("label")[i];
     achv.textContent = text;
 }
-
+function setAchivItemColor(color,i)
+{
+    var achv = document.getElementsByTagName("label")[i];
+    achv.style.color = color;
+}
 function setTime(val) {
     var time = document.getElementById("time");
     time.innerHTML += val;
@@ -69,9 +73,20 @@ function reloadClick() {
 //------------------------------------------------------------------------------
 if (sessionStorage.getItem("dataForLastWindow")) {
     data = JSON.parse(sessionStorage.getItem("dataForLastWindow"));
-    
+
+    for (var i = 0; i < allAchievements.length; i++) {
+        setAchivText(i, allAchievements[i]);
+         setAchivItemColor("#A9A9A9",i)
+    }
     for (var i = 0; i < data.achievements.length; i++) {
-        setAchivText(i, data.achievements[i]);
+
+        for (var j = 0; j < allAchievements.length; j++) {
+            if( data.achievements[i] != allAchievements[j])
+                {
+                    setAchivItemColor("red",i)
+                }
+          //  setAchivText(i, allAchievements[j]);
+        }
     }
     setTime(data.tSecs);
     setLabCount(data.totalLabs);
