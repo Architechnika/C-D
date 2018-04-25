@@ -24,7 +24,7 @@ body{
 }
 
 #dropLists{
-    padding: 3px 45%;
+    text-align: center;
 }
 .dropdown-menu{
     width: 100%;
