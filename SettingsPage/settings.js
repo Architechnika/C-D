@@ -1,6 +1,9 @@
 var key = "settings";
-var leng = = "ru";
+var leng = "ru";
 var cont = document.getElementsByClassName("cont")[0];
+var dropListLeng = document.getElementById("butDropdown")
+
+dropListLeng.textContent = document.getElementsByClassName(leng)[0].textContent;
 //if(screen.width > screen.height)
 // {
 cont.style.width = "60%";
@@ -38,9 +41,11 @@ function clickCancel() {
 function lengR() {
     var rus = document.getElementsByClassName("ru")[0];
     leng = rus.className;
+    dropListLeng.textContent = document.getElementsByClassName(leng)[0].textContent;
 }
 
 function lengE() {
     var eng = document.getElementsByClassName("en")[0];
     leng = eng.className;
+    dropListLeng.textContent = document.getElementsByClassName(leng)[0].textContent;
 }
