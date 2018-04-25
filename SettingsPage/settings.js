@@ -54,7 +54,7 @@ function setLang() {
     document.getElementById("butOK").textContent = lang[selectLang]['mainmenu_settings_accept'];
     document.getElementById("butCanc").textContent = lang[selectLang]['mainmenu_settings_cancel'];
      document.getElementById("labelAudio").textContent = lang[selectLang]['mainmenu_settings_sound'];
-    document.getElementById("labelAudio").innerHTML +='<input type="checkbox"id="audio">'
+    document.getElementById("labelAudio").innerHTML +='<input type="checkbox" checked id="audio">'
     document.getElementById("audio").checked = allSettings.isAudio;
     //var k = document.getElementById("labelAudio");
     //
