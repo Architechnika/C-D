@@ -42,14 +42,26 @@
                 </div>
                 <img src="../img/interface/medal_gold.png" alt="lorem" id="pic">
                 <div id="buttonGruop">
-                    <button onclick="reloadClick()" type="button">Повторить</button>
-                    <button onclick="nextClick()" type="button">Далее</button>
+                    <button id="bRepeat" onclick="reloadClick()" type="button">Повторить</button>
+                    <button id="bContinue" onclick="nextClick()" type="button">Далее</button>
                 </div>
                 <br>
             </form>
         </div>
     </div>
     <script type="text/javascript" src="../Language.js"></script>
+    <!--Загружаем языковые настройки-->
+    <script>
+        if (selectLang) {
+            document.getElementsByTagName("title")[0].textContent = lang[selectLang]['game_title'];
+            document.getElementById("time").textContent = lang[selectLang]['gui_total_time'];
+            document.getElementById("labCount").textContent = lang[selectLang]['gui_total_lab_complete'];
+            document.getElementById("level").textContent = lang[selectLang]['gui_level'];
+            document.getElementById("achivText").textContent = lang[selectLang]['gui_achiv'];
+            document.getElementById("bRepeat").textContent = lang[selectLang]['gui_repeat'];
+            document.getElementById("bContinue").textContent = lang[selectLang]['gui_next'];
+        }
+    </script>
     <script src="js/lastWindow.js"></script>
 </body>
 
