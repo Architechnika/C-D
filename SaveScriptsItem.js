@@ -93,7 +93,7 @@ function SaveItem(name, script) {
 
     this.onClick = function (el) {
         //обработчик загрузки на поле
-        audio_GUI_click.play();
+        if (soundIsOn) audio_GUI_click.play();
         lastClickedElement.commands = getCopyOfObj(el.scriptArray);
         allButtons.mainButton.onClick(allButtons.mainButton);
     }
