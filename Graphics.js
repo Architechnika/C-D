@@ -11,8 +11,8 @@ pjs.system.setTitle(lang[selectLang]['game_title']); // Set Title for Tab or Win
 
 //Обновление графики на экране
 function updateScreen() {
-    game.clear();
     if (!isUpdateGraphics) return;
+    game.clear();
     //Отрисовываем игровое поле
     for (var i = 0; i < field.length; i++) {
         if(field[i].isInCameraStatic())

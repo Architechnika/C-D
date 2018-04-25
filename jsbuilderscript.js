@@ -22066,8 +22066,8 @@ pjs.system.setTitle(lang[selectLang]['game_title']); // Set Title for Tab or Win
 
 //Обновление графики на экране
 function updateScreen() {
-    game.clear();
     if (!isUpdateGraphics) return;
+    game.clear();
     //Отрисовываем игровое поле
     for (var i = 0; i < field.length; i++) {
         if(field[i].isInCameraStatic())
@@ -27247,8 +27247,9 @@ function getLocalEXP(){
 
 //Вызывает отрисовку текущей выполняемой команды на карте кода
 function drawCommState(isRegenCodeMap) {
-    if ((!isVerticalScreen && isVisualizeCodeMap) || !isStarted) {
-        if (isRegenCodeMap || !isStarted)
+    if (isStarted) return;
+    if (!isVerticalScreen && isVisualizeCodeMap) {
+        if (isRegenCodeMap)
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0], true);
         codeView.setAlphaToElement(passiveItemsAlpha,playerCommands[0]);
     }
