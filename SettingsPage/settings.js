@@ -10,6 +10,7 @@ if (localStorage.getItem(key)) {
     var sett = localStorage.getItem(key);
     var allSettings = JSON.parse(sett);
     document.getElementById("audio").checked = allSettings.isAudio;
+
     if (allSettings.language) {
         dropListlang.textContent = document.getElementsByClassName(allSettings.language)[0].textContent;
         langS = allSettings.language;
