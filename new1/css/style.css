@@ -20,11 +20,11 @@ body {
 #level{
     text-align: center;
     color: red;
-     margin-left: 10%;
+/*     margin-left: 10%;*/
 }
 p {
     text-align: center;
-    margin-left: 10%;
+/*    margin-left: 10%;*/
     
     color: red;
     
@@ -37,7 +37,7 @@ h3 {
 
 #achivBlock {
     text-align: center;
-    margin-left: 10%;
+/*    margin-left: 10%;*/
     color: red
 }
 #pic{
