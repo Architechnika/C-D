@@ -41,6 +41,13 @@ body {
   border-radius:5px;
   box-shadow:0 1px 0 rgb(255,255,255), 0 2px 0 rgb(197,200,204), 0 3px 0 rgb(255,255,255), 0 4px 0 rgb(197,200,204);
 }
+
+/*
+#mylogo{
+    width: 5%;
+    height: 5%;
+}
+*/
 .form-wrapper:before, .menu:before {
   content:"";
   display:block;
