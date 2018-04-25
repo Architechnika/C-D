@@ -146,9 +146,16 @@
     <script>
         if (selectLang) {
             document.getElementsByTagName("title")[0].textContent = lang[selectLang]['game_title'];
-            document.getElementsByTagName("bNewGame")[0].textContent = lang[selectLang]['mainmenu_newgame'];
-            document.getElementsByTagName("bContinueGame")[0].textContent = lang[selectLang]['mainmenu_continue'];
-            document.getElementsByTagName("bSettings")[0].textContent = lang[selectLang]['mainmenu_settings'];
+            document.getElementById("bNewGame").textContent = lang[selectLang]['mainmenu_newgame'];
+            document.getElementById("bContinueGame").textContent = lang[selectLang]['mainmenu_continue'];
+            document.getElementById("bSettings").textContent = lang[selectLang]['mainmenu_settings'];
+            document.getElementById("programmVersion").textContent = lang[selectLang]['mainmenu_version'] + currentVersion;
+            document.getElementById("userName").textContent = lang[selectLang]['mainmenu_login'];
+            document.getElementById("userPswd").textContent = lang[selectLang]['mainmenu_password'];
+            document.getElementById("bLogRegist").textContent = lang[selectLang]['mainmenu_logpass'];
+            document.getElementById("AreYouSure").textContent = lang[selectLang]['mainmenu_sure'];
+            document.getElementById("click").textContent = lang[selectLang]['gui_yes'];
+            document.getElementById("clickCancel").textContent = lang[selectLang]['gui_no'];
         }
     </script>
 </body>
