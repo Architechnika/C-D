@@ -1,4 +1,11 @@
 var selectLang = 'ru';
+//Подгружаем настройки языка из настроек
+if (localStorage.getItem("settings")) {
+    var lang = JSON.parse(localStorage.getItem("settings")).language;
+    if (lang)
+        selectLang = lang;
+}
+
 var lang = {
     ru : {
        'robot_not_know'  : 'Робот не знает что ему делать',

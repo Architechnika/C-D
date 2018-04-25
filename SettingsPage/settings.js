@@ -3,20 +3,15 @@ var lang = "ru";
 var cont = document.getElementsByClassName("cont")[0];
 var dropListlang = document.getElementById("butDropdown")
 
-dropListlang.textContent = document.getElementsByClassName(lang)[0].textContent;
-//if(screen.width > screen.height)
-// {
 cont.style.width = "60%";
 cont.style.marginLeft = '20%'
-// }else
-// {
-
-//}
 
 if (localStorage.getItem(key)) {
     var sett = localStorage.getItem(key);
     var allSettings = JSON.parse(sett);
     document.getElementById("audio").checked = allSettings.isAudio;
+    if(allSettings.language)
+    dropListLang.textContent = document.getElementsByClassName(allSettings.language)[0].textContent;
 
 }
 
