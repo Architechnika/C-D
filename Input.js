@@ -83,7 +83,7 @@ function onWheel(e) {
         } else codeView.elementsMove(0, e.deltaY * 0.5 * -1);
         return;
     }
-    onRecize(e, e.deltaY * -1, scrollStep);
+    onRecize(e, e.deltaY, scrollStep);
     e.cancelBubble = true;
 }
 
@@ -274,22 +274,22 @@ function onUp(e) {
                 }
             }
         });
-        if (!clicked && !touchTapTimeFlag) { //Если клик не был обнаружен выше
-            if (allButtons && !allButtons.checkButtonsClicked(e))
-                if (isVerticalScreen) {
-                    //Если ориентация вертикальная то проверяем клики по полю только когда находимся на экране с полем
-                    if (!isSecondScreen)
-                        processFieldClick(e);
-                    else codeView.isClicked(e);
-                }
-                else if (!codeView.isClicked(e)) {
-                    if (inputCommandStates !== 4) {
-                        tupAnimation.setVisible(true);
-                        tupAnimation.setPositionC(pjs.vector.point(e.x, e.y))
-                        processFieldClick(e);
-                    }
+    }
+    if (!clicked && !touchTapTimeFlag) { //Если клик не был обнаружен выше
+        if (allButtons && !allButtons.checkButtonsClicked(e))
+            if (isVerticalScreen) {
+                //Если ориентация вертикальная то проверяем клики по полю только когда находимся на экране с полем
+                if (!isSecondScreen)
+                    processFieldClick(e);
+                else codeView.isClicked(e);
             }
-        }
+            else if (!codeView.isClicked(e)) {
+                if (inputCommandStates !== 4) {
+                    tupAnimation.setVisible(true);
+                    tupAnimation.setPositionC(pjs.vector.point(e.x, e.y))
+                    processFieldClick(e);
+                }
+            }
     }
 }
 
