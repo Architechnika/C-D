@@ -161,7 +161,6 @@ function recalcScreen() {
         }
     }
     labView.setFocusOnElement(field[playerPozition], true);
-    initLastWindow();
 }
 
 //Инициализация лабиринта
