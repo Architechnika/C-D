@@ -282,10 +282,12 @@ function onUp(e) {
                         processFieldClick(e);
                     else codeView.isClicked(e);
                 }
-            else if (!codeView.isClicked(e)) {
-                tupAnimation.setVisible(true);
-                tupAnimation.setPositionC(pjs.vector.point(e.x, e.y))
-                processFieldClick(e);
+                else if (!codeView.isClicked(e)) {
+                    if (inputCommandStates !== 4) {
+                        tupAnimation.setVisible(true);
+                        tupAnimation.setPositionC(pjs.vector.point(e.x, e.y))
+                        processFieldClick(e);
+                    }
             }
         }
     }

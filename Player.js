@@ -159,9 +159,6 @@ function playerMove(canRead) {
             playerInventory.splice(0, 1);
             break;
         case "repeat":
-            if (comm.countBlock.count == 0) {
-                return lang[selectLang]['robot_left_counter_countblock'];
-            }
             //Выполняем итерацию цикла(получаем команды)
             var comms = checkConditionREPEAT(comm.countBlock, comm.commandsBlock);
             //Добавляем их в стек команд
