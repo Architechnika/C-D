@@ -15,12 +15,22 @@
 
 <body>
     <!--<script type="text/javascript" src="https://unpkg.com/popper.js"></script>-->
-    <!--    <script src="bootstrap/js/bootstrap.js" ></script>-->
+
 
     <div class="cont">
         <label class="btn btn-primary btn-block">
                 <input type="checkbox" checked id="audio"> Звук
-                </label>
+        </label>
+        
+        <div class="dropdown">
+         <button class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="butDropdown">Язык
+             <span class="caret"></span></button>
+             <ul class="dropdown-menu">
+                 <li><a onclick="lengR()" href="#" id="dropLists" class="ru">Русский</a></li>
+                <li><a onclick="lengE()" href="#" id="dropLists" class="en">English</a></li>
+            </ul>
+        </div>
+        
         <div class="btn-group" id="buttons">
             <button onclick="clickReady()" class="btn btn-success " type="button" id="butOK">Принять</button>
             <button onclick="clickCancel()" class="btn btn-danger " type="button" id="butCanc">Отменить</button>
@@ -30,6 +40,8 @@
 
 
     <script src="settings.js"></script>
+    <script src="../jquery.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
 </body>
 
 </html>

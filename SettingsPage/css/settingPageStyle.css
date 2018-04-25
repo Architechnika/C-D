@@ -3,9 +3,11 @@
     src: url('../../font/NeSkidComica.ttf');
 }
 *{
-    background:  url(../../img/interface/bg.jpg); 
     background-size: auto;
     font-family: 'comic';
+}
+body{
+    background:  url(../../img/interface/bg.jpg);
 }
 
 #buttons{
@@ -16,4 +18,14 @@
 }
 #butCanc{
     width: 50%;    
+}
+#butDropdown{
+    width: 100%;
+}
+
+#dropLists{
+    padding: 3px 45%;
+}
+.dropdown-menu{
+    width: 100%;
 }
