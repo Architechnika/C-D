@@ -394,3 +394,5 @@ arrInterfaceAndCommandsImagesForLoad.forEach(function (e) {
     var path = e.split(".png")[0] + "_pressed.png";
     new Image().src = path;
 });
+//Загружаем задний фон
+new Image().src = backgroundImgPath;

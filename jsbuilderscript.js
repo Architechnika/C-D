@@ -3960,6 +3960,8 @@ var lang = {
         'mainmenu_settings_accept': 'Принять',
         'mainmenu_settings_cancel': 'Отменить',
         'mainmenu_settings_sound': 'Звук',
+        'mainmenu_preloader': 'Подождите, идет загрузка...',
+        'script_saved': 'Скрипт успешно сохранен',
     },
     en : {
         'robot_not_know': 'Robot doesn\'t now what to do',
@@ -4000,6 +4002,8 @@ var lang = {
         'mainmenu_settings_accept': 'Ok',
         'mainmenu_settings_cancel': 'Cancel',
         'mainmenu_settings_sound': 'Sound',
+        'mainmenu_preloader': 'Loading...',
+        'script_saved': 'Script successfully saved',
     },
 }
 /*
@@ -4442,7 +4446,8 @@ arrInterfaceAndCommandsImagesForLoad.forEach(function (e) {
     var path = e.split(".png")[0] + "_pressed.png";
     new Image().src = path;
 });
-//анимация клика по полю
+//Загружаем задний фон
+new Image().src = backgroundImgPath;//анимация клика по полю
 var tupAnimation = game.newAnimationObject(   { 
      animation : pjs.tiles.newImage("animations/tup.png").getAnimation(0, 0, 128, 128, 10), 
      x : 100, 
@@ -24486,7 +24491,7 @@ function Input(inputName, buttonName, cancelButtName) {
             myScripts.push(getCopyOfObj(lastClickedElement.commands));
             var item = new SaveItem(this.getText(), getCopyOfObj(lastClickedElement.commands));
             saveItems.push(item);
-            showMessage("Скрипт успешно сохранен");
+            showMessage(lang[selectLang]['script_saved']);
         }
     }
     this.onClickCancel = function () {
