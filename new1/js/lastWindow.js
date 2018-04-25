@@ -109,7 +109,7 @@ if (sessionStorage.getItem("dataForLastWindow")) {
     setTime(data.tSecs);
     setLabCount(data.totalLabs);
     setLevel(data.pLvl);
-    setBarProgress(data.cExp / ((data.nExp - data.pExp) / 100));
+    setBarProgress((data.cExp - data.pExp) / ((data.nExp - data.pExp) / 100));
     buff = data.buff;
     if (data.achievements.length == 0)
         setImgSrc(medalBronzeImgSrc);

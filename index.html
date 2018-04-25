@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -143,7 +143,15 @@
         document.title = lang[selectLang]['game_title'];
     </script>
 
-
+    <script>
+        if (localStorage.getItem("settings")) {
+            var sett = localStorage.getItem("settings");
+            selectLang = JSON.parse(sett).language;
+            if (selectLang) {
+                document.getElementsByTagName("title")[0].textContent = lang[selectLang]['game_title'];
+            }
+        }
+    </script>
 </body>
 
 </html>

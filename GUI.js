@@ -384,7 +384,7 @@ function PlayerLevelVisualisation(X,Y,W,H,LastWindow) {
             lvlLineMembrane.w = 0;
         }
         else {
-            var expPerc = gExp / ((nxtLvl - prvLvl) / 100);
+            var expPerc = (gExp - prvLvl) / ((nxtLvl - prvLvl) / 100);
             var lvlLinePerc = (bg.w / 100) * expPerc;
             lvlLine.w = lvlLinePerc;
             lvlLineMembrane.w = lvlLinePerc;
