@@ -1,9 +1,7 @@
 var key = "settings";
-var leng = "ru";
 var cont = document.getElementsByClassName("cont")[0];
-var dropListLeng = document.getElementById("butDropdown")
-
-dropListLeng.textContent = document.getElementsByClassName(leng)[0].textContent;
+var dropListLang = document.getElementById("butDropdown")
+var lang = "ru";
 //if(screen.width > screen.height)
 // {
 cont.style.width = "60%";
@@ -17,12 +15,14 @@ if (localStorage.getItem(key)) {
     var sett = localStorage.getItem(key);
     var allSettings = JSON.parse(sett);
     document.getElementById("audio").checked = allSettings.isAudio;
+    if(allSettings.language)
+    dropListLang.textContent = document.getElementsByClassName(allSettings.language)[0].textContent;
 
 }
 
 function SettingsAtributs() {
     this.isAudio = document.getElementById("audio").checked;
-    this.language = leng;
+    this.language = lang;
 }
 
 function clickReady() {
@@ -38,14 +38,14 @@ function clickCancel() {
     window.location.href = '../index.html'
 }
 
-function lengR() {
+function langR() {
     var rus = document.getElementsByClassName("ru")[0];
-    leng = rus.className;
-    dropListLeng.textContent = document.getElementsByClassName(leng)[0].textContent;
+    lang = rus.className;
+    dropListLang.textContent = document.getElementsByClassName(lang)[0].textContent;
 }
 
-function lengE() {
+function langE() {
     var eng = document.getElementsByClassName("en")[0];
-    leng = eng.className;
-    dropListLeng.textContent = document.getElementsByClassName(leng)[0].textContent;
+    lang = eng.className;
+    dropListLang.textContent = document.getElementsByClassName(lang)[0].textContent;
 }
