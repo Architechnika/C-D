@@ -101,6 +101,7 @@ h3 {
     box-shadow: inset 0 1px 0 rgb(242, 220, 175);
     text-shadow: 1px 1px 0 rgb(138, 100, 50);
     transition: color 300ms linear;
+    font-family: 'comic';
 }
 
 .form-wrapper button[type="button"]:hover,
