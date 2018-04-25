@@ -1,5 +1,5 @@
 var key = "settings";
-var lang = "ru";
+var langS = "ru";
 var cont = document.getElementsByClassName("cont")[0];
 var dropListlang = document.getElementById("butDropdown")
 
@@ -10,14 +10,17 @@ if (localStorage.getItem(key)) {
     var sett = localStorage.getItem(key);
     var allSettings = JSON.parse(sett);
     document.getElementById("audio").checked = allSettings.isAudio;
-    if(allSettings.language)
-    dropListlang.textContent = document.getElementsByClassName(allSettings.language)[0].textContent;
+
+    if (allSettings.language) {
+        dropListlang.textContent = document.getElementsByClassName(allSettings.language)[0].textContent;
+        langS = allSettings.language;
+    }
 
 }
 
 function SettingsAtributs() {
     this.isAudio = document.getElementById("audio").checked;
-    this.language = lang;
+    this.language = langS;
 }
 
 function clickReady() {
@@ -35,12 +38,24 @@ function clickCancel() {
 
 function langR() {
     var rus = document.getElementsByClassName("ru")[0];
-    lang = rus.className;
-    dropListlang.textContent = document.getElementsByClassName(lang)[0].textContent;
+    langS = rus.className;
+    dropListlang.textContent = document.getElementsByClassName(langS)[0].textContent;
 }
 
 function langE() {
     var eng = document.getElementsByClassName("en")[0];
-    lang = eng.className;
-    dropListlang.textContent = document.getElementsByClassName(lang)[0].textContent;
+    langS = eng.className;
+    dropListlang.textContent = document.getElementsByClassName(langS)[0].textContent;
 }
+
+function setLang() {
+    //установка языка
+    document.getElementById("butOK").textContent = lang[selectLang]['mainmenu_settings_accept'];
+    document.getElementById("butCanc").textContent = lang[selectLang]['mainmenu_settings_cancel'];
+     document.getElementById("labelAudio").textContent = lang[selectLang]['mainmenu_settings_sound'];
+    document.getElementById("labelAudio").innerHTML +='<input type="checkbox"id="audio">'
+    document.getElementById("audio").checked = allSettings.isAudio;
+    //var k = document.getElementById("labelAudio");
+    //
+}
+setLang()

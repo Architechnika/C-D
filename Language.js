@@ -43,6 +43,9 @@ var lang = {
         'mainmenu_logpass': 'Войти/Регистрация',
         'mainmenu_version': 'Версия игры : ',
         'mainmenu_sure': 'Вы Уверены? Весь несохраненный прогресс исчезнет',
+        'mainmenu_settings_accept': 'Принять',
+        'mainmenu_settings_cancel': 'Отменить',
+        'mainmenu_settings_sound': 'Звук',
     },
     en : {
         'robot_not_know': 'Robot doesn\'t now what to do',
@@ -80,5 +83,8 @@ var lang = {
         'mainmenu_logpass': 'Login/Register',
         'mainmenu_version': 'Version : ',
         'mainmenu_sure': 'Are you sure? All unsaved progress will disappear',
+        'mainmenu_settings_accept': 'Ok',
+        'mainmenu_settings_cancel': 'Cancel',
+        'mainmenu_settings_sound': 'Sound',
     },
 }
