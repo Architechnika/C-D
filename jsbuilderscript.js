@@ -4734,7 +4734,7 @@ function ToolTip()
                     <section>
 
                         <div class="tn-box tn-box-color-1">
-                            <p class="text" >Ваши персональные настройки были успешно сохранены!</p>
+                            <p class="text" ></p>
                             <div class="tn-progress"></div>
                         </div>
 
@@ -4764,6 +4764,7 @@ function ToolTip()
         var div = base.getElementsByTagName('div')[0];
         div.style.background = 'red';
     }
+    base.getElementsByTagName('input')[0].hidden = true;;
 }/**
  * @license
  * Lodash <https://lodash.com/>
@@ -22230,7 +22231,7 @@ function onWheel(e) {
         } else codeView.elementsMove(0, e.deltaY * 0.5 * -1);
         return;
     }
-    onRecize(e, e.deltaY, scrollStep);
+    onRecize(e, e.deltaY * -1, scrollStep);
     e.cancelBubble = true;
 }
 
@@ -22319,7 +22320,7 @@ function onRecize(e, delta, step) {
                 var el = itms[i];
                 if (clickIsInObj(e.x, e.y, el)) {
                     touchedScroll = scroll;
-                    scrollDynamic(new point(delta * -1, delta * -1), touchedScroll);
+                    scrollDynamic(isMobile ? new point(delta * -1, delta * -1) : new point(delta, delta), touchedScroll);
                     return;
                 }
             }
@@ -22797,15 +22798,30 @@ function findPressed(e) {
             }
         }
     }
-    if (codeView && codeView.elems.length > 0) {
-        var scrlitems = codeView.elems;
-        for (var i = 0; i < scrlitems.length; i++) {
-            el = scrlitems[i];
-            if (clickIsInObj(e.x, e.y, el)) {
-                if (el.file) {
-                    el.setImage(getPressedImg(el));
-                    pressedItem = el;
-                    return;
+    if (clickIsInObj(e.x, e.y, codeMapBG)) {
+        if (codeView && codeView.elems.length > 0) {
+            var scrlitems = codeView.elems;
+            for (var i = 0; i < scrlitems.length; i++) {
+                el = scrlitems[i];
+                if (clickIsInObj(e.x, e.y, el)) {
+                    if (el.file) {
+                        el.setImage(getPressedImg(el));
+                        pressedItem = el;
+                        return;
+                    }
+                }
+            }
+        }
+        if (codeView.menu.visible) {
+            var scrlitems = codeView.menu.itemsArray;
+            for (var i = 0; i < scrlitems.length; i++) {
+                el = scrlitems[i];
+                if (clickIsInObj(e.x, e.y, el)) {
+                    if (el.file) {
+                        el.setImage(getPressedImg(el));
+                        pressedItem = el;
+                        return;
+                    }
                 }
             }
         }
@@ -24474,7 +24490,7 @@ function Input(inputName, buttonName, cancelButtName) {
                 <span class="ring"></span>
             </div>
             <form class="login-form1" action="#" method="post">
-                <input id="userName" type="text" name="username" placeholder="Введите логин" />
+                <input id="userName" type="text" name="username" placeholder="Введите логин" maxlength="5" />
                 <button onclick="saveInput.onClick()" type="button">Название</button>
                 <button onclick="saveInput.onClickCancel()" type="button">Название</button>
             </form>
@@ -24954,7 +24970,7 @@ function SaveItem(name, script) {
         x: parent.x + parent.w*0.5,
         y: parent.y + parent.h / 2,
         text: name,
-        size: parent.h * 0.18,
+        size: parent.h * 0.12,
         color: "#05ae21",
         font: textFont,
     });
@@ -24983,7 +24999,7 @@ function SaveItem(name, script) {
         }
         this.setH = function (H) {
             parent.h = H;
-            saveFileName.size = H * 0.2;
+            saveFileName.size = H * 0.14;
         }
         
         this.setImg = function(val)
@@ -25035,6 +25051,7 @@ function SaveItem(name, script) {
         if (soundIsOn) audio_GUI_click.play();
         lastClickedElement.commands = getCopyOfObj(el.scriptArray);
         allButtons.mainButton.onClick(allButtons.mainButton);
+        lastClickedElement.onClick(lastClickedIndx);
     }
 
     this.draw = function () {
@@ -26670,6 +26687,7 @@ var getTextObject = function (el, elemWH) {
             text: txt,
             size: elemWH / 2.3,
             color: textOnCodeMapColor,
+            font : textFont,
         });
         return obj;
     }
@@ -26761,6 +26779,7 @@ function ItemMenu() {
     //
     //массив для хранения всех кнопок, для дальнейшго обхода по ним в поиске клика
     this.itemsArray = [];
+    this.visible = false;
     //переменная для хранения ссылки на объект по которому кликнули
     var element = undefined;
     var elementBuff = undefined;
@@ -26784,6 +26803,7 @@ function ItemMenu() {
             OOP.forArr(this.itemsArray, function (el) {
                 el.setVisible(visible)
             })
+            this.visible = visible;
         }
     }
 
@@ -27830,7 +27850,7 @@ function setFocused(fieldElem, indx) {
     }
     if (fieldElem.isCommandsReaded) fieldElem.isCommandsReaded = false;
     //Cохраняем номер текущего
-    lastClickedIndx = indx;
+    lastClickedIndx = indx; 
     if (lastClickedElement) lastClickedElement.setStroke(false);
     //Запоминаем последний кликнутый пользователь элемент
     lastClickedElement = field[lastClickedIndx];

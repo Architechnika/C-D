@@ -48,5 +48,5 @@ function MessageBox()
         var div = base.getElementsByTagName('div')[0];
         div.style.background = 'red';
     }
-    base.getElementsByTagName('input')[0].checked = false;
+    base.getElementsByTagName('input')[0].hidden = true;;
 }
