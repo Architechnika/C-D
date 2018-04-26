@@ -2,6 +2,10 @@
     font-family: comic;
     src: url('../../font/NeSkidComica.ttf');
 }
+@font-face {
+    font-family: armCup;
+    src: url('../../font/ArmCupertino.ttf');
+}
 *{
     background-size: auto;
     font-family: 'comic';

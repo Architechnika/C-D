@@ -2,6 +2,10 @@
     font-family: comic;
     src: url('../../font/NeSkidComica.ttf');
 }
+@font-face {
+    font-family: armCup;
+    src: url('../../font/ArmCupertino.ttf');
+}
 body {
   background-image:url(../../img/interface/bg.jpg);
 }
@@ -9,7 +13,7 @@ body {
   width:100%;
   height:100%;    
   margin: 10% auto ;
-  font-family: 'comic';
+  font-family: 'comic','armCup';
 }
 
 .us{
