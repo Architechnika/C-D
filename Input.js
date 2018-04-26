@@ -83,7 +83,7 @@ function onWheel(e) {
         } else codeView.elementsMove(0, e.deltaY * 0.5 * -1);
         return;
     }
-    onRecize(e, e.deltaY, scrollStep);
+    onRecize(e, e.deltaY * -1, scrollStep);
     e.cancelBubble = true;
 }
 
@@ -172,7 +172,7 @@ function onRecize(e, delta, step) {
                 var el = itms[i];
                 if (clickIsInObj(e.x, e.y, el)) {
                     touchedScroll = scroll;
-                    scrollDynamic(new point(delta * -1, delta * -1), touchedScroll);
+                    scrollDynamic(isMobile ? new point(delta * -1, delta * -1) : new point(delta, delta), touchedScroll);
                     return;
                 }
             }
