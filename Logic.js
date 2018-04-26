@@ -307,7 +307,7 @@ function setFocused(fieldElem, indx) {
     }
     if (fieldElem.isCommandsReaded) fieldElem.isCommandsReaded = false;
     //Cохраняем номер текущего
-    lastClickedIndx = indx;
+    lastClickedIndx = indx; 
     if (lastClickedElement) lastClickedElement.setStroke(false);
     //Запоминаем последний кликнутый пользователь элемент
     lastClickedElement = field[lastClickedIndx];

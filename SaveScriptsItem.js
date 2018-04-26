@@ -96,6 +96,7 @@ function SaveItem(name, script) {
         if (soundIsOn) audio_GUI_click.play();
         lastClickedElement.commands = getCopyOfObj(el.scriptArray);
         allButtons.mainButton.onClick(allButtons.mainButton);
+        lastClickedElement.onClick(lastClickedIndx);
     }
 
     this.draw = function () {
