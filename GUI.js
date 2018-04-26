@@ -354,7 +354,7 @@ function PlayerLevelVisualisation(X,Y,W,H,LastWindow) {
         fillColor: "red",
         alpha: 0.7,
     });
-    var expText = new Label(mainBG.x + mainBG.w + 2, mainBG.y, lang[selectLang]['gui_level'] + lvl);
+    var expText = new Label(mainBG.x + mainBG.w, mainBG.y, lang[selectLang]['gui_level'] + lvl);
     expText.setTextSize(mainBG.h * 1.5);
     expText.setTextColor(guiTextColor);
     this.setTextColor = function(color)
@@ -369,7 +369,7 @@ function PlayerLevelVisualisation(X,Y,W,H,LastWindow) {
     if(!LastWindow)
         {
     textW = expText.getText().toString().length * gameSpaceW * 0.022;
-    expText.setTextPosition(mainBG.x - textW)
+    expText.setTextPosition(mainBG.x - textW-10)
         }
     this.setTextSize = function(sz)
     {

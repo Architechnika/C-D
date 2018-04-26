@@ -48,13 +48,19 @@ function langE() {
     dropListlang.textContent = document.getElementsByClassName(langS)[0].textContent;
 }
 
+function langAM() {
+    var am = document.getElementsByClassName("am")[0];
+    langS = am.className;
+    dropListlang.textContent = document.getElementsByClassName(langS)[0].textContent;
+}
+
 function setLang() {
     //установка языка
     document.getElementsByTagName("title")[0].textContent = lang[selectLang]['mainmenu_settings'];
     document.getElementById("butOK").textContent = lang[selectLang]['mainmenu_settings_accept'];
     document.getElementById("butCanc").textContent = lang[selectLang]['mainmenu_settings_cancel'];
-     document.getElementById("labelAudio").textContent = lang[selectLang]['mainmenu_settings_sound'];
-    document.getElementById("labelAudio").innerHTML +='<input type="checkbox" checked id="audio">'
+    document.getElementById("labelAudio").textContent = lang[selectLang]['mainmenu_settings_sound'];
+    document.getElementById("labelAudio").innerHTML += '<input type="checkbox" checked id="audio">'
     document.getElementById("audio").checked = allSettings.isAudio;
     //var k = document.getElementById("labelAudio");
     //
