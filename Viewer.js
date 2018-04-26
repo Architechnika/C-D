@@ -1002,30 +1002,44 @@ function ItemMenu() {
     var setMovableFromElement = function (element) {
         if (!element || element.name == "line") return;
         element.setImage(commandMovableImgSrc);
+        delete element.onClick;
+
         if (element.command.name != "repeat" && element.command.name != "repeatif" && element.command.name != "if") {
             return;
         }
-        if (element.command.blockA)//Перерисовываем блок А
-            searchItemByCommand(element.command.blockA).setImage(commandMovableImgSrc);
+        if (element.command.blockA) {//Перерисовываем блок А
+            var el = searchItemByCommand(element.command.blockA);
+            el.setImage(commandMovableImgSrc);
+            delete el.onClick;
+        }
         if (element.command.blockB) {//Перерисовываем блок Б
             for (var i = 0; i < element.command.blockB.length; i++) {
-                searchItemByCommand(element.command.blockB[i]).setImage(commandMovableImgSrc);
+                var el = searchItemByCommand(element.command.blockB[i]);
+                el.setImage(commandMovableImgSrc);
+                delete element.onClick;
             }
         }
         if (element.command.countBlock) {
             var cI = searchItemByCommand(element.command.countBlock);
             delete cI.textObj;
             cI.setImage(commandMovableImgSrc);
+            delete cI.onClick;
         }
         if (element.command.commandsBlock && element.command.commandsBlock.actions) {
-            searchItemByCommand(element.command.commandsBlock.actions).setImage(commandMovableImgSrc);//Перерисовываем плюсик этой команды
+            var el = searchItemByCommand(element.command.commandsBlock.actions)//Перерисовываем плюсик этой команды
+            el.setImage(commandMovableImgSrc);
+            delete el.onClick;
             for (var i = 0; i < element.command.commandsBlock.actions.length; i++) {//Перерисовываем все команды этого блока
                 setMovableFromElement(searchItemByCommand(element.command.commandsBlock.actions[i]));
             }
         }
         if (element.command.elseBlock && element.command.elseBlock.actions) {
-            searchItemByCommand(element.command.elseBlock).setImage(commandMovableImgSrc);//Перерисовываем иконку команды иначе
-            searchItemByCommand(element.command.elseBlock.actions).setImage(commandMovableImgSrc);//Перерисовываем плюсик от блока иначе
+            var el = searchItemByCommand(element.command.elseBlock);//Перерисовываем иконку команды иначе
+            el.setImage(commandMovableImgSrc);
+            delete el.onClick;
+            el = searchItemByCommand(element.command.elseBlock.actions);//Перерисовываем плюсик от блока иначе
+            el.setImage(commandMovableImgSrc);
+            delete el.onClick;
             for (var i = 0; i < element.command.elseBlock.actions.length; i++) {//Перерисовываем все команды этого блока
                 setMovableFromElement(searchItemByCommand(element.command.elseBlock.actions[i]));
             }

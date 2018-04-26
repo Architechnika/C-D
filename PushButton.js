@@ -135,6 +135,7 @@ function Buttons() { //класс для работы совсеми кнопк�
     });
     this.deleteButton.setUserData({
         onClick: function (el) {
+            if (codeView.isElementMove) return;
             if(soundIsOn) audio_GUI_click.play();
             if (lastClickedElement.commands && lastClickedElement.commands.length > 0)
                 dialog.setHidden(false);
@@ -142,6 +143,7 @@ function Buttons() { //класс для работы совсеми кнопк�
     });
     this.saveButton.setUserData({
         onClick: function (el) {
+            if (codeView.isElementMove) return;
             if(soundIsOn) audio_GUI_click.play();
             if (lastClickedElement.commands && lastClickedElement.commands.length > 0)
                 {
