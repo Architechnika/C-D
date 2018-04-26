@@ -650,15 +650,30 @@ function findPressed(e) {
             }
         }
     }
-    if (codeView && codeView.elems.length > 0) {
-        var scrlitems = codeView.elems;
-        for (var i = 0; i < scrlitems.length; i++) {
-            el = scrlitems[i];
-            if (clickIsInObj(e.x, e.y, el)) {
-                if (el.file) {
-                    el.setImage(getPressedImg(el));
-                    pressedItem = el;
-                    return;
+    if (clickIsInObj(e.x, e.y, codeMapBG)) {
+        if (codeView && codeView.elems.length > 0) {
+            var scrlitems = codeView.elems;
+            for (var i = 0; i < scrlitems.length; i++) {
+                el = scrlitems[i];
+                if (clickIsInObj(e.x, e.y, el)) {
+                    if (el.file) {
+                        el.setImage(getPressedImg(el));
+                        pressedItem = el;
+                        return;
+                    }
+                }
+            }
+        }
+        if (codeView.menu.visible) {
+            var scrlitems = codeView.menu.itemsArray;
+            for (var i = 0; i < scrlitems.length; i++) {
+                el = scrlitems[i];
+                if (clickIsInObj(e.x, e.y, el)) {
+                    if (el.file) {
+                        el.setImage(getPressedImg(el));
+                        pressedItem = el;
+                        return;
+                    }
                 }
             }
         }

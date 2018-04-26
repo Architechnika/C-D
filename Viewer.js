@@ -857,6 +857,7 @@ function ItemMenu() {
     //
     //массив для хранения всех кнопок, для дальнейшго обхода по ним в поиске клика
     this.itemsArray = [];
+    this.visible = false;
     //переменная для хранения ссылки на объект по которому кликнули
     var element = undefined;
     var elementBuff = undefined;
@@ -880,6 +881,7 @@ function ItemMenu() {
             OOP.forArr(this.itemsArray, function (el) {
                 el.setVisible(visible)
             })
+            this.visible = visible;
         }
     }
 
