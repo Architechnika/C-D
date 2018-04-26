@@ -46,6 +46,8 @@ var lang = {
         'mainmenu_settings_accept': 'Принять',
         'mainmenu_settings_cancel': 'Отменить',
         'mainmenu_settings_sound': 'Звук',
+        'mainmenu_preloader': 'Подождите, идет загрузка...',
+        'script_saved': 'Скрипт успешно сохранен',
     },
     en : {
         'robot_not_know': 'Robot doesn\'t now what to do',
@@ -86,5 +88,7 @@ var lang = {
         'mainmenu_settings_accept': 'Ok',
         'mainmenu_settings_cancel': 'Cancel',
         'mainmenu_settings_sound': 'Sound',
+        'mainmenu_preloader': 'Loading...',
+        'script_saved': 'Script successfully saved',
     },
 }

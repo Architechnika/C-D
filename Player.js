@@ -159,9 +159,6 @@ function playerMove(canRead) {
             playerInventory.splice(0, 1);
             break;
         case "repeat":
-            if (comm.countBlock.count == 0) {
-                return lang[selectLang]['robot_left_counter_countblock'];
-            }
             //Выполняем итерацию цикла(получаем команды)
             var comms = checkConditionREPEAT(comm.countBlock, comm.commandsBlock);
             //Добавляем их в стек команд
@@ -296,8 +293,9 @@ function getLocalEXP(){
 
 //Вызывает отрисовку текущей выполняемой команды на карте кода
 function drawCommState(isRegenCodeMap) {
-    if ((!isVerticalScreen && isVisualizeCodeMap) || !isStarted) {
-        if (isRegenCodeMap || !isStarted)
+    if (isStarted) return;
+    if (!isVerticalScreen && isVisualizeCodeMap) {
+        if (isRegenCodeMap)
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0], true);
         codeView.setAlphaToElement(passiveItemsAlpha,playerCommands[0]);
     }

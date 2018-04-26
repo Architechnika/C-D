@@ -40,7 +40,7 @@ function Input(inputName, buttonName, cancelButtName) {
             myScripts.push(getCopyOfObj(lastClickedElement.commands));
             var item = new SaveItem(this.getText(), getCopyOfObj(lastClickedElement.commands));
             saveItems.push(item);
-            showMessage("Скрипт успешно сохранен");
+            showMessage(lang[selectLang]['script_saved']);
         }
     }
     this.onClickCancel = function () {

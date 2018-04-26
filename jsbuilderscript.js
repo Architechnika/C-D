@@ -3960,6 +3960,8 @@ var lang = {
         'mainmenu_settings_accept': 'Принять',
         'mainmenu_settings_cancel': 'Отменить',
         'mainmenu_settings_sound': 'Звук',
+        'mainmenu_preloader': 'Подождите, идет загрузка...',
+        'script_saved': 'Скрипт успешно сохранен',
     },
     en : {
         'robot_not_know': 'Robot doesn\'t now what to do',
@@ -4000,6 +4002,8 @@ var lang = {
         'mainmenu_settings_accept': 'Ok',
         'mainmenu_settings_cancel': 'Cancel',
         'mainmenu_settings_sound': 'Sound',
+        'mainmenu_preloader': 'Loading...',
+        'script_saved': 'Script successfully saved',
     },
 }
 /*
@@ -4141,7 +4145,7 @@ var lineImg = "img/commands/command_line.png";
 //Пути до файлов с изображением робота--------------------------------------------
 var playerImgSrc = "img/assets/"+currentAsset+"/field/object_player.png";
 //Пути до файлов с изображением команд--------------------------------------------
-var commandMovableImgSrc = nonePath;//"img/commands/command_movable.png";
+var commandMovableImgSrc = "img/commands/command_code_move.png";//"img/commands/command_movable.png";
 var commandNoneImgSrc = "img/commands/command_none.png";
 var commandUpImgSrc = "img/commands/command_up.png";
 var commandDownImgSrc = "img/commands/command_down.png";
@@ -4442,7 +4446,8 @@ arrInterfaceAndCommandsImagesForLoad.forEach(function (e) {
     var path = e.split(".png")[0] + "_pressed.png";
     new Image().src = path;
 });
-//анимация клика по полю
+//Загружаем задний фон
+new Image().src = backgroundImgPath;//анимация клика по полю
 var tupAnimation = game.newAnimationObject(   { 
      animation : pjs.tiles.newImage("animations/tup.png").getAnimation(0, 0, 128, 128, 10), 
      x : 100, 
@@ -22061,8 +22066,8 @@ pjs.system.setTitle(lang[selectLang]['game_title']); // Set Title for Tab or Win
 
 //Обновление графики на экране
 function updateScreen() {
-    game.clear();
     if (!isUpdateGraphics) return;
+    game.clear();
     //Отрисовываем игровое поле
     for (var i = 0; i < field.length; i++) {
         if(field[i].isInCameraStatic())
@@ -22225,7 +22230,7 @@ function onWheel(e) {
         } else codeView.elementsMove(0, e.deltaY * 0.5 * -1);
         return;
     }
-    onRecize(e, e.deltaY * -1, scrollStep);
+    onRecize(e, e.deltaY, scrollStep);
     e.cancelBubble = true;
 }
 
@@ -22416,20 +22421,22 @@ function onUp(e) {
                 }
             }
         });
-        if (!clicked && !touchTapTimeFlag) { //Если клик не был обнаружен выше
-            if (allButtons && !allButtons.checkButtonsClicked(e))
-                if (isVerticalScreen) {
-                    //Если ориентация вертикальная то проверяем клики по полю только когда находимся на экране с полем
-                    if (!isSecondScreen)
-                        processFieldClick(e);
-                    else codeView.isClicked(e);
-                }
-            else if (!codeView.isClicked(e)) {
-                tupAnimation.setVisible(true);
-                tupAnimation.setPositionC(pjs.vector.point(e.x, e.y))
-                processFieldClick(e);
+    }
+    if (!clicked && !touchTapTimeFlag) { //Если клик не был обнаружен выше
+        if (allButtons && !allButtons.checkButtonsClicked(e))
+            if (isVerticalScreen) {
+                //Если ориентация вертикальная то проверяем клики по полю только когда находимся на экране с полем
+                if (!isSecondScreen)
+                    processFieldClick(e);
+                else codeView.isClicked(e);
             }
-        }
+            else if (!codeView.isClicked(e)) {
+                if (inputCommandStates !== 4) {
+                    tupAnimation.setVisible(true);
+                    tupAnimation.setPositionC(pjs.vector.point(e.x, e.y))
+                    processFieldClick(e);
+                }
+            }
     }
 }
 
@@ -24486,7 +24493,7 @@ function Input(inputName, buttonName, cancelButtName) {
             myScripts.push(getCopyOfObj(lastClickedElement.commands));
             var item = new SaveItem(this.getText(), getCopyOfObj(lastClickedElement.commands));
             saveItems.push(item);
-            showMessage("Скрипт успешно сохранен");
+            showMessage(lang[selectLang]['script_saved']);
         }
     }
     this.onClickCancel = function () {
@@ -26517,15 +26524,18 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
             this.checkObjsInArea(1);
         //Проверяем надо ли смещать код мап после ресайза(Да знаю, что для этого мы и писали универсальную функцию ресайза в родительском классе, но тут особый случай, не могу придумать способа его обрабатывать без специального кода тут)
         //Считаем разность нижней точки кодмапа с нижней точкой последнего элемента
-        var lastElemDiff = (codeMapBG.y + codeMapBG.h) - (parent.elems[parent.elems.length - 1].y + parent.elems[parent.elems.length - 1].h);
-        var shift = lastElemDiff;        
+        var shiftY = (codeMapBG.y + codeMapBG.h) - (parent.elems[parent.elems.length - 1].y + parent.elems[parent.elems.length - 1].h);
+        var shiftX = (codeMapBG.x + codeMapBG.w) - (parent.elems[parent.elems.length - 1].x + parent.elems[parent.elems.length - 1].w);
         //Если разность больше 0 то надо сдвигать
-        if(lastElemDiff > 0 ){
+        if (shiftY > 0 || shiftX > 0){
             //Но если после сдвига верхние жлементы сдвинутся внутрь codeMapBG то это будет неправильно поэтому проверяем
-            if(parent.elems[0].y + parent.elems[0].h + lastElemDiff > codeMapBG.y){
-                shift = codeMapBG.y - (parent.elems[0].y);
+            if (parent.elems[0].y + parent.elems[0].h + shiftY > codeMapBG.y){
+                shiftY = codeMapBG.y - (parent.elems[0].y);
             }
-            this.elementsMove(0,shift, true, true);
+            if (parent.elems[0].x + parent.elems[0].w + shiftX > codeMapBG.x) {
+                shiftX = codeMapBG.x - (parent.elems[0].x);
+            }
+            this.elementsMove(shiftX>0?shiftX:0,shiftY>0?shiftY:0, true, true);
         }
     }
 
@@ -27105,9 +27115,6 @@ function playerMove(canRead) {
             playerInventory.splice(0, 1);
             break;
         case "repeat":
-            if (comm.countBlock.count == 0) {
-                return lang[selectLang]['robot_left_counter_countblock'];
-            }
             //Выполняем итерацию цикла(получаем команды)
             var comms = checkConditionREPEAT(comm.countBlock, comm.commandsBlock);
             //Добавляем их в стек команд
@@ -27242,8 +27249,9 @@ function getLocalEXP(){
 
 //Вызывает отрисовку текущей выполняемой команды на карте кода
 function drawCommState(isRegenCodeMap) {
-    if ((!isVerticalScreen && isVisualizeCodeMap) || !isStarted) {
-        if (isRegenCodeMap || !isStarted)
+    if (isStarted) return;
+    if (!isVerticalScreen && isVisualizeCodeMap) {
+        if (isRegenCodeMap)
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0], true);
         codeView.setAlphaToElement(passiveItemsAlpha,playerCommands[0]);
     }

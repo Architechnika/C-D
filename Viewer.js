@@ -619,15 +619,18 @@ function CodeMapView(backX, backY, backW, backH, fillCol) {
             this.checkObjsInArea(1);
         //Проверяем надо ли смещать код мап после ресайза(Да знаю, что для этого мы и писали универсальную функцию ресайза в родительском классе, но тут особый случай, не могу придумать способа его обрабатывать без специального кода тут)
         //Считаем разность нижней точки кодмапа с нижней точкой последнего элемента
-        var lastElemDiff = (codeMapBG.y + codeMapBG.h) - (parent.elems[parent.elems.length - 1].y + parent.elems[parent.elems.length - 1].h);
-        var shift = lastElemDiff;        
+        var shiftY = (codeMapBG.y + codeMapBG.h) - (parent.elems[parent.elems.length - 1].y + parent.elems[parent.elems.length - 1].h);
+        var shiftX = (codeMapBG.x + codeMapBG.w) - (parent.elems[parent.elems.length - 1].x + parent.elems[parent.elems.length - 1].w);
         //Если разность больше 0 то надо сдвигать
-        if(lastElemDiff > 0 ){
+        if (shiftY > 0 || shiftX > 0){
             //Но если после сдвига верхние жлементы сдвинутся внутрь codeMapBG то это будет неправильно поэтому проверяем
-            if(parent.elems[0].y + parent.elems[0].h + lastElemDiff > codeMapBG.y){
-                shift = codeMapBG.y - (parent.elems[0].y);
+            if (parent.elems[0].y + parent.elems[0].h + shiftY > codeMapBG.y){
+                shiftY = codeMapBG.y - (parent.elems[0].y);
             }
-            this.elementsMove(0,shift, true, true);
+            if (parent.elems[0].x + parent.elems[0].w + shiftX > codeMapBG.x) {
+                shiftX = codeMapBG.x - (parent.elems[0].x);
+            }
+            this.elementsMove(shiftX>0?shiftX:0,shiftY>0?shiftY:0, true, true);
         }
     }
 

@@ -93,7 +93,7 @@ var lineImg = "img/commands/command_line.png";
 //Пути до файлов с изображением робота--------------------------------------------
 var playerImgSrc = "img/assets/"+currentAsset+"/field/object_player.png";
 //Пути до файлов с изображением команд--------------------------------------------
-var commandMovableImgSrc = nonePath;//"img/commands/command_movable.png";
+var commandMovableImgSrc = "img/commands/command_code_move.png";//"img/commands/command_movable.png";
 var commandNoneImgSrc = "img/commands/command_none.png";
 var commandUpImgSrc = "img/commands/command_up.png";
 var commandDownImgSrc = "img/commands/command_down.png";
@@ -394,3 +394,5 @@ arrInterfaceAndCommandsImagesForLoad.forEach(function (e) {
     var path = e.split(".png")[0] + "_pressed.png";
     new Image().src = path;
 });
+//Загружаем задний фон
+new Image().src = backgroundImgPath;

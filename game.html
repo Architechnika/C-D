@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+﻿<!DOCTYPE HTML>
 <html>
 
 
@@ -41,7 +41,7 @@
     <script type="text/javascript" src="Logic.js"></script>
 
     <div id="preloader_malc">
-        <div>
+        <div id="preloader_text">
             Подождите, идет загрузка...
         </div>
     </div>
@@ -85,12 +85,14 @@
     </style>
 
     <script type="text/javascript">
+        if (selectLang) {
+            document.getElementById("preloader_text").textContent = lang[selectLang]['mainmenu_preloader'];
+        }
         window.onload = function() {
             setTimeout(function() {
                 document.getElementById('preloader_malc').style.display = 'none';
             }, 400);
         };
-
     </script>
 </body>
 
