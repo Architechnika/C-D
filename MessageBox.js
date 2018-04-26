@@ -18,7 +18,7 @@ function MessageBox()
                     <section>
 
                         <div class="tn-box tn-box-color-1">
-                            <p class="text" >Ваши персональные настройки были успешно сохранены!</p>
+                            <p class="text" ></p>
                             <div class="tn-progress"></div>
                         </div>
 
@@ -48,4 +48,5 @@ function MessageBox()
         var div = base.getElementsByTagName('div')[0];
         div.style.background = 'red';
     }
+    base.getElementsByTagName('input')[0].checked = false;
 }
