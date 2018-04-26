@@ -21,7 +21,7 @@ function Input(inputName, buttonName, cancelButtName) {
                 <span class="ring"></span>
             </div>
             <form class="login-form1" action="#" method="post">
-                <input id="userName" type="text" name="username" placeholder="Введите логин" />
+                <input id="userName" type="text" name="username" placeholder="Введите логин" maxlength="5" />
                 <button onclick="saveInput.onClick()" type="button">Название</button>
                 <button onclick="saveInput.onClickCancel()" type="button">Название</button>
             </form>

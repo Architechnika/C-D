@@ -764,7 +764,8 @@ var getTextObject = function (el, elemWH) {
             y: tY,
             text: txt,
             size: elemWH / 2.3,
-            color: textOnCodeMapColor,
+            color: guiTextColor,
+            font : textFont,
         });
         return obj;
     }

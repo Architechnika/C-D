@@ -15,7 +15,7 @@ function SaveItem(name, script) {
         x: parent.x + parent.w*0.5,
         y: parent.y + parent.h / 2,
         text: name,
-        size: parent.h * 0.18,
+        size: parent.h * 0.12,
         color: "#05ae21",
         font: textFont,
     });
@@ -44,7 +44,7 @@ function SaveItem(name, script) {
         }
         this.setH = function (H) {
             parent.h = H;
-            saveFileName.size = H * 0.2;
+            saveFileName.size = H * 0.14;
         }
         
         this.setImg = function(val)
