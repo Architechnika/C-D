@@ -2,34 +2,42 @@
     font-family: comic;
     src: url('../../font/NeSkidComica.ttf');
 }
+
 @font-face {
     font-family: armCup;
-    src: url('../../font/ArmCupertino.ttf');
+    src: url('../../font/arm.ttf');
 }
-*{
+
+* {
     background-size: auto;
-    font-family: 'comic';
-}
-body{
-    background:  url(../../img/interface/bg.jpg);
+    /*    font-family: 'comic';*/
+    font-family: 'comic', 'armCup';
 }
 
-#buttons{
-    width: 100%;
+body {
+    background: url(../../img/interface/bg.jpg);
 }
-#butOK{
-    width: 50%;    
-}
-#butCanc{
-    width: 50%;    
-}
-#butDropdown{
+
+#buttons {
     width: 100%;
 }
 
-#dropLists{
+#butOK {
+    width: 50%;
+}
+
+#butCanc {
+    width: 50%;
+}
+
+#butDropdown {
+    width: 100%;
+}
+
+#dropLists {
     text-align: center;
 }
-.dropdown-menu{
+
+.dropdown-menu {
     width: 100%;
 }

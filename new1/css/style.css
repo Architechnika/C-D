@@ -2,7 +2,11 @@
     font-family: comic;
     src: url('../../font/NeSkidComica.ttf');
 }
+@font-face {
+    font-family: armCup;
+    src: url('../../font/arm.ttf');
 
+}
 body {
     background-image: url(../../img/interface/bg.jpg);
     height: 100%;
@@ -13,7 +17,7 @@ body {
     height: 100%;
     /*  margin: 10% auto ;*/
     margin-top: 2.5vh;
-    font-family: 'comic';
+    font-family: 'comic','armCup';
     font-size: 200%;
 }
 
@@ -101,7 +105,7 @@ h3 {
     box-shadow: inset 0 1px 0 rgb(242, 220, 175);
     text-shadow: 1px 1px 0 rgb(138, 100, 50);
     transition: color 300ms linear;
-    font-family: 'comic';
+    font-family: 'comic','armCup';
 }
 
 .form-wrapper button[type="button"]:hover,
@@ -169,7 +173,7 @@ h3 {
     top: 0;
     left: 0;
     width: 100%;
-    font-family: 'comic';
+    font-family: 'comic','armCup';
     font-size: 13px;
     box-shadow: 1px 0px 2px rgba(0, 0, 0, 0.2);
     -webkit-animation: slideOut 0.5s ease-in-out 0.3s backwards;

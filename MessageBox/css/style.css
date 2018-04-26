@@ -2,6 +2,10 @@
     font-family: comic;
     src: url('../../font/NeSkidComica.ttf');
 }
+@font-face {
+    font-family: armCup;
+    src: url('../../font/arm.ttf');
+}
 
 .tn-box {
     /*РАМКА*/
@@ -17,7 +21,7 @@
     filter: alpha(opacity=0);
     cursor: default;
     display: none;
-    font-family: 'comic';
+    font-family: 'comic','armCup';
 }
 
 .tn-box p {

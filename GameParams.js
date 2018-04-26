@@ -54,6 +54,8 @@ var currentAsset = "greenland";
 //Параметры для внутриигрового текста
 var textOnCodeMapColor = "#1f75fe";//Цвет цифр когда вводишь итерации в команду repeat
 var textFont = "comic"; //шрифт текста
+    if(selectLang == 'am')
+        textFont = "armCup"
 var guiTextColor = "red";//ЦВЕТ ТЕКСТА ДЛЯ GUI 
 
 var totalLabCompleted = 0; //Счетчик пройденных лабиринтов

@@ -36,7 +36,7 @@
     <script type="text/javascript" src="Viewer.js"></script>
     <script type="text/javascript" src="Player.js"></script>
     <script type="text/javascript" src="SecondScreen.js"></script>
-   
+
     <script type="text/javascript" src="pathfinding-browser.min.js"></script>
     <script type="text/javascript" src="Logic.js"></script>
 
@@ -50,6 +50,12 @@
         @font-face {
             font-family: comic;
             src: url('font/NeSkidComica.ttf');
+        }
+
+        @font-face {
+            font-family: armCup;
+            src: url('../../font/arm.ttf');
+
         }
 
         #preloader_malc {
@@ -68,7 +74,7 @@
             height: 40px;
             line-height: 40px;
             border-radius: 8px;
-            font-family: 'comic';
+            font-family: 'comic','armCup';
             font-size: 15px;
             color: #111;
             text-align: center;
@@ -93,6 +99,7 @@
                 document.getElementById('preloader_malc').style.display = 'none';
             }, 400);
         };
+
     </script>
 </body>
 
