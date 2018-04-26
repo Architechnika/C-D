@@ -3916,24 +3916,25 @@ var selectLang = 'ru';
 //Подгружаем настройки языка из настроек
 if (localStorage.getItem("settings")) {
     var lang = JSON.parse(localStorage.getItem("settings")).language;
-    if (lang)
+    if (lang) {
         selectLang = lang;
+    }
 }
 
 var lang = {
-    ru : {
-       'robot_not_know'  : 'Робот не знает что ему делать',
-       'inventory_is_empty' : 'Инвентарь робота пуст',
-       'robot_not_look_there': 'Робот смотрит не в ту сторону',
-       'robot_left_condition_if': 'Не задано условие в операторе условия ЕСЛИ',
-       'robot_left_condition_repeatif': 'Не задано условие в ЦИКЛЕ',
-       'robot_left_counter_countblock': 'Не задано количество итераций в ЦИКЛЕ',
-       'crashed_the_wall' : 'Робот врезался в стену',
-       'robot_not_find_object' : 'Робот не может найти объект который можно подобрать',
-       'game_title' : 'SkillCraft - развивайся играя',
-        'robot_is_waiting' : 'Робот остановился и ждет дальнейших команд',
-        'robot_enter_infinity_cycle' : 'Робот зашёл в бесконечный цикл. Дальнейшее выполнение невозможно',
-        'dialog_delete' : 'Удалить?',
+    ru: {
+        'robot_not_know': 'Робот не знает что ему делать',
+        'inventory_is_empty': 'Инвентарь робота пуст',
+        'robot_not_look_there': 'Робот смотрит не в ту сторону',
+        'robot_left_condition_if': 'Не задано условие в операторе условия ЕСЛИ',
+        'robot_left_condition_repeatif': 'Не задано условие в ЦИКЛЕ',
+        'robot_left_counter_countblock': 'Не задано количество итераций в ЦИКЛЕ',
+        'crashed_the_wall': 'Робот врезался в стену',
+        'robot_not_find_object': 'Робот не может найти объект который можно подобрать',
+        'game_title': 'SkillCraft - развивайся играя',
+        'robot_is_waiting': 'Робот остановился и ждет дальнейших команд',
+        'robot_enter_infinity_cycle': 'Робот зашёл в бесконечный цикл. Дальнейшее выполнение невозможно',
+        'dialog_delete': 'Удалить?',
         'tooltip_robot': 'Это робот',
         'achievement_optimal_route': 'КРАТЧАЙШИЙ ПУТЬ',
         'achievement_no_errors': 'ПРОХОЖДЕНИЕ БЕЗ ОШИБОК',
@@ -3963,7 +3964,7 @@ var lang = {
         'mainmenu_preloader': 'Подождите, идет загрузка...',
         'script_saved': 'Скрипт успешно сохранен',
     },
-    en : {
+    en: {
         'robot_not_know': 'Robot doesn\'t now what to do',
         'inventory_is_empty': 'Inventory is empty',
         'robot_not_look_there': 'Robot looks the wrong side',
@@ -4004,6 +4005,48 @@ var lang = {
         'mainmenu_settings_sound': 'Sound',
         'mainmenu_preloader': 'Loading...',
         'script_saved': 'Script successfully saved',
+    },
+    am: {
+        'robot_not_know': 'Ռոբոտը չգիտի, թե ինչ պետք է անի',
+        'inventory_is_empty': 'Ռոբոտի գույքագրում դատարկ է',
+        'robot_not_look_there': 'Ռոբոտը նայում է սխալ ուղղությամբ',
+        'robot_left_condition_if': 'Պայմանագրի հայտարարության մեջ պայմանը չի տրվում',
+        'robot_left_condition_repeatif': 'Չի տրվում պայմանը ՓՈՒԼՈՒՄ',
+        'robot_left_counter_countblock': 'ՓՈՒԼԻ ի կրկնողությունների թիվը չի նշվում',
+        'crashed_the_wall': 'Ռոբոտը բախվեց պատին',
+        'robot_not_find_object': 'Ռոբոտը չի կարող գտնել օբյեկտ, որը կարող է վերցնել',
+        'game_title': 'SkillCraft - զարգացիր խաղալով',
+        'robot_is_waiting': 'Ռոբոտը կանգնել է և սպասում է հետագա հրամաններին',
+        'robot_enter_infinity_cycle': 'Ռոբոտը անսահման ցիկլի մեջ է: Հետագա իրականացումը հնարավոր չէ',
+        'dialog_delete': 'Ջնջե՞լ',
+        'tooltip_robot': 'Սա ռոբոտ է',
+        'achievement_optimal_route': 'ԱՄԵՆԱԿԱՐՃ ՈՒՂԻՆ',
+        'achievement_no_errors': 'ԱՆՑՈՒՄ ԱՌԱՆՑ ՍԽԱԼՆԵՐԻ',
+        'achievement_all_boxes': 'ԲՈԼՈՐ ԱՐԿՂԵՐԸ ՀԱՎԱՔՎԱԾ ԵՆ',
+        'gui_inp_name': 'Մուտքագրեք անունը',
+        'gui_save': 'Պահպանել',
+        'gui_cancel': 'Չեղարկել',
+        'gui_yes': 'Այո',
+        'gui_no': 'Ոչ',
+        'gui_level': 'Աստիճան: ',
+        'gui_total_lab_complete': 'Անցած լաբիրինթոսների թիվը: ',
+        'gui_total_time': 'Անցման ժամանակը: ',
+        'gui_repeat': 'Կրկնել',
+        'gui_next': 'Հաջորդը',
+        'gui_achiv': 'Ձեռքբերումներ `:',
+        'mainmenu_newgame': 'Նոր խաղ',
+        'mainmenu_continue': 'Շարունակել',
+        'mainmenu_settings': 'Կարգավորումներ',
+        'mainmenu_login': 'Մուտքագրեք մուտքանունը',
+        'mainmenu_password': 'Մուտքագրեք գաղտնաբառը',
+        'mainmenu_logpass': 'Մուտք / Գրանցվել',
+        'mainmenu_version': 'Խաղի տարբերակ: ',
+        'mainmenu_sure': 'Դուք վստահ ե՞ք: Ամբողջ չգրանցված առաջընթացը կվերանա',
+        'mainmenu_settings_accept': 'ընդունել',
+        'mainmenu_settings_cancel': 'Չեղարկել',
+        'mainmenu_settings_sound': 'Ձայն',
+        'mainmenu_preloader': 'Խնդրում ենք սպասել, բեռնում ...',
+        'script_saved': 'Պահպանել',
     },
 }
 /*
@@ -4106,6 +4149,8 @@ var currentAsset = "greenland";
 //Параметры для внутриигрового текста
 var textOnCodeMapColor = "#1f75fe";//Цвет цифр когда вводишь итерации в команду repeat
 var textFont = "comic"; //шрифт текста
+    if(selectLang == 'am')
+        textFont = "armCup"
 var guiTextColor = "red";//ЦВЕТ ТЕКСТА ДЛЯ GUI 
 
 var totalLabCompleted = 0; //Счетчик пройденных лабиринтов
@@ -24907,7 +24952,7 @@ function PlayerLevelVisualisation(X,Y,W,H,LastWindow) {
         fillColor: "red",
         alpha: 0.7,
     });
-    var expText = new Label(mainBG.x + mainBG.w + 2, mainBG.y, lang[selectLang]['gui_level'] + lvl);
+    var expText = new Label(mainBG.x + mainBG.w, mainBG.y, lang[selectLang]['gui_level'] + lvl);
     expText.setTextSize(mainBG.h * 1.5);
     expText.setTextColor(guiTextColor);
     this.setTextColor = function(color)
@@ -24922,7 +24967,7 @@ function PlayerLevelVisualisation(X,Y,W,H,LastWindow) {
     if(!LastWindow)
         {
     textW = expText.getText().toString().length * gameSpaceW * 0.022;
-    expText.setTextPosition(mainBG.x - textW)
+    expText.setTextPosition(mainBG.x - textW-10)
         }
     this.setTextSize = function(sz)
     {
