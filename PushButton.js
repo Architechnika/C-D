@@ -183,6 +183,10 @@ function Buttons() { //класс для работы совсеми кнопк�
         onClick: function (el) {
             if(soundIsOn) audio_GUI_click.play();
             sleep(80);
+            //сохраняем состояние игры
+            if (userData !== undefined) {
+                userData.save(true, totalSeconds, field, playerInventory, gameObjects, entrySide);
+            }
             menuBClick();
         }
     });

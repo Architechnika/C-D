@@ -439,19 +439,17 @@ function onOkBClick() { //Вернет TRUE если надо закрыть к�
 function startBClick() {
     isStarted = !isStarted;
     if (isStarted) {
-        if (!isVisualizeCodeMap && codeView) {
-            codeView.clear();
-        }
+        codeView.clear();
         //Запоминаем время начала движения робота
         startPlayerMoveTime = totalSeconds;
         if (!isVerticalScreen)
             initLeftScroll([]);
         //Увеличиваем счетчик попыток для прохождения
         totalAttempts++;
-        if (!isVerticalScreen && isVisualizeCodeMap) {
+        /*if (!isVerticalScreen && isVisualizeCodeMap) {
             var comms = playerCommands && playerCommands.length > 0 ? playerCommands : field[playerPozition].commands;
             codeView.createCodeMap(codeMapBG.x, codeMapBG.y, comms, undefined, undefined, passiveItemsAlpha, playerCommands[0]);
-        }
+        }*/
         setTimeout("processRobotMove()", robotMoveDelay);
     }
     return true;
@@ -460,6 +458,7 @@ function startBClick() {
 //КНОПКА МЕНЮ
 function menuBClick() {
     clearAllLayers();
+
     window.location.href = 'index.html'
     return true;
 }

@@ -186,6 +186,7 @@ function initializeGame(isInit, dontSaveState) {
             else {
                 movePlayerToFieldElement(field[playerPozition], undefined, playerPozition);
                 playerSetDirection(getPlayerDirFromSide(), false);
+                isLoaded = true;
             }
         } else {
             initLabirint();

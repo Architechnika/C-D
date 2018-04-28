@@ -295,8 +295,7 @@ function getLocalEXP(){
 function drawCommState(isRegenCodeMap) {
     if (isStarted) return;
     if (!isVerticalScreen && isVisualizeCodeMap) {
-        if (isRegenCodeMap)
-            codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0], true);
+        codeView.createCodeMap(codeMapBG.x, codeMapBG.y, lastReadedCommands, undefined, undefined, passiveItemsAlpha, playerCommands[0], true);
         codeView.setAlphaToElement(passiveItemsAlpha,playerCommands[0]);
     }
 }
